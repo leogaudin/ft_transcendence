@@ -1,0 +1,13 @@
+services:
+  transcendence:
+    build:
+      context: srcs/
+      dockerfile: Dockerfile
+    container_name: transcendence
+    volumes:
+      - ./srcs/backend:/backend
+      - ./srcs/frontend:/frontend
+
+volumes:
+  backend:
+  frontend:
