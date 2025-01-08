@@ -14,7 +14,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./frontend:/var/www/html
+      - ./frontend:/usr/share/nginx/html
 volumes:
   backend:
   frontend:
