@@ -11,8 +11,10 @@ services:
     build:
       context: frontend
     container_name: front
+    ports:
+      - "8000:80"
     volumes:
-      - ./frontend:/transcendence
+      - ./frontend:/var/www/html
 volumes:
   backend:
   frontend:
