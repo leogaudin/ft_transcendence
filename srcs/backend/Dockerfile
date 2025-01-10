@@ -8,4 +8,6 @@ WORKDIR /transcendence
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# RUN python manage.py makemigrations && python manage.py migrate
+
 CMD ["python3", "manage.py", "runserver", "0.0.0.0:9000"]
