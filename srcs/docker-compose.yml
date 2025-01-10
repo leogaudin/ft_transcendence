@@ -15,16 +15,6 @@ services:
         condition: service_healthy
     build:
       context: backend
-    command:
-      [
-        "python",
-        "manage.py",
-        "makemigrations",
-        "&&",
-        "python",
-        "manage.py",
-        "migrate",
-      ]
     container_name: back
     ports:
       - "9000:9000"
