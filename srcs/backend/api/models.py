@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.db.models.fields import related
 
 # Models are classes that contain data
 
@@ -11,6 +12,7 @@ class User(models.Model):
     email = models.CharField(max_length=255)
     # avatar = models.ImageField(upload_to="avatars/") # This needs "Pillow" to be installed
     friends = models.ManyToManyField("self", blank=True, symmetrical=True)
+    created = models.DateField(auto_now=True)
     wins = models.IntegerField(
         default=0,
         validators=[
@@ -28,8 +30,21 @@ class User(models.Model):
         return self.alias
 
 
+class Match(models.Model):
+    date = models.DateField(auto_now=True)
+    left_player = models.ForeignKey(
+        User, related_name="left_player_matches", on_delete=models.CASCADE
+    )
+    right_player = models.ForeignKey(
+        User, related_name="right_player_matches", on_delete=models.CASCADE
+    )
+    winner = models.ForeignKey(
+        User, related_name="won_matches", on_delete=models.CASCADE
+    )
+
+
 class Tournament(models.Model):
     name = models.CharField(max_length=255)
-    playerAmount = models.IntegerField(
+    player_amount = models.IntegerField(
         validators=[MinValueValidator(4), MaxValueValidator(16)]
     )
