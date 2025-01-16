@@ -4,12 +4,12 @@ from django.contrib.auth.hashers import make_password
 from ..models import User
 import json
 
-# These are views, views are functions that get called when you access a url like "localhost:9000/api/test/"
-# They can return HTML content, like "api_test" or a JSON, like "add_user"
+# These are views, views are functions that get called when you access a url like "localhost:9000/api/"
+# They can return HTML content, like "default" or a JSON, like "add_user"
 
 
-def api_test(request):
-    return HttpResponse("Hello world!")
+def default(request):
+    return HttpResponse("Nothing to see here.")
 
 
 def add_user(request):

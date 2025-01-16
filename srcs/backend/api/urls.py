@@ -5,6 +5,6 @@ from . import views
 # Each path needs a route, a function that will be called, and a name to identify it
 
 urlpatterns = [
-    path("test/", views.api_test, name="test"),
+    path("", views.default, name="default"),
     path("add-user/", views.add_user, name="add-user"),
 ]
