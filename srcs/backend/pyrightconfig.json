@@ -1,4 +1,6 @@
 {
   "venv": "env",
-  "venvPath": "/home/alvega-g/sgoinfre/ft_transcendence/srcs/backend"
+  "venvPath": "/home/alvega-g/sgoinfre/ft_transcendence/srcs/backend",
+  "reportUninitializedInstanceVariable": "warning",
+  "typeCheckingMode": "off"
 }
