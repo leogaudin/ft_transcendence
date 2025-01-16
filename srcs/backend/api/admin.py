@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Match, Tournament
+from .models import User, Match, Tournament, Chat, Message
 
 # We register our models here so we can access them in the admin panel ("localhost:9000/admin")
 # Only authorized users can access the admin panel
@@ -7,3 +7,5 @@ from .models import User, Match, Tournament
 admin.site.register(User)
 admin.site.register(Match)
 admin.site.register(Tournament)
+admin.site.register(Chat)
+admin.site.register(Message)
