@@ -48,12 +48,10 @@ def add_user(request):
         return JsonResponse({"error": "Only POST requests are allowed"}, status=405)
 
 
-# FIX: Esto no va
 def delete_user(request):
     if request.method == "DELETE":
         try:
             body = request.body.decode("utf-8")
-            print("Raw body:", body)
             data = json.loads(body)
             name = data.get("name")
             if not name:
@@ -64,7 +62,9 @@ def delete_user(request):
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
         except User.DoesNotExist:
-            return JsonResponse({"error": f"Unable to find user name {name}"})
+            return JsonResponse(
+                {"error": f"Unable to find user name {name}"}, status=404
+            )
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 

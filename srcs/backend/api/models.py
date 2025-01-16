@@ -6,7 +6,7 @@ from django.db import models
 
 # Anonymize an user when they're deleted
 def anonymize():
-    return User.objects.get_or_create(username="anonymous")[0]
+    return User.objects.get_or_create(name="anonymous")[0]
 
 
 class User(models.Model):
