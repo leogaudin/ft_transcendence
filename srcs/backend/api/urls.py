@@ -9,4 +9,5 @@ urlpatterns = [
     path("add-user/", views.add_user, name="add-user"),
     path("delete-user/", views.delete_user, name="delete-user"),
     path("add-chat/", views.add_chat, name="add-chat"),
+    path("delete-chat/", views.delete_chat, name="delete-chat"),
 ]
