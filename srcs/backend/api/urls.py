@@ -12,4 +12,9 @@ urlpatterns = [
     path("delete-chat/", views.delete_chat, name="delete-chat"),
     path("add-message/", views.add_message, name="add-message"),
     path("delete-message/", views.delete_message, name="delete-message"),
+    # TODO:
+    # path("add-match/", views.add_match, name="add-match"),
+    # path("delete-match/", views.delete_match, name="delete-match"),
+    # path("add-tournament/", views.add_tournament, name="add-tournament"),
+    # path("delete-tournament/", views.delete_tournament, name="delete-tournament"),
 ]
