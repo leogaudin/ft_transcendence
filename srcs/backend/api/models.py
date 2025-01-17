@@ -82,8 +82,17 @@ class Chat(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["first_user", "second_user"], name="unique_chat"
-            )
+            ),
+            models.CheckConstraint(
+                check=models.Q(first_user__lt=models.F("second_user")),
+                name="first_user_lt_second_user",
+            ),
         ]
+
+    def save(self, *args, **kwargs):
+        if self.first_user.id > self.second_user.id:
+            self.first_user, self.second_user = self.second_user, self.first_user
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Chat between {self.first_user} and {self.second_user}"
