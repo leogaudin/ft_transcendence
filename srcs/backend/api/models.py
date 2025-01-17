@@ -44,6 +44,11 @@ class Tournament(models.Model):
         validators=[MinValueValidator(4), MaxValueValidator(16)]
     )
 
+    def __str__(self):
+        return (
+            f"Tournament {self.name} at {self.date} with {self.player_amount} players"
+        )
+
 
 class Match(models.Model):
     date = models.DateTimeField(auto_now_add=True)
@@ -67,6 +72,11 @@ class Match(models.Model):
         null=True,
         blank=True,
     )
+
+    def __str__(self):
+        return (
+            f"Match between {self.left_player} and {self.right_player} ({self.result})"
+        )
 
 
 class Chat(models.Model):
