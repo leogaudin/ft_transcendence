@@ -10,4 +10,6 @@ urlpatterns = [
     path("delete-user/", views.delete_user, name="delete-user"),
     path("add-chat/", views.add_chat, name="add-chat"),
     path("delete-chat/", views.delete_chat, name="delete-chat"),
+    path("add-message/", views.add_message, name="add-message"),
+    path("delete-message/", views.delete_message, name="delete-message"),
 ]

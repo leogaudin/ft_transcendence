@@ -50,14 +50,13 @@ def add_user(request):
 def delete_user(request):
     if request.method == "DELETE":
         try:
-            body = request.body.decode("utf-8")
-            data = json.loads(body)
+            data = json.loads(request.body)
             name = data.get("name")
             if not name:
                 return JsonResponse({"error": "No name provided"}, status=400)
             user = User.objects.get(name=name)
             user.delete()
-            return JsonResponse({"user": "deleted"}, status=200)
+            return JsonResponse({"success": f"User {name} deleted"}, status=200)
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
         except User.DoesNotExist:

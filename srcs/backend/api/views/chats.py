@@ -48,7 +48,6 @@ def add_chat(request):
 def delete_chat(request):
     if request.method == "DELETE":
         try:
-            # body = request.body.decode("utf-8")
             data = json.loads(request.body)
             first_user_alias = data.get("first_user")
             second_user_alias = data.get("second_user")
@@ -74,7 +73,12 @@ def delete_chat(request):
             chat = Chat.objects.get(first_user=first_user, second_user=second_user)
             chat.delete()
 
-            return JsonResponse({"chat": "deleted"}, status=200)
+            return JsonResponse(
+                {
+                    "success": f"Chat between {first_user_alias} and {second_user_alias} deleted"
+                },
+                status=200,
+            )
         except json.JSONDecodeError:
             return JsonResponse({"error": "Invalid JSON"}, status=400)
         except Exception as e:
