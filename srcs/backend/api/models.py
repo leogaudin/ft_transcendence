@@ -58,7 +58,7 @@ class Match(models.Model):
     right_player = models.ForeignKey(
         User, related_name="right_player_matches", on_delete=models.SET(anonymize)
     )
-    result = models.CharField(max_length=255)
+    result = models.ArrayField(models.IntegerField(), size=2)  # TODO: Run migrations
     winner = models.ForeignKey(
         User, related_name="won_matches", on_delete=models.SET(anonymize)
     )
