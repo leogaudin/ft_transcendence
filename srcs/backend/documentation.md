@@ -119,7 +119,7 @@
 
 - http://localhost:9000/api/get/: GET request
 
-  - http://localhost:9000/api/get/user/**username**
+  - http://localhost:9000/api/get/user/username
 
     - return (200)
 
@@ -134,7 +134,7 @@
     }
     ```
 
-  - http://localhost:9000/api/get/chat/**id**
+  - http://localhost:9000/api/get/chat/id
 
     - return (200)
 
@@ -147,7 +147,7 @@
     }
     ```
 
-  - http://localhost:9000/api/get/message/**id**
+  - http://localhost:9000/api/get/message/id
 
     - return (200)
 
@@ -160,7 +160,7 @@
     }
     ```
 
-  - http://localhost:9000/api/get/match/**id**
+  - http://localhost:9000/api/get/match/id
 
     - return (200)
 
@@ -175,7 +175,7 @@
     }
     ```
 
-  - http://localhost:9000/api/get/tournament/**id**
+  - http://localhost:9000/api/get/tournament/id
     - return (200)
     ```javascript
     {
