@@ -3,18 +3,18 @@ from django.http import JsonResponse
 import json
 
 
-def add_tournament(request):  # TEST:
+def add_tournament(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
             name = data.get("name")
-            player_amount = data.get("player_amount")
+            player_amount = int(data.get("player_amount"))
             player_aliases = data.get("players")
             if not all([name, player_amount, player_aliases]):
                 return JsonResponse({"error": "All fields are required"}, status=400)
-            players = []
-            for i in enumerate(player_aliases):
-                if i > player_amount:
+            players = [None] * player_amount
+            for i, player in enumerate(player_aliases):
+                if i >= player_amount:
                     raise Exception("Too many players for the given tournament.")
                 try:
                     players[i] = User.objects.get(alias=player_aliases[i])
@@ -28,15 +28,17 @@ def add_tournament(request):  # TEST:
             tournament = Tournament.objects.create(
                 name=name,
                 player_amount=player_amount,
-                players=players,  # Does this work like this?
             )
+            tournament.players.set(players)
             return JsonResponse(
                 {
                     "created": {
                         "id": tournament.id,
                         "name": tournament.name,
                         "player_amount": tournament.player_amount,
-                        "players": tournament.players.alias,  # Also this?
+                        "players": [
+                            player.alias for player in tournament.players.all()
+                        ],
                     }
                 },
                 status=201,
@@ -50,7 +52,7 @@ def add_tournament(request):  # TEST:
         return JsonResponse({"error": "Only POST requests are allowed"}, status=405)
 
 
-def delete_tournament(request):  # TEST:
+def delete_tournament(request):
     if request.method == "DELETE":
         try:
             data = json.loads(request.body)

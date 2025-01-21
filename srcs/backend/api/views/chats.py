@@ -25,6 +25,8 @@ def add_chat(request):
                     {"error": f"User with alias {second_user_alias} does not exist"},
                     status=404,
                 )
+            if first_user.id > second_user.id:
+                first_user, second_user = second_user, first_user
             chat = Chat.objects.create(first_user=first_user, second_user=second_user)
             return JsonResponse(
                 {

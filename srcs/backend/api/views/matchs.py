@@ -3,7 +3,7 @@ from django.http import JsonResponse
 import json
 
 
-def add_match(request):  # TEST:
+def add_match(request):
     if request.method == "POST":
         try:
             data = json.loads(request.body)
@@ -44,8 +44,8 @@ def add_match(request):  # TEST:
                 {
                     "created": {
                         "id": match.id,
-                        "left_user": match.left_user.alias,
-                        "right_user": match.right_user.alias,
+                        "left_user": match.left_player.alias,
+                        "right_user": match.right_player.alias,
                         "result": match.result,
                         "winner": match.winner.alias,
                         "loser": match.loser.alias,
@@ -62,7 +62,7 @@ def add_match(request):  # TEST:
         return JsonResponse({"error": "Only POST requests are allowed"}, status=405)
 
 
-def delete_match(request):  # TEST:
+def delete_match(request):
     if request.method == "DELETE":
         try:
             data = json.loads(request.body)

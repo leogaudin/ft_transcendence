@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 # Models are classes that contain data
 
@@ -58,7 +59,7 @@ class Match(models.Model):
     right_player = models.ForeignKey(
         User, related_name="right_player_matches", on_delete=models.SET(anonymize)
     )
-    result = models.ArrayField(models.IntegerField(), size=2)  # TODO: Run migrations
+    result = ArrayField(models.IntegerField(), size=2)
     winner = models.ForeignKey(
         User, related_name="won_matches", on_delete=models.SET(anonymize)
     )
@@ -93,16 +94,7 @@ class Chat(models.Model):
             models.UniqueConstraint(
                 fields=["first_user", "second_user"], name="unique_chat"
             ),
-            models.CheckConstraint(
-                check=models.Q(first_user__lt=models.F("second_user")),
-                name="first_user_lt_second_user",
-            ),
         ]
-
-    def save(self, *args, **kwargs):
-        if self.first_user.id > self.second_user.id:
-            self.first_user, self.second_user = self.second_user, self.first_user
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Chat between {self.first_user} and {self.second_user}"
