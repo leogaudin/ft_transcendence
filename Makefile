@@ -19,4 +19,4 @@ down:
 clean: down
 		@docker system prune -a -f
 
-.PHONY: all attach build down clean
+.PHONY: all attach front back build down clean
