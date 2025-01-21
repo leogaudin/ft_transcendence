@@ -10,7 +10,7 @@
 
     ```javascript
     {
-      "name": "foo",
+      "username": "foo",
       "alias": "bar",
       "password": "baz",
       "email": "foobar@gmail.com",
@@ -22,7 +22,7 @@
     ```javascript
     {
       "id": "x",
-      "name": "foo",
+      "username": "foo",
       "alias": "bar",
       "email": "foobar@gmail.com",
       "wins": "y",
@@ -192,7 +192,7 @@
     - request
     ```javascript
     {
-      "name": "foo",
+      "username": "foo",
     }
     ```
     - return (200)
