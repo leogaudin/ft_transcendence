@@ -52,15 +52,13 @@ def add_message(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 
-def get_message(request):
+def get_message(request, id):
     if request.method != "GET":
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
     try:
-        data = json.loads(request.body)
-        message_id = data.get("id")
-        if not message_id:
+        if not id:
             return JsonResponse({"error": "No ID provided"}, status=400)
-        message = Message.objects.get(id=message_id)
+        message = Message.objects.get(id=id)
         return JsonResponse(
             {
                 "id": message.id,
@@ -69,11 +67,9 @@ def get_message(request):
                 "body": message.body,
             }
         )
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
-    except User.DoesNotExist:
+    except Message.DoesNotExist:
         return JsonResponse(
-            {"error": f"Unable to find message with id {message_id}"}, status=404
+            {"error": f"Unable to find message with id {id}"}, status=404
         )
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)

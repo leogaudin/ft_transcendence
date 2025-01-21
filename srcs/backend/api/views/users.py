@@ -46,12 +46,10 @@ def add_user(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 
-def get_user(request):
+def get_user(request, name):
     if request.method != "GET":
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
     try:
-        data = json.loads(request.body)
-        name = data.get("name")
         if not name:
             return JsonResponse({"error": "No name provided"}, status=400)
         user = User.objects.get(name=name)
@@ -65,8 +63,6 @@ def get_user(request):
                 "losses": user.losses,
             }
         )
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
     except User.DoesNotExist:
         return JsonResponse({"error": f"Unable to find user name {name}"}, status=404)
     except Exception as e:

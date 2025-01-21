@@ -46,15 +46,13 @@ def add_chat(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 
-def get_chat(request):
+def get_chat(request, id):
     if request.method != "GET":
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
     try:
-        data = json.loads(request.body)
-        chat_id = data.get("id")
-        if not chat_id:
+        if not id:
             return JsonResponse({"error": "No ID provided"}, status=400)
-        chat = Chat.objects.get(id=chat_id)
+        chat = Chat.objects.get(id=id)
         return JsonResponse(
             {
                 "id": chat.id,
@@ -63,12 +61,8 @@ def get_chat(request):
                 "created_at": chat.created_at,
             }
         )
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
-    except User.DoesNotExist:
-        return JsonResponse(
-            {"error": f"Unable to find chat with id {chat_id}"}, status=404
-        )
+    except Chat.DoesNotExist:
+        return JsonResponse({"error": f"Unable to find chat with id {id}"}, status=404)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 

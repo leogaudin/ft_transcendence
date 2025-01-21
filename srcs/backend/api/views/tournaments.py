@@ -47,15 +47,13 @@ def add_tournament(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 
-def get_tournament(request):
+def get_tournament(request, id):
     if request.method != "GET":
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
     try:
-        data = json.loads(request.body)
-        name = data.get("name")
-        if not name:
-            return JsonResponse({"error": "No name provided"}, status=400)
-        tournament = Tournament.objects.get(name=name)
+        if not id:
+            return JsonResponse({"error": "No ID provided"}, status=400)
+        tournament = Tournament.objects.get(id=id)
         return JsonResponse(
             {
                 "id": tournament.id,
@@ -64,11 +62,9 @@ def get_tournament(request):
                 "players": [player.alias for player in tournament.players.all()],
             }
         )
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
     except Tournament.DoesNotExist:
         return JsonResponse(
-            {"error": f"Unable to find tournament with name {name}"}, status=404
+            {"error": f"Unable to find tournament with ID {id}"}, status=404
         )
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)

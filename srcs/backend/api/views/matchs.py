@@ -61,15 +61,13 @@ def add_match(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 
-def get_match(request):
+def get_match(request, id):
     if request.method != "GET":
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
     try:
-        data = json.loads(request.body)
-        match_id = data.get("id")
-        if not match_id:
+        if not id:
             return JsonResponse({"error": "No ID provided"}, status=400)
-        match = Match.objects.get(id=match_id)
+        match = Match.objects.get(id=id)
         return JsonResponse(
             {
                 "id": match.id,
@@ -80,12 +78,8 @@ def get_match(request):
                 "loser": match.loser.alias,
             }
         )
-    except json.JSONDecodeError:
-        return JsonResponse({"error": "Invalid JSON"}, status=400)
-    except User.DoesNotExist:
-        return JsonResponse(
-            {"error": f"Unable to find match with id {match_id}"}, status=404
-        )
+    except Match.DoesNotExist:
+        return JsonResponse({"error": f"Unable to find match with id {id}"}, status=404)
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
 
