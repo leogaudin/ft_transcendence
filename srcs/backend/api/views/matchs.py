@@ -66,7 +66,7 @@ def get_match(request):
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
     try:
         data = json.loads(request.body)
-        match_id = data.get("match_id")
+        match_id = data.get("id")
         if not match_id:
             return JsonResponse({"error": "No ID provided"}, status=400)
         match = Match.objects.get(id=match_id)
@@ -95,7 +95,7 @@ def delete_match(request):
         return JsonResponse({"error": "Only DELETE requests are allowed"}, status=405)
     try:
         data = json.loads(request.body)
-        match_id = data.get("match_id")
+        match_id = data.get("id")
         if not match_id:
             return JsonResponse({"error": "All fields are required"}, status=400)
         try:

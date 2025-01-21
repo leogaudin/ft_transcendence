@@ -57,7 +57,7 @@ def get_message(request):
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
     try:
         data = json.loads(request.body)
-        message_id = data.get("message_id")
+        message_id = data.get("id")
         if not message_id:
             return JsonResponse({"error": "No ID provided"}, status=400)
         message = Message.objects.get(id=message_id)
@@ -84,7 +84,7 @@ def delete_message(request):
         return JsonResponse({"error": "Only DELETE requests are allowed"}, status=405)
     try:
         data = json.loads(request.body)
-        message_id = data.get("message_id")
+        message_id = data.get("id")
         if not message_id:
             return JsonResponse({"error": "All fields are required"}, status=400)
         try:

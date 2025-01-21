@@ -79,7 +79,7 @@ def delete_tournament(request):
         return JsonResponse({"error": "Only DELETE requests are allowed"}, status=405)
     try:
         data = json.loads(request.body)
-        tournament_id = data.get("tournament_id")
+        tournament_id = data.get("id")
         if not tournament_id:
             return JsonResponse({"error": "All fields are required"}, status=400)
         try:
