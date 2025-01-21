@@ -16,9 +16,6 @@ urlpatterns = [
     path("delete/match/", views.delete_match, name="delete-match"),
     path("add/tournament/", views.add_tournament, name="add-tournament"),
     path("delete/tournament/", views.delete_tournament, name="delete-tournament"),
-    # TODO:
-    # Make sure these return the ID of the given object
-    # Otherwise it would be impossible to delete them
     path("get/user/", views.get_user, name="get-user"),
     path("get/chat/", views.get_chat, name="get-chat"),
     path("get/message/", views.get_message, name="get-message"),
