@@ -10,18 +10,18 @@ def add_tournament(request):
         data = json.loads(request.body)
         name = data.get("name")
         player_amount = int(data.get("player_amount"))
-        player_aliases = data.get("players")
-        if not all([name, player_amount, player_aliases]):
+        player_usernames = data.get("players")
+        if not all([name, player_amount, player_usernames]):
             return JsonResponse({"error": "All fields are required"}, status=400)
         players = [None] * player_amount
-        for i, player in enumerate(player_aliases):
+        for i, player in enumerate(player_usernames):
             if i >= player_amount:
                 raise Exception("Too many players for the given tournament.")
             try:
-                players[i] = User.objects.get(alias=player_aliases[i])
+                players[i] = User.objects.get(alias=player_usernames[i])
             except User.DoesNotExist:
                 return JsonResponse(
-                    {"error": f"User with alias {player_aliases[i]} does not exist"},
+                    {"error": f"User with alias {player_usernames[i]} does not exist"},
                     status=404,
                 )
         tournament = Tournament.objects.create(
@@ -59,7 +59,7 @@ def get_tournament(request, id):
                 "id": tournament.id,
                 "name": tournament.name,
                 "player_amount": tournament.player_amount,
-                "players": [player.alias for player in tournament.players.all()],
+                "players": [player.username for player in tournament.players.all()],
             }
         )
     except Tournament.DoesNotExist:

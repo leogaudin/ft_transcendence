@@ -15,23 +15,23 @@ def add_message(request):
         return JsonResponse({"error": "Only POST requests are allowed"}, status=405)
     try:
         data = json.loads(request.body)
-        sender_alias = data.get("sender")
-        receiver_alias = data.get("receiver")
+        sender_username = data.get("sender")
+        receiver_username = data.get("receiver")
         body = data.get("body")
-        if not all([sender_alias, receiver_alias, body]):
+        if not all([sender_username, receiver_username, body]):
             return JsonResponse({"error": "All fields are required"}, status=400)
         try:
-            sender = User.objects.get(alias=sender_alias)
+            sender = User.objects.get(username=sender_username)
         except User.DoesNotExist:
             return JsonResponse(
-                {"error": f"User with alias {sender_alias} does not exist"},
+                {"error": f"User with alias {sender_username} does not exist"},
                 status=404,
             )
         try:
-            receiver = User.objects.get(alias=receiver_alias)
+            receiver = User.objects.get(username=receiver_username)
         except User.DoesNotExist:
             return JsonResponse(
-                {"error": f"User with alias {receiver_alias} does not exist"},
+                {"error": f"User with alias {receiver_username} does not exist"},
                 status=404,
             )
         chat = find_chat(sender, receiver)
@@ -40,7 +40,7 @@ def add_message(request):
             {
                 "created": {
                     "id": message.id,
-                    "sender": message.sender.alias,
+                    "sender": message.sender.username,
                     "body": message.body,
                 }
             },

@@ -8,22 +8,22 @@ def add_chat(request):
         return JsonResponse({"error": "Only POST requests are allowed"}, status=405)
     try:
         data = json.loads(request.body)
-        first_user_alias = data.get("first_user")
-        second_user_alias = data.get("second_user")
-        if not all([first_user_alias, second_user_alias]):
+        first_user_username = data.get("first_user")
+        second_user_username = data.get("second_user")
+        if not all([first_user_username, second_user_username]):
             return JsonResponse({"error": "All fields are required"}, status=400)
         try:
-            first_user = User.objects.get(alias=first_user_alias)
+            first_user = User.objects.get(username=first_user_username)
         except User.DoesNotExist:
             return JsonResponse(
-                {"error": f"User with alias {first_user_alias} does not exist"},
+                {"error": f"User with alias {first_user_username} does not exist"},
                 status=404,
             )
         try:
-            second_user = User.objects.get(alias=second_user_alias)
+            second_user = User.objects.get(username=second_user_username)
         except User.DoesNotExist:
             return JsonResponse(
-                {"error": f"User with alias {second_user_alias} does not exist"},
+                {"error": f"User with alias {second_user_username} does not exist"},
                 status=404,
             )
         if first_user.id > second_user.id:
@@ -33,8 +33,8 @@ def add_chat(request):
             {
                 "created": {
                     "id": chat.id,
-                    "first_user": chat.first_user.alias,
-                    "second_user": chat.second_user.alias,
+                    "first_user": chat.first_user.username,
+                    "second_user": chat.second_user.username,
                 }
             },
             status=201,
@@ -56,8 +56,8 @@ def get_chat(request, id):
         return JsonResponse(
             {
                 "id": chat.id,
-                "first_user": chat.first_user.alias,
-                "second_user": chat.second_user.alias,
+                "first_user": chat.first_user.username,
+                "second_user": chat.second_user.username,
                 "created_at": chat.created_at,
             }
         )
@@ -72,22 +72,22 @@ def delete_chat(request):
         return JsonResponse({"error": "Only DELETE requests are allowed"}, status=405)
     try:
         data = json.loads(request.body)
-        first_user_alias = data.get("first_user")
-        second_user_alias = data.get("second_user")
-        if not all([first_user_alias, second_user_alias]):
+        first_user_username = data.get("first_user")
+        second_user_username = data.get("second_user")
+        if not all([first_user_username, second_user_username]):
             return JsonResponse({"error": "All fields are required"}, status=400)
         try:
-            first_user = User.objects.get(alias=first_user_alias)
+            first_user = User.objects.get(username=first_user_username)
         except User.DoesNotExist:
             return JsonResponse(
-                {"error": f"User with alias {first_user_alias} does not exist"},
+                {"error": f"User with alias {first_user_username} does not exist"},
                 status=404,
             )
         try:
-            second_user = User.objects.get(alias=second_user_alias)
+            second_user = User.objects.get(username=second_user_username)
         except User.DoesNotExist:
             return JsonResponse(
-                {"error": f"User with alias {second_user_alias} does not exist"},
+                {"error": f"User with alias {second_user_username} does not exist"},
                 status=404,
             )
 
@@ -98,7 +98,7 @@ def delete_chat(request):
 
         return JsonResponse(
             {
-                "success": f"Chat between {first_user_alias} and {second_user_alias} deleted"
+                "success": f"Chat between {first_user_username} and {second_user_username} deleted"
             },
             status=200,
         )

@@ -7,11 +7,11 @@ from django.contrib.postgres.fields import ArrayField
 
 # Anonymize an user when they're deleted
 def anonymize():
-    return User.objects.get_or_create(name="anonymous")[0]
+    return User.objects.get_or_create(username="anonymous")[0]
 
 
 class User(models.Model):
-    name = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)
     alias = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
@@ -33,8 +33,13 @@ class User(models.Model):
         ],
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["username"], name="unique_user"),
+        ]
+
     def __str__(self):
-        return self.alias
+        return self.username
 
 
 class Tournament(models.Model):

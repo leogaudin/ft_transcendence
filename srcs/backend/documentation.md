@@ -119,14 +119,14 @@
 
 - http://localhost:9000/api/get/: GET request
 
-  - http://localhost:9000/api/get/user/**name**
+  - http://localhost:9000/api/get/user/**username**
 
     - return (200)
 
     ```javascript
     {
       "id": "x",
-      "name": "foo",
+      "username": "foo",
       "alias": "bar",
       "email": "foobar@gmail.com",
       "wins": "y",

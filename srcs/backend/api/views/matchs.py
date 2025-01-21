@@ -8,23 +8,23 @@ def add_match(request):
         return JsonResponse({"error": "Only POST requests are allowed"}, status=405)
     try:
         data = json.loads(request.body)
-        left_player_alias = data.get("left_player")
-        right_player_alias = data.get("right_player")
+        left_player_username = data.get("left_player")
+        right_player_username = data.get("right_player")
         result = data.get("result")
-        if not all([left_player_alias, right_player_alias, result]):
+        if not all([left_player_username, right_player_username, result]):
             return JsonResponse({"error": "All fields are required"}, status=400)
         try:
-            left_player = User.objects.get(alias=left_player_alias)
+            left_player = User.objects.get(username=left_player_username)
         except User.DoesNotExist:
             return JsonResponse(
-                {"error": f"User with alias {left_player_alias} does not exist"},
+                {"error": f"User with username {left_player_username} does not exist"},
                 status=404,
             )
         try:
-            right_player = User.objects.get(alias=right_player_alias)
+            right_player = User.objects.get(username=right_player_username)
         except User.DoesNotExist:
             return JsonResponse(
-                {"error": f"User with alias {right_player_alias} does not exist"},
+                {"error": f"User with alias {right_player_username} does not exist"},
                 status=404,
             )
         # Should a tie be possible?
@@ -45,11 +45,11 @@ def add_match(request):
             {
                 "created": {
                     "id": match.id,
-                    "left_user": match.left_player.alias,
-                    "right_user": match.right_player.alias,
+                    "left_user": match.left_player.username,
+                    "right_user": match.right_player.username,
                     "result": match.result,
-                    "winner": match.winner.alias,
-                    "loser": match.loser.alias,
+                    "winner": match.winner.username,
+                    "loser": match.loser.username,
                 }
             },
             status=201,
@@ -71,11 +71,11 @@ def get_match(request, id):
         return JsonResponse(
             {
                 "id": match.id,
-                "left_player": match.left_player.alias,
-                "right_player": match.right_player.alias,
+                "left_player": match.left_player.username,
+                "right_player": match.right_player.username,
                 "result": match.result,
-                "winner": match.winner.alias,
-                "loser": match.loser.alias,
+                "winner": match.winner.username,
+                "loser": match.loser.username,
             }
         )
     except Match.DoesNotExist:
