@@ -52,6 +52,33 @@ def add_message(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 
+def get_message(request):
+    if request.method != "GET":
+        return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
+    try:
+        data = json.loads(request.body)
+        message_id = data.get("message_id")
+        if not message_id:
+            return JsonResponse({"error": "No ID provided"}, status=400)
+        message = Message.objects.get(id=message_id)
+        return JsonResponse(
+            {
+                "id": message.id,
+                "sender": message.sender.alias,
+                "date": message.date,
+                "body": message.body,
+            }
+        )
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    except User.DoesNotExist:
+        return JsonResponse(
+            {"error": f"Unable to find message with id {message_id}"}, status=404
+        )
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
 def delete_message(request):
     if request.method != "DELETE":
         return JsonResponse({"error": "Only DELETE requests are allowed"}, status=405)

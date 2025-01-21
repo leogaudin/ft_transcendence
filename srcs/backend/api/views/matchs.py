@@ -61,6 +61,35 @@ def add_match(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 
+def get_match(request):
+    if request.method != "GET":
+        return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
+    try:
+        data = json.loads(request.body)
+        match_id = data.get("match_id")
+        if not match_id:
+            return JsonResponse({"error": "No ID provided"}, status=400)
+        match = Match.objects.get(id=match_id)
+        return JsonResponse(
+            {
+                "id": match.id,
+                "left_player": match.left_player.alias,
+                "right_player": match.right_player.alias,
+                "result": match.result,
+                "winner": match.winner.alias,
+                "loser": match.loser.alias,
+            }
+        )
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    except User.DoesNotExist:
+        return JsonResponse(
+            {"error": f"Unable to find match with id {match_id}"}, status=404
+        )
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
 def delete_match(request):
     if request.method != "DELETE":
         return JsonResponse({"error": "Only DELETE requests are allowed"}, status=405)

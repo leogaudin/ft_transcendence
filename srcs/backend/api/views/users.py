@@ -46,9 +46,31 @@ def add_user(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 
-# def get_user(request):
-#     if request.method != "GET":
-#         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
+def get_user(request):
+    if request.method != "GET":
+        return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
+    try:
+        data = json.loads(request.body)
+        name = data.get("name")
+        if not name:
+            return JsonResponse({"error": "No name provided"}, status=400)
+        user = User.objects.get(name=name)
+        return JsonResponse(
+            {
+                "id": user.id,
+                "name": user.name,
+                "alias": user.alias,
+                "email": user.email,
+                "wins": user.wins,
+                "losses": user.losses,
+            }
+        )
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    except User.DoesNotExist:
+        return JsonResponse({"error": f"Unable to find user name {name}"}, status=404)
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
 
 
 def delete_user(request):

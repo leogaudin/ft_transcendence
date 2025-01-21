@@ -46,6 +46,33 @@ def add_chat(request):
         return JsonResponse({"error": str(e)}, status=500)
 
 
+def get_chat(request):
+    if request.method != "GET":
+        return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
+    try:
+        data = json.loads(request.body)
+        chat_id = data.get("id")
+        if not chat_id:
+            return JsonResponse({"error": "No ID provided"}, status=400)
+        chat = Chat.objects.get(id=chat_id)
+        return JsonResponse(
+            {
+                "id": chat.id,
+                "first_user": chat.first_user.alias,
+                "second_user": chat.second_user.alias,
+                "created_at": chat.created_at,
+            }
+        )
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+    except User.DoesNotExist:
+        return JsonResponse(
+            {"error": f"Unable to find chat with id {chat_id}"}, status=404
+        )
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
 def delete_chat(request):
     if request.method != "DELETE":
         return JsonResponse({"error": "Only DELETE requests are allowed"}, status=405)
