@@ -4,6 +4,12 @@ all:
 attach:
 		@docker compose -f ./srcs/docker-compose.yml up --build
 
+front:
+		@docker compose -f ./srcs/docker-compose.yml up frontend --build -d
+
+back:
+		@docker compose -f ./srcs/docker-compose.yml up backend --build -d
+
 build:
 		@docker compose -f ./srcs/docker-compose.yml build
 
