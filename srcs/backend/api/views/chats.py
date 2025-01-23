@@ -31,11 +31,9 @@ def add_chat(request):
         chat = Chat.objects.create(first_user=first_user, second_user=second_user)
         return JsonResponse(
             {
-                "created": {
-                    "id": chat.id,
-                    "first_user": chat.first_user.username,
-                    "second_user": chat.second_user.username,
-                }
+                "id": chat.id,
+                "first_user": chat.first_user.username,
+                "second_user": chat.second_user.username,
             },
             status=201,
         )

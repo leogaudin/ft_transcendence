@@ -43,14 +43,12 @@ def add_match(request):
         )
         return JsonResponse(
             {
-                "created": {
-                    "id": match.id,
-                    "left_user": match.left_player.username,
-                    "right_user": match.right_player.username,
-                    "result": match.result,
-                    "winner": match.winner.username,
-                    "loser": match.loser.username,
-                }
+                "id": match.id,
+                "left_user": match.left_player.username,
+                "right_user": match.right_player.username,
+                "result": match.result,
+                "winner": match.winner.username,
+                "loser": match.loser.username,
             },
             status=201,
         )

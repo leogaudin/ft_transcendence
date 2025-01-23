@@ -31,12 +31,10 @@ def add_tournament(request):
         tournament.players.set(players)
         return JsonResponse(
             {
-                "created": {
-                    "id": tournament.id,
-                    "name": tournament.name,
-                    "player_amount": tournament.player_amount,
-                    "players": [player.alias for player in tournament.players.all()],
-                }
+                "id": tournament.id,
+                "name": tournament.name,
+                "player_amount": tournament.player_amount,
+                "players": [player.alias for player in tournament.players.all()],
             },
             status=201,
         )

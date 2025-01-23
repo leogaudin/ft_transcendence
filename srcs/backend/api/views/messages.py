@@ -38,11 +38,9 @@ def add_message(request):
         message = Message.objects.create(chat=chat, sender=sender, body=body)
         return JsonResponse(
             {
-                "created": {
-                    "id": message.id,
-                    "sender": message.sender.username,
-                    "body": message.body,
-                }
+                "id": message.id,
+                "sender": message.sender.username,
+                "body": message.body,
             },
             status=201,
         )
