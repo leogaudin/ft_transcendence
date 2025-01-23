@@ -61,7 +61,8 @@ def get_user(request, username):
                 "email": user.email,
                 "wins": user.wins,
                 "losses": user.losses,
-            }
+            },
+            status=200,
         )
     except User.DoesNotExist:
         return JsonResponse(
