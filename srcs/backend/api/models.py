@@ -1,16 +1,17 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 
 # Models are classes that contain data
 
 
 # Anonymize an user when they're deleted
 def anonymize():
-    return User.objects.get_or_create(name="anonymous")[0]
+    return User.objects.get_or_create(username="anonymous")[0]
 
 
 class User(models.Model):
-    name = models.CharField(max_length=255)
+    username = models.CharField(max_length=255)
     alias = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
@@ -32,8 +33,13 @@ class User(models.Model):
         ],
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["username"], name="unique_user"),
+        ]
+
     def __str__(self):
-        return self.alias
+        return self.username
 
 
 class Tournament(models.Model):
@@ -58,7 +64,7 @@ class Match(models.Model):
     right_player = models.ForeignKey(
         User, related_name="right_player_matches", on_delete=models.SET(anonymize)
     )
-    result = models.ArrayField(models.IntegerField(), size=2)  # TODO: Run migrations
+    result = ArrayField(models.IntegerField(), size=2)
     winner = models.ForeignKey(
         User, related_name="won_matches", on_delete=models.SET(anonymize)
     )
@@ -93,16 +99,7 @@ class Chat(models.Model):
             models.UniqueConstraint(
                 fields=["first_user", "second_user"], name="unique_chat"
             ),
-            models.CheckConstraint(
-                check=models.Q(first_user__lt=models.F("second_user")),
-                name="first_user_lt_second_user",
-            ),
         ]
-
-    def save(self, *args, **kwargs):
-        if self.first_user.id > self.second_user.id:
-            self.first_user, self.second_user = self.second_user, self.first_user
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Chat between {self.first_user} and {self.second_user}"
