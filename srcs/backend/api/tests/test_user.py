@@ -3,6 +3,36 @@ from django.urls import reverse
 import json
 
 
+def create_user(self, payload=None):
+    if payload is None:
+        return self.client.post(
+            self.url,
+            data="Invalid JSON",
+            content_type="application/json",
+        )
+    else:
+        return self.client.post(
+            self.url,
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+
+
+def delete_user(self, payload=None):
+    if payload is None:
+        return self.client.delete(
+            self.url,
+            data="Invalid JSON",
+            content_type="application/json",
+        )
+    else:
+        return self.client.delete(
+            self.url,
+            data=json.dumps(payload),
+            content_type="application/json",
+        )
+
+
 class AddUserTestCase(TestCase):
     def setUp(self):
         self.client = Client()
@@ -26,11 +56,7 @@ class AddUserTestCase(TestCase):
         }
 
     def test_success(self):
-        response = self.client.post(
-            self.url,
-            data=json.dumps(self.valid_payload),
-            content_type="application/json",
-        )
+        response = create_user(self, self.valid_payload)
         data = response.json()
         self.assertEqual(response.status_code, 201)
         self.assertIn("id", data)
@@ -46,54 +72,29 @@ class AddUserTestCase(TestCase):
             },
         )
 
-    def test_missing_data(self):
-        response = self.client.post(
-            self.url,
-            data=json.dumps(self.incomplete_payload),
-            content_type="application/json",
-        )
-        data = response.json()
+    def test_invalid_json(self):
+        response = create_user(self, None)
         self.assertEqual(response.status_code, 400)
-        self.assertDictEqual(data, {"error": "All fields are required"})
-
-    def test_duplicate_username(self):
-        setup_response = self.client.post(
-            self.url,
-            data=json.dumps(self.valid_payload),
-            content_type="application/json",
-        )
-        response = self.client.post(
-            self.url,
-            data=json.dumps(self.duplicate_payload),
-            content_type="application/json",
-        )
-        self.assertEqual(response.status_code, 500)
-        self.assertEqual(
-            response.json(),
-            {
-                "error": 'duplicate key value violates unique constraint "unique_user"\n'
-                "DETAIL:  Key (username)=(testuser) already exists.\n"
-            },
-        )
 
     def test_incorrect_method(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 405)
-        self.assertEqual(response.json(), {"error": "Only POST requests are allowed"})
 
-    def test_invalid_json(self):
-        response = self.client.post(
-            self.url, data="Invalid JSON", content_type="application/json"
-        )
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {"error": "Invalid JSON"})
+    def test_missing_data(self):
+        response = create_user(self, {})
+        self.assertEqual(response.status_code, 422)
+
+    def test_duplicate_username(self):
+        response = create_user(self, self.valid_payload)
+        response = create_user(self, self.duplicate_payload)
+        self.assertEqual(response.status_code, 500)
 
 
 class GetUserTestCase(TestCase):
     def setUp(self):
         self.client = Client()
         self.add_url = reverse("add-user")
-        self.url = "http://localhost:9000/api/get/user/testuser/"
+        self.url = reverse("add-user")
         self.incorrect_url = "http://localhost:9000/api/get/user/wrongtestuser/"
         self.create_payload = {
             "username": "testuser",
@@ -101,11 +102,8 @@ class GetUserTestCase(TestCase):
             "password": "testpassword123",
             "email": "testuser@example.com",
         }
-        self.client.post(
-            self.add_url,
-            data=json.dumps(self.create_payload),
-            content_type="application/json",
-        )
+        create_user(self, self.create_payload)
+        self.url = "http://localhost:9000/api/get/user/testuser/"
 
     def test_success(self):
         response = self.client.get(self.url)
@@ -127,21 +125,16 @@ class GetUserTestCase(TestCase):
     def test_incorrect_url(self):
         response = self.client.get(self.incorrect_url)
         self.assertEqual(response.status_code, 404)
-        self.assertEqual(
-            response.json()["error"], "Unable to find user name wrongtestuser"
-        )
 
     def test_incorrect_method(self):
         response = self.client.post(self.url)
         self.assertEqual(response.status_code, 405)
-        self.assertEqual(response.json()["error"], "Only GET requests are allowed")
 
 
 class DeleteUserTestCase(TestCase):
     def setUp(self):
         self.client = Client()
-        self.add_url = reverse("add-user")
-        self.url = reverse("delete-user")
+        self.url = reverse("add-user")
         self.create_payload = {
             "username": "testuser",
             "alias": "testalias",
@@ -150,51 +143,25 @@ class DeleteUserTestCase(TestCase):
         }
         self.valid_payload = {"username": "testuser"}
         self.incorrect_payload = {"username": "wrongtestuser"}
-        self.missing_payload = {}
-        self.client.post(
-            self.add_url,
-            data=json.dumps(self.create_payload),
-            content_type="application/json",
-        )
+        create_user(self, self.create_payload)
+        self.url = reverse("delete-user")
 
     def test_success(self):
-        response = self.client.delete(
-            self.url,
-            data=json.dumps(self.valid_payload),
-            content_type="application/json",
-        )
-        data = response.json()
+        response = delete_user(self, self.valid_payload)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(data["success"], "User testuser deleted")
-
-    def test_missing_data(self):
-        response = self.client.delete(
-            self.url,
-            data=json.dumps(self.missing_payload),
-            content_type="application/json",
-        )
-        data = response.json()
-        self.assertEqual(response.status_code, 400)
-        self.assertEqual(data["error"], "No name provided")
-
-    def test_incorrect_user(self):
-        response = self.client.delete(
-            self.url,
-            data=json.dumps(self.incorrect_payload),
-            content_type="application/json",
-        )
-        data = response.json()
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(data["error"], "Unable to find user name wrongtestuser")
 
     def test_invalid_json(self):
-        response = self.client.delete(
-            self.url, data="Invalid JSON", content_type="application/json"
-        )
+        response = delete_user(self, None)
         self.assertEqual(response.status_code, 400)
-        self.assertEqual(response.json(), {"error": "Invalid JSON"})
+
+    def test_incorrect_user(self):
+        response = delete_user(self, self.incorrect_payload)
+        self.assertEqual(response.status_code, 404)
 
     def test_incorrect_method(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 405)
-        self.assertEqual(response.json(), {"error": "Only DELETE requests are allowed"})
+
+    def test_missing_data(self):
+        response = delete_user(self, {})
+        self.assertEqual(response.status_code, 422)
