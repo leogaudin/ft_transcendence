@@ -20,8 +20,8 @@ clean: down
 		@docker system prune -a -f
 
 test:
-		@docker exec -it back python manage.py test --parallel --shuffle --failfast --buffer | grep -v "database for alias"
+		@docker exec -it back python manage.py test --parallel --shuffle --failfast --buffer
 testall:
-		@docker exec -it back python manage.py test --parallel --shuffle --buffer | grep -v "database for alias"
+		@docker exec -it back python manage.py test --parallel --shuffle --buffer
 
 .PHONY: all attach front back build down clean test testall
