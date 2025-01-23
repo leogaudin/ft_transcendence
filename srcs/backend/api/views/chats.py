@@ -11,7 +11,7 @@ def add_chat(request):
         first_user_username = data.get("first_user")
         second_user_username = data.get("second_user")
         if not all([first_user_username, second_user_username]):
-            return JsonResponse({"error": "All fields are required"}, status=400)
+            return JsonResponse({"error": "All fields are required"}, status=422)
         try:
             first_user = User.objects.get(username=first_user_username)
         except User.DoesNotExist:
@@ -49,7 +49,7 @@ def get_chat(request, id):
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
     try:
         if not id:
-            return JsonResponse({"error": "No ID provided"}, status=400)
+            return JsonResponse({"error": "No ID provided"}, status=422)
         chat = Chat.objects.get(id=id)
         return JsonResponse(
             {
@@ -57,7 +57,8 @@ def get_chat(request, id):
                 "first_user": chat.first_user.username,
                 "second_user": chat.second_user.username,
                 "created_at": chat.created_at,
-            }
+            },
+            status=200,
         )
     except Chat.DoesNotExist:
         return JsonResponse({"error": f"Unable to find chat with id {id}"}, status=404)
@@ -73,7 +74,7 @@ def delete_chat(request):
         first_user_username = data.get("first_user")
         second_user_username = data.get("second_user")
         if not all([first_user_username, second_user_username]):
-            return JsonResponse({"error": "All fields are required"}, status=400)
+            return JsonResponse({"error": "All fields are required"}, status=422)
         try:
             first_user = User.objects.get(username=first_user_username)
         except User.DoesNotExist:

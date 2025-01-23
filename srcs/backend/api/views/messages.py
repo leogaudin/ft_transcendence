@@ -19,7 +19,7 @@ def add_message(request):
         receiver_username = data.get("receiver")
         body = data.get("body")
         if not all([sender_username, receiver_username, body]):
-            return JsonResponse({"error": "All fields are required"}, status=400)
+            return JsonResponse({"error": "All fields are required"}, status=422)
         try:
             sender = User.objects.get(username=sender_username)
         except User.DoesNotExist:
@@ -55,15 +55,16 @@ def get_message(request, id):
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
     try:
         if not id:
-            return JsonResponse({"error": "No ID provided"}, status=400)
+            return JsonResponse({"error": "No ID provided"}, status=422)
         message = Message.objects.get(id=id)
         return JsonResponse(
             {
                 "id": message.id,
-                "sender": message.sender.alias,
+                "sender": message.sender.username,
                 "date": message.date,
                 "body": message.body,
-            }
+            },
+            status=200,
         )
     except Message.DoesNotExist:
         return JsonResponse(
@@ -80,13 +81,12 @@ def delete_message(request):
         data = json.loads(request.body)
         message_id = data.get("id")
         if not message_id:
-            return JsonResponse({"error": "All fields are required"}, status=400)
+            return JsonResponse({"error": "All fields are required"}, status=422)
         try:
             message = Message.objects.get(id=message_id)
         except Message.DoesNotExist:
             return JsonResponse(
-                {"error": f"Message with id {message_id} does not exist"},
-                status=404,
+                {"error": f"Message with id {message_id} does not exist"}, status=404
             )
         message.delete()
 

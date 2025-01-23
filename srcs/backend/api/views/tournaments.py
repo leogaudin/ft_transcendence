@@ -12,7 +12,7 @@ def add_tournament(request):
         player_amount = int(data.get("player_amount"))
         player_usernames = data.get("players")
         if not all([name, player_amount, player_usernames]):
-            return JsonResponse({"error": "All fields are required"}, status=400)
+            return JsonResponse({"error": "All fields are required"}, status=422)
         players = [None] * player_amount
         for i, player in enumerate(player_usernames):
             if i >= player_amount:
@@ -50,7 +50,7 @@ def get_tournament(request, id):
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
     try:
         if not id:
-            return JsonResponse({"error": "No ID provided"}, status=400)
+            return JsonResponse({"error": "No ID provided"}, status=422)
         tournament = Tournament.objects.get(id=id)
         return JsonResponse(
             {
@@ -58,7 +58,8 @@ def get_tournament(request, id):
                 "name": tournament.name,
                 "player_amount": tournament.player_amount,
                 "players": [player.username for player in tournament.players.all()],
-            }
+            },
+            status=200,
         )
     except Tournament.DoesNotExist:
         return JsonResponse(
@@ -75,7 +76,7 @@ def delete_tournament(request):
         data = json.loads(request.body)
         tournament_id = data.get("id")
         if not tournament_id:
-            return JsonResponse({"error": "All fields are required"}, status=400)
+            return JsonResponse({"error": "All fields are required"}, status=422)
         try:
             tournament = Tournament.objects.get(id=tournament_id)
         except Tournament.DoesNotExist:

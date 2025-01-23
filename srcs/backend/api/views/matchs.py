@@ -12,7 +12,7 @@ def add_match(request):
         right_player_username = data.get("right_player")
         result = data.get("result")
         if not all([left_player_username, right_player_username, result]):
-            return JsonResponse({"error": "All fields are required"}, status=400)
+            return JsonResponse({"error": "All fields are required"}, status=422)
         try:
             left_player = User.objects.get(username=left_player_username)
         except User.DoesNotExist:
@@ -64,7 +64,7 @@ def get_match(request, id):
         return JsonResponse({"error": "Only GET requests are allowed"}, status=405)
     try:
         if not id:
-            return JsonResponse({"error": "No ID provided"}, status=400)
+            return JsonResponse({"error": "No ID provided"}, status=422)
         match = Match.objects.get(id=id)
         return JsonResponse(
             {
@@ -74,7 +74,8 @@ def get_match(request, id):
                 "result": match.result,
                 "winner": match.winner.username,
                 "loser": match.loser.username,
-            }
+            },
+            status=200,
         )
     except Match.DoesNotExist:
         return JsonResponse({"error": f"Unable to find match with id {id}"}, status=404)
@@ -89,7 +90,7 @@ def delete_match(request):
         data = json.loads(request.body)
         match_id = data.get("id")
         if not match_id:
-            return JsonResponse({"error": "All fields are required"}, status=400)
+            return JsonResponse({"error": "All fields are required"}, status=422)
         try:
             match = Match.objects.get(id=match_id)
         except Match.DoesNotExist:
