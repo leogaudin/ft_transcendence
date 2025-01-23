@@ -20,6 +20,6 @@ clean: down
 		@docker system prune -a -f
 
 test:
-		@docker exec -it back python manage.py test
+		@docker exec -it back python manage.py test --parallel --shuffle --failfast --buffer
 
 .PHONY: all attach front back build down clean test
