@@ -19,4 +19,7 @@ down:
 clean: down
 		@docker system prune -a -f
 
-.PHONY: all attach front back build down clean
+test:
+		@docker exec -it back python manage.py test
+
+.PHONY: all attach front back build down clean test
