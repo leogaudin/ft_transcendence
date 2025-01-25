@@ -4,6 +4,16 @@ from .views import UserCreateView, UserListView, UserDetailView, UserDeleteView
 # Here we define the different urls our api has
 # Each path needs a route, a function that will be called, and a name to identify it
 
+# For the URLS to be REST appropiate, they should work in the following way:
+# users/ with GET retrieves all users
+# users/ with POST creates a new user
+# for these two ^ use ListCreateAPIView in one url path / view
+# users/<slug>/ with GET retrieves that user
+# users/<slug>/ with DELETE deletes that user
+# users/<slug>/ with PUT updates the whole user
+# users/<slug>/ with PATCH updates the user in the given field
+# for these four ^ use RetrieveUpdateDestroyAPIView in one path / view
+
 urlpatterns = [
     path("users/", UserListView.as_view(), name="user-list"),
     path("users/", UserCreateView.as_view(), name="user-create"), # Change to "users/create/" or something
