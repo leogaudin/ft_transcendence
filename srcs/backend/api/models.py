@@ -1,11 +1,8 @@
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.postgres.fields import ArrayField
 
-# Models are classes that contain data
 
-
-# Anonymize an user when they're deleted
 def anonymize():
     return User.objects.get_or_create(username="anonymous")[0]
 
