@@ -6,7 +6,7 @@ from .views import UserCreateView, UserListView, UserDetailView, UserDeleteView
 
 urlpatterns = [
     path("users/", UserListView.as_view(), name="user-list"),
-    path("users/", UserCreateView.as_view(), name="user-create"),
+    path("users/", UserCreateView.as_view(), name="user-create"), # Change to "users/create/" or something
     path("users/<str:username>/", UserDetailView.as_view(), name="user-detail"),
     path("users/<str:username>/delete/", UserDeleteView.as_view(), name="user-delete"),
     # path("", views.default, name="default"),
