@@ -1,31 +1,16 @@
-from rest_framework.generics import (
-    CreateAPIView,
-    ListAPIView,
-    RetrieveAPIView,
-    DestroyAPIView,
-)
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
 
 from ..models import User
 from ..serializers import UserSerializer
 
 
-class UserCreateView(CreateAPIView):
+class ListCreateUsersView(ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
 
-class UserListView(ListAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class UserDetailView(RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    lookup_field = "username"
-
-
-class UserDeleteView(DestroyAPIView):
+class RetrieveUpdateDestroyUsersView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     lookup_field = "username"

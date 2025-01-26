@@ -8,13 +8,13 @@ def anonymize():
 
 
 class User(models.Model):
-    username = models.CharField(max_length=255)
+    username = models.CharField(max_length=255, unique=True)
     alias = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     # avatar = models.ImageField(upload_to="avatars/") # This needs "Pillow" to be installed
     friends = models.ManyToManyField("self", blank=True, symmetrical=True)
-    created = models.DateField(auto_now=True)
+    created = models.DateTimeField(auto_now_add=True)
     is_online = models.BooleanField(default=False)
     last_login = models.DateTimeField(auto_now=True)
     wins = models.IntegerField(
@@ -29,11 +29,6 @@ class User(models.Model):
             MinValueValidator(0),
         ],
     )
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=["username"], name="unique_user"),
-        ]
 
     def __str__(self):
         return self.username
