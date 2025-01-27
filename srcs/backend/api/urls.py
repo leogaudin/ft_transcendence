@@ -18,9 +18,7 @@ urlpatterns = [
         views.RetrieveUpdateDestroyChatsView.as_view(),
         name="chat-retrieve-update-destroy",
     ),
-    path(
-        "messages/", views.ListCreateMessagesView.as_view(), name="message-list-create"
-    ),
+    path("messages/", views.ListCreateMessagesView.as_view(), name="message-list-create"),
     path(
         "messages/<int:id>/",
         views.RetrieveUpdateDestroyMessagesView.as_view(),

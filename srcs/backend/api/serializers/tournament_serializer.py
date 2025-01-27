@@ -3,9 +3,7 @@ from ..models import Tournament, User
 
 
 class TournamentSerializer(serializers.ModelSerializer):
-    players = serializers.SlugRelatedField(
-        many=True, queryset=User.objects.all(), slug_field="username"
-    )
+    players = serializers.SlugRelatedField(many=True, queryset=User.objects.all(), slug_field="username")
 
     class Meta:
         model = Tournament
