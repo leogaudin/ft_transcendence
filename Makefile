@@ -24,4 +24,14 @@ test:
 testall:
 		@docker exec -it back python manage.py test --parallel --shuffle --buffer
 
-.PHONY: all attach front back build down clean test testall
+repopulate:
+		@docker exec -it back python manage.py mockup
+
+
+reset:
+		@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
+		@docker exec -it back python manage.py hard_reset
+		@echo -n "Repopulate with mockup data? [y/N] " && read ans && [ $${ans:-N} = y ]
+		@make repopulate
+
+.PHONY: all attach front back build down clean test testall repopulate reset
