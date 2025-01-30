@@ -1,29 +1,50 @@
+@font-face {
+    font-family: "Stgotic W00 Regular";
+    src: url("../resources/fonts/StgoticW00Regular/WebFonts/7f2601fe8fb9981900a68f043ba3e86b.woff") format("woff"),
+	url("../resources/fonts/StgoticW00Regular/Stgotic\ W00\ Regular.ttf") format("truetype");
+	font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+	font-family: "Pixel Operator";
+	src: url("../resources/fonts/pixel_operator/PixelOperator.ttf") format("truetype");
+	font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+	font-family: "Perfect DOS VGA";
+	src: url("../resources/fonts/perfect_dos_vga_437/Perfect\ DOS\ VGA\ 437\ Win.ttf") format("truetype");
+	font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+	--accent-pink: #FEE0EF;
+	--dark-pink: #D087AB;
+	--back-purple: #3B0034;
+	--dark-purple: #54184D;
+	--dark-blue: #360066;
+	--violet: #522B66;
+}
+
 body {
 	margin: 0;
-	font:normal 75% Arial, Helvetica, sans-serif;
+	font-family: "Perfect DOS VGA";
+	color: var(--accent-pink);
 }
   
 canvas {
 	display: block;
 }
-
-/* .charm-regular {
-	font-family: "Charm", serif;
-	font-weight: 400;
-	font-style: normal;
-}
-  
-  .charm-bold {
-	font-family: "Charm", serif;
-	font-weight: 700;
-	font-style: normal;
-} */
   
 #particles-js {
 	position: absolute;
 	width: 100%;
 	height: 100%;
-	background: linear-gradient(90deg, rgba(59,0,52,1) 0%, rgba(84,24,77,1) 50%, rgba(59,0,52,1) 100%);	background-repeat: no-repeat;
+	background: linear-gradient(90deg, var(--back-purple) 0%, var(--dark-purple) 50%, var(--back-purple) 100%);
+	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: 50% 50%;
 }
@@ -39,17 +60,19 @@ canvas {
 	left: 50%;
 	transform: translate(-50%, -50%);
 	border-radius: 15px;
-	background-color: #360066;
-	box-shadow: #522B66 0px 0px 20px;
+	background-color: var(--dark-blue);
+	box-shadow: var(--violet) 0px 0px 20px;
 }
 
 #header-section {
+	width: 100%;
 	height: 20%;
 	padding: 10px;
 }
 
 #profile-settings {
 	margin-left: 25px;
+	transition: box-shadow 250ms ease-in-out;
 }
 
 #body-section {
@@ -63,16 +86,27 @@ canvas {
 }
 
 #explanation {
-	background-color: pink;
+	text-align: center;
+	background-color: var(--dark-pink);
 	width: 30%;
 	border-radius: 15px;
+	color: white;
+	box-shadow: #3b00345d 0px 5px 5px;
+	padding: 10px;
 }
 
 .page-option {
-	background-color: blue;
+	background-color: var(--violet);
 	border-radius: 15px;
 	margin: 10px 0;
 	font-size: xx-large;
+	box-shadow: #3b00345d 0px 5px 5px;
+	transition: box-shadow 500ms ease-in-out;
+}
+
+.page-option:hover, #profile-settings:hover {
+	cursor: pointer;
+	box-shadow: var(--accent-pink) 0px 0px 10px;
 }
 
 
@@ -91,8 +125,7 @@ canvas {
 }
 
 h1 {
-	font-family: "Charm", serif;
-	font-weight: 700;
-	font-style: normal;
-	/* font-size: xx-larger; */
+	font-family: "Stgotic W00 Regular", serif;
+	font-size: 25px;
+	color: white;
 }
