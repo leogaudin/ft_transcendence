@@ -78,6 +78,7 @@ canvas {
 
 #page-selector {
 	margin-right: 10px;
+	padding-right: 15px;
 	width: 65%;
 }
 
@@ -99,6 +100,7 @@ canvas {
 	display: flex;
 	font-size: xx-large;
 	justify-content: center;
+	margin: 5px;
 	transition: box-shadow 350ms ease-in-out;
 }
 

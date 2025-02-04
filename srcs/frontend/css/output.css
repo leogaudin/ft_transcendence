@@ -551,13 +551,8 @@
   .gap-4 {
     gap: calc(var(--spacing) * 4);
   }
-  .md\:aspect-21\/9 {
+  .md\:grid-cols-2 {
     @media (width >= 48rem) {
-      aspect-ratio: 21/9;
-    }
-  }
-  .lg\:grid-cols-2 {
-    @media (width >= 64rem) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
@@ -629,6 +624,7 @@ canvas {
 }
 #page-selector {
   margin-right: 10px;
+  padding-right: 15px;
   width: 65%;
 }
 #explanation {
@@ -648,6 +644,7 @@ canvas {
   display: flex;
   font-size: xx-large;
   justify-content: center;
+  margin: 5px;
   transition: box-shadow 350ms ease-in-out;
 }
 .page-option:hover, #profile-settings:hover {
