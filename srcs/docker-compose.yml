@@ -10,9 +10,6 @@ services:
     networks:
       - transcendence
   backend:
-    depends_on:
-      db:
-        condition: service_healthy
     build:
       context: backend
     container_name: back
@@ -21,29 +18,11 @@ services:
     env_file:
       - .env
     volumes:
-      - ./backend:/transcendence
-    networks:
-      - transcendence
-  db:
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
-      interval: 3s
-      timeout: 3s
-      retries: 5
-    build:
-      context: database
-    container_name: db
-    ports:
-      - "5432:5432"
-    env_file:
-      - .env
-    volumes:
-      - /home/$USER/data/postgres_data:/var/lib/postgresql/data
+      - ./backend:/usr/transcendence
     networks:
       - transcendence
 volumes:
   frontend:
   backend:
-  db:
 networks:
   transcendence:
