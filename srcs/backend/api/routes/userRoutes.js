@@ -4,7 +4,7 @@ import {
   getUsers,
   putUser,
   deleteUser,
-} from "./userModel.js";
+} from "../models/userModel.js";
 
 const asyncHandler = (fn) => async (req, res) => {
   try {
