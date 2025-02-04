@@ -1,13 +1,6 @@
 @import "tailwindcss";
 
 @font-face {
-	font-family: "Pixel Operator";
-	src: url("../resources/fonts/pixel_operator/PixelOperator.ttf") format("truetype");
-	font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
 	font-family: "Perfect DOS VGA";
 	src: url("../resources/fonts/perfect_dos_vga_437/Perfect\ DOS\ VGA\ 437\ Win.ttf") format("truetype");
 	font-weight: normal;
@@ -50,15 +43,19 @@ canvas {
 	background-position: 50% 50%;
 }
 
+#visual-div {
+	min-height: 100vh;
+}
+
 #home-page {
-	max-width: 1350px;
-	width: 85%;
-	padding: 25px;
-	z-index: 1;
-	margin: 10vh 5vw;
-	border-radius: 15px;
 	background-color: var(--dark-blue);
+	border-radius: 15px;
 	box-shadow: var(--violet) 0px 0px 20px;
+	margin: 10vh 5vw;
+	max-width: 1350px;
+	padding: 25px;
+	width: 85%;
+	z-index: 1;
 }
 
 #header-section {
@@ -68,6 +65,7 @@ canvas {
 }
 
 #profile-settings {
+	border-radius: 50%;
 	margin-left: 25px;
 	max-height: 100px;
 	max-width: 100px;
@@ -79,33 +77,34 @@ canvas {
 }
 
 #page-selector {
-	width: 70%;
 	margin-right: 10px;
+	width: 65%;
 }
 
 #explanation {
-	text-align: center;
 	background-color: var(--dark-pink);
-	width: 30%;
 	border-radius: 15px;
-	color: white;
 	box-shadow: #3b00345d 0px 5px 5px;
+	color: white;
 	padding: 10px;
+	text-align: center;
+	width: 35%;
 }
 
 .page-option {
-	width: 100%;
+	align-items: center;
 	background-color: var(--violet);
 	border-radius: 15px;
-	margin: 10px 0;
-	font-size: xx-large;
 	box-shadow: #3b00345d 0px 5px 5px;
+	display: flex;
+	font-size: xx-large;
+	justify-content: center;
 	transition: box-shadow 350ms ease-in-out;
 }
 
 .page-option:hover, #profile-settings:hover {
-	cursor: pointer;
 	box-shadow: var(--accent-pink) 0px 0px 10px;
+	cursor: pointer;
 }
 
 
@@ -120,6 +119,9 @@ canvas {
 	#explanation {
 		width: 100%;
 		height: auto;
+	}
+	.page-option {
+		aspect-ratio: auto;
 	}
 }
 
