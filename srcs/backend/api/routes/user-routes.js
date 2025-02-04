@@ -4,7 +4,7 @@ import {
   getUsers,
   putUser,
   deleteUser,
-} from "../models/userModel.js";
+} from "../models/user-model.js";
 
 const asyncHandler = (fn) => async (req, res) => {
   try {
@@ -23,7 +23,7 @@ const validateUserInput = (req, res) => {
   return true;
 };
 
-const routes = [
+const user_routes = [
   {
     method: "GET",
     url: "/users",
@@ -76,4 +76,4 @@ const routes = [
   },
 ];
 
-export default routes;
+export default user_routes;

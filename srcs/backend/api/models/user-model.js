@@ -1,4 +1,4 @@
-import { db } from "../database.js";
+import db from "../database.js";
 
 export function createUser(username, email, password) {
   return new Promise((resolve, reject) => {

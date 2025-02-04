@@ -1,6 +1,6 @@
 import sqlite3 from "sqlite3";
 
-export const db = new sqlite3.Database("transcendence.db", (err) => {
+const db = new sqlite3.Database("transcendence.db", (err) => {
   if (err) {
     return console.error("Error opening the database:", err.message);
   }
@@ -24,3 +24,5 @@ db.serialize(() => {
     },
   );
 });
+
+export default db;
