@@ -1,6 +1,32 @@
+@import "tailwindcss";
+
+@font-face {
+	font-family: "Perfect DOS VGA";
+	src: url("../resources/fonts/perfect_dos_vga_437/Perfect\ DOS\ VGA\ 437\ Win.ttf") format("truetype");
+	font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+	font-family: "Alagard";
+	src: url("../resources/fonts/alagard.ttf") format("truetype");
+	font-weight: normal;
+    font-style: normal;
+}
+
+:root {
+	--accent-pink: #FEE0EF;
+	--dark-pink: #D087AB;
+	--back-purple: #3B0034;
+	--dark-purple: #54184D;
+	--dark-blue: #360066;
+	--violet: #522B66;
+}
+
 body {
 	margin: 0;
-	font:normal 75% Arial, Helvetica, sans-serif;
+	font-family: "Perfect DOS VGA";
+	color: var(--accent-pink);
 }
   
 canvas {
@@ -8,24 +34,100 @@ canvas {
 }
   
 #particles-js {
-	position: absolute;
+	position: fixed;
 	width: 100%;
 	height: 100%;
-	background: linear-gradient(90deg, rgba(59,0,52,1) 0%, rgba(84,24,77,1) 50%, rgba(59,0,52,1) 100%);	background-repeat: no-repeat;
+	background: linear-gradient(90deg, var(--back-purple) 0%, var(--dark-purple) 50%, var(--back-purple) 100%);
+	background-repeat: no-repeat;
 	background-size: cover;
 	background-position: 50% 50%;
 }
 
+#visual-div {
+	min-height: 100vh;
+}
+
 #home-page {
-	position: absolute;
-	width: 85vw;
-	height: 75vh;
-	padding: 25px;
-	z-index: 1;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+	background-color: var(--dark-blue);
 	border-radius: 15px;
-	background-color: #360066;
-	box-shadow: #522B66 0px 0px 20px;
+	box-shadow: var(--violet) 0px 0px 20px;
+	margin: 10vh 5vw;
+	max-width: 1350px;
+	padding: 25px;
+	width: 85%;
+	z-index: 1;
+}
+
+#header-section {
+	width: 100%;
+	padding: 10px;
+	margin: 10px;
+}
+
+#profile-settings {
+	border-radius: 50%;
+	margin-left: 25px;
+	max-height: 100px;
+	max-width: 100px;
+	transition: box-shadow 350ms ease-in-out;
+}
+
+#body-section {
+	flex: 1;
+}
+
+#page-selector {
+	margin-right: 10px;
+	padding-right: 15px;
+	width: 65%;
+}
+
+#explanation {
+	background-color: var(--dark-pink);
+	border-radius: 15px;
+	box-shadow: #3b00345d 0px 5px 5px;
+	color: white;
+	padding: 10px;
+	text-align: center;
+	width: 35%;
+}
+
+.page-option {
+	align-items: center;
+	background-color: var(--violet);
+	border-radius: 15px;
+	box-shadow: #3b00345d 0px 5px 5px;
+	display: flex;
+	font-size: xx-large;
+	justify-content: center;
+	margin: 5px;
+	transition: box-shadow 350ms ease-in-out;
+}
+
+.page-option:hover, #profile-settings:hover {
+	box-shadow: var(--accent-pink) 0px 0px 10px;
+	cursor: pointer;
+}
+
+
+@media only screen and (max-width: 767px) {
+	#body-section {
+		flex-direction: column;
+	}
+	#page-selector {
+		width: 100%;
+		height: auto;
+	}
+	#explanation {
+		width: 100%;
+		height: auto;
+	}
+	.page-option {
+		aspect-ratio: auto;
+	}
+}
+
+h1 {
+	font-family: "Alagard", serif;
+	color: white;
 }
