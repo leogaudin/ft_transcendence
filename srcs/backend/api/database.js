@@ -14,7 +14,7 @@ db.serialize(() => {
     CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL UNIQUE,
-    alias TEXT NOT NULL,
+    alias TEXT,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -32,10 +32,11 @@ db.serialize(() => {
   );
   db.run(
     `
-    CREATE TABLE IF NOT EXISTS user_friends(
+    CREATE TABLE IF NOT EXISTS user_friends (
     user_id INTEGER NOT NULL,
     friend_id INTEGER NOT NULL,
     PRIMARY KEY (user_id, friend_id),
+    UNIQUE (user_id, friend_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (friend_id) REFERENCES users(id)
     )`,

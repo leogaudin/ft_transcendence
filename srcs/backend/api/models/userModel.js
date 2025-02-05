@@ -16,15 +16,15 @@ export function getUsers() {
 
 export function createUser(data) {
   return new Promise((resolve, reject) => {
-    const sql = "INSERT INTO users (username, email, password) VALUES (?,?,?)";
-    const params = data;
+    const sql = `INSERT INTO users (username, email, password) VALUES (?,?,?)`;
+    const params = [data.username, data.email, data.password];
 
     db.run(sql, params, function (err) {
       if (err) {
         console.error("Error inserting user:", err.message);
         return reject(err);
       }
-      resolve({ id: this.lastID, username, email });
+      resolve({ id: this.lastID, username: data.username, email: data.email });
     });
   });
 }
@@ -43,14 +43,14 @@ export function getUserByID(id) {
   });
 }
 
-export function putUser(id, username, email, password) {
+export function putUser(id, data) {
   return new Promise((resolve, reject) => {
     const sql = `
       UPDATE users
       SET username = ?, email = ?, password = ?
       WHERE id = ?
     `;
-    const params = [username, email, password, id];
+    const params = [data.username, data.email, data.password, id];
     db.run(sql, params, function (err) {
       if (err) {
         console.error("Error updating user:", err.message);
@@ -59,7 +59,7 @@ export function putUser(id, username, email, password) {
       if (this.changes === 0) {
         return reject(new Error("User not found"));
       }
-      resolve({ id, username, email });
+      resolve(getUserByID(id));
     });
   });
 }
