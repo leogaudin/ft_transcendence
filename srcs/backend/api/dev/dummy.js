@@ -11,7 +11,7 @@
       password: "foopassword",
     }),
   });
-  console.log(res);
+  console.log(res.status);
   res = await fetch("http://localhost:9000/users", {
     method: "POST",
     headers: {
@@ -23,7 +23,7 @@
       password: "barpassword",
     }),
   });
-  console.log(res);
+  console.log(res.status);
   res = await fetch("http://localhost:9000/users", {
     method: "POST",
     headers: {
@@ -35,5 +35,5 @@
       password: "bazpassword",
     }),
   });
-  console.log(res);
+  console.log(res.status);
 })();
