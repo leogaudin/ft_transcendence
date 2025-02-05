@@ -28,7 +28,7 @@ reset:
 		@docker compose -f ./srcs/docker-compose.yml stop backend
 		@rm -f ./srcs/backend/transcendence.db
 		@echo -n "Repopulate with mockup data? [y/N] " && read ans && [ $${ans:-N} = y ]
-		@make back && sleep 1
+		@make back && sleep 3
 		@make repopulate
 
 
