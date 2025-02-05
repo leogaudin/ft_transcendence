@@ -1,22 +1,22 @@
-// import { asyncHandler } from "./routes.js";
-// import {
-//   createMatch,
-//   getMatchByID,
-//   getMatches,
-//   putMatch,
-//   patchMatch,
-//   deleteMatch,
-// } from "../models/match-model.js";
+import { asyncHandler, validateInput } from "../utils.js";
+import {
+  getMatches,
+  //   createMatch,
+  //   getMatchByID,
+  //   putMatch,
+  //   patchMatch,
+  //   deleteMatch,
+} from "../models/matchModel.js";
 
 const match_routes = [
-  // {
-  //   method: "GET",
-  //   url: "/matches",
-  //   handler: asyncHandler(async (req, res) => {
-  //     const matches = await getMatches();
-  //     res.code(200).send(matches);
-  //   }),
-  // },
+  {
+    method: "GET",
+    url: "/matches",
+    handler: asyncHandler(async (req, res) => {
+      const matches = await getMatches();
+      res.code(200).send(matches);
+    }),
+  },
   // {
   //   method: "POST",
   //   url: "/matches",
