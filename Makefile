@@ -25,8 +25,10 @@ repopulate:
 
 reset:
 		@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
-		@rm ./srcs/backend/transcendence.db
+		@docker compose -f ./srcs/docker-compose.yml stop backend
+		@rm -f ./srcs/backend/transcendence.db
 		@echo -n "Repopulate with mockup data? [y/N] " && read ans && [ $${ans:-N} = y ]
+		@make back && sleep 1
 		@make repopulate
 
 

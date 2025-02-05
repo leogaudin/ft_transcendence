@@ -22,7 +22,16 @@ db.serialize(() => {
     last_login DATETIME DEFAULT CURRENT_TIMESTAMP,
     wins INTEGER DEFAULT 0 CHECK (wins >= 0),
     losses INTEGER DEFAULT 0 CHECK (losses >= 0)
-    );
+    )`,
+    (err) => {
+      if (err) {
+        return console.error("Error creating table:", err.message);
+      }
+      console.log("User table ready.");
+    },
+  );
+  db.run(
+    `
     CREATE TABLE IF NOT EXISTS user_friends(
     user_id INTEGER NOT NULL,
     friend_id INTEGER NOT NULL,
@@ -34,7 +43,7 @@ db.serialize(() => {
       if (err) {
         return console.error("Error creating table:", err.message);
       }
-      console.log("User and Friend tables ready.");
+      console.log("Friend table ready.");
     },
   );
 });
@@ -47,7 +56,16 @@ db.serialize(() => {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
     player_amount INTEGER DEFAULT 4 CHECK (player_amount >= 4)
-    );
+    )`,
+    (err) => {
+      if (err) {
+        return console.error("Error creating table:", err.message);
+      }
+      console.log("Tournament table ready.");
+    },
+  );
+  db.run(
+    `
     CREATE TABLE IF NOT EXISTS tournaments_players (
     tournament_id INTEGER,
     player_id INTEGER,
@@ -59,7 +77,7 @@ db.serialize(() => {
       if (err) {
         return console.error("Error creating table:", err.message);
       }
-      console.log("Tournament table ready.");
+      console.log("Tournament players table ready.");
     },
   );
 });

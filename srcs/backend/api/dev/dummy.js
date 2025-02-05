@@ -1,6 +1,6 @@
 (async () => {
   console.log("Creating users...");
-  await fetch("http://localhost:9000/users", {
+  let res = await fetch("http://localhost:9000/users", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -11,7 +11,8 @@
       password: "foopassword",
     }),
   });
-  await fetch("http://localhost:9000/users", {
+  console.log(res);
+  res = await fetch("http://localhost:9000/users", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -22,7 +23,8 @@
       password: "barpassword",
     }),
   });
-  await fetch("http://localhost:9000/users", {
+  console.log(res);
+  res = await fetch("http://localhost:9000/users", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -33,4 +35,5 @@
       password: "bazpassword",
     }),
   });
+  console.log(res);
 })();
