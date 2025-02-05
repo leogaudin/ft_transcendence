@@ -19,19 +19,15 @@ down:
 clean: down
 		@docker system prune -a -f
 
-test:
-		@docker exec -it back python manage.py test --parallel --shuffle --failfast --buffer
-testall:
-		@docker exec -it back python manage.py test --parallel --shuffle --buffer
 
 repopulate:
-		@docker exec -it back python manage.py mockup
-
+		@docker exec -it back node api/dev/dummy.js
 
 reset:
 		@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
-		@docker exec -it back python manage.py hard_reset
+		@rm ./srcs/backend/transcendence.db
 		@echo -n "Repopulate with mockup data? [y/N] " && read ans && [ $${ans:-N} = y ]
 		@make repopulate
 
-.PHONY: all attach front back build down clean test testall repopulate reset
+
+.PHONY: all attach front back build down clean repopulate reset
