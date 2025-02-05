@@ -63,6 +63,30 @@ export function putUser(id, username, email, password) {
     });
   });
 }
+export function patchUser(id, updates) {
+  return new Promise((resolve, reject) => {
+    const fields = Object.keys(updates)
+      .map((key) => `${key} = ?`)
+      .join(", ");
+    const params = Object.values(updates);
+    params.push(id);
+    const sql = `
+      UPDATE users
+      SET ${fields}
+      WHERE id = ?
+    `;
+    db.run(sql, params, function (err) {
+      if (err) {
+        console.error("Error updating user:", err.message);
+        return reject(err);
+      }
+      if (this.changes === 0) {
+        return reject(new Error("User not found"));
+      }
+      resolve({ id, ...updates });
+    });
+  });
+}
 
 export function deleteUser(id) {
   return new Promise((resolve, reject) => {
