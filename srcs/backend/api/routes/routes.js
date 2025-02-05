@@ -1,8 +1,8 @@
-import user_routes from "./user-routes.js";
-import match_routes from "./match-routes.js";
-import tournament_routes from "./tournament-routes.js";
-import message_routes from "./message-routes.js";
-import chat_routes from "./chat-routes.js";
+import user_routes from "./userRoutes.js";
+import match_routes from "./matchRoutes.js";
+import tournament_routes from "./tournamentRoutes.js";
+import message_routes from "./messageRoutes.js";
+import chat_routes from "./chatRoutes.js";
 
 // Bundling all of the routes into one export
 const routes = [].concat(

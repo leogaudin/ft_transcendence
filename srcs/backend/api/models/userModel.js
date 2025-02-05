@@ -1,9 +1,23 @@
 import db from "../database.js";
 
-export function createUser(username, email, password) {
+export function getUsers() {
+  return new Promise((resolve, reject) => {
+    const sql = "SELECT * FROM users";
+
+    db.all(sql, (err, rows) => {
+      if (err) {
+        console.error("Error getting user:", err.message);
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}
+
+export function createUser(data) {
   return new Promise((resolve, reject) => {
     const sql = "INSERT INTO users (username, email, password) VALUES (?,?,?)";
-    const params = [username, email, password];
+    const params = data;
 
     db.run(sql, params, function (err) {
       if (err) {
@@ -29,20 +43,6 @@ export function getUserByID(id) {
   });
 }
 
-export function getUsers() {
-  return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM users";
-
-    db.all(sql, (err, rows) => {
-      if (err) {
-        console.error("Error getting user:", err.message);
-        return reject(err);
-      }
-      resolve(rows);
-    });
-  });
-}
-
 export function putUser(id, username, email, password) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -63,6 +63,7 @@ export function putUser(id, username, email, password) {
     });
   });
 }
+
 export function patchUser(id, updates) {
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
