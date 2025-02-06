@@ -135,7 +135,7 @@
     body: JSON.stringify({
       name: "Test tournament",
       player_amount: 4,
-      players: [1, 2, 3, 4],
+      player_ids: "1,2,3,4",
     }),
   });
   console.log(res.status);
@@ -147,7 +147,7 @@
     body: JSON.stringify({
       name: "Another test tournament",
       player_amount: 4,
-      players: [1, 2, 3, 4],
+      player_ids: "1,2,3,4",
     }),
   });
   console.log(res.status);

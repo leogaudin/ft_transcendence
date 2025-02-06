@@ -14,13 +14,10 @@ export function getTournaments() {
   });
 }
 
-// TODO: Tournament table
-// CHECK DOWNWARDS
-//
 export function createTournament(data) {
   return new Promise((resolve, reject) => {
-    const sql = `INSERT INTO tournaments (name, player_amount, players) VALUES (?,?,?)`;
-    const params = [data.tournamentname, data.email, data.password];
+    const sql = `INSERT INTO tournaments (name, player_amount, player_ids) VALUES (?,?,?)`;
+    const params = [data.name, data.player_amount, data.player_ids];
 
     db.run(sql, params, function (err) {
       if (err) {
@@ -29,8 +26,9 @@ export function createTournament(data) {
       }
       resolve({
         id: this.lastID,
-        tournamentname: data.tournamentname,
-        email: data.email,
+        name: data.name,
+        player_amount: data.player_amount,
+        player_ids: data.player_ids,
       });
     });
   });
@@ -54,13 +52,13 @@ export function putTournament(id, data) {
   return new Promise((resolve, reject) => {
     const sql = `
       UPDATE tournaments
-      SET tournamentname = ?, email = ?, password = ?
+      SET name = ?, player_amount = ?, player_ids = ?
       WHERE id = ?
     `;
-    const params = [data.tournamentname, data.email, data.password, id];
+    const params = [data.name, data.player_amount, data.player_ids, id];
     db.run(sql, params, function (err) {
       if (err) {
-        console.error("Error updating tournamen:", err.message);
+        console.error("Error updating tournament:", err.message);
         return reject(err);
       }
       if (this.changes === 0) {
@@ -71,7 +69,7 @@ export function putTournament(id, data) {
   });
 }
 
-export function patchTournamen(updates) {
+export function patchTournament(updates) {
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
       .map((key) => `${key} = ?`)

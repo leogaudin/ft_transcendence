@@ -21,7 +21,7 @@ const tournament_routes = [
     method: "POST",
     url: "/tournaments",
     handler: asyncHandler(async (req, res) => {
-      if (!validateInput(req, res, ["name", "player_amount", "players"]))
+      if (!validateInput(req, res, ["name", "player_amount", "player_ids"]))
         return;
       const tournament = await createTournament(req.body);
       res.code(201).send(tournament);
@@ -39,7 +39,7 @@ const tournament_routes = [
     method: "PUT",
     url: "/tournaments/:id",
     handler: asyncHandler(async (req, res) => {
-      if (!validateInput(req, res, ["name", "player_amount", "players"]))
+      if (!validateInput(req, res, ["name", "player_amount", "player_ids"]))
         return;
       const tournament = await putTournament(req.params.id, req.body);
       res.code(200).send(tournament);

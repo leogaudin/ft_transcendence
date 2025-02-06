@@ -56,30 +56,14 @@ db.serialize(() => {
     CREATE TABLE IF NOT EXISTS tournaments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
-    player_amount INTEGER DEFAULT 4 CHECK (player_amount >= 4)
+    player_amount INTEGER NOT NULL DEFAULT 4 CHECK (player_amount >= 4),
+    player_ids TEXT NOT NULL
     )`,
     (err) => {
       if (err) {
         return console.error("Error creating table:", err.message);
       }
       console.log("Tournament table ready.");
-    },
-  );
-  // TODO:  Does this make sense?
-  db.run(
-    `
-    CREATE TABLE IF NOT EXISTS tournaments_players (
-    tournament_id INTEGER,
-    player_id INTEGER,
-    PRIMARY KEY (tournament_id, player_id),
-    FOREIGN KEY (tournament_id) REFERENCES tournaments(id) ON DELETE CASCADE,
-    FOREIGN KEY (player_id) REFERENCES users(id) ON DELETE CASCADE
-    )`,
-    (err) => {
-      if (err) {
-        return console.error("Error creating table:", err.message);
-      }
-      console.log("Tournament players table ready.");
     },
   );
 });
