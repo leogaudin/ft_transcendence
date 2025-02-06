@@ -89,11 +89,11 @@ db.serialize(() => {
     `
     CREATE TABLE IF NOT EXISTS matches (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    left_player_id INTEGER,
-    right_player_id INTEGER,
-    result TEXT,
-    winner_id INTEGER,
-    loser_id INTEGER,
+    left_player_id INTEGER NOT NULL,
+    right_player_id INTEGER NOT NULL,
+    result TEXT NOT NULL,
+    winner_id INTEGER NOT NULL,
+    loser_id INTEGER NOT NULL,
     tournament_id INTEGER,
     FOREIGN KEY (left_player_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (right_player_id) REFERENCES users(id) ON DELETE SET NULL,
@@ -116,8 +116,8 @@ db.serialize(() => {
     `
     CREATE TABLE IF NOT EXISTS chats (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    first_user_id INTEGER,
-    second_user_id INTEGER,
+    first_user_id INTEGER NOT NULL,
+    second_user_id INTEGER NOT NULL,
     FOREIGN KEY (first_user_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (second_user_id) REFERENCES users(id) ON DELETE SET NULL,
     UNIQUE(first_user_id, second_user_id)
@@ -137,9 +137,9 @@ db.serialize(() => {
     `
     CREATE TABLE IF NOT EXISTS messages (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    sender_id INTEGER,
-    chat_id INTEGER,
-    body TEXT,
+    sender_id INTEGER NOT NULL,
+    chat_id INTEGER NOT NULL,
+    body TEXT NOT NULL,
     sent_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
