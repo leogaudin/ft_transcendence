@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Login Page</title>
+    <link href="css/output.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="particles-js"></div>
+    <div id="visual-div" class="flex flex-col justify-center items-center">
+      <main id="login-page" class="flex flex-col">
+        <header id="header-section" class="flex justify-center items-center">
+          <h1>Welcome!</h1>
+          <img id="login-page-img" src="resources/img/sleeping-cat.png" alt="sleeping cat">
+        </header>
+        <div id="divider"></div>
+        <section id="sign-in">
+          <form action="/enviar" method="POST" class="flex flex-col items-center">
+            <input type="email" id="email" placeholder="Email" class="data-user">
+            <input type="password" id="password" placeholder="Password" class="data-user">
+            <button type="submit" class="data-user signin-user">Sign in</button>
+          </form>      
+        </section>
+        <p class="flex justify-center">or</p>
+        <section id="google-authentication">
+          <script src="https://accounts.google.com/gsi/client" async></script>
+          <div id="g_id_onload"
+              data-client_id="YOUR_GOOGLE_CLIENT_ID"
+              data-login_uri="https://your.domain/your_login_endpoint"
+              data-auto_prompt="false">
+          </div>
+          <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
+        </section>
+        <section id="forgot-password" class="flex justify-center"><a href="/passwordrecovery">Forgot password?</a></section>
+        <section id="sign-up" class="flex justify-center">
+          <p>Don't have an account? <a href="/signup" class="text-[var(--dark-pink)]">Sign up</a></p>
+        </section>
+      </main>
+      <footer id="login-footer" class="flex">
+        <div id="language-selector" class="relative inline-block">
+          <select>
+              <option value="en" class="l-options">English</option>
+              <option value="es" class="l-options">Español</option>
+              <option value="fr" class="l-options">Français</option>
+          </select>
+        </div>
+        <div id="terms-conditions">Privacy and Terms Conditions</div>
+      </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
+  <script src="js/init.js"></script>
+  </body>
+</html>

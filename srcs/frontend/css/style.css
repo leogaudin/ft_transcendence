@@ -132,3 +132,61 @@ h1 {
 	font-size: xxx-large;
 	color: white;
 }
+
+/* --> Login Page <-- */
+
+#login-page {
+	background-color: var(--dark-blue);
+	border-radius: 15px;
+	box-shadow: var(--violet) 0px 0px 20px;
+	margin: 10px;
+	padding: 25px;
+	width: 30%;
+	z-index: 1;
+	gap: 10px;
+}
+
+#divider {
+	border-bottom: 5px solid var(--violet);
+	border-radius: 3px;
+	margin: 20px;
+}
+
+#login-page-img {
+	margin-left: 20px;
+	max-height: 100px;
+	max-width: 100px;
+}
+
+#login-footer {
+	z-index: 1;
+	justify-content: space-between;
+	width: 30%;
+}
+
+.data-user {
+	width: 100%;
+	background-color: #54184d6f;
+	border-radius: 5px;
+	margin: 5px;
+	padding: 5px;
+}
+
+.signin-user {
+	background-color: var(--dark-purple);
+	width:fit-content;
+	transition: 350ms ease-in-out;
+}
+
+.signin-user:hover {
+	background-color: var(--accent-pink);
+	color: var(--dark-purple);
+	cursor: pointer;
+}
+  
+
+.l-options {
+	/* color: var(--dark-pink); */
+	background-color: var(--violet);
+
+}
