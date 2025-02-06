@@ -19,7 +19,6 @@ down:
 clean: down
 		@docker system prune -a -f
 
-
 repopulate:
 		@docker exec -it back node api/dev/dummy.js
 
@@ -30,6 +29,5 @@ reset:
 		@echo -n "Repopulate with mockup data? [y/N] " && read ans && [ $${ans:-N} = y ]
 		@make back && sleep 3
 		@make repopulate
-
 
 .PHONY: all attach front back build down clean repopulate reset
