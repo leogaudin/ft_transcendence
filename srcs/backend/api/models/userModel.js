@@ -6,7 +6,7 @@ export function getUsers() {
 
     db.all(sql, (err, rows) => {
       if (err) {
-        console.error("Error getting user:", err.message);
+        console.error("Error getting users:", err.message);
         return reject(err);
       }
       resolve(rows);
