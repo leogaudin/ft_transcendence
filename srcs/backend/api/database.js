@@ -65,6 +65,7 @@ db.serialize(() => {
       console.log("Tournament table ready.");
     },
   );
+  // TODO:  Does this make sense?
   db.run(
     `
     CREATE TABLE IF NOT EXISTS tournaments_players (
