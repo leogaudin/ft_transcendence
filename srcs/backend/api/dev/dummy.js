@@ -163,8 +163,8 @@
       left_player_id: 1,
       right_player_id: 2,
       result: "3, 2",
-      winner: 1,
-      loser: 2,
+      winner_id: 1,
+      loser_id: 2,
     }),
   });
   console.log(res.status);
@@ -177,8 +177,8 @@
       left_player_id: 1,
       right_player_id: 2,
       result: "2, 3",
-      winner: 2,
-      loser: 1,
+      winner_id: 2,
+      loser_id: 1,
     }),
   });
   console.log(res.status);
@@ -191,8 +191,8 @@
       left_player_id: 4,
       right_player_id: 3,
       result: "3, 2",
-      winner: 4,
-      loser: 3,
+      winner_id: 4,
+      loser_id: 3,
     }),
   });
   console.log(res.status);
