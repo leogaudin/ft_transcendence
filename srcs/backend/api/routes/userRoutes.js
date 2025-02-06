@@ -8,6 +8,15 @@ import {
   deleteUser,
 } from "../models/userModel.js";
 
+/* TODO:
+ * HASH PASSWORDS
+ * Endpoints to retrieve all of the messages, chats, tournaments and matches of a given player, ie. http://localhost:9000/users/:id/messages
+ * Endpoint to change / reset password of users
+ * Avatar handling and storage
+ * Friend handling
+ * Deleted user handling (make user anonymous)
+ * */
+
 const user_routes = [
   {
     method: "GET",
