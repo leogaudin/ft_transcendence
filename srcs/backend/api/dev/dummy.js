@@ -1,3 +1,4 @@
+// User creation
 (async () => {
   console.log("Creating users...");
   let res = await fetch("http://localhost:9000/users", {
@@ -33,6 +34,173 @@
       username: "baz",
       email: "baz@gmail.com",
       password: "bazpassword",
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: "qux",
+      email: "qux@gmail.com",
+      password: "quxpassword",
+    }),
+  });
+  console.log(res.status);
+})();
+
+// Chat creation
+(async () => {
+  console.log("Creating chats...");
+  let res = await fetch("http://localhost:9000/chats", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      first_user_id: "1",
+      second_user_id: "2",
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/chats", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      first_user_id: "2",
+      second_user_id: "3",
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/chats", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      first_user_id: "3",
+      second_user_id: "1",
+    }),
+  });
+  console.log(res.status);
+})();
+
+// Messages creation
+(async () => {
+  console.log("Creating messages...");
+  let res = await fetch("http://localhost:9000/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sender_id: "1",
+      chat_id: "1",
+      body: "this is a test message",
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sender_id: "1",
+      chat_id: "1",
+      body: "this is another test message",
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      sender_id: "3",
+      chat_id: "3",
+      body: "this is a new test message",
+    }),
+  });
+  console.log(res.status);
+})();
+
+// Tournament creation
+(async () => {
+  console.log("Creating tournaments...");
+  let res = await fetch("http://localhost:9000/tournaments", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: "Test tournament",
+      player_amount: 4,
+      players: [1, 2, 3, 4],
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/tournaments", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      name: "Another test tournament",
+      player_amount: 4,
+      players: [1, 2, 3, 4],
+    }),
+  });
+  console.log(res.status);
+})();
+
+// Match creation
+(async () => {
+  console.log("Creating matches...");
+  let res = await fetch("http://localhost:9000/matches", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      left_player_id: 1,
+      right_player_id: 2,
+      result: "3, 2",
+      winner: 1,
+      loser: 2,
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/matches", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      left_player_id: 1,
+      right_player_id: 2,
+      result: "2, 3",
+      winner: 2,
+      loser: 1,
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/matches", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      left_player_id: 4,
+      right_player_id: 3,
+      result: "3, 2",
+      winner: 4,
+      loser: 3,
     }),
   });
   console.log(res.status);
