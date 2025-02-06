@@ -49,12 +49,10 @@
     }),
   });
   console.log(res.status);
-})();
 
-// Chat creation
-(async () => {
+  // Chat creation
   console.log("Creating chats...");
-  let res = await fetch("http://localhost:9000/chats", {
+  res = await fetch("http://localhost:9000/chats", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -87,12 +85,10 @@
     }),
   });
   console.log(res.status);
-})();
 
-// Messages creation
-(async () => {
+  // Messages creation
   console.log("Creating messages...");
-  let res = await fetch("http://localhost:9000/messages", {
+  res = await fetch("http://localhost:9000/messages", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -128,12 +124,10 @@
     }),
   });
   console.log(res.status);
-})();
 
-// Tournament creation
-(async () => {
+  // Tournament creation
   console.log("Creating tournaments...");
-  let res = await fetch("http://localhost:9000/tournaments", {
+  res = await fetch("http://localhost:9000/tournaments", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -157,12 +151,10 @@
     }),
   });
   console.log(res.status);
-})();
 
-// Match creation
-(async () => {
+  // Match creation
   console.log("Creating matches...");
-  let res = await fetch("http://localhost:9000/matches", {
+  res = await fetch("http://localhost:9000/matches", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
