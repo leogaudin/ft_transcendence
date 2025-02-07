@@ -10,7 +10,8 @@ export function getUsers() {
         console.error("Error getting users:", err.message);
         return reject(err);
       }
-      resolve(rows);
+      const passwordRemoved = rows.map(({ password, ...user }) => user);
+      resolve(passwordRemoved);
     });
   });
 }
