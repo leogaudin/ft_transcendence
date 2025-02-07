@@ -7,6 +7,7 @@ import {
   patchUser,
   deleteUser,
 } from "../models/userModel.js";
+import fastify from "../index.js";
 
 /* TODO:
  * Send JWT on auth success
@@ -33,7 +34,9 @@ const user_routes = [
     handler: asyncHandler(async (req, res) => {
       if (!validateInput(req, res, ["username", "password", "email"])) return;
       const user = await createUser(req.body);
-      res.code(201).send(user);
+      //TEST: Check implementation of JWT
+      const token = fastify.jwt.sign(user);
+      res.code(201).send({ token });
     }),
   },
   {

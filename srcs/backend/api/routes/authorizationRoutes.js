@@ -7,7 +7,9 @@ const auth_routes = [
     handler: asyncHandler(async (req, res) => {
       if (!validateInput(req, res, ["username", "password"])) return;
       // TODO: Return a JWT on success
-      if (await loginUser(req.body)) res.code(200).send({ "auth:": "success" });
+      if (await loginUser(req.body)) {
+        res.code(200).send({ "auth:": "success" });
+      }
       res.code(403).send({ "auth:": "failure" });
     }),
   },

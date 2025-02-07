@@ -1,9 +1,13 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
+import jwt from "@fastify/jwt";
 import routes from "./routes/routes.js";
 
 const fastify = Fastify({ logger: true });
 await fastify.register(cors, {});
+fastify.register(jwt, {
+  secret: process.env.JWT_SECRET,
+});
 
 const { ADDRESS = "0.0.0.0", PORT = "9000" } = process.env;
 
@@ -23,3 +27,5 @@ try {
   fastify.log.error(err);
   process.exit(1);
 }
+
+export default fastify;
