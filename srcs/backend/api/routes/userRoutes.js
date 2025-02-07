@@ -9,7 +9,8 @@ import {
 } from "../models/userModel.js";
 
 /* TODO:
- * HASH PASSWORDS
+ * Send JWT on auth success
+ * Do not return the hashed password on get / list user
  * Endpoints to retrieve all of the messages, chats, tournaments and matches of a given player, ie. http://localhost:9000/users/:id/messages
  * Endpoint to change / reset password of users
  * Avatar handling and storage

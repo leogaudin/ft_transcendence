@@ -1,3 +1,6 @@
+import { getUserByUsername } from "./models/userModel.js";
+import bcrypt from "bcryptjs";
+
 export const asyncHandler = (fn) => async (req, res) => {
   try {
     await fn(req, res);
@@ -19,4 +22,9 @@ export function validateInput(req, res, requiredFields) {
   }
 
   return true;
+}
+
+export async function loginUser(data) {
+  const user = await getUserByUsername(data.username);
+  return await bcrypt.compare(data.password, user.password);
 }

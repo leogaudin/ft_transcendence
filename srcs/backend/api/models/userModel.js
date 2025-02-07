@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import db from "../database.js";
 
 export function getUsers() {
@@ -14,11 +15,11 @@ export function getUsers() {
   });
 }
 
-export function createUser(data) {
+export async function createUser(data) {
+  data.password = await bcrypt.hash(data.password, 10);
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO users (username, email, password) VALUES (?,?,?)`;
     const params = [data.username, data.email, data.password];
-
     db.run(sql, params, function (err) {
       if (err) {
         console.error("Error inserting user:", err.message);
@@ -43,7 +44,8 @@ export function getUserByID(id) {
   });
 }
 
-export function putUser(id, data) {
+export async function putUser(id, data) {
+  data.password = await bcrypt.hash(data.password, 10);
   return new Promise((resolve, reject) => {
     const sql = `
       UPDATE users
@@ -64,7 +66,10 @@ export function putUser(id, data) {
   });
 }
 
-export function patchUser(id, updates) {
+export async function patchUser(id, updates) {
+  if (updates.hasOwnProperty("password")) {
+    updates.password = await bcrypt.hash(updates.password, 10);
+  }
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
       .map((key) => `${key} = ?`)
@@ -104,6 +109,19 @@ export function deleteUser(id) {
         return reject(new Error("User not found"));
       }
       resolve();
+    });
+  });
+}
+
+export function getUserByUsername(username) {
+  return new Promise((resolve, reject) => {
+    const sql = `SELECT * FROM users WHERE username = ? `;
+    db.get(sql, username, (err, row) => {
+      if (err) {
+        console.error("Error getting user:", err.message);
+        return reject(err);
+      }
+      resolve(row);
     });
   });
 }
