@@ -56,8 +56,22 @@ db.serialize(() => {
     CREATE TABLE IF NOT EXISTS tournaments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
-    player_amount INTEGER NOT NULL DEFAULT 4 CHECK (player_amount >= 4),
-    player_ids TEXT NOT NULL
+    player_amount INTEGER NOT NULL DEFAULT 4 CHECK (player_amount >= 4)
+    )`,
+    (err) => {
+      if (err) {
+        return console.error("Error creating table:", err.message);
+      }
+      console.log("Tournament table ready.");
+    },
+  );
+  db.run(
+    `
+    CREATE TABLE IF NOT EXISTS tournament_players (
+    tournament_id INTEGER,
+    player_id INTEGER,
+    PRIMARY KEY (tournament_id, player_id),
+    FOREIGN KEY (tournament_id) REFERENCES tournaments(id)
     )`,
     (err) => {
       if (err) {

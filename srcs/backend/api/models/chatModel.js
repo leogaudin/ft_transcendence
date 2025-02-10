@@ -117,3 +117,16 @@ export function deleteChat(id) {
     });
   });
 }
+
+export function getChatsOfUser(id) {
+  return new Promise((resolve, reject) => {
+    const sql = ` SELECT * FROM chats WHERE first_user_id = ? OR second_user_id = ?`;
+    db.all(sql, [id, id], (err, rows) => {
+      if (err) {
+        console.error("Error getting chats:", err.message);
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}

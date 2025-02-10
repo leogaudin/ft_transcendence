@@ -128,3 +128,16 @@ export function deleteMatch(id) {
     });
   });
 }
+
+export function getMatchesOfUser(id) {
+  return new Promise((resolve, reject) => {
+    const sql = ` SELECT * FROM matches WHERE left_player_id = ? OR right_player_id = ?`;
+    db.all(sql, [id, id], (err, rows) => {
+      if (err) {
+        console.error("Error getting matches:", err.message);
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}

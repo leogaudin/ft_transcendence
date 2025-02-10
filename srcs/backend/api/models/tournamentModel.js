@@ -1,5 +1,20 @@
 import db from "../database.js";
 
+export function getPlayersInTournament(tournamentID) {
+  return new Promise((resolve, reject) => {
+    const sql =
+      "SELECT player_id FROM tournament_players WHERE tournament_id = ?";
+
+    db.all(sql, tournamentID, (err, rows) => {
+      if (err) {
+        console.error("Error getting tournament players:", err.message);
+        return reject(err);
+      }
+      resolve(rows.map((row) => row.player_id));
+    });
+  });
+}
+
 export function getTournaments() {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM tournaments";
@@ -14,34 +29,69 @@ export function getTournaments() {
   });
 }
 
+export function addPlayerToTournament(tournamentID, playerId) {
+  return new Promise((resolve, reject) => {
+    const sql = `INSERT INTO tournament_players (tournament_id, player_id) VALUES (?,?)`;
+    const params = [tournamentID, playerId];
+    db.run(sql, params, (err) => {
+      if (err) {
+        console.error("Error adding player to tournament:", err.message);
+        return reject(err);
+      }
+      resolve();
+    });
+  });
+}
+
 export function createTournament(data) {
   return new Promise((resolve, reject) => {
-    const sql = `INSERT INTO tournaments (name, player_amount, player_ids) VALUES (?,?,?)`;
-    const params = [data.name, data.player_amount, data.player_ids];
+    const sql = `INSERT INTO tournaments (name, player_amount) VALUES (?,?)`;
+    const params = [data.name, data.player_amount];
 
     db.run(sql, params, function (err) {
       if (err) {
         console.error("Error inserting tournament:", err.message);
         return reject(err);
       }
-      resolve({
-        id: this.lastID,
-        name: data.name,
-        player_amount: data.player_amount,
-        player_ids: data.player_ids,
-      });
+      const tournamentID = this.lastID;
+      const insertPromises = data.player_ids.map((playerID) =>
+        addPlayerToTournament(tournamentID, playerID),
+      );
+      Promise.all(insertPromises)
+        .then(() =>
+          resolve({
+            id: tournamentID,
+            name: data.name,
+            player_amount: data.player_amount,
+            player_ids: data.player_ids,
+          }),
+        )
+        .catch(reject);
     });
   });
 }
 
 export function getTournamentByID(id) {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM tournaments WHERE id = ?";
+    // EMPTY PLAYER IDS
+    const sql = `
+SELECT t.*,
+GROUP_CONCAT(tp.player_id) as player_ids
+FROM tournaments t
+LEFT JOIN tournament_players tp ON t.id = tp.tournament_id
+WHERE t.id = ?
+GROUP BY t.id
+`;
 
     db.get(sql, [id], (err, row) => {
       if (err) {
         console.error("Error getting tournament:", err.message);
         return reject(err);
+      }
+      if (row && row.player_ids) {
+        row.player_ids = row.player_ids.split(",").map((id) => parseInt(id));
+      } else if (row) {
+        row.player_ids = [];
       }
       resolve(row);
     });
@@ -109,6 +159,22 @@ export function deleteTournament(id) {
         return reject(new Error("Tournament not found"));
       }
       resolve();
+    });
+  });
+}
+
+export function getTournamentsOfUser(id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT t.* FROM tournaments t 
+      JOIN tournament_players tp ON t.id = tp.tournament_id
+      WHERE tp.player_id = ?`;
+    db.all(sql, [id], (err, rows) => {
+      if (err) {
+        console.error("Error getting matches:", err.message);
+        return reject(err);
+      }
+      resolve(rows);
     });
   });
 }

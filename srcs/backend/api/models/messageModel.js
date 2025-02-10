@@ -111,3 +111,16 @@ export function deleteMessage(id) {
     });
   });
 }
+
+export function getMessagesOfUser(id) {
+  return new Promise((resolve, reject) => {
+    const sql = ` SELECT * FROM messages WHERE sender_id = ? `;
+    db.all(sql, [id], (err, rows) => {
+      if (err) {
+        console.error("Error getting messagess:", err.message);
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}

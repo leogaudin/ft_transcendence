@@ -7,6 +7,10 @@ import {
   patchUser,
   deleteUser,
 } from "../models/userModel.js";
+import { getMessagesOfUser } from "../models/messageModel.js";
+import { getChatsOfUser } from "../models/chatModel.js";
+import { getMatchesOfUser } from "../models/matchModel.js";
+import { getTournamentsOfUser } from "../models/tournamentModel.js";
 import fastify from "../index.js";
 
 /* TODO:
@@ -36,7 +40,12 @@ const user_routes = [
       const user = await createUser(req.body);
       //TEST: Check implementation of JWT
       const token = fastify.jwt.sign(user);
-      res.code(201).send({ token });
+      res.code(201).send({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        token: token,
+      });
     }),
   },
   {
@@ -71,6 +80,29 @@ const user_routes = [
     handler: asyncHandler(async (req, res) => {
       await deleteUser(req.params.id);
       res.code(204);
+    }),
+  },
+  {
+    method: "GET",
+    url: "/users/:id/:str",
+    handler: asyncHandler(async (req, res) => {
+      const table = req.params.str;
+      const id = req.params.id;
+      var data;
+      if (table == "messages") {
+        data = await getMessagesOfUser(id);
+      }
+      if (table == "chats") {
+        data = await getChatsOfUser(id);
+      }
+      if (table == "matches") {
+        data = await getMatchesOfUser(id);
+      }
+      if (table == "tournaments") {
+        data = await getTournamentsOfUser(id);
+      }
+
+      res.code(200).send(data);
     }),
   },
 ];
