@@ -75,12 +75,12 @@ export function getTournamentByID(id) {
   return new Promise((resolve, reject) => {
     // EMPTY PLAYER IDS
     const sql = `
-SELECT t.*,
+SELECT t.id, t.name, t.player_amount,
 GROUP_CONCAT(tp.player_id) as player_ids
 FROM tournaments t
 LEFT JOIN tournament_players tp ON t.id = tp.tournament_id
 WHERE t.id = ?
-GROUP BY t.id
+GROUP BY t.id, t.name, t.player_amount
 `;
 
     db.get(sql, [id], (err, row) => {
@@ -88,10 +88,9 @@ GROUP BY t.id
         console.error("Error getting tournament:", err.message);
         return reject(err);
       }
+      // Still doesnt work, the issue is here because the query works outside
       if (row && row.player_ids) {
         row.player_ids = row.player_ids.split(",").map((id) => parseInt(id));
-      } else if (row) {
-        row.player_ids = [];
       }
       resolve(row);
     });
