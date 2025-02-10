@@ -38,7 +38,7 @@ const user_routes = [
     handler: asyncHandler(async (req, res) => {
       if (!validateInput(req, res, ["username", "password", "email"])) return;
       const user = await createUser(req.body);
-      //TEST: Check implementation of JWT
+      //TEST: Check implementation of JWT, like expire date
       const token = fastify.jwt.sign(user);
       res.code(201).send({
         id: user.id,
