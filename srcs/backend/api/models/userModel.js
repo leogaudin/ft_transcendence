@@ -117,7 +117,7 @@ export function deleteUser(id) {
 export function getUserByUsername(username) {
   return new Promise((resolve, reject) => {
     const sql = `SELECT * FROM users WHERE username = ? `;
-    db.get(sql, username, (err, row) => {
+    db.get(sql, username, function (err, row) {
       if (err) {
         console.error("Error getting user:", err.message);
         return reject(err);
