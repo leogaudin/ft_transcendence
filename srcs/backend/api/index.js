@@ -9,6 +9,9 @@ const fastify = Fastify({ logger: true });
 await fastify.register(cors, {});
 fastify.register(jwt, {
   secret: process.env.JWT_SECRET,
+  sign: {
+    expiresIn: "1d",
+  },
 });
 
 const { ADDRESS = "0.0.0.0", PORT = "9000" } = process.env;

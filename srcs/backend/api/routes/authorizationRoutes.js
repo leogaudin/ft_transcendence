@@ -1,4 +1,9 @@
-import { asyncHandler, validateInput, loginUser } from "../utils.js";
+import {
+  asyncHandler,
+  validateInput,
+  loginUser,
+  registerUser,
+} from "../utils.js";
 
 const auth_routes = [
   {
@@ -11,6 +16,15 @@ const auth_routes = [
         res.code(200).send({ "auth:": "success" });
       }
       res.code(403).send({ "auth:": "failure" });
+    }),
+  },
+  {
+    method: "POST",
+    url: "/register",
+    handler: asyncHandler(async (req, res) => {
+      if (!validateInput(req, res, ["username", "email", "password"])) return;
+      const result = await registerUser(req.body);
+      res.code(201).send(result);
     }),
   },
 ];
