@@ -17,14 +17,28 @@ export function getPlayersInTournament(tournamentID) {
 
 export function getTournaments() {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM tournaments";
-
+    const sql = `
+      SELECT 
+        t.id,
+        t.name,
+        t.player_amount,
+        GROUP_CONCAT(tp.player_id) as player_ids
+      FROM tournaments t
+      LEFT JOIN tournament_players tp ON t.id = tp.tournament_id
+      GROUP BY t.id, t.name, t.player_amount
+    `;
     db.all(sql, (err, rows) => {
       if (err) {
         console.error("Error getting tournaments:", err.message);
         return reject(err);
       }
-      resolve(rows);
+      const tournaments = rows.map((row) => ({
+        ...row,
+        player_ids: row.player_ids
+          ? row.player_ids.split(",").map((id) => parseInt(id))
+          : [],
+      }));
+      resolve(tournaments);
     });
   });
 }
@@ -73,22 +87,20 @@ export function createTournament(data) {
 
 export function getTournamentByID(id) {
   return new Promise((resolve, reject) => {
-    // EMPTY PLAYER IDS
     const sql = `
-SELECT t.id, t.name, t.player_amount,
-GROUP_CONCAT(tp.player_id) as player_ids
-FROM tournaments t
-LEFT JOIN tournament_players tp ON t.id = tp.tournament_id
-WHERE t.id = ?
-GROUP BY t.id, t.name, t.player_amount
-`;
+      SELECT t.id, t.name, t.player_amount,
+      GROUP_CONCAT(tp.player_id) as player_ids
+      FROM tournaments t
+      LEFT JOIN tournament_players tp ON t.id = tp.tournament_id
+      WHERE t.id = ?
+      GROUP BY t.id, t.name, t.player_amount
+      `;
 
     db.get(sql, [id], (err, row) => {
       if (err) {
         console.error("Error getting tournament:", err.message);
         return reject(err);
       }
-      // Still doesnt work, the issue is here because the query works outside
       if (row && row.player_ids) {
         row.player_ids = row.player_ids.split(",").map((id) => parseInt(id));
       }

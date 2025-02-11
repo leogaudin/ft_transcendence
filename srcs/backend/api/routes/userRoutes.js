@@ -15,7 +15,6 @@ import fastify from "../index.js";
 
 /* TODO:
  * Send JWT on auth success - WIP
- * Endpoints to retrieve all of the messages, chats, tournaments and matches of a given player, ie. http://localhost:9000/users/:id/messages
  * Endpoint to change / reset password of users
  * Avatar handling and storage
  * Friend handling
