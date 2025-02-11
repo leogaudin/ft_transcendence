@@ -1,8 +1,7 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
-import routes from "./routes/routes.js";
-
+import createRoutes from "./routes/routes.js";
 // NODEMAILER for sending emails
 
 const fastify = Fastify({ logger: true });
@@ -13,6 +12,13 @@ fastify.register(jwt, {
     expiresIn: "1d",
   },
 });
+fastify.decorate("authenticate", async function (req, res) {
+  try {
+    await req.jwtVerify();
+  } catch (err) {
+    res.send(err);
+  }
+});
 
 const { ADDRESS = "0.0.0.0", PORT = "9000" } = process.env;
 
@@ -20,6 +26,8 @@ const { ADDRESS = "0.0.0.0", PORT = "9000" } = process.env;
 fastify.get("/", async function handler(request, reply) {
   return { hello: "world" };
 });
+
+const routes = createRoutes(fastify);
 
 routes.forEach((route) => {
   fastify.route(route);

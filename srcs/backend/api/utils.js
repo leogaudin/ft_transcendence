@@ -37,7 +37,7 @@ export async function loginUser(data) {
   if (!user) return null;
   const isAuthorized = await bcrypt.compare(data.password, user.password);
   if (!isAuthorized) return false;
-  const token = fastify.jwt.sign({ user: user.username });
+  const token = fastify.jwt.sign({ user: user.id });
   const result = Object.assign({}, user, { token });
   delete result.password;
   return result;
@@ -45,7 +45,7 @@ export async function loginUser(data) {
 
 export async function registerUser(data) {
   const user = await createUser(data);
-  const token = fastify.jwt.sign({ user: user.username });
+  const token = fastify.jwt.sign({ user: user.id });
   const result = Object.assign({}, user, { token });
   return result;
 }

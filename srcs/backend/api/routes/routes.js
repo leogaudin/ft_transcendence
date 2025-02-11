@@ -1,18 +1,25 @@
-import user_routes from "./userRoutes.js";
-import match_routes from "./matchRoutes.js";
-import tournament_routes from "./tournamentRoutes.js";
-import message_routes from "./messageRoutes.js";
-import chat_routes from "./chatRoutes.js";
-import auth_routes from "./authorizationRoutes.js";
+import createUserRoutes from "./userRoutes.js";
+import createMatchRoutes from "./matchRoutes.js";
+import createTournamentRoutes from "./tournamentRoutes.js";
+import createMessageRoutes from "./messageRoutes.js";
+import createChatRoutes from "./chatRoutes.js";
+import createAuthRoutes from "./authorizationRoutes.js";
 
 // Bundling all of the routes into one export
-const routes = [].concat(
-  user_routes,
-  match_routes,
-  tournament_routes,
-  message_routes,
-  chat_routes,
-  auth_routes,
-);
 
-export default routes;
+export default function createRoutes(fastify) {
+  const userRoutes = createUserRoutes(fastify);
+  const chatRoutes = createChatRoutes(fastify);
+  const messageRoutes = createMessageRoutes(fastify);
+  const matchRoutes = createMatchRoutes(fastify);
+  const tournamentRoutes = createTournamentRoutes(fastify);
+  const authRoutes = createAuthRoutes(fastify);
+  return [].concat(
+    userRoutes,
+    chatRoutes,
+    messageRoutes,
+    matchRoutes,
+    tournamentRoutes,
+    authRoutes,
+  );
+}
