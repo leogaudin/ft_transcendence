@@ -34,6 +34,21 @@ export default function createAuthRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["email"])) return;
         const result = await resetUserPassword(req.body);
+        if (result == null) res.code(404).send({ error: "user not found" });
+        res.code(200).send(result);
+      }),
+    },
+    {
+      method: "GET",
+      url: "/resetToken",
+      handler: asyncHandler(async (req, res) => {
+        const result = await verifyUserResetToken(
+          req.params.token,
+          req.params.id,
+        );
+        if (result == null) res.code(404).send({ error: "user not found" });
+        if (result == false) res.code(403).send({ authorization: "failed" });
+        res.code(200).send(result);
       }),
     },
   ];

@@ -20,6 +20,7 @@ db.serialize(() => {
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     is_online BOOLEAN DEFAULT 0,
     last_login DATETIME DEFAULT CURRENT_TIMESTAMP,
+    reset_token TEXT,
     wins INTEGER DEFAULT 0 CHECK (wins >= 0),
     losses INTEGER DEFAULT 0 CHECK (losses >= 0)
     )`,

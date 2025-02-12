@@ -2,6 +2,7 @@ import {
   createUser,
   getUserByUsername,
   getUserByEmail,
+  getUserByID,
 } from "./models/userModel.js";
 import bcrypt from "bcryptjs";
 import fastify from "./index.js";
@@ -51,31 +52,39 @@ export async function registerUser(data) {
 
 // TODO: This
 const transporter = nodemailer.createTransport({
-  host: "smtp.ethereal.email",
+  host: process.env.EMAIL_HOST,
   port: 587,
-  secure: false, // true for port 465, false for other ports
   auth: {
-    user: "maddison53@ethereal.email",
-    pass: "jn7jnAPss4f63QBp6D",
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
 export async function resetUserPassword(data) {
-  const user = getUserByEmail(data.email);
+  const user = await getUserByEmail(data.email);
   if (!user) return null;
   const resetToken = crypto.randomBytes(32).toString("hex");
   const hash = await bcrypt.hash(resetToken, 10);
-  const link = `http://localhost:9000/reset?token=${resetToken}&id=${user.id}`;
-  // const info = await sendEmail(user.email, "Password Reset Request", {
-  //   name: user.name,
-  //   link: link,
-  // });
-  const info = await transporter.sendEmail({
-    from: '"Maddison Foo Koch 👻" <maddison53@ethereal.email>', // sender address
-    to: "bar@example.com, baz@example.com", // list of receivers
-    subject: "Hello ✔", // Subject line
-    text: "Hello world?", // plain text body
-    html: "<b>Hello world?</b>", // html body
+  patchUser({ reset_token: hash });
+  const link = `http://localhost:9000/resetToken?token=${resetToken}&id=${user.id}`;
+  const info = await transporter.sendMail({
+    from: `"Transcendence" <${process.env.EMAIL_USER}>`,
+    to: user.email,
+    subject: "Password Reset Request",
+    text: link,
+    html: link,
   });
-  console.log(info);
+
+  return info;
+}
+
+export async function verifyUserResetToken(token, id) {
+  const user = await getUserByID(id);
+  if (!user) return null;
+  const isAuthorized = await bcrypt.compare(token, user.reset_token);
+  if (!isAuthorized) return false;
+  console.log("User is able to reset password");
+  // Reset password logic
+  // patchUser(id, {password: newPassword})
+  return true;
 }
