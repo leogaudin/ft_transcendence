@@ -3,6 +3,7 @@ import {
   validateInput,
   loginUser,
   registerUser,
+  resetUserPassword,
 } from "../utils.js";
 
 export default function createAuthRoutes(fastify) {
@@ -25,6 +26,14 @@ export default function createAuthRoutes(fastify) {
         if (!validateInput(req, res, ["username", "email", "password"])) return;
         const result = await registerUser(req.body);
         res.code(201).send(result);
+      }),
+    },
+    {
+      method: "POST",
+      url: "/reset",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["email"])) return;
+        const result = await resetUserPassword(req.body);
       }),
     },
   ];

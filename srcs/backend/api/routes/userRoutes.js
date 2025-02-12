@@ -12,15 +12,6 @@ import { getChatsOfUser } from "../models/chatModel.js";
 import { getMatchesOfUser } from "../models/matchModel.js";
 import { getTournamentsOfUser } from "../models/tournamentModel.js";
 
-/* TODO:
- * Send JWT on auth success - WIP
- * Endpoint to change / reset password of users
- * Avatar handling and storage
- * Friend handling
- * Deleted user handling (make user anonymous)
- * Do not return the hashed password on get / list user - sort of done
- * */
-
 export default function createUserRoutes(fastify) {
   return [
     {

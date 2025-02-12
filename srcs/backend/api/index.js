@@ -2,7 +2,6 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
 import createRoutes from "./routes/routes.js";
-// NODEMAILER for sending emails
 
 const fastify = Fastify({ logger: true });
 await fastify.register(cors, {});
