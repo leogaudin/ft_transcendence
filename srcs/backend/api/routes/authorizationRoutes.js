@@ -1,5 +1,5 @@
 import {
-  asyncHandlerAuths,
+  asyncHandler,
   validateInput,
   loginUser,
   registerUser,
@@ -10,7 +10,7 @@ export default function createAuthRoutes(fastify) {
     {
       method: "POST",
       url: "/login",
-      handler: asyncHandlerAuths(async (req, res) => {
+      handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["username", "password"])) return;
         const result = await loginUser(req.body);
         if (result == false) res.code(403).send({ authorization: "failed" });
@@ -21,7 +21,7 @@ export default function createAuthRoutes(fastify) {
     {
       method: "POST",
       url: "/register",
-      handler: asyncHandlerAuths(async (req, res) => {
+      handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["username", "email", "password"])) return;
         const result = await registerUser(req.body);
         res.code(201).send(result);
