@@ -3,6 +3,7 @@ import {
   getUserByUsername,
   getUserByEmail,
   getUserByID,
+  patchUser,
 } from "./models/userModel.js";
 import bcrypt from "bcryptjs";
 import fastify from "./index.js";
@@ -65,7 +66,7 @@ export async function resetUserPassword(data) {
   if (!user) return null;
   const resetToken = crypto.randomBytes(32).toString("hex");
   const hash = await bcrypt.hash(resetToken, 10);
-  patchUser({ reset_token: hash });
+  patchUser(user.id, { reset_token: hash });
   const link = `http://localhost:9000/resetToken?token=${resetToken}&id=${user.id}`;
   const info = await transporter.sendMail({
     from: `"Transcendence" <${process.env.EMAIL_USER}>`,
