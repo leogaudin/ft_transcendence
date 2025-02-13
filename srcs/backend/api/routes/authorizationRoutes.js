@@ -4,6 +4,7 @@ import {
   loginUser,
   registerUser,
   resetUserPassword,
+  verifyUserResetToken,
 } from "../utils.js";
 
 export default function createAuthRoutes(fastify) {
@@ -43,8 +44,8 @@ export default function createAuthRoutes(fastify) {
       url: "/resetToken",
       handler: asyncHandler(async (req, res) => {
         const result = await verifyUserResetToken(
-          req.params.token,
-          req.params.id,
+          req.query.token,
+          req.query.id,
         );
         if (result == null) res.code(404).send({ error: "user not found" });
         if (result == false) res.code(403).send({ authorization: "failed" });
