@@ -13,10 +13,10 @@ db.serialize(() => {
     `
     CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL UNIQUE,
-    alias TEXT,
-    email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    alias VARCHAR(255),
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     is_online BOOLEAN DEFAULT 0,
     last_login DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -56,7 +56,7 @@ db.serialize(() => {
     `
     CREATE TABLE IF NOT EXISTS tournaments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT,
+    name VARCHAR(255),
     player_amount INTEGER NOT NULL DEFAULT 4 CHECK (player_amount >= 4)
     )`,
     (err) => {
@@ -91,7 +91,7 @@ db.serialize(() => {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     left_player_id INTEGER NOT NULL,
     right_player_id INTEGER NOT NULL,
-    result TEXT NOT NULL,
+    result VARCHAR(255) NOT NULL,
     winner_id INTEGER NOT NULL,
     loser_id INTEGER NOT NULL,
     tournament_id INTEGER,
