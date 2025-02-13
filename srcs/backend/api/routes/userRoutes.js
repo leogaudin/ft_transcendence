@@ -6,6 +6,8 @@ import {
   putUser,
   patchUser,
   deleteUser,
+  addUserFriend,
+  removeUserFriend,
 } from "../models/userModel.js";
 import { getMessagesOfUser } from "../models/messageModel.js";
 import { getChatsOfUser } from "../models/chatModel.js";
@@ -96,7 +98,26 @@ export default function createUserRoutes(fastify) {
         if (table == "tournaments") {
           data = await getTournamentsOfUser(id);
         }
-
+        res.code(200).send(data);
+      }),
+    },
+    {
+      onRequest: [fastify.authenticate],
+      method: "POST",
+      url: "/users/:id/friends",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["friend_id"])) return;
+        const data = await addUserFriend(req.params.id, req.body.friend_id);
+        res.code(200).send(data);
+      }),
+    },
+    {
+      onRequest: [fastify.authenticate],
+      method: "PATCH",
+      url: "/users/:id/friends",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["friend_id"])) return;
+        const data = await removeUserFriend(req.params.id, req.body.friend_id);
         res.code(200).send(data);
       }),
     },
