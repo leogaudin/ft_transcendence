@@ -1,10 +1,27 @@
 // User creation
 (async () => {
-  console.log("Creating users...");
-  let res = await fetch("http://localhost:9000/users", {
+  console.log("Creating debug user...");
+  let res = await fetch("http://localhost:9000/register", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: "debug",
+      email: "debug",
+      password: "debug",
+    }),
+  });
+  const body = await res.json();
+  const token = body.token;
+  console.log(res.status);
+  console.log("token", token);
+  console.log("Creating users...");
+  res = await fetch("http://localhost:9000/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       username: "foo",
@@ -17,6 +34,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       username: "bar",
@@ -29,6 +47,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       username: "baz",
@@ -41,6 +60,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       username: "qux",
@@ -56,6 +76,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       first_user_id: "1",
@@ -67,6 +88,8 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       first_user_id: "2",
@@ -78,6 +101,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       first_user_id: "3",
@@ -92,6 +116,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       sender_id: "1",
@@ -104,6 +129,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       sender_id: "1",
@@ -116,6 +142,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       sender_id: "3",
@@ -131,6 +158,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       name: "Test tournament",
@@ -143,6 +171,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       name: "Another test tournament",
@@ -158,6 +187,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       left_player_id: 1,
@@ -172,6 +202,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       left_player_id: 1,
@@ -186,6 +217,7 @@
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       left_player_id: 4,
