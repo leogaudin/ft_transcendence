@@ -33,6 +33,17 @@ export function validateInput(req, res, requiredFields) {
   return true;
 }
 
+export function anonymize(user) {
+  if (!user.is_deleted) {
+    delete user.is_deleted;
+  } else {
+    delete user.is_deleted;
+    user.username = "anonymous";
+    user.email = "anonymous@mail.com";
+  }
+  return user;
+}
+
 export async function loginUser(data) {
   const user = await getUserByUsername(data.username);
   if (!user) return null;

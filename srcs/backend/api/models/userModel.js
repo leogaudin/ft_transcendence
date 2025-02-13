@@ -1,14 +1,16 @@
 import bcrypt from "bcryptjs";
 import db from "../database.js";
+import { anonymize } from "../utils.js";
 
 export function getUsers() {
   return new Promise((resolve, reject) => {
-    const sql = ` SELECT u.id, u.username, u.email FROM users u `;
+    const sql = ` SELECT u.id, u.username, u.email, u.is_deleted FROM users u `;
     db.all(sql, (err, rows) => {
       if (err) {
         console.error("Error getting users:", err.message);
         return reject(err);
       }
+      rows.forEach(anonymize);
       resolve(rows);
     });
   });
@@ -51,6 +53,7 @@ export function getUserByID(id) {
       };
       delete user.friends_ids;
       delete user.password;
+      anonymize(user);
       resolve(user);
     });
   });
@@ -109,7 +112,8 @@ export async function patchUser(id, updates) {
 export function deleteUser(id) {
   return new Promise((resolve, reject) => {
     const sql = `
-      DELETE FROM users
+      UPDATE users
+      SET is_deleted = 1
       WHERE id = ?
     `;
     db.run(sql, id, function (err) {
@@ -165,7 +169,9 @@ export function removeUserFriend(id, friend_id) {
 
 export function getUserByUsername(username) {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT * FROM users WHERE username = ? `;
+    const sql = `
+      SELECT * FROM users
+      WHERE username = ? AND is_deleted = 0 `;
     db.get(sql, username, function (err, row) {
       if (err) {
         console.error("Error getting user:", err.message);
@@ -178,7 +184,9 @@ export function getUserByUsername(username) {
 
 export function getUserByEmail(email) {
   return new Promise((resolve, reject) => {
-    const sql = `SELECT * FROM users WHERE email = ? `;
+    const sql = `
+      SELECT * FROM users
+      WHERE email = ? AND is_deleted = 0 `;
     db.get(sql, email, function (err, row) {
       if (err) {
         console.error("Error getting user:", err.message);

@@ -70,6 +70,41 @@
   });
   console.log(res.status);
 
+  console.log("Adding friends...");
+  res = await fetch("http://localhost:9000/users/1/friends", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      friend_id: "2",
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/users/1/friends", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      friend_id: "3",
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/users/1/friends", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      friend_id: "4",
+    }),
+  });
+  console.log(res.status);
+
   // Chat creation
   console.log("Creating chats...");
   res = await fetch("http://localhost:9000/chats", {
