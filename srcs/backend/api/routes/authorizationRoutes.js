@@ -3,9 +3,8 @@ import {
   validateInput,
   loginUser,
   registerUser,
-  resetUserPassword,
-  verifyUserResetToken,
 } from "../utils.js";
+import { resetUserPassword, verifyUserResetToken } from "../passwordReset.js";
 
 export default function createAuthRoutes(fastify) {
   return [

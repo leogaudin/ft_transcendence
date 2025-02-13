@@ -1,14 +1,10 @@
 import {
   createUser,
   getUserByUsername,
-  getUserByEmail,
-  getUserByID,
   patchUser,
 } from "./models/userModel.js";
 import bcrypt from "bcryptjs";
 import fastify from "./index.js";
-import nodemailer from "nodemailer";
-import crypto from "crypto";
 
 export const asyncHandler = (fn) => async (req, res) => {
   try {
@@ -61,46 +57,4 @@ export async function registerUser(data) {
   const token = fastify.jwt.sign({ user: user.id });
   const result = Object.assign({}, user, { token });
   return result;
-}
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST,
-  port: 587,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
-export async function resetUserPassword(data) {
-  const user = await getUserByEmail(data.email);
-  if (!user) return null;
-  const resetToken = crypto.randomBytes(32).toString("hex");
-  const hash = await bcrypt.hash(resetToken, 10);
-  await patchUser(user.id, { reset_token: hash });
-  // This should go to the frontend, and after the user
-  // fills a form, the new password gets sent to /resetToken endpoint
-  const link = `http://localhost:9000/resetToken?token=${resetToken}&id=${user.id}`;
-  const info = await transporter.sendMail({
-    from: `"Transcendence" <${process.env.EMAIL_USER}>`,
-    to: user.email,
-    subject: "Password Reset Request",
-    text: link,
-    html: link,
-  });
-
-  return info;
-}
-
-export async function verifyUserResetToken(token, id) {
-  const user = await getUserByID(id);
-  if (!user) return null;
-  if (!user.reset_token) return false;
-  const isAuthorized = await bcrypt.compare(token, user.reset_token);
-  if (!isAuthorized) return false;
-  console.log("User is able to reset password");
-  // Reset password logic
-  // patchUser(id, {password: newPassword})
-  patchUser(user.id, { reset_token: null }); // Null the reset_token after changin pass
-  return true;
 }
