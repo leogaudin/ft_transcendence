@@ -52,6 +52,7 @@ export async function loginUser(data) {
   const token = fastify.jwt.sign({ user: user.id });
   const result = Object.assign({}, user, { token });
   delete result.password;
+  await patchUser(user.id, { is_online: 1 });
   return result;
 }
 
@@ -76,7 +77,7 @@ export async function resetUserPassword(data) {
   if (!user) return null;
   const resetToken = crypto.randomBytes(32).toString("hex");
   const hash = await bcrypt.hash(resetToken, 10);
-  patchUser(user.id, { reset_token: hash });
+  await patchUser(user.id, { reset_token: hash });
   // This should go to the frontend, and after the user
   // fills a form, the new password gets sent to /resetToken endpoint
   const link = `http://localhost:9000/resetToken?token=${resetToken}&id=${user.id}`;
