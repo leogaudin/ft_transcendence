@@ -66,7 +66,8 @@ export async function resetUserPassword(data) {
   const resetToken = crypto.randomBytes(32).toString("hex");
   const hash = await bcrypt.hash(resetToken, 10);
   patchUser(user.id, { reset_token: hash });
-  // This link should go to the frontend, then after the user changes their password, it goes to the backend to make the change
+  // This should go to the frontend, and after the user
+  // fills a form, the new password gets sent to /resetToken endpoint
   const link = `http://localhost:9000/resetToken?token=${resetToken}&id=${user.id}`;
   const info = await transporter.sendMail({
     from: `"Transcendence" <${process.env.EMAIL_USER}>`,
