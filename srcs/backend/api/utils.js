@@ -51,7 +51,6 @@ export async function registerUser(data) {
   return result;
 }
 
-// TODO: This
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: 587,
@@ -83,10 +82,12 @@ export async function resetUserPassword(data) {
 export async function verifyUserResetToken(token, id) {
   const user = await getUserByID(id);
   if (!user) return null;
+  if (!user.reset_token) return false;
   const isAuthorized = await bcrypt.compare(token, user.reset_token);
   if (!isAuthorized) return false;
   console.log("User is able to reset password");
   // Reset password logic
   // patchUser(id, {password: newPassword})
+  patchUser(user.id, { reset_token: null }); // Null the reset_token after changin pass
   return true;
 }
