@@ -1,11 +1,3 @@
-import {
-  createUser,
-  getUserByUsername,
-  patchUser,
-} from "./models/userModel.js";
-import bcrypt from "bcryptjs";
-import fastify from "./index.js";
-
 export const asyncHandler = (fn) => async (req, res) => {
   try {
     await fn(req, res);
@@ -39,6 +31,14 @@ export function anonymize(user) {
   }
   return user;
 }
+
+import {
+  createUser,
+  getUserByUsername,
+  patchUser,
+} from "./models/userModel.js";
+import bcrypt from "bcryptjs";
+import fastify from "./index.js";
 
 export async function loginUser(data) {
   const user = await getUserByUsername(data.username);
