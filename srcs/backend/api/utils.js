@@ -58,3 +58,27 @@ export async function registerUser(data) {
   const result = Object.assign({}, user, { token });
   return result;
 }
+
+import { pipeline } from "node:stream/promises";
+import { createWriteStream } from "node:fs";
+import path from "node:path";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export async function saveFile(data) {
+  const uploadDir = path.join(__dirname, "uploads");
+  const filename = `${Date.now()}-${data.filename}`;
+  const filepath = path.join(uploadDir, filename);
+  await pipeline(data.file, createWriteStream(filepath));
+  return {
+    message: "File uploaded successfully",
+    fileDetails: {
+      filename: filename,
+      originalName: data.filename,
+      mimetype: data.mimetype,
+      size: data.file.bytesRead,
+    },
+  };
+}

@@ -1,39 +1,16 @@
+import { asyncHandler } from "../utils.js";
+import { saveFile } from "../utils.js";
+
 export default function createUploadRoutes(fastify) {
   return [
     {
       method: "POST",
       url: "/upload",
       handler: asyncHandler(async (req, res) => {
-        // Do shit with the file
-        const file = await req.file();
-        // const data = await request.file();
-        //
-        //         if (!data) {
-        //           return reply.code(400).send({ error: 'No file uploaded' });
-        //         }
-        //
-        //         // Ensure uploads directory exists
-        //         const uploadsDir = path.join(__dirname, '..', 'uploads');
-        //
-        //         // Generate unique filename
-        //         const filename = `${Date.now()}-${data.filename}`;
-        //         const filepath = path.join(uploadsDir, filename);
-        //
-        //         // Save file
-        //         await pipeline(
-        //           data.file,
-        //           createWriteStream(filepath)
-        //         );
-        //
-        //         return {
-        //           message: "File uploaded successfully",
-        //           fileDetails: {
-        //             filename: filename,
-        //             originalName: data.filename,
-        //             mimetype: data.mimetype,
-        //             size: data.file.bytesRead
-        // }
-        // };
+        const data = await req.file();
+        if (!data) return res.code(400).send({ error: "No file uploaded" });
+        const result = await saveFile(data);
+        res.code(200).send(result);
       }),
     },
   ];

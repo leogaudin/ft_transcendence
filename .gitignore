@@ -51,6 +51,7 @@ out
 
 #Database 
 *.db
+uploads/
 
 # Frontend #
 # Tailwind CSS #
