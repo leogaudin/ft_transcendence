@@ -2,15 +2,20 @@ import Fastify from "fastify";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
 import createRoutes from "./routes/routes.js";
+import multer from "fastify-multer";
 
 const fastify = Fastify({ logger: true });
+const upload = multer({ dest: "uploads/" });
+
 await fastify.register(cors, {});
-fastify.register(jwt, {
+await fastify.register(jwt, {
   secret: process.env.JWT_SECRET,
   sign: {
     expiresIn: "1d",
   },
 });
+await fastify.register(multer.contentParser);
+
 fastify.decorate("authenticate", async function (req, res) {
   try {
     await req.jwtVerify();
@@ -18,6 +23,7 @@ fastify.decorate("authenticate", async function (req, res) {
     res.send(err);
   }
 });
+fastify.decorate("upload", upload);
 
 const { ADDRESS = "0.0.0.0", PORT = "9000" } = process.env;
 

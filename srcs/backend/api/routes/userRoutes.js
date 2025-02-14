@@ -17,6 +17,23 @@ import { getTournamentsOfUser } from "../models/tournamentModel.js";
 export default function createUserRoutes(fastify) {
   return [
     {
+      method: "POST",
+      url: "/upload",
+      preHandler: fastify.upload.single("avatar"),
+      handler: asyncHandler(async (req, res) => {
+        const file = req.file;
+        return {
+          message: "File uploaded successfully",
+          fileDetails: {
+            filename: file.filename,
+            originalName: file.originalname,
+            mimetype: file.mimetype,
+            size: file.size,
+          },
+        };
+      }),
+    },
+    {
       onRequest: [fastify.authenticate],
       method: "GET",
       url: "/users",
