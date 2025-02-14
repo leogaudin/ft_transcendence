@@ -5,9 +5,9 @@
   "dependencies": {
     "@fastify/cors": "^10.0.2",
     "@fastify/jwt": "^9.0.3",
+    "@fastify/multipart": "^9.0.3",
     "bcryptjs": "^2.4.3",
     "fastify": "^5.2.1",
-    "fastify-multer": "^2.0.3",
     "handlebars": "^4.7.8",
     "nodemailer": "^6.10.0",
     "nodemon": "^3.1.9",

@@ -1,11 +1,10 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
+import multipart from "@fastify/multipart";
 import createRoutes from "./routes/routes.js";
-import multer from "fastify-multer";
 
 const fastify = Fastify({ logger: true });
-const upload = multer({ dest: "uploads/" });
 
 await fastify.register(cors, {});
 await fastify.register(jwt, {
@@ -14,7 +13,17 @@ await fastify.register(jwt, {
     expiresIn: "1d",
   },
 });
-await fastify.register(multer.contentParser);
+// Add constraints to the file, like
+// {
+//    limits: {
+// fieldNameSize: 100, // Max field name size in bytes
+// fieldSize: 100,     // Max field value size in bytes
+// fields: 10,         // Max number of non-file fields
+// fileSize: 5000000,  // For multipart forms, the max file size in bytes (5MB)
+// files: 1,
+//
+// }
+await fastify.register(multipart);
 
 fastify.decorate("authenticate", async function (req, res) {
   try {
@@ -23,7 +32,6 @@ fastify.decorate("authenticate", async function (req, res) {
     res.send(err);
   }
 });
-fastify.decorate("upload", upload);
 
 const { ADDRESS = "0.0.0.0", PORT = "9000" } = process.env;
 
