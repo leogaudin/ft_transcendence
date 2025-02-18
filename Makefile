@@ -26,6 +26,7 @@ reset:
 		@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
 		@docker compose -f ./srcs/docker-compose.yml stop backend
 		@rm -f ./srcs/backend/transcendence.db
+		@find ./srcs/backend/api/avatars/ ! -name 'default.jpg' -type f -exec rm -f {} +
 		@echo -n "Repopulate with mockup data? [y/N] " && read ans && [ $${ans:-N} = y ]
 		@make back && sleep 3
 		@make repopulate
