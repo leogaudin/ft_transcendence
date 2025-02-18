@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @font-face {
 	font-family: "Perfect DOS VGA";
@@ -141,7 +143,8 @@ h1 {
 	box-shadow: var(--violet) 0px 0px 20px;
 	margin: 10px;
 	padding: 25px;
-	width: 30%;
+	min-width: 30%;
+	max-width: 90%;
 	z-index: 1;
 	gap: 10px;
 }
@@ -160,8 +163,9 @@ h1 {
 
 #login-footer {
 	z-index: 1;
-	justify-content: space-between;
-	width: 30%;
+	/* justify-content: space-between; */
+	min-width: 30%;
+	max-width: 90%;
 }
 
 .data-user {
@@ -184,4 +188,11 @@ h1 {
 	cursor: pointer;
 }
   
-
+#terms-conditions {
+	text-align: end;
+	/* display: flex;
+	flex-wrap: wrap;
+	justify-content: end;
+	align-items: end;
+	align-content: end; */
+}
