@@ -34,6 +34,7 @@ export function anonymize(user) {
 
 import {
   createUser,
+  getUserByID,
   getUserByUsername,
   patchUser,
 } from "./models/userModel.js";
@@ -64,6 +65,7 @@ import { createWriteStream } from "node:fs";
 import path from "node:path";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import { unlink } from "node:fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -72,7 +74,15 @@ export async function saveAvatar(user_id, data) {
   const filename = `${Date.now()}-${data.filename}`;
   const filepath = path.join(uploadDir, filename);
   await pipeline(data.file, createWriteStream(filepath));
+  const user = await getUserByID(user_id);
+  const old_avatar = user.avatar;
+  const default_avatar = "/usr/transcendence/api/avatars/default.jpg";
   await patchUser(user_id, { avatar: filepath });
+  if (old_avatar != default_avatar) {
+    unlink(old_avatar, (err) => {
+      if (err) return { error: err.message };
+    });
+  }
   return {
     message: "File uploaded successfully",
     id: user_id,
