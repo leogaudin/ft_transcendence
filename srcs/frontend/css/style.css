@@ -29,6 +29,7 @@ body {
 	margin: 0;
 	font-family: "Perfect DOS VGA";
 	color: var(--accent-pink);
+	cursor: default;
 }
   
 canvas {
@@ -137,7 +138,7 @@ h1 {
 
 /* --> Login Page <-- */
 
-#login-page {
+#login-page, #sign-up-page {
 	background-color: var(--dark-blue);
 	border-radius: 15px;
 	box-shadow: var(--violet) 0px 0px 20px;
@@ -147,6 +148,10 @@ h1 {
 	max-width: 90%;
 	z-index: 1;
 	gap: 10px;
+}
+
+#sign-up-page {
+	display: none;
 }
 
 #divider {
@@ -185,6 +190,15 @@ h1 {
 	background-color: var(--accent-pink);
 	color: var(--dark-purple);
 	cursor: pointer;
+}
+
+.create-account {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 10px;
+	padding: 10px;
 }
   
 #terms-conditions {

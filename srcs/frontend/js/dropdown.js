@@ -28,3 +28,19 @@ function changeLanguage(option) {
     const language = languages.find((elem) => elem.key == option);
     button.innerText = language.label;
 }
+
+const signUpButton = document.getElementById("sign-up-button");
+const signInButton = document.getElementById("sign-in-button");
+const signUpPage = document.getElementById("sign-up-page");
+const signInPage = document.getElementById("login-page");
+
+document.addEventListener("DOMContentLoaded", () =>{
+    signUpButton.addEventListener("click", () => {
+        signInPage.style.display = "none";
+        signUpPage.style.display = "block";
+    });
+    signInButton.addEventListener("click", () => {
+        signInPage.style.display = "block";
+        signUpPage.style.display = "none";
+    });
+});
