@@ -51,7 +51,8 @@ out
 
 #Database 
 *.db
-uploads/
+avatars/*
+!avatars/default.jpg
 
 # Frontend #
 # Tailwind CSS #
