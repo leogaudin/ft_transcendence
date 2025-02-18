@@ -52,6 +52,9 @@ out
 #Database 
 *.db
 
+#py_cache
+__pycache__
+
 # Frontend #
 # Tailwind CSS #
 srcs/frontend/node_modules
