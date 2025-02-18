@@ -163,7 +163,6 @@ h1 {
 
 #login-footer {
 	z-index: 1;
-	/* justify-content: space-between; */
 	min-width: 30%;
 	max-width: 90%;
 }
@@ -190,9 +189,25 @@ h1 {
   
 #terms-conditions {
 	text-align: end;
-	/* display: flex;
-	flex-wrap: wrap;
-	justify-content: end;
-	align-items: end;
-	align-content: end; */
+}
+
+#menu-button {
+	background-color: var(--dark-blue);
+	border-radius: 5px;
+	box-shadow: var(--violet) 0px 0px 20px;
+}
+
+.l-option {
+	background-color: var(--accent-pink);
+	color: var(--dark-blue);
+	border-radius: 5px;
+	margin-bottom: 5px;
+	transition: 350ms ease-in-out;
+	width: 100px;
+}
+
+.l-option:hover {
+	background-color: var(--dark-blue);
+	color: var(--accent-pink);
+	padding-left: 10px;
 }
