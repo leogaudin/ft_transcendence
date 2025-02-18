@@ -1,9 +1,7 @@
-FROM node:bookworm
+FROM node:alpine
 
 WORKDIR /usr/transcendence
 
 COPY package.json .
 
-RUN npm install
-
-CMD ["npm", "start"]
+CMD ["sh","node_start.sh"]

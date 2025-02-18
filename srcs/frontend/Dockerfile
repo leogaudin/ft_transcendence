@@ -1,4 +1,4 @@
-FROM nginx:bookworm
+FROM nginx:alpine
 
 # TODO: CHANGE THIS WHEN DEVELOPMENT IS DONE
 RUN sed -i "s|user  nginx;|user  root;|g" /etc/nginx/nginx.conf
