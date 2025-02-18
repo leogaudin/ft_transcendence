@@ -17,6 +17,7 @@ db.serialize(() => {
     alias VARCHAR(255),
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
+    avatar TEXT DEFAULT "/usr/transcendence/api/avatars/default.jpg",
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     is_online BOOLEAN DEFAULT 0,
     last_login DATETIME DEFAULT CURRENT_TIMESTAMP,

@@ -67,13 +67,15 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-export async function saveFile(data) {
-  const uploadDir = path.join(__dirname, "uploads");
+export async function saveAvatar(user_id, data) {
+  const uploadDir = path.join(__dirname, "avatars");
   const filename = `${Date.now()}-${data.filename}`;
   const filepath = path.join(uploadDir, filename);
   await pipeline(data.file, createWriteStream(filepath));
+  await patchUser(user_id, { avatar: filepath });
   return {
     message: "File uploaded successfully",
+    id: user_id,
     fileDetails: {
       filename: filename,
       originalName: data.filename,

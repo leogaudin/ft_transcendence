@@ -51,7 +51,7 @@ out
 
 #Database 
 *.db
-avatars/*
+avatars/
 !avatars/default.jpg
 
 # Frontend #

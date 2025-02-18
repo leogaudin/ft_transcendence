@@ -4,7 +4,7 @@ import createTournamentRoutes from "./tournamentRoutes.js";
 import createMessageRoutes from "./messageRoutes.js";
 import createChatRoutes from "./chatRoutes.js";
 import createAuthRoutes from "./authorizationRoutes.js";
-import createUploadRoutes from "./uploadRoutes.js";
+import createAvatarRoutes from "./avatarRoutes.js";
 
 // Bundling all of the routes into one export
 
@@ -15,7 +15,7 @@ export default function createRoutes(fastify) {
   const matchRoutes = createMatchRoutes(fastify);
   const tournamentRoutes = createTournamentRoutes(fastify);
   const authRoutes = createAuthRoutes(fastify);
-  const uploadRoutes = createUploadRoutes(fastify);
+  const avatarRoutes = createAvatarRoutes(fastify);
   return [].concat(
     userRoutes,
     chatRoutes,
@@ -23,6 +23,6 @@ export default function createRoutes(fastify) {
     matchRoutes,
     tournamentRoutes,
     authRoutes,
-    uploadRoutes,
+    avatarRoutes,
   );
 }
