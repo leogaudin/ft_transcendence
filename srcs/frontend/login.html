@@ -38,7 +38,7 @@
         </section>
       </main>
       <footer id="login-footer" class="flex justify-between gap-x-10">
-        <div class="relative inline-block text-left">
+        <div class="relative inline-block text-left" id="language-menu">
           <div>
             <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
               Language
@@ -50,9 +50,9 @@
         
           <div class="absolute right-0 z-10 mt-2origin-top-right focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
             <div class="hidden py-1" role="none" id="language-options">
-              <a href="#" class="l-option block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-0">Español</a>
-              <a href="#" class="l-option block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-1">English</a>
-              <a href="#" class="l-option block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-2">Français</a>
+              <a href="#" language_key="es" class="l-option block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-0">Español</a>
+              <a href="#" language_key="en" class="l-option block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-1">English</a>
+              <a href="#" language_key="fr" class="l-option block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-2">Français</a>
             </div>
           </div>
         </div>
