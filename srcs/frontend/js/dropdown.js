@@ -37,10 +37,10 @@ const signInPage = document.getElementById("login-page");
 document.addEventListener("DOMContentLoaded", () =>{
     signUpButton.addEventListener("click", () => {
         signInPage.style.display = "none";
-        signUpPage.style.display = "block";
+        signUpPage.style.display = "flex";
     });
     signInButton.addEventListener("click", () => {
-        signInPage.style.display = "block";
+        signInPage.style.display = "flex";
         signUpPage.style.display = "none";
     });
 });
