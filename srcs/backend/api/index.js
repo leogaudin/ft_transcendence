@@ -6,7 +6,11 @@ import createRoutes from "./routes/routes.js";
 
 const fastify = Fastify({ logger: true });
 
-await fastify.register(cors, {});
+await fastify.register(cors, {
+  origin: "http://localhost:8000",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+});
 await fastify.register(jwt, {
   secret: process.env.JWT_SECRET,
   sign: {
