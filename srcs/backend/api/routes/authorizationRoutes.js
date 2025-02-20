@@ -23,7 +23,17 @@ export default function createAuthRoutes(fastify) {
       method: "POST",
       url: "/register",
       handler: asyncHandler(async (req, res) => {
-        if (!validateInput(req, res, ["username", "email", "password"])) return;
+        if (
+          !validateInput(req, res, [
+            "username",
+            "email",
+            "password",
+            "confirm_password",
+          ])
+        )
+          return;
+        if (req.body.password != req.body.confirm_password)
+          res.code(400).send({ error: "passwords don't match" });
         const result = await registerUser(req.body);
         res.code(201).send(result);
       }),
