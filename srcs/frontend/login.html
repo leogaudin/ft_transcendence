@@ -33,37 +33,49 @@
           <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with" data-shape="rectangular" data-logo_alignment="left"></div>
         </section>
         <section id="forgot-password" class="flex justify-center"><a href="/passwordrecovery">Forgot password?</a></section>
-        <section id="sign-up" class="flex justify-center">
-          <p>Don't have an account? <a href="/signup" class="text-[var(--dark-pink)]">Sign up</a></p>
+        <section id="sign-up-button" class="flex justify-center">
+          <p>Don't have an account? <a href="#" class="text-[var(--dark-pink)]">Sign up</a></p>
         </section>
       </main>
-      <footer id="login-footer" class="flex">
-        <div class="relative inline-block text-left">
+      <main id="sign-up-page" class="flex flex-col">
+        <header id="header-section" class="flex justify-center items-center">
+          <h1>Create an account</h1>
+          <img id="login-page-img" src="resources/img/sleeping-cat.png" alt="sleeping cat">
+        </header>
+        <div id="divider"></div>
+        <section id="sign-up">
+          <form action="/enviar" method="POST" class="flex flex-col items-center">
+            <p class="flex justify-start w-full">Username</p>
+            <input type="text" id="username" placeholder="username-example123" class="data-user">
+            <p class="flex justify-start w-full mt-5">Email</p>
+            <input type="email" id="email" placeholder="example@email.com" class="data-user">
+            <p class="flex justify-start w-full mt-5">Password</p>
+            <input type="password" id="password" placeholder="Password" class="data-user">
+            <p class="flex justify-start w-full mt-5">Repeat the password</p>
+            <input type="password" id="password" placeholder="Password" class="data-user">
+            <div class="create-account">
+              <button type="submit" class="data-user signin-user">Create account</button>
+              <p>or return to <a href="#" class="text-[var(--dark-pink)]" id="sign-in-button">Sign in</a></p>
+            </div>
+        </section>
+        <p class="flex justify-center items-center">By signing up, you agree to our Privacy and Terms Conditions.</p>
+      </main>
+      <footer id="login-footer" class="flex justify-between gap-x-10">
+        <div class="relative inline-block text-left" id="language-menu">
           <div>
-            <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
-              Options
+            <button type="button" class="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50" id="menu-button" aria-expanded="true" aria-haspopup="true">
+              Language
               <svg class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" data-slot="icon">
                 <path fill-rule="evenodd" d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" clip-rule="evenodd" />
               </svg>
             </button>
           </div>
         
-          <!--
-            Dropdown menu, show/hide based on menu state.
-        
-            Entering: "transition ease-out duration-100"
-              From: "transform opacity-0 scale-95"
-              To: "transform opacity-100 scale-100"
-            Leaving: "transition ease-in duration-75"
-              From: "transform opacity-100 scale-100"
-              To: "transform opacity-0 scale-95"
-          -->
-          <div class="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white ring-1 shadow-lg ring-black/5 focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+          <div class="absolute right-0 z-10 mt-2origin-top-right focus:outline-hidden" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
             <div class="hidden py-1" role="none" id="language-options">
-              <!-- Active: "bg-gray-100 text-gray-900 outline-hidden", Not Active: "text-gray-700" -->
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-0">Español</a>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-1">English</a>
-              <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-2">Français</a>
+              <a href="#" language_key="es" class="l-option block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-0">Español</a>
+              <a href="#" language_key="en" class="l-option block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-1">English</a>
+              <a href="#" language_key="fr" class="l-option block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="menu-item-2">Français</a>
             </div>
           </div>
         </div>

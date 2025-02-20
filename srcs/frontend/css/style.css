@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @font-face {
 	font-family: "Perfect DOS VGA";
@@ -27,6 +29,7 @@ body {
 	margin: 0;
 	font-family: "Perfect DOS VGA";
 	color: var(--accent-pink);
+	cursor: default;
 }
   
 canvas {
@@ -135,15 +138,20 @@ h1 {
 
 /* --> Login Page <-- */
 
-#login-page {
+#login-page, #sign-up-page {
 	background-color: var(--dark-blue);
 	border-radius: 15px;
 	box-shadow: var(--violet) 0px 0px 20px;
 	margin: 10px;
 	padding: 25px;
-	width: 30%;
+	min-width: 30%;
+	max-width: 90%;
 	z-index: 1;
 	gap: 10px;
+}
+
+#sign-up-page {
+	display: none;
 }
 
 #divider {
@@ -160,8 +168,8 @@ h1 {
 
 #login-footer {
 	z-index: 1;
-	justify-content: space-between;
-	width: 30%;
+	min-width: 30%;
+	max-width: 90%;
 }
 
 .data-user {
@@ -183,5 +191,37 @@ h1 {
 	color: var(--dark-purple);
 	cursor: pointer;
 }
-  
 
+.create-account {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: 10px;
+	padding: 10px;
+}
+  
+#terms-conditions {
+	text-align: end;
+}
+
+#menu-button {
+	background-color: var(--dark-blue);
+	border-radius: 5px;
+	box-shadow: var(--violet) 0px 0px 20px;
+}
+
+.l-option {
+	background-color: var(--accent-pink);
+	color: var(--dark-blue);
+	border-radius: 5px;
+	margin-bottom: 5px;
+	transition: 350ms ease-in-out;
+	width: 100px;
+}
+
+.l-option:hover {
+	background-color: var(--dark-blue);
+	color: var(--accent-pink);
+	padding-left: 10px;
+}
