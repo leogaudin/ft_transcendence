@@ -44,3 +44,62 @@ document.addEventListener("DOMContentLoaded", () =>{
         signUpPage.style.display = "none";
     });
 });
+
+
+const signupSubmit = document.getElementById("signup-form");
+
+async function handleRegister() {
+    const username = document.getElementById("username").value;
+    const email = document.getElementById("signup-email").value;
+    const password = document.getElementById("new-password").value;
+    const confirmPassword = document.getElementById("confirm-password").value;
+
+    try {
+        if (!username || !email || !password || !confirmPassword)
+            throw new Error("Fill in all the fields");
+        if (password !== confirmPassword)
+            throw new Error("Passwords don't match");
+        if (password.length < 9)
+            throw new Error("Password too short");
+        if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password))
+            throw new Error("Please use at least one uppercase, lowercase, number and '*.-_'");
+    }
+    catch (error) {
+        console.error(`Error: `, error);
+        return false;
+    }
+    // Mirar tipo de email, largo, etc
+    const response = await sendRequest('POST', 'register', {username: username, email: email, password: password, confirm_password: confirmPassword});
+    if (response["error"]) {
+        if (response["error"].includes("username"))
+            alert("Email duplicado");
+        else if (response["error"].includes("email"))
+            alert("Error en el usuario");
+        else if (response["error"].includes("password"))
+            alert("Error en la contraseña");
+        else
+            alert(response["error"]);
+        console.log(response);
+    }
+    else {
+        alert("Chuli");
+    }
+}
+
+signupSubmit.addEventListener("submit", handleRegister);
+
+async function sendRequest(method, endpoint, body = null) {
+    try {
+        const response = await fetch(`http://localhost:9000/${endpoint}`, {
+            method,
+            credentials: 'include',
+            headers: { 'Content-Type': 'application/json' },
+            body: body ? JSON.stringify(body) : null
+        });
+        return await response.json();
+    }
+    catch (error) {
+        console.error(`Error en ${method} ${endpoint}:`, error);
+        return false;
+    }
+}
