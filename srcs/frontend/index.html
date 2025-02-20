@@ -7,7 +7,7 @@
     <link href="css/output.css" rel="stylesheet" />
   </head>
   <body>
-    <div id="particles-js"></div>
+    <!-- <div id="particles-js"></div> -->
     <div id="visual-div" class="flex flex-col justify-center items-center">
       <main id="login-page" class="flex flex-col">
         <header id="header-section" class="flex justify-center items-center">
@@ -16,8 +16,8 @@
         </header>
         <div id="divider"></div>
         <section id="sign-in">
-          <form action="/enviar" method="POST" class="flex flex-col items-center">
-            <input type="email" id="email" placeholder="Email" class="data-user">
+          <form id="login-form" class="flex flex-col items-center">
+            <input type="text" id="login-username" placeholder="Username" class="data-user">
             <input type="password" id="password" placeholder="Password" class="data-user">
             <button type="submit" class="data-user signin-user">Sign in</button>
           </form>      
@@ -86,6 +86,7 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
   <script src="js/init.js"></script>
-  <script src="js/dropdown.js"></script>
+  <script src="js/loginPage.js"></script>
+  <script src="js/fLoginPage.js"></script>
   </body>
 </html>
