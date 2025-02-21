@@ -9,7 +9,13 @@ export function getMatchs() {
         console.error("Error getting matches:", err.message);
         return reject(err);
       }
-      resolve(rows);
+      const matches = rows.map((row) => ({
+        ...row,
+        result: row.result
+          ? row.result.split(",").map((id) => parseInt(id))
+          : [],
+      }));
+      resolve(matches);
     });
   });
 }
@@ -32,14 +38,10 @@ export function createMatch(data) {
         console.error("Error inserting match:", err.message);
         return reject(err);
       }
-      resolve({
-        id: this.lastID,
-        left_player_id: data.left_player_id,
-        right_player_id: data.right_player_id,
-        result: data.result,
-        winner_id: data.winner_id,
-        loser_id: data.loser_id,
-      });
+      if (row && row.result) {
+        row.result = row.result.split(",").map((id) => parseInt(id));
+      }
+      resolve(row);
     });
   });
 }
@@ -52,6 +54,9 @@ export function getMatchByID(id) {
       if (err) {
         console.error("Error getting match:", err.message);
         return reject(err);
+      }
+      if (row && row.result) {
+        row.result = row.result.split(",").map((id) => parseInt(id));
       }
       resolve(row);
     });
