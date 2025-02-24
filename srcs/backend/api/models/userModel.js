@@ -2,6 +2,10 @@ import bcrypt from "bcryptjs";
 import db from "../database.js";
 import { anonymize } from "../utils.js";
 
+/**
+ * Returns the ID, username and email of all avaliable users
+ * @returns {array} - All avaliable users
+ */
 export function getUsers() {
   return new Promise((resolve, reject) => {
     const sql = ` SELECT u.id, u.username, u.email, u.is_deleted FROM users u `;
@@ -16,6 +20,11 @@ export function getUsers() {
   });
 }
 
+/**
+ * Creates a user, hashing the password in the process
+ * @param {payload} data - User to create
+ * @returns {object} - The newly created user
+ */
 export async function createUser(data) {
   data.password = await bcrypt.hash(data.password, 10);
   return new Promise((resolve, reject) => {
@@ -31,6 +40,11 @@ export async function createUser(data) {
   });
 }
 
+/**
+ * Finds a user by a given ID if it exists
+ * @param {int} id - ID of the user
+ * @returns {object} - The found user
+ */
 export function getUserByID(id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -59,6 +73,12 @@ export function getUserByID(id) {
   });
 }
 
+/**
+ * Fully modifies a user
+ * @param {int} id - ID of the user
+ * @param {payload} data - User data to modify
+ * @returns {object} - The modified user
+ */
 export async function putUser(id, data) {
   data.password = await bcrypt.hash(data.password, 10);
   return new Promise((resolve, reject) => {
@@ -81,6 +101,12 @@ export async function putUser(id, data) {
   });
 }
 
+/**
+ * Patches a user with the given information
+ * @param {int} id - ID of the user
+ * @param {payload} updates - Fields to change
+ * @returns {object} - Modified fields
+ */
 export async function patchUser(id, updates) {
   if (updates.hasOwnProperty("password")) {
     updates.password = await bcrypt.hash(updates.password, 10);
@@ -109,6 +135,12 @@ export async function patchUser(id, updates) {
   });
 }
 
+/**
+ * Sets the deletion flag of a user to true
+ * @param {int} id - ID of the user
+ * @returns {promise} - Nothing on success,
+ *                      error on failure
+ */
 export function deleteUser(id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -129,6 +161,12 @@ export function deleteUser(id) {
   });
 }
 
+/**
+ * Adds a friend to a user
+ * @param {int} id - ID of the user
+ * @param {int} friend_id - ID of the friend
+ * @returns {object} - Object with the IDs of the users
+ */
 export function addUserFriend(id, friend_id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -147,6 +185,13 @@ export function addUserFriend(id, friend_id) {
     });
   });
 }
+/**
+ * Deletes a friend for a user
+ * @param {int} id - ID of the user
+ * @param {int} friend_id - ID of the friend
+ * @returns {object} - Object on success,
+ *                     error on failure
+ */
 export function removeUserFriend(id, friend_id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -167,6 +212,11 @@ export function removeUserFriend(id, friend_id) {
   });
 }
 
+/**
+ * Finds a user by a given username
+ * @param {string} username - Name of the user
+ * @returns {object} - Found user
+ */
 export function getUserByUsername(username) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -182,6 +232,11 @@ export function getUserByUsername(username) {
   });
 }
 
+/**
+ * Finds a user by a given email
+ * @param {string} email - Email of the user
+ * @returns {object} - Found user
+ */
 export function getUserByEmail(email) {
   return new Promise((resolve, reject) => {
     const sql = `
