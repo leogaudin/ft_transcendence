@@ -1,3 +1,7 @@
+/**
+ * Wraps a function in a try catch with await
+ * @param {function} fn - Function to wrap
+ */
 export const asyncHandler = (fn) => async (req, res) => {
   try {
     await fn(req, res);
@@ -6,6 +10,13 @@ export const asyncHandler = (fn) => async (req, res) => {
   }
 };
 
+/**
+ * Checks if a given request has specific fields
+ * @param {request} req - Request to check values from
+ * @param {response} res - Response to return codes
+ * @param {array} requiredFields - Fields to check for
+ * @returns {boolean} - True if successful, false if not
+ */
 export function validateInput(req, res, requiredFields) {
   if (!req.body)
     return res.code(400).send({ error: "Body of request not found" });
@@ -21,6 +32,12 @@ export function validateInput(req, res, requiredFields) {
   return true;
 }
 
+/**
+ * Checks if a given user is deleted, and if it is
+ * modifies it, giving it an anonymous name
+ * @param {user} user - User to check
+ * @returns {user} - Modified user
+ */
 export function anonymize(user) {
   if (!user.is_deleted) {
     delete user.is_deleted;
@@ -41,6 +58,13 @@ import {
 import bcrypt from "bcryptjs";
 import fastify from "./index.js";
 
+/**
+ * Logs the user
+ * @param {payload} data - Payload to evaluate
+ * @returns {object} - An object with the user and a JWT if successful,
+ *                     false if the password is incorrect,
+ *                     null if the user does not exist
+ */
 export async function loginUser(data) {
   const user = await getUserByUsername(data.username);
   if (!user) return null;
@@ -53,6 +77,11 @@ export async function loginUser(data) {
   return result;
 }
 
+/**
+ * Registers a user, creating it and giving a JWT
+ * @param {payload} data - Payload to evaluate
+ * @returns {object} - An object with the full user information and a JWT
+ */
 export async function registerUser(data) {
   const user = await createUser(data);
   const token = fastify.jwt.sign({ user: user.id });
@@ -69,6 +98,13 @@ import { unlink } from "node:fs";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+/**
+ * Saves a given image as the avatar of an user,
+ * deleting the old one in the process
+ * @param {int} user_id - ID of the user
+ * @param {payload} data - Payload to add the image from
+ * @returns {object} - Object with the ID and metadata of the avatar
+ */
 export async function saveAvatar(user_id, data) {
   const uploadDir = path.join(__dirname, "avatars");
   const filename = `${Date.now()}-${data.filename}`;

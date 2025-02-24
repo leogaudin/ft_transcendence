@@ -6,6 +6,7 @@ import createRoutes from "./routes/routes.js";
 
 const fastify = Fastify({ logger: true });
 
+/** Plugin registration */
 await fastify.register(cors, {
   origin: "http://localhost:8000",
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
@@ -18,18 +19,9 @@ await fastify.register(jwt, {
     expiresIn: "1d",
   },
 });
-// Add constraints to the file, like
-// {
-//    limits: {
-// fieldNameSize: 100, // Max field name size in bytes
-// fieldSize: 100,     // Max field value size in bytes
-// fields: 10,         // Max number of non-file fields
-// fileSize: 5000000,  // For multipart forms, the max file size in bytes (5MB)
-// files: 1,
-//
-// }
 await fastify.register(multipart);
 
+/** Decorator for JWT verification */
 fastify.decorate("authenticate", async function (req, res) {
   try {
     await req.jwtVerify();
@@ -40,18 +32,15 @@ fastify.decorate("authenticate", async function (req, res) {
 
 const { ADDRESS = "0.0.0.0", PORT = "9000" } = process.env;
 
-// Declare a route
+/** Declares the routes */
 fastify.get("/", async function handler(request, reply) {
   return { hello: "world" };
 });
-
 const routes = createRoutes(fastify);
-
 routes.forEach((route) => {
   fastify.route(route);
 });
 
-// Run the server!
 try {
   await fastify.listen({ host: ADDRESS, port: PORT });
 } catch (err) {
