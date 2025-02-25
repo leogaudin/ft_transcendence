@@ -49,9 +49,11 @@ export function getUserByID(id) {
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT u.*,
-      GROUP_CONCAT(uf.friend_id) AS friends_ids
+      GROUP_CONCAT(DISTINCT uf.friend_id) AS friends_ids,
+      GROUP_CONCAT(DISTINCT ub.blocked_id) AS blocked_ids
       FROM users u
       LEFT JOIN user_friends uf ON u.id = uf.user_id
+      LEFT JOIN user_blocks ub ON u.id = ub.user_id
       WHERE id = ?
       GROUP BY u.id`;
 

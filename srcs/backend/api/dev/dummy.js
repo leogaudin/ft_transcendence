@@ -70,6 +70,32 @@
     }),
   });
   console.log(res.status);
+  res = await fetch("http://localhost:9000/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      username: "quux",
+      email: "quux@gmail.com",
+      password: "quuxpassword",
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      username: "quuux",
+      email: "quuux@gmail.com",
+      password: "quuuxpassword",
+    }),
+  });
+  console.log(res.status);
 
   console.log("Adding friends...");
   res = await fetch("http://localhost:9000/users/1/friends", {
