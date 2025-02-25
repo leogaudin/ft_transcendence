@@ -1,5 +1,9 @@
-import db from "../database.js";
+import db from "../database.
 
+/**
+ * Finds all avaliable chats
+ * @returns {array} - All avaliable rows
+ */
 export function getChats() {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM chats";
@@ -14,6 +18,12 @@ export function getChats() {
   });
 }
 
+/**
+ * Creates a chat between two users,
+ * ensuring uniqueness by ordering the IDs
+ * @param {payload} data - IDs of the users
+ * @returns {object} - Newly created chat
+ */
 export function createChat(data) {
   return new Promise((resolve, reject) => {
     // Ensuring unique chats between two people
