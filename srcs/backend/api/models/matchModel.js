@@ -1,5 +1,9 @@
 import db from "../database.js";
 
+/**
+ * Finds all avaliable matches
+ * @returns {array} - All avaliable rows
+ */
 export function getMatchs() {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM matches";
@@ -20,6 +24,11 @@ export function getMatchs() {
   });
 }
 
+/**
+ * Creates a match
+ * @param {payload} data - IDs and result of the match
+ * @returns {object} - Newly created match
+ */
 export function createMatch(data) {
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO matches (
@@ -46,6 +55,11 @@ export function createMatch(data) {
   });
 }
 
+/**
+ * Finds a match by a given ID
+ * @param {int} id - ID of the match
+ * @returns {object} - Found match
+ */
 export function getMatchByID(id) {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM matches WHERE id = ?";
@@ -63,6 +77,12 @@ export function getMatchByID(id) {
   });
 }
 
+/**
+ * Fully modifies a match
+ * @param {int} id - ID of the match
+ * @param {payload} data - IDs and result of the match
+ * @returns {object} - Modified match
+ */
 export function putMatch(id, data) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -91,6 +111,12 @@ export function putMatch(id, data) {
   });
 }
 
+/**
+ * Modifies one or more fields of a match
+ * @param {int} id - ID of the match
+ * @param {payload} updates - Fields to modify
+ * @returns {object} - Modified fields
+ */
 export function patchMatch(id, updates) {
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
@@ -115,6 +141,12 @@ export function patchMatch(id, updates) {
     });
   });
 }
+/**
+ * Deletes a match
+ * @param {int} id - ID of the match
+ * @returns {promise} - Nothing on success,
+ *                      error on failure
+ */
 export function deleteMatch(id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -134,6 +166,11 @@ export function deleteMatch(id) {
   });
 }
 
+/**
+ * Finds all matches of a given user
+ * @param {int} id - ID of the user
+ * @returns {array} - All found matches
+ */
 export function getMatchesOfUser(id) {
   return new Promise((resolve, reject) => {
     const sql = ` SELECT * FROM matches WHERE left_player_id = ? OR right_player_id = ?`;
