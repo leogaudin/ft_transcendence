@@ -10,6 +10,7 @@
       username: "debug",
       email: "debug",
       password: "debug",
+      confirm_password: "debug",
     }),
   });
   const body = await res.json();
