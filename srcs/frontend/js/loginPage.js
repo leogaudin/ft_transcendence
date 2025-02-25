@@ -45,4 +45,19 @@ document.addEventListener("DOMContentLoaded", () =>{
     });
 });
 
+const resetPassButton = document.getElementById("forgot-password");
+const resetPassword = document.getElementById("reset-password");
 
+document.addEventListener("DOMContentLoaded", () =>{
+    resetPassButton.addEventListener("click", () => {
+        Popup();
+    });
+    resetPassword.addEventListener("click", () => {
+        resetPassword.close();
+    });
+});
+
+function Popup() {
+    var myDialog = document.getElementById("reset-password");
+    myDialog.showModal();
+}
