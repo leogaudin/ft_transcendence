@@ -8,6 +8,8 @@ import {
   deleteUser,
   addUserFriend,
   removeUserFriend,
+  addUserBlock,
+  removeUserBlock,
 } from "../models/userModel.js";
 import { getMessagesOfUser } from "../models/messageModel.js";
 import { getChatsOfUser } from "../models/chatModel.js";
@@ -118,6 +120,26 @@ export default function createUserRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["friend_id"])) return;
         const data = await removeUserFriend(req.params.id, req.body.friend_id);
+        res.code(200).send(data);
+      }),
+    },
+    {
+      onRequest: [fastify.authenticate],
+      method: "POST",
+      url: "/users/:id/blocks",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["blocked_id"])) return;
+        const data = await addUserBlock(req.params.id, req.body.blocked_id);
+        res.code(200).send(data);
+      }),
+    },
+    {
+      onRequest: [fastify.authenticate],
+      method: "PATCH",
+      url: "/users/:id/blocks",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["blocked_id"])) return;
+        const data = await removeUserBlock(req.params.id, req.body.blocked_id);
         res.code(200).send(data);
       }),
     },

@@ -66,8 +66,10 @@ export function getUserByID(id) {
       const user = {
         ...row,
         friends: row.friends_ids ? row.friends_ids.split(",").map(Number) : [],
+        blocks: row.blocked_ids ? row.blocked_ids.split(",").map(Number) : [],
       };
       delete user.friends_ids;
+      delete user.blocked_ids;
       delete user.password;
       anonymize(user);
       resolve(user);
@@ -210,6 +212,45 @@ export function removeUserFriend(id, friend_id) {
         return reject(new Error("User not found"));
       }
       resolve({ success: "friend removed" });
+    });
+  });
+}
+
+export function addUserBlock(id, blocked_id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      INSERT INTO user_blocks (user_id, blocked_id)
+      VALUES (?,?)`;
+    const params = [id, blocked_id];
+    db.run(sql, params, function (err) {
+      if (err) {
+        console.error("Error updating user blocks:", err.message);
+        return reject(err);
+      }
+      if (this.changes === 0) {
+        return reject(new Error("User not found"));
+      }
+      resolve({ user_id: id, blocked_id: blocked_id });
+    });
+  });
+}
+
+// TODO:
+export function removeUserBlock(id, blocked_id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      DELETE FROM user_blocks
+      WHERE (user_id = ? AND blocked_id = ?)`;
+    const params = [id, blocked_id];
+    db.run(sql, params, function (err) {
+      if (err) {
+        console.error("Error updating user blocks:", err.message);
+        return reject(err);
+      }
+      if (this.changes === 0) {
+        return reject(new Error("User not found"));
+      }
+      resolve({ success: "block removed" });
     });
   });
 }

@@ -132,6 +132,30 @@
   });
   console.log(res.status);
 
+  console.log("Adding blocks...");
+  res = await fetch("http://localhost:9000/users/1/blocks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      blocked_id: "6",
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/users/1/blocks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      blocked_id: "7",
+    }),
+  });
+  console.log(res.status);
+
   // Chat creation
   console.log("Creating chats...");
   res = await fetch("http://localhost:9000/chats", {
