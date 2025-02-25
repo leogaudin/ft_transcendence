@@ -1,5 +1,9 @@
 import db from "../database.js";
 
+/**
+ * Finds all avaliable messages
+ * @returns {array} - All avaliable messages
+ */
 export function getMessages() {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM messages";
@@ -14,6 +18,11 @@ export function getMessages() {
   });
 }
 
+/**
+ * Creates a message
+ * @param {payload} data - IDs of the sender, chat and body of the message
+ * @returns {object} - Newly created message
+ */
 export function createMessage(data) {
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO messages (sender_id, chat_id, body) VALUES (?,?,?)`;
@@ -34,6 +43,11 @@ export function createMessage(data) {
   });
 }
 
+/**
+ * Finds a message by a given ID
+ * @param {int} id - ID of the message
+ * @returns {object} - Found message
+ */
 export function getMessageByID(id) {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM messages WHERE id = ?";
@@ -48,6 +62,12 @@ export function getMessageByID(id) {
   });
 }
 
+/**
+ * Fully modifies a message
+ * @param {int} id - ID of the message
+ * @param {payload} data - IDs of the sender, chat and body of the message
+ * @returns {object} - Modified message
+ */
 export function putMessage(id, data) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -69,6 +89,12 @@ export function putMessage(id, data) {
   });
 }
 
+/**
+ * Modifies one or more fields of a message
+ * @param {int} id - ID of the message
+ * @param {payload} updates - Field(s) to modify
+ * @returns {object} - Modified fields
+ */
 export function patchMessage(id, updates) {
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
@@ -93,6 +119,12 @@ export function patchMessage(id, updates) {
     });
   });
 }
+/**
+ * Deletes a message by a given ID
+ * @param {int} id - ID of the message
+ * @returns {promise} - Nothing on success,
+ *                      error on failure
+ */
 export function deleteMessage(id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -112,6 +144,11 @@ export function deleteMessage(id) {
   });
 }
 
+/**
+ * Finds all messages of a given user
+ * @param {int} id - ID of the user
+ * @returns {array} - All found messages
+ */
 export function getMessagesOfUser(id) {
   return new Promise((resolve, reject) => {
     const sql = ` SELECT * FROM messages WHERE sender_id = ? `;
