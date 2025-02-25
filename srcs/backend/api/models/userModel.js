@@ -216,6 +216,12 @@ export function removeUserFriend(id, friend_id) {
   });
 }
 
+/**
+ * Adds a user to the blocked list of another
+ * @param {int} id - ID of the user
+ * @param {int} blocked_id - ID of the blocked user
+ * @returns {object} - IDs of the relevant users
+ */
 export function addUserBlock(id, blocked_id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -235,7 +241,13 @@ export function addUserBlock(id, blocked_id) {
   });
 }
 
-// TODO:
+/**
+ * Removes a user from the blocked list of another
+ * @param {int} id - ID of the user
+ * @param {int} blocked_id - ID of the blocked user
+ * @returns {promise} - Nothing on success,
+ *                      error on failure
+ */
 export function removeUserBlock(id, blocked_id) {
   return new Promise((resolve, reject) => {
     const sql = `
