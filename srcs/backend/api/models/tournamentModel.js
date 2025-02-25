@@ -1,5 +1,10 @@
 import db from "../database.js";
 
+/**
+ * Finds all tournaments where a given player plays
+ * @param {int} tournamentID - ID of the tournament
+ * @returns {array} - All found tournaments
+ */
 export function getPlayersInTournament(tournamentID) {
   return new Promise((resolve, reject) => {
     const sql =
@@ -15,6 +20,10 @@ export function getPlayersInTournament(tournamentID) {
   });
 }
 
+/**
+ * Finds all avaliable tournaments
+ * @returns {array} - All avaliable tournaments
+ */
 export function getTournaments() {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -43,6 +52,13 @@ export function getTournaments() {
   });
 }
 
+/**
+ * Adds a player to a tournament
+ * @param {int} tournamentID - ID of the tournament
+ * @param {int} playerId - ID of the player
+ * @returns {promise} - Nothing on success,
+ *                      error on failure
+ */
 export function addPlayerToTournament(tournamentID, playerId) {
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO tournament_players (tournament_id, player_id) VALUES (?,?)`;
@@ -57,6 +73,11 @@ export function addPlayerToTournament(tournamentID, playerId) {
   });
 }
 
+/**
+ * Creates a tournament
+ * @param {payload} data - Name, player amount and IDs of the players
+ * @returns {object} - Newly created tournament
+ */
 export function createTournament(data) {
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO tournaments (name, player_amount) VALUES (?,?)`;
@@ -85,6 +106,11 @@ export function createTournament(data) {
   });
 }
 
+/**
+ * Finds a tournament by a given ID
+ * @param {int} id - ID of the tournament
+ * @returns {object} - Found tournament
+ */
 export function getTournamentByID(id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -109,6 +135,12 @@ export function getTournamentByID(id) {
   });
 }
 
+/**
+ * Fully modifies a tournament
+ * @param {int} id - ID of the tournament
+ * @param {payload} data - Name, player amount and IDs of the players
+ * @returns {object} - Modified tournament
+ */
 export function putTournament(id, data) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -130,6 +162,11 @@ export function putTournament(id, data) {
   });
 }
 
+/**
+ * Modifies one or more fields of a tournament
+ * @param {payload} updates - Field(s) to modify
+ * @returns {object} - Modified fields
+ */
 export function patchTournament(updates) {
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
@@ -155,6 +192,12 @@ export function patchTournament(updates) {
   });
 }
 
+/**
+ * Deletes a tournament by a given ID
+ * @param {int} id - ID of the tournament
+ * @returns {promise} - Nothing on success,
+ *                      error on failure
+ */
 export function deleteTournament(id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -174,6 +217,11 @@ export function deleteTournament(id) {
   });
 }
 
+/**
+ * Finds all tournaments where a given user plays
+ * @param {int} id - ID of the user
+ * @returns {array} - All found tournaments
+ */
 export function getTournamentsOfUser(id) {
   return new Promise((resolve, reject) => {
     const sql = `
