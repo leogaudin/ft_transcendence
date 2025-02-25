@@ -47,10 +47,17 @@ export function createMatch(data) {
         console.error("Error inserting match:", err.message);
         return reject(err);
       }
-      if (row && row.result) {
-        row.result = row.result.split(",").map((id) => parseInt(id));
+      if (data.result) {
+        data.result = data.result.split(",").map((id) => parseInt(id));
       }
-      resolve(row);
+      resolve({
+        id: this.lastID,
+        left_player_id: data.first_id,
+        right_player_id: data.second_id,
+        result: data.result,
+        winner_id: data.winner_id,
+        loser_id: data.loser_id,
+      });
     });
   });
 }

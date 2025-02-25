@@ -10,6 +10,7 @@
       username: "debug",
       email: "debug",
       password: "debug",
+      confirm_password: "debug",
     }),
   });
   const body = await res.json();
@@ -69,6 +70,32 @@
     }),
   });
   console.log(res.status);
+  res = await fetch("http://localhost:9000/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      username: "quux",
+      email: "quux@gmail.com",
+      password: "quuxpassword",
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/users", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      username: "quuux",
+      email: "quuux@gmail.com",
+      password: "quuuxpassword",
+    }),
+  });
+  console.log(res.status);
 
   console.log("Adding friends...");
   res = await fetch("http://localhost:9000/users/1/friends", {
@@ -101,6 +128,30 @@
     },
     body: JSON.stringify({
       friend_id: "4",
+    }),
+  });
+  console.log(res.status);
+
+  console.log("Adding blocks...");
+  res = await fetch("http://localhost:9000/users/1/blocks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      blocked_id: "6",
+    }),
+  });
+  console.log(res.status);
+  res = await fetch("http://localhost:9000/users/1/blocks", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      blocked_id: "7",
     }),
   });
   console.log(res.status);
