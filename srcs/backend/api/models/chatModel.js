@@ -1,4 +1,4 @@
-import db from "../database.
+import db from "../database";
 
 /**
  * Finds all avaliable chats
@@ -47,6 +47,11 @@ export function createChat(data) {
   });
 }
 
+/**
+ * Finds a chat by a given ID if it exists
+ * @param {int} id - ID of the chat
+ * @returns {object} - Found chat
+ */
 export function getChatByID(id) {
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM chats WHERE id = ?";
@@ -61,6 +66,12 @@ export function getChatByID(id) {
   });
 }
 
+/**
+ * Fully replaces a chat
+ * @param {int} id - ID of the chat
+ * @param {payload} data - Data to replace with
+ * @returns {object} - Modified chat
+ */
 export function putChat(id, data) {
   return new Promise((resolve, reject) => {
     const first_id = Math.min(data.first_user_id, data.second_user_id);
@@ -84,6 +95,12 @@ export function putChat(id, data) {
   });
 }
 
+/**
+ * Modifies one or more fields of a chat
+ * @param {int} id - ID of the chat
+ * @param {object} updates - Field(s) to modify
+ * @returns {object} - Modified fields
+ */
 export function patchChat(id, updates) {
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
@@ -109,6 +126,12 @@ export function patchChat(id, updates) {
   });
 }
 
+/**
+ * Deletes a chat
+ * @param {int} id - ID of the chat
+ * @returns {promise} - Nothing on success,
+ *                      error on failure
+ */
 export function deleteChat(id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -128,6 +151,11 @@ export function deleteChat(id) {
   });
 }
 
+/**
+ * Returns all found chats of a user
+ * @param {int} id - ID of the user
+ * @returns {array} - All found chats
+ */
 export function getChatsOfUser(id) {
   return new Promise((resolve, reject) => {
     const sql = ` SELECT * FROM chats WHERE first_user_id = ? OR second_user_id = ?`;
