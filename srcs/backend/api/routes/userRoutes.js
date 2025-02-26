@@ -24,6 +24,8 @@ export default function createUserRoutes(fastify) {
       url: "/users",
       handler: asyncHandler(async (req, res) => {
         const users = await getUsers();
+        if (!req.session.user) console.log("session user is empty");
+        else console.log("session user:", req.session.user);
         res.code(200).send(users);
       }),
     },
@@ -47,7 +49,10 @@ export default function createUserRoutes(fastify) {
       method: "GET",
       url: "/users/:id",
       handler: asyncHandler(async (req, res) => {
+        if (!req.session.user) console.log("session user is empty");
+        else console.log("session user:", req.session.user);
         const user = await getUserByID(req.params.id);
+        req.session.user = user;
         res.code(200).send(user);
       }),
     },
