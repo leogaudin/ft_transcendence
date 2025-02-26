@@ -1,6 +1,8 @@
 import Fastify from "fastify";
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
+import cookie from "@fastify/cookie";
+import session from "@fastify/session";
 import multipart from "@fastify/multipart";
 import createRoutes from "./routes/routes.js";
 
@@ -20,6 +22,16 @@ await fastify.register(jwt, {
   },
 });
 await fastify.register(multipart);
+await fastify.register(cookie);
+await fastify.register(session, {
+  cookieName: "sessionId",
+  secret: process.env.SESSION_SECRET,
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
+    maxAge: 3600000,
+  },
+});
 
 /** Decorator for JWT verification */
 fastify.decorate("authenticate", async function (req, res) {
