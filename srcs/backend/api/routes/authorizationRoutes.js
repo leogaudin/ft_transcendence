@@ -3,8 +3,11 @@ import {
   validateInput,
   loginUser,
   registerUser,
+  enable2fa,
+  verify2fa,
 } from "../utils.js";
 import { resetUserPassword, verifyUserResetToken } from "../passwordReset.js";
+import { getUserByID } from "../models/userModel.js";
 
 export default function createAuthRoutes(fastify) {
   return [
@@ -58,6 +61,28 @@ export default function createAuthRoutes(fastify) {
         );
         if (result == null) res.code(404).send({ error: "user not found" });
         if (result == false) res.code(403).send({ authorization: "failed" });
+        res.code(200).send(result);
+      }),
+    },
+    {
+      onRequest: [fastify.authenticate],
+      method: "POST",
+      url: "/2fa/enable",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["id"])) return;
+        const user = await getUserByID(req.body.id);
+        const qr = await enable2fa(user);
+        res.code(200).send(qr);
+      }),
+    },
+    {
+      onRequest: [fastify.authenticate],
+      method: "POST",
+      url: "/2fa/verify",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["id", "totp_code"])) return;
+        const user = await getUserByID(req.body.id);
+        const result = await verify2fa(user, req.body.totp_code);
         res.code(200).send(result);
       }),
     },

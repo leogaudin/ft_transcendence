@@ -70,11 +70,35 @@ export async function loginUser(data) {
   if (!user) return null;
   const isAuthorized = await bcrypt.compare(data.password, user.password);
   if (!isAuthorized) return false;
+  // if (user.is_2fa_enabled == true) 2faLogin(user);
   const token = fastify.jwt.sign({ user: user.id });
   const result = Object.assign({}, user, { token });
   delete result.password;
   await patchUser(user.id, { is_online: 1 });
   return result;
+}
+
+// TODO: Continue working on this 2FA
+//       currently it works, but needs further integration with the login system
+import qrcode from "qrcode";
+import { authenticator } from "otplib";
+export async function enable2fa(user) {
+  const secret = authenticator.generateSecret();
+  await patchUser(user.id, { pending_totp_secret: secret });
+  const keyUri = authenticator.keyuri(user.username, "Transcendence", secret);
+  const qr = await qrcode.toDataURL(keyUri);
+  return { qr_code: qr };
+}
+export async function verify2fa(user, totpCode) {
+  const totpVerified = authenticator.verify({
+    token: totpCode,
+    secret: user.pending_totp_secret,
+  });
+  return {
+    totpVerified: totpVerified,
+    totpCode: totpCode,
+    pending_totp_secret: user.pending_totp_secret,
+  };
 }
 
 /**
