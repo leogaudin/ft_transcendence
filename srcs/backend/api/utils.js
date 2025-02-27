@@ -1,6 +1,15 @@
+import { pipeline } from "node:stream/promises";
+import { createWriteStream, unlink } from "node:fs";
+import path from "node:path";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 /**
  * Wraps a function in a try catch with await
- * @param {function} fn - Function to wrap
+ * @param {Function} fn - Function to wrap
  */
 export const asyncHandler = (fn) => async (req, res) => {
   try {
@@ -12,10 +21,10 @@ export const asyncHandler = (fn) => async (req, res) => {
 
 /**
  * Checks if a given request has specific fields
- * @param {request} req - Request to check values from
- * @param {response} res - Response to return codes
- * @param {array} requiredFields - Fields to check for
- * @returns {boolean} - True if successful, false if not
+ * @param {Request} req - Request to check values from
+ * @param {Response} res - Response to return codes
+ * @param {Array} requiredFields - Fields to check for
+ * @returns {Boolean} - True if successful, false if not
  */
 export function validateInput(req, res, requiredFields) {
   if (!req.body)
@@ -35,8 +44,8 @@ export function validateInput(req, res, requiredFields) {
 /**
  * Checks if a given user is deleted, and if it is
  * modifies it, giving it an anonymous name
- * @param {user} user - User to check
- * @returns {user} - Modified user
+ * @param {Object} user - User to check
+ * @returns {Object} - Modified user
  */
 export function anonymize(user) {
   if (!user.is_deleted) {
@@ -49,85 +58,12 @@ export function anonymize(user) {
   return user;
 }
 
-import {
-  createUser,
-  getUserByID,
-  getUserByUsername,
-  patchUser,
-} from "./models/userModel.js";
-import bcrypt from "bcryptjs";
-import fastify from "./index.js";
-
-/**
- * Logs the user
- * @param {payload} data - Payload to evaluate
- * @returns {object} - An object with the user and a JWT if successful,
- *                     false if the password is incorrect,
- *                     null if the user does not exist
- */
-export async function loginUser(data) {
-  const user = await getUserByUsername(data.username);
-  if (!user) return null;
-  const isAuthorized = await bcrypt.compare(data.password, user.password);
-  if (!isAuthorized) return false;
-  // if (user.is_2fa_enabled == true) 2faLogin(user);
-  const token = fastify.jwt.sign({ user: user.id });
-  const result = Object.assign({}, user, { token });
-  delete result.password;
-  await patchUser(user.id, { is_online: 1 });
-  return result;
-}
-
-// TODO: Continue working on this 2FA
-//       currently it works, but needs further integration with the login system
-import qrcode from "qrcode";
-import { authenticator } from "otplib";
-export async function enable2fa(user) {
-  const secret = authenticator.generateSecret();
-  await patchUser(user.id, { pending_totp_secret: secret });
-  const keyUri = authenticator.keyuri(user.username, "Transcendence", secret);
-  const qr = await qrcode.toDataURL(keyUri);
-  return { qr_code: qr };
-}
-export async function verify2fa(user, totpCode) {
-  const totpVerified = authenticator.verify({
-    token: totpCode,
-    secret: user.pending_totp_secret,
-  });
-  return {
-    totpVerified: totpVerified,
-    totpCode: totpCode,
-    pending_totp_secret: user.pending_totp_secret,
-  };
-}
-
-/**
- * Registers a user, creating it and giving a JWT
- * @param {payload} data - Payload to evaluate
- * @returns {object} - An object with the full user information and a JWT
- */
-export async function registerUser(data) {
-  const user = await createUser(data);
-  const token = fastify.jwt.sign({ user: user.id });
-  const result = Object.assign({}, user, { token });
-  return result;
-}
-
-import { pipeline } from "node:stream/promises";
-import { createWriteStream } from "node:fs";
-import path from "node:path";
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { unlink } from "node:fs";
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
 /**
  * Saves a given image as the avatar of an user,
  * deleting the old one in the process
- * @param {int} user_id - ID of the user
- * @param {payload} data - Payload to add the image from
- * @returns {object} - Object with the ID and metadata of the avatar
+ * @param {Number} user_id - ID of the user
+ * @param {Object} data - Payload to add the image from
+ * @returns {Object} - Object with the ID and metadata of the avatar
  */
 export async function saveAvatar(user_id, data) {
   const uploadDir = path.join(__dirname, "avatars");

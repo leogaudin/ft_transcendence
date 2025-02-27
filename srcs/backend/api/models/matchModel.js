@@ -2,7 +2,7 @@ import db from "../database.js";
 
 /**
  * Finds all avaliable matches
- * @returns {array} - All avaliable rows
+ * @returns {Array} - All avaliable rows
  */
 export function getMatchs() {
   return new Promise((resolve, reject) => {
@@ -26,8 +26,8 @@ export function getMatchs() {
 
 /**
  * Creates a match
- * @param {payload} data - IDs and result of the match
- * @returns {object} - Newly created match
+ * @param {Object} data - IDs and result of the match
+ * @returns {Object} - Newly created match
  */
 export function createMatch(data) {
   return new Promise((resolve, reject) => {
@@ -64,8 +64,8 @@ export function createMatch(data) {
 
 /**
  * Finds a match by a given ID
- * @param {int} id - ID of the match
- * @returns {object} - Found match
+ * @param {Number} id - ID of the match
+ * @returns {Object} - Found match
  */
 export function getMatchByID(id) {
   return new Promise((resolve, reject) => {
@@ -86,9 +86,9 @@ export function getMatchByID(id) {
 
 /**
  * Fully modifies a match
- * @param {int} id - ID of the match
- * @param {payload} data - IDs and result of the match
- * @returns {object} - Modified match
+ * @param {Number} id - ID of the match
+ * @param {Object} data - IDs and result of the match
+ * @returns {Object} - Modified match
  */
 export function putMatch(id, data) {
   return new Promise((resolve, reject) => {
@@ -120,9 +120,9 @@ export function putMatch(id, data) {
 
 /**
  * Modifies one or more fields of a match
- * @param {int} id - ID of the match
- * @param {payload} updates - Fields to modify
- * @returns {object} - Modified fields
+ * @param {Number} id - ID of the match
+ * @param {Object} updates - Fields to modify
+ * @returns {Object} - Modified fields
  */
 export function patchMatch(id, updates) {
   return new Promise((resolve, reject) => {
@@ -150,8 +150,8 @@ export function patchMatch(id, updates) {
 }
 /**
  * Deletes a match
- * @param {int} id - ID of the match
- * @returns {promise} - Nothing on success,
+ * @param {Number} id - ID of the match
+ * @returns {Promise} - Nothing on success,
  *                      error on failure
  */
 export function deleteMatch(id) {
@@ -175,8 +175,8 @@ export function deleteMatch(id) {
 
 /**
  * Finds all matches of a given user
- * @param {int} id - ID of the user
- * @returns {array} - All found matches
+ * @param {Number} id - ID of the user
+ * @returns {Array} - All found matches
  */
 export function getMatchesOfUser(id) {
   return new Promise((resolve, reject) => {

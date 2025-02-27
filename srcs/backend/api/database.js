@@ -23,6 +23,8 @@ db.serialize(() => {
     last_login DATETIME DEFAULT CURRENT_TIMESTAMP,
     reset_token TEXT,
     pending_totp_secret TEXT,
+    totp_secret TEXT,
+    is_2fa_enabled BOOLEAN DEFAULT 0,
     is_deleted BOOLEAN DEFAULT 0,
     wins INTEGER DEFAULT 0 CHECK (wins >= 0),
     losses INTEGER DEFAULT 0 CHECK (losses >= 0)

@@ -1,11 +1,5 @@
-import {
-  asyncHandler,
-  validateInput,
-  loginUser,
-  registerUser,
-  enable2fa,
-  verify2fa,
-} from "../utils.js";
+import { asyncHandler, validateInput } from "../utils.js";
+import { loginUser, registerUser, enable2fa, verify2fa } from "../authUtils.js";
 import { resetUserPassword, verifyUserResetToken } from "../passwordReset.js";
 import { getUserByID } from "../models/userModel.js";
 

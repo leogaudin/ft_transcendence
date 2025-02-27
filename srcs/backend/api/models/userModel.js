@@ -4,7 +4,7 @@ import { anonymize } from "../utils.js";
 
 /**
  * Returns the ID, username and email of all avaliable users
- * @returns {array} - All avaliable users
+ * @returns {Array} - All avaliable users
  */
 export async function getUsers() {
   return new Promise((resolve, reject) => {
@@ -22,8 +22,8 @@ export async function getUsers() {
 
 /**
  * Creates a user, hashing the password in the process
- * @param {payload} data - User to create
- * @returns {object} - The newly created user
+ * @param {Object} data - User to create
+ * @returns {Object} - The newly created user
  */
 export async function createUser(data) {
   data.password = await bcrypt.hash(data.password, 10);
@@ -42,8 +42,8 @@ export async function createUser(data) {
 
 /**
  * Finds a user by a given ID if it exists
- * @param {int} id - ID of the user
- * @returns {object} - The found user
+ * @param {Number} id - ID of the user
+ * @returns {Object} - The found user
  */
 export function getUserByID(id) {
   return new Promise((resolve, reject) => {
@@ -79,9 +79,9 @@ export function getUserByID(id) {
 
 /**
  * Fully modifies a user
- * @param {int} id - ID of the user
- * @param {payload} data - User data to modify
- * @returns {object} - The modified user
+ * @param {Number} id - ID of the user
+ * @param {Object} data - User data to modify
+ * @returns {Object} - The modified user
  */
 export async function putUser(id, data) {
   data.password = await bcrypt.hash(data.password, 10);
@@ -107,9 +107,9 @@ export async function putUser(id, data) {
 
 /**
  * Patches a user with the given information
- * @param {int} id - ID of the user
- * @param {payload} updates - Fields to change
- * @returns {object} - Modified fields
+ * @param {Number} id - ID of the user
+ * @param {Object} updates - Fields to change
+ * @returns {Object} - Modified fields
  */
 export async function patchUser(id, updates) {
   if (updates.hasOwnProperty("password")) {
@@ -141,8 +141,8 @@ export async function patchUser(id, updates) {
 
 /**
  * Sets the deletion flag of a user to true
- * @param {int} id - ID of the user
- * @returns {promise} - Nothing on success,
+ * @param {Number} id - ID of the user
+ * @returns {Promise} - Nothing on success,
  *                      error on failure
  */
 export function deleteUser(id) {
@@ -167,9 +167,9 @@ export function deleteUser(id) {
 
 /**
  * Adds a friend to a user
- * @param {int} id - ID of the user
- * @param {int} friend_id - ID of the friend
- * @returns {object} - Object with the IDs of the users
+ * @param {Number} id - ID of the user
+ * @param {Number} friend_id - ID of the friend
+ * @returns {Object} - Object with the IDs of the users
  */
 export function addUserFriend(id, friend_id) {
   return new Promise((resolve, reject) => {
@@ -191,9 +191,9 @@ export function addUserFriend(id, friend_id) {
 }
 /**
  * Deletes a friend for a user
- * @param {int} id - ID of the user
- * @param {int} friend_id - ID of the friend
- * @returns {object} - Object on success,
+ * @param {Number} id - ID of the user
+ * @param {Number} friend_id - ID of the friend
+ * @returns {Object} - Object on success,
  *                     error on failure
  */
 export function removeUserFriend(id, friend_id) {
@@ -218,9 +218,9 @@ export function removeUserFriend(id, friend_id) {
 
 /**
  * Adds a user to the blocked list of another
- * @param {int} id - ID of the user
- * @param {int} blocked_id - ID of the blocked user
- * @returns {object} - IDs of the relevant users
+ * @param {Number} id - ID of the user
+ * @param {Number} blocked_id - ID of the blocked user
+ * @returns {Object} - IDs of the relevant users
  */
 export function addUserBlock(id, blocked_id) {
   return new Promise((resolve, reject) => {
@@ -243,9 +243,9 @@ export function addUserBlock(id, blocked_id) {
 
 /**
  * Removes a user from the blocked list of another
- * @param {int} id - ID of the user
- * @param {int} blocked_id - ID of the blocked user
- * @returns {promise} - Nothing on success,
+ * @param {Number} id - ID of the user
+ * @param {Number} blocked_id - ID of the blocked user
+ * @returns {Promise} - Nothing on success,
  *                      error on failure
  */
 export function removeUserBlock(id, blocked_id) {
@@ -269,8 +269,8 @@ export function removeUserBlock(id, blocked_id) {
 
 /**
  * Finds a user by a given username
- * @param {string} username - Name of the user
- * @returns {object} - Found user
+ * @param {String} username - Name of the user
+ * @returns {Object} - Found user
  */
 export function getUserByUsername(username) {
   return new Promise((resolve, reject) => {
@@ -289,8 +289,8 @@ export function getUserByUsername(username) {
 
 /**
  * Finds a user by a given email
- * @param {string} email - Email of the user
- * @returns {object} - Found user
+ * @param {String} email - Email of the user
+ * @returns {Object} - Found user
  */
 export function getUserByEmail(email) {
   return new Promise((resolve, reject) => {

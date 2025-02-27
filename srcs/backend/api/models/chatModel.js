@@ -2,7 +2,7 @@ import db from "../database.js";
 
 /**
  * Finds all avaliable chats
- * @returns {array} - All avaliable rows
+ * @returns {Array} - All avaliable rows
  */
 export function getChats() {
   return new Promise((resolve, reject) => {
@@ -21,8 +21,8 @@ export function getChats() {
 /**
  * Creates a chat between two users,
  * ensuring uniqueness by ordering the IDs
- * @param {payload} data - IDs of the users
- * @returns {object} - Newly created chat
+ * @param {Object} data - IDs of the users
+ * @returns {Object} - Newly created chat
  */
 export function createChat(data) {
   return new Promise((resolve, reject) => {
@@ -49,8 +49,8 @@ export function createChat(data) {
 
 /**
  * Finds a chat by a given ID if it exists
- * @param {int} id - ID of the chat
- * @returns {object} - Found chat
+ * @param {Number} id - ID of the chat
+ * @returns {Object} - Found chat
  */
 export function getChatByID(id) {
   return new Promise((resolve, reject) => {
@@ -68,9 +68,9 @@ export function getChatByID(id) {
 
 /**
  * Fully replaces a chat
- * @param {int} id - ID of the chat
- * @param {payload} data - Data to replace with
- * @returns {object} - Modified chat
+ * @param {Number} id - ID of the chat
+ * @param {Object} data - Data to replace with
+ * @returns {Object} - Modified chat
  */
 export function putChat(id, data) {
   return new Promise((resolve, reject) => {
@@ -97,9 +97,9 @@ export function putChat(id, data) {
 
 /**
  * Modifies one or more fields of a chat
- * @param {int} id - ID of the chat
- * @param {object} updates - Field(s) to modify
- * @returns {object} - Modified fields
+ * @param {Number} id - ID of the chat
+ * @param {Object} updates - Field(s) to modify
+ * @returns {Object} - Modified fields
  */
 export function patchChat(id, updates) {
   return new Promise((resolve, reject) => {
@@ -128,8 +128,8 @@ export function patchChat(id, updates) {
 
 /**
  * Deletes a chat
- * @param {int} id - ID of the chat
- * @returns {promise} - Nothing on success,
+ * @param {Number} id - ID of the chat
+ * @returns {Promise} - Nothing on success,
  *                      error on failure
  */
 export function deleteChat(id) {
@@ -153,8 +153,8 @@ export function deleteChat(id) {
 
 /**
  * Returns all found chats of a user
- * @param {int} id - ID of the user
- * @returns {array} - All found chats
+ * @param {Number} id - ID of the user
+ * @returns {Array} - All found chats
  */
 export function getChatsOfUser(id) {
   return new Promise((resolve, reject) => {

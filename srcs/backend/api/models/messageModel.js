@@ -2,7 +2,7 @@ import db from "../database.js";
 
 /**
  * Finds all avaliable messages
- * @returns {array} - All avaliable messages
+ * @returns {Array} - All avaliable messages
  */
 export function getMessages() {
   return new Promise((resolve, reject) => {
@@ -20,8 +20,8 @@ export function getMessages() {
 
 /**
  * Creates a message
- * @param {payload} data - IDs of the sender, chat and body of the message
- * @returns {object} - Newly created message
+ * @param {Object} data - IDs of the sender, chat and body of the message
+ * @returns {Object} - Newly created message
  */
 export function createMessage(data) {
   return new Promise((resolve, reject) => {
@@ -45,8 +45,8 @@ export function createMessage(data) {
 
 /**
  * Finds a message by a given ID
- * @param {int} id - ID of the message
- * @returns {object} - Found message
+ * @param {Number} id - ID of the message
+ * @returns {Object} - Found message
  */
 export function getMessageByID(id) {
   return new Promise((resolve, reject) => {
@@ -64,9 +64,9 @@ export function getMessageByID(id) {
 
 /**
  * Fully modifies a message
- * @param {int} id - ID of the message
- * @param {payload} data - IDs of the sender, chat and body of the message
- * @returns {object} - Modified message
+ * @param {Number} id - ID of the message
+ * @param {Object} data - IDs of the sender, chat and body of the message
+ * @returns {Object} - Modified message
  */
 export function putMessage(id, data) {
   return new Promise((resolve, reject) => {
@@ -91,9 +91,9 @@ export function putMessage(id, data) {
 
 /**
  * Modifies one or more fields of a message
- * @param {int} id - ID of the message
- * @param {payload} updates - Field(s) to modify
- * @returns {object} - Modified fields
+ * @param {Number} id - ID of the message
+ * @param {Object} updates - Field(s) to modify
+ * @returns {Object} - Modified fields
  */
 export function patchMessage(id, updates) {
   return new Promise((resolve, reject) => {
@@ -121,8 +121,8 @@ export function patchMessage(id, updates) {
 }
 /**
  * Deletes a message by a given ID
- * @param {int} id - ID of the message
- * @returns {promise} - Nothing on success,
+ * @param {Number} id - ID of the message
+ * @returns {Promise} - Nothing on success,
  *                      error on failure
  */
 export function deleteMessage(id) {
@@ -146,8 +146,8 @@ export function deleteMessage(id) {
 
 /**
  * Finds all messages of a given user
- * @param {int} id - ID of the user
- * @returns {array} - All found messages
+ * @param {Number} id - ID of the user
+ * @returns {Array} - All found messages
  */
 export function getMessagesOfUser(id) {
   return new Promise((resolve, reject) => {

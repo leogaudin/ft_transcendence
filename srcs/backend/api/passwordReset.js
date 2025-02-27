@@ -21,8 +21,8 @@ const transporter = nodemailer.createTransport({
 
 /**
  * Sends the user a link to reset their password
- * @param {payload} data - Payload to check
- * @returns {object} - Object with success or failure
+ * @param {Object} data - Payload to check
+ * @returns {Object} - Object with success or failure
  */
 export async function resetUserPassword(data) {
   const user = await getUserByEmail(data.email);
@@ -54,9 +54,9 @@ export async function resetUserPassword(data) {
 /**
  * Checks the token sent by the user against the reset token
  * to verify them for password changing
- * @param {string} token - Random string sent back
- * @param {int} id - ID of the user
- * @returns {boolean} - True if successful,
+ * @param {String} token - Random string sent back
+ * @param {Number} id - ID of the user
+ * @returns {Boolean} - True if successful,
  *                      false if not
  */
 export async function verifyUserResetToken(token, id) {

@@ -2,8 +2,8 @@ import db from "../database.js";
 
 /**
  * Finds all tournaments where a given player plays
- * @param {int} tournamentID - ID of the tournament
- * @returns {array} - All found tournaments
+ * @param {Number} tournamentID - ID of the tournament
+ * @returns {Array} - All found tournaments
  */
 export function getPlayersInTournament(tournamentID) {
   return new Promise((resolve, reject) => {
@@ -22,7 +22,7 @@ export function getPlayersInTournament(tournamentID) {
 
 /**
  * Finds all avaliable tournaments
- * @returns {array} - All avaliable tournaments
+ * @returns {Array} - All avaliable tournaments
  */
 export function getTournaments() {
   return new Promise((resolve, reject) => {
@@ -54,9 +54,9 @@ export function getTournaments() {
 
 /**
  * Adds a player to a tournament
- * @param {int} tournamentID - ID of the tournament
- * @param {int} playerId - ID of the player
- * @returns {promise} - Nothing on success,
+ * @param {Number} tournamentID - ID of the tournament
+ * @param {Number} playerId - ID of the player
+ * @returns {Promise} - Nothing on success,
  *                      error on failure
  */
 export function addPlayerToTournament(tournamentID, playerId) {
@@ -75,8 +75,8 @@ export function addPlayerToTournament(tournamentID, playerId) {
 
 /**
  * Creates a tournament
- * @param {payload} data - Name, player amount and IDs of the players
- * @returns {object} - Newly created tournament
+ * @param {Object} data - Name, player amount and IDs of the players
+ * @returns {Object} - Newly created tournament
  */
 export function createTournament(data) {
   return new Promise((resolve, reject) => {
@@ -108,8 +108,8 @@ export function createTournament(data) {
 
 /**
  * Finds a tournament by a given ID
- * @param {int} id - ID of the tournament
- * @returns {object} - Found tournament
+ * @param {Number} id - ID of the tournament
+ * @returns {Object} - Found tournament
  */
 export function getTournamentByID(id) {
   return new Promise((resolve, reject) => {
@@ -137,9 +137,9 @@ export function getTournamentByID(id) {
 
 /**
  * Fully modifies a tournament
- * @param {int} id - ID of the tournament
- * @param {payload} data - Name, player amount and IDs of the players
- * @returns {object} - Modified tournament
+ * @param {Number} id - ID of the tournament
+ * @param {Object} data - Name, player amount and IDs of the players
+ * @returns {Object} - Modified tournament
  */
 export function putTournament(id, data) {
   return new Promise((resolve, reject) => {
@@ -164,8 +164,8 @@ export function putTournament(id, data) {
 
 /**
  * Modifies one or more fields of a tournament
- * @param {payload} updates - Field(s) to modify
- * @returns {object} - Modified fields
+ * @param {Object} updates - Field(s) to modify
+ * @returns {Object} - Modified fields
  */
 export function patchTournament(updates) {
   return new Promise((resolve, reject) => {
@@ -194,8 +194,8 @@ export function patchTournament(updates) {
 
 /**
  * Deletes a tournament by a given ID
- * @param {int} id - ID of the tournament
- * @returns {promise} - Nothing on success,
+ * @param {Number} id - ID of the tournament
+ * @returns {Promise} - Nothing on success,
  *                      error on failure
  */
 export function deleteTournament(id) {
@@ -219,8 +219,8 @@ export function deleteTournament(id) {
 
 /**
  * Finds all tournaments where a given user plays
- * @param {int} id - ID of the user
- * @returns {array} - All found tournaments
+ * @param {Number} id - ID of the user
+ * @returns {Array} - All found tournaments
  */
 export function getTournamentsOfUser(id) {
   return new Promise((resolve, reject) => {
