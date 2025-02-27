@@ -1,8 +1,11 @@
 # TODO
 
+- Better error management
+  - Currently if there is any error, the server responds with 500,
+    no matter what exception or error gets thrown in the endpoints
 - 2FA (SMS, authenticator apps, emails)
-  - [node-2fa](https://www.npmjs.com/package/node-2fa)
-  - [Chrome Authenticator](https://chromewebstore.google.com/detail/autenticador/bhghoamapcdpbohphigoooaddinpkbai?hl=es)
+  - Needs final integration between existing login and 2fa login
+  - Enabling of 2fa should be done, only thing missing is the display of the qr
 - Logout endpoint (needed?)
 - Blocking users preventing them seeing messages from blocked users
   - added a "user_blocks" table
