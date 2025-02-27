@@ -59,6 +59,4 @@ __pycache__
 
 # Frontend #
 # Tailwind CSS #
-srcs/frontend/node_modules
-srcs/frontend/node_modules/*
-srcs/frontend/*.json
+srcs/frontend/node_modules/
