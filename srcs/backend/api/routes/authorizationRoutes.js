@@ -19,7 +19,6 @@ export default function createAuthRoutes(fastify) {
         const result = await loginUser(req.body);
         if (result == false) res.code(403).send({ authorization: "failed" });
         if (result == null) res.code(404).send({ error: "user not found" });
-        req.session.user = getUserByID(result.id);
         res.code(200).send(result);
       }),
     },
@@ -39,7 +38,6 @@ export default function createAuthRoutes(fastify) {
         if (req.body.password != req.body.confirm_password)
           res.code(400).send({ error: "passwords don't match" });
         const result = await registerUser(req.body);
-        req.session.user = getUserByID(result.id);
         res.code(201).send(result);
       }),
     },

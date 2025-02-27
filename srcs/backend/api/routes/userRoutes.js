@@ -24,8 +24,6 @@ export default function createUserRoutes(fastify) {
       url: "/users",
       handler: asyncHandler(async (req, res) => {
         const users = await getUsers();
-        console.log(req.session.user);
-        console.log(req.session.id);
         res.code(200).send(users);
       }),
     },

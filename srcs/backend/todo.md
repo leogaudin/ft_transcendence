@@ -1,6 +1,5 @@
 # TODO
 
-- Implement req.session for less queries to the DB
 - 2FA (SMS, authenticator apps, emails)
   - [node-2fa](https://www.npmjs.com/package/node-2fa)
   - [Chrome Authenticator](https://chromewebstore.google.com/detail/autenticador/bhghoamapcdpbohphigoooaddinpkbai?hl=es)

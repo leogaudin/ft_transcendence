@@ -6,7 +6,7 @@ import { anonymize } from "../utils.js";
  * Returns the ID, username and email of all avaliable users
  * @returns {array} - All avaliable users
  */
-export function getUsers() {
+export async function getUsers() {
   return new Promise((resolve, reject) => {
     const sql = ` SELECT u.id, u.username, u.email, u.is_deleted FROM users u `;
     db.all(sql, (err, rows) => {
