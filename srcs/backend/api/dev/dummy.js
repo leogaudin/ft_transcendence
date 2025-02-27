@@ -1,317 +1,227 @@
-// User creation
+/**
+ * @module Debug module for quick generation of test data
+ */
+
+/**
+ * @param {String} name - Name of user
+ */
+async function debugRegister(name) {
+  process.stdout.write(`Creating test user ${name}...`);
+  try {
+    let res = await fetch("http://localhost:9000/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: name,
+        email: `${name}@mail.com`,
+        password: `${name}password`,
+        confirm_password: `${name}password`,
+      }),
+    });
+    const body = await res.json();
+    const token = body.token;
+    console.log(res.status, `(${token})`);
+    return { name: name, id: body.id, token: token };
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
+/**
+ * @param {Object} user - Main user
+ * @param {Object} friend - Friend user
+ */
+async function debugFriend(user, friend) {
+  process.stdout.write(`Adding friends to user ${user.name}...`);
+  try {
+    res = await fetch("http://localhost:9000/users/friends", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        friend_id: friend.id,
+      }),
+    });
+    console.log(res.status);
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
+/**
+ * @param {Object} user - Main user
+ * @param {Object} blocked - Blocked user
+ */
+async function debugBlock(user, blocked) {
+  process.stdout.write(`Adding blocks to user ${user.name}...`);
+  try {
+    res = await fetch("http://localhost:9000/users/blocks", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        blocked_id: blocked.id,
+      }),
+    });
+    console.log(res.status);
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
+/**
+ * @param {Object} user - Main user
+ * @param {Object} second_user - Second user
+ */
+async function debugChat(user, second_user) {
+  process.stdout.write(
+    `Creating chat between user ${user.name} and user ${second_user.name}...`,
+  );
+  try {
+    res = await fetch("http://localhost:9000/chats", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        first_user_id: user.id,
+        second_user_id: second_user.id,
+      }),
+    });
+    console.log(res.status);
+    const body = await res.json();
+    return body;
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
+/**
+ * @param {Object} user - Main user
+ * @param {Object} chat - Chat between main user and another user
+ * @param {String} body - Text of message
+ */
+async function debugMessage(user, chat, body) {
+  process.stdout.write(
+    `Creating message from user ${user.name} in chat ${chat.id}...`,
+  );
+  try {
+    res = await fetch("http://localhost:9000/messages", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        sender_id: user.id,
+        chat_id: chat.id,
+        body: body,
+      }),
+    });
+    console.log(res.status);
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
+/**
+ * @param {Object} user - Main user
+ * @param {String} name - Name of tournament
+ * @param {Array} players - Array of players
+ */
+async function debugTournament(user, name, players) {
+  process.stdout.write(`Creating tournament ${name}...`);
+  try {
+    const ids = players.map((user) => user.id);
+    res = await fetch("http://localhost:9000/tournaments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        name: name,
+        player_amount: ids.length,
+        player_ids: ids,
+      }),
+    });
+    console.log(res.status);
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
+/**
+ * @param {Object} user - Left player
+ * @param {Object} second_user - Right player
+ * @param {String} result - Result of the match
+ * @param {Object} winner - Winner player
+ * @param {Object} loser - Loser player
+ */
+async function debugMatch(user, second_user, result, winner, loser) {
+  process.stdout.write(
+    `Creating match between ${user.name} and ${second_user.name}...`,
+  );
+  try {
+    res = await fetch("http://localhost:9000/matches", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        left_player_id: user.id,
+        right_player_id: second_user.id,
+        result: result,
+        winner_id: winner.id,
+        loser_id: loser.id,
+      }),
+    });
+    console.log(res.status);
+  } catch (err) {
+    console.error("Error:", err);
+  }
+}
+
 (async () => {
-  console.log("Creating debug user...");
-  let res = await fetch("http://localhost:9000/register", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      username: "debug",
-      email: "debug",
-      password: "debug",
-      confirm_password: "debug",
-    }),
-  });
-  const body = await res.json();
-  const token = body.token;
-  console.log(res.status);
-  console.log("token", token);
-  console.log("Creating users...");
-  res = await fetch("http://localhost:9000/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      username: "foo",
-      email: "foo@gmail.com",
-      password: "foopassword",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      username: "bar",
-      email: "bar@gmail.com",
-      password: "barpassword",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      username: "baz",
-      email: "baz@gmail.com",
-      password: "bazpassword",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      username: "qux",
-      email: "qux@gmail.com",
-      password: "quxpassword",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      username: "quux",
-      email: "quux@gmail.com",
-      password: "quuxpassword",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/users", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      username: "quuux",
-      email: "quuux@gmail.com",
-      password: "quuuxpassword",
-    }),
-  });
-  console.log(res.status);
+  let foo = await debugRegister("foo");
+  let bar = await debugRegister("bar");
+  let baz = await debugRegister("baz");
+  let qud = await debugRegister("qud");
+  let qux = await debugRegister("qux");
+  let bfoo = await debugRegister("bfoo");
+  let bbar = await debugRegister("bbar");
 
-  console.log("Adding friends...");
-  res = await fetch("http://localhost:9000/users/1/friends", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      friend_id: "2",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/users/1/friends", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      friend_id: "3",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/users/1/friends", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      friend_id: "4",
-    }),
-  });
-  console.log(res.status);
+  await debugFriend(foo, bar);
+  await debugFriend(foo, baz);
+  await debugFriend(foo, qud);
+  await debugFriend(foo, qux);
+  await debugFriend(bar, baz);
+  await debugFriend(bar, qux);
 
-  console.log("Adding blocks...");
-  res = await fetch("http://localhost:9000/users/1/blocks", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      blocked_id: "6",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/users/1/blocks", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      blocked_id: "7",
-    }),
-  });
-  console.log(res.status);
+  await debugBlock(foo, bfoo);
+  await debugBlock(foo, bbar);
 
-  // Chat creation
-  console.log("Creating chats...");
-  res = await fetch("http://localhost:9000/chats", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      first_user_id: "1",
-      second_user_id: "2",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/chats", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
+  let foo_bar_chat = await debugChat(foo, bar);
+  let bar_baz_chat = await debugChat(bar, baz);
 
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      first_user_id: "2",
-      second_user_id: "3",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/chats", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      first_user_id: "3",
-      second_user_id: "1",
-    }),
-  });
-  console.log(res.status);
+  for (let i = 1; i < 10; i++) {
+    await debugMessage(foo, foo_bar_chat, `Test message from foo number ${i}`);
+    await debugMessage(bar, foo_bar_chat, `Test message from bar number ${i}`);
+    await debugMessage(baz, bar_baz_chat, `Test message from baz number ${i}`);
+  }
 
-  // Messages creation
-  console.log("Creating messages...");
-  res = await fetch("http://localhost:9000/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      sender_id: "1",
-      chat_id: "1",
-      body: "this is a test message",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      sender_id: "1",
-      chat_id: "1",
-      body: "this is another test message",
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      sender_id: "3",
-      chat_id: "3",
-      body: "this is a new test message",
-    }),
-  });
-  console.log(res.status);
+  await debugTournament(foo, "Test tournament one", [foo, bar, baz, qud]);
+  await debugTournament(foo, "Test tournament two", [foo, qux, baz, qud]);
 
-  // Tournament creation
-  console.log("Creating tournaments...");
-  res = await fetch("http://localhost:9000/tournaments", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      name: "Test tournament",
-      player_amount: 4,
-      player_ids: [1, 2, 3, 4],
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/tournaments", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      name: "Another test tournament",
-      player_amount: 4,
-      player_ids: [1, 2, 3, 4],
-    }),
-  });
-  console.log(res.status);
-
-  // Match creation
-  console.log("Creating matches...");
-  res = await fetch("http://localhost:9000/matches", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      left_player_id: 1,
-      right_player_id: 2,
-      result: "3, 2",
-      winner_id: 1,
-      loser_id: 2,
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/matches", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      left_player_id: 1,
-      right_player_id: 2,
-      result: "2, 3",
-      winner_id: 2,
-      loser_id: 1,
-    }),
-  });
-  console.log(res.status);
-  res = await fetch("http://localhost:9000/matches", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({
-      left_player_id: 4,
-      right_player_id: 3,
-      result: "3, 2",
-      winner_id: 4,
-      loser_id: 3,
-    }),
-  });
-  console.log(res.status);
+  await debugMatch(foo, bar, "3, 2", foo, bar);
+  await debugMatch(foo, bar, "2, 3", bar, foo);
+  await debugMatch(foo, bar, "3, 1", foo, bar);
 })();

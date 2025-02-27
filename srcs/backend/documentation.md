@@ -1,9 +1,9 @@
-# Endpoints
+# Documentación API Transcendence
 
-#### Ejemplos
+## Ejemplos
 
 ```js
-let res = await fetch("http://localhost:9000/users/1", {
+let res = await fetch("http://localhost:9000/users", {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
@@ -27,11 +27,25 @@ let res = await fetch("http://localhost:9000/messages", {
 if (!res.ok) handleError();
 ```
 
-#### Todos los endpoints están precedidos de
+Si quieres ver más, cf. `srcs/backend/api/dev/dummy.js`
 
-- <http://localhost:9000>
+## Endpoints
 
-#### Estos endpoints devuelven un JWT
+Todos los endpoints están precedidos de <http://localhost:9000>
+
+La estructura de la documentación es la siguiente:
+
+`METODO` `/endpoint` `parámetros requeridos` Descripción
+
+```json
+{
+  "respuesta": "a la petición"
+}
+```
+
+### Autorización
+
+Estos endpoints devuelven un JWT / no necesitan un JWT
 
 `POST` `/login` `{username, password}` Loguea al usuario,
 devuelve toda la info del usuario
@@ -69,9 +83,12 @@ devuelve toda la info del usuario
 
 #### El resto de endpoints requiren un JWT además de lo que cada uno necesite
 
-- users
+Es obligatorio mandar un JWT tanto por seguridad como para acceder al ID del
+usuario en cuestión, ya que esta información se guarda encriptada en dicho JWT
 
-`GET` `/users` Devuelve el id, username y email de todos los usuarios
+### Usuarios
+
+`GET` `/users/list` Devuelve el id, username y email de todos los usuarios
 
 ```json
 [
@@ -98,7 +115,7 @@ devuelve toda la info del usuario
 }
 ```
 
-`GET` `/users/:id` Devuelve toda la información de un usuario
+`GET` `/users` Devuelve toda la información de un usuario
 
 ```json
 {
@@ -117,7 +134,7 @@ devuelve toda la info del usuario
 }
 ```
 
-`PUT` `/users/:id` `{username, password, email}` Modifica completamente un usuario
+`PUT` `/users` `{username, password, email}` Modifica completamente un usuario
 
 ```json
 {
@@ -127,7 +144,7 @@ devuelve toda la info del usuario
 }
 ```
 
-`PATCH` `/users/:id` `{?, ...}` Modifica uno o más campos de un usuario.
+`PATCH` `/users` `{?, ...}` Modifica uno o más campos de un usuario.
 Devuelve los campos modificados
 
 ```json
@@ -136,13 +153,13 @@ Devuelve los campos modificados
 }
 ```
 
-`DELETE` `/users/:id` Borra un usuario
+`DELETE` `/users` Borra un usuario
 
-`GET` `/users/:id/:str` Devuelve la tabla _str_ en relación al usuario,
+`GET` `/users/:str` Devuelve la tabla _str_ en relación al usuario,
 donde _str_ puede ser _chats_, _messages_, _matches_ o _tournaments_.
-Cf. la tabla en cuestión para ver lo que devuelve
+cf. la tabla en cuestión para ver lo que devuelve
 
-`POST` `/users/:id/friends` `{friend_id}` Añade un amigo al usuario
+`POST` `/users/friends` `{friend_id}` Añade un amigo al usuario
 
 ```json
 {
@@ -151,7 +168,7 @@ Cf. la tabla en cuestión para ver lo que devuelve
 }
 ```
 
-`PATCH` `/users/:id/friends` `{friend_id}` Borra un amigo del usuario
+`PATCH` `/users/friends` `{friend_id}` Borra un amigo del usuario
 
 ```json
 {
@@ -159,9 +176,9 @@ Cf. la tabla en cuestión para ver lo que devuelve
 }
 ```
 
-- avatar
+### Avatares
 
-`POST` `/avatar/:id` Modifica el avatar del usuario.
+`POST` `/avatar` Modifica el avatar del usuario.
 Debe incluir `multipart/form-data` en los headers de la request
 
 ```json
@@ -177,7 +194,7 @@ Debe incluir `multipart/form-data` en los headers de la request
 }
 ```
 
-- chats
+### Chats
 
 `GET` `/chats` Devuelve el id y usuarios de todos los chats
 
@@ -242,7 +259,7 @@ Devuelve los campos modificados
 
 `DELETE` `/chats/:id` Borra un chat
 
-- messages
+### Mensajes
 
 `GET` `/messages` Devuelve el id, id del usuario que mandó el mensaje,
 id del chat al que pertenece, cuerpo del mensaje y fecha
@@ -318,7 +335,7 @@ Devuelve los campos modificados
 
 `DELETE` `/messages/:id` Borra un mensaje
 
-- tournaments
+### Torneos
 
 `GET` `/tournaments` Devuelve el id, nombre del torneo, cantidad de jugadores e
 ids de los jugadores
@@ -385,7 +402,7 @@ Devuelve los campos modificados
 
 `DELETE` `/tournaments/:id` Borra un torneo
 
-- matches
+### Partidas
 
 `GET` `/matches` Devuelve el id, ids de los jugadores, resultado,
 id del ganador y perdedor y si pertenece a un torneo

@@ -21,7 +21,7 @@ export default function createUserRoutes(fastify) {
     {
       onRequest: [fastify.authenticate],
       method: "GET",
-      url: "/users",
+      url: "/users/list",
       handler: asyncHandler(async (req, res) => {
         const users = await getUsers();
         res.code(200).send(users);
@@ -45,60 +45,59 @@ export default function createUserRoutes(fastify) {
     {
       onRequest: [fastify.authenticate],
       method: "GET",
-      url: "/users/:id",
+      url: "/users",
       handler: asyncHandler(async (req, res) => {
-        const user = await getUserByID(req.params.id);
+        const user = await getUserByID(req.userId);
         res.code(200).send(user);
       }),
     },
     {
       onRequest: [fastify.authenticate],
       method: "PUT",
-      url: "/users/:id",
+      url: "/users",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["username", "password", "email"])) return;
-        const user = await putUser(req.params.id, req.body);
+        const user = await putUser(req.userId, req.body);
         res.code(200).send(user);
       }),
     },
     {
       onRequest: [fastify.authenticate],
       method: "PATCH",
-      url: "/users/:id",
+      url: "/users",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, [])) return;
-        const user = await patchUser(req.params.id, req.body);
+        const user = await patchUser(req.userId, req.body);
         res.code(200).send(user);
       }),
     },
     {
       onRequest: [fastify.authenticate],
       method: "DELETE",
-      url: "/users/:id",
+      url: "/users",
       handler: asyncHandler(async (req, res) => {
-        await deleteUser(req.params.id);
+        await deleteUser(req.userId);
         res.code(204);
       }),
     },
     {
       onRequest: [fastify.authenticate],
       method: "GET",
-      url: "/users/:id/:str",
+      url: "/users/:str",
       handler: asyncHandler(async (req, res) => {
         const table = req.params.str;
-        const id = req.params.id;
         var data;
         if (table == "messages") {
-          data = await getMessagesOfUser(id);
+          data = await getMessagesOfUser(req.userId);
         }
         if (table == "chats") {
-          data = await getChatsOfUser(id);
+          data = await getChatsOfUser(req.userId);
         }
         if (table == "matches") {
-          data = await getMatchesOfUser(id);
+          data = await getMatchesOfUser(req.userId);
         }
         if (table == "tournaments") {
-          data = await getTournamentsOfUser(id);
+          data = await getTournamentsOfUser(req.userId);
         }
         res.code(200).send(data);
       }),
@@ -106,40 +105,40 @@ export default function createUserRoutes(fastify) {
     {
       onRequest: [fastify.authenticate],
       method: "POST",
-      url: "/users/:id/friends",
+      url: "/users/friends",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["friend_id"])) return;
-        const data = await addUserFriend(req.params.id, req.body.friend_id);
+        const data = await addUserFriend(req.userId, req.body.friend_id);
         res.code(200).send(data);
       }),
     },
     {
       onRequest: [fastify.authenticate],
       method: "PATCH",
-      url: "/users/:id/friends",
+      url: "/users/friends",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["friend_id"])) return;
-        const data = await removeUserFriend(req.params.id, req.body.friend_id);
+        const data = await removeUserFriend(req.userId, req.body.friend_id);
         res.code(200).send(data);
       }),
     },
     {
       onRequest: [fastify.authenticate],
       method: "POST",
-      url: "/users/:id/blocks",
+      url: "/users/blocks",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["blocked_id"])) return;
-        const data = await addUserBlock(req.params.id, req.body.blocked_id);
+        const data = await addUserBlock(req.userId, req.body.blocked_id);
         res.code(200).send(data);
       }),
     },
     {
       onRequest: [fastify.authenticate],
       method: "PATCH",
-      url: "/users/:id/blocks",
+      url: "/users/blocks",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["blocked_id"])) return;
-        const data = await removeUserBlock(req.params.id, req.body.blocked_id);
+        const data = await removeUserBlock(req.userId, req.body.blocked_id);
         res.code(200).send(data);
       }),
     },
