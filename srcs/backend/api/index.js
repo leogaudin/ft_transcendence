@@ -25,6 +25,8 @@ await fastify.register(multipart);
 fastify.decorate("authenticate", async function (req, res) {
   try {
     await req.jwtVerify();
+    const token = await req.jwtDecode();
+    req.userId = token.user;
   } catch (err) {
     res.send(err);
   }
