@@ -50,14 +50,19 @@ const resetPassword = document.getElementById("reset-password");
 
 document.addEventListener("DOMContentLoaded", () =>{
     resetPassButton.addEventListener("click", () => {
-        Popup();
+        popUp();
+        document.getElementById("visual-div").style.opacity = "0.5";
     });
-    resetPassword.addEventListener("click", () => {
-        resetPassword.close();
+    resetPassword.addEventListener("click", function (event) {
+        if (event.target.classList.contains("close-icon")) {
+            document.getElementById("visual-div").style.opacity = "1";
+            resetPassword.style.display = "none";
+            resetPassword.close();
+        }
     });
 });
 
-function Popup() {
-    var myDialog = document.getElementById("reset-password");
-    myDialog.showModal();
+function popUp() {
+    resetPassword.style.display = "flex";
+    resetPassword.showModal();
 }

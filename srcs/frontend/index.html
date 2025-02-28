@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <div id="particles-js"></div>
+  <!-- <div id="particles-js"></div> -->
   <div id="visual-div" class="flex flex-col justify-center items-center">
     <main id="login-page" class="flex flex-col">
       <header id="header-section" class="flex justify-center items-center">
@@ -33,7 +33,7 @@
         <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
           data-shape="rectangular" data-logo_alignment="left"></div>
       </section>
-      <button id="forgot-password" class="flex justify-center cursor-pointer">
+      <button id="forgot-password" class="flex justify-center cursor-pointer text-[var(--dark-pink)]">
         <a href="#">Forgot password?</a>
       </button>
       <section id="sign-up-button" class="flex justify-center">
@@ -95,9 +95,21 @@
 
       <div id="terms-conditions">Privacy and Terms Conditions</div>
     </footer>
-
   </div>
-  <dialog id="reset-password">Hola soy un dialogo</dialog>
+  <dialog id="reset-password">
+    <div id="recover-password-modal" class="w-full h-full">
+      <div class="flex justify-between items-center m-2.5">
+        <h1 class="text-white text-3xl">Recover your password</h1>
+        <div class="close-icon"></div>
+      </div>
+      <div id="pink-divider"></div>
+      <form id="recover-password-form" class="flex justify-center items-center">
+        <input type="email" id="email-password-recovery" class="text-black w-2/3 p-1 m-2 rounded-md" placeholder="Introduce your email">
+        <button type="submit" class="signin-user p-1 m-2 rounded-md">Submit</button>
+      </form>
+      <p class="m-2.5">We'll send you an email to reset your password</p>
+    </div>
+  </dialog>
 
   <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
   <script src="js/init.js"></script>
