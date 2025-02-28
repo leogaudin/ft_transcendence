@@ -225,3 +225,32 @@ h1 {
 	color: var(--accent-pink);
 	padding-left: 10px;
 }
+
+#reset-password {
+	display: none;
+	background-color: var(--dark-pink);
+	box-shadow: var(--accent-pink) 0px 0px 20px;
+	border-radius: 15px;
+	color: white;
+	min-height: 20%;
+	min-width: 35%;
+}
+
+#pink-divider {
+	border-bottom: 3px solid var(--accent-pink);
+	border-radius: 3px;
+	margin: 10px;
+}
+
+.close-icon {
+	background-image: url("../resources/img/close_icon.svg");
+	width: 30px;
+	height: 30px;
+	background-size: cover;
+	transition: background-image 0.3s ease;
+}
+
+.close-icon:hover {
+	cursor: pointer;
+	background-image: url("../resources/img/close_icon_hover.svg");
+}
