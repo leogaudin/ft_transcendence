@@ -68,6 +68,19 @@ devuelve toda la info del usuario
 }
 ```
 
+`POST` `/register` `{username, email, password, confirm_password}` Registra al usuario
+
+```json
+{
+  "id": 1,
+  "username": "debug",
+  "email": "debug@gmail.com",
+  "token": "verylongandsecurejwt"
+}
+```
+
+`POST` `/reset` `{email}` Manda un correo al usuario para resetear su contraseña
+
 #### 2FA
 
 Si el usuario ha activado 2FA previamente, se pedirá un TOTP.
@@ -94,19 +107,6 @@ obtener un código de contraseña temporal (TOTP)
   "success": "2FA successfully enabled for user with ID 1"
 }
 ```
-
-`POST` `/register` `{username, email, password, confirm_password}` Registra al usuario
-
-```json
-{
-  "id": 1,
-  "username": "debug",
-  "email": "debug@gmail.com",
-  "token": "verylongandsecurejwt"
-}
-```
-
-`POST` `/reset` `{email}` Manda un correo al usuario para resetear su contraseña
 
 #### El resto de endpoints requiren un JWT además de lo que cada uno necesite
 
