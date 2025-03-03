@@ -16,7 +16,7 @@ export default function createChatRoutes(fastify) {
       url: "/chats",
       handler: asyncHandler(async (req, res) => {
         const chats = await getChats();
-        res.code(200).send(chats);
+        return res.code(200).send(chats);
       }),
     },
     {
@@ -27,7 +27,7 @@ export default function createChatRoutes(fastify) {
         if (!validateInput(req, res, ["first_user_id", "second_user_id"]))
           return;
         const chat = await createChat(req.body);
-        res.code(201).send(chat);
+        return res.code(201).send(chat);
       }),
     },
     {
@@ -36,7 +36,7 @@ export default function createChatRoutes(fastify) {
       url: "/chats/:id",
       handler: asyncHandler(async (req, res) => {
         const chat = await getChatByID(req.params.id);
-        res.code(200).send(chat);
+        return res.code(200).send(chat);
       }),
     },
     {
@@ -47,7 +47,7 @@ export default function createChatRoutes(fastify) {
         if (!validateInput(req, res, ["first_user_id", "second_user_id"]))
           return;
         const chat = await putChat(req.params.id, req.body);
-        res.code(200).send(chat);
+        return res.code(200).send(chat);
       }),
     },
     {
@@ -57,7 +57,7 @@ export default function createChatRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, [])) return;
         const chat = await patchChat(req.params.id, req.body);
-        res.code(200).send(chat);
+        return res.code(200).send(chat);
       }),
     },
     {
@@ -66,7 +66,7 @@ export default function createChatRoutes(fastify) {
       url: "/chats/:id",
       handler: asyncHandler(async (req, res) => {
         await deleteChat(req.params.id);
-        res.code(204);
+        return res.code(204);
       }),
     },
   ];

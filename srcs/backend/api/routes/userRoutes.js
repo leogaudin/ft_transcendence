@@ -24,7 +24,7 @@ export default function createUserRoutes(fastify) {
       url: "/users/list",
       handler: asyncHandler(async (req, res) => {
         const users = await getUsers();
-        res.code(200).send(users);
+        return res.code(200).send(users);
       }),
     },
     {
@@ -34,7 +34,7 @@ export default function createUserRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["username", "password", "email"])) return;
         const user = await createUser(req.body);
-        res.code(201).send({
+        return res.code(201).send({
           id: user.id,
           username: user.username,
           email: user.email,
@@ -48,7 +48,7 @@ export default function createUserRoutes(fastify) {
       url: "/users",
       handler: asyncHandler(async (req, res) => {
         const user = await getUserByID(req.userId);
-        res.code(200).send(user);
+        return res.code(200).send(user);
       }),
     },
     {
@@ -58,7 +58,7 @@ export default function createUserRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["username", "password", "email"])) return;
         const user = await putUser(req.userId, req.body);
-        res.code(200).send(user);
+        return res.code(200).send(user);
       }),
     },
     {
@@ -68,7 +68,7 @@ export default function createUserRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, [])) return;
         const user = await patchUser(req.userId, req.body);
-        res.code(200).send(user);
+        return res.code(200).send(user);
       }),
     },
     {
@@ -77,7 +77,7 @@ export default function createUserRoutes(fastify) {
       url: "/users",
       handler: asyncHandler(async (req, res) => {
         await deleteUser(req.userId);
-        res.code(204);
+        return res.code(204);
       }),
     },
     {
@@ -99,7 +99,7 @@ export default function createUserRoutes(fastify) {
         if (table == "tournaments") {
           data = await getTournamentsOfUser(req.userId);
         }
-        res.code(200).send(data);
+        return res.code(200).send(data);
       }),
     },
     {
@@ -109,7 +109,7 @@ export default function createUserRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["friend_id"])) return;
         const data = await addUserFriend(req.userId, req.body.friend_id);
-        res.code(200).send(data);
+        return res.code(200).send(data);
       }),
     },
     {
@@ -119,7 +119,7 @@ export default function createUserRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["friend_id"])) return;
         const data = await removeUserFriend(req.userId, req.body.friend_id);
-        res.code(200).send(data);
+        return res.code(200).send(data);
       }),
     },
     {
@@ -129,7 +129,7 @@ export default function createUserRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["blocked_id"])) return;
         const data = await addUserBlock(req.userId, req.body.blocked_id);
-        res.code(200).send(data);
+        return res.code(200).send(data);
       }),
     },
     {
@@ -139,7 +139,7 @@ export default function createUserRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["blocked_id"])) return;
         const data = await removeUserBlock(req.userId, req.body.blocked_id);
-        res.code(200).send(data);
+        return res.code(200).send(data);
       }),
     },
   ];

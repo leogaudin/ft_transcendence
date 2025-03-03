@@ -1,8 +1,4 @@
-import {
-  createUser,
-  getUserByUsername,
-  patchUser,
-} from "./models/userModel.js";
+import { createUser, patchUser } from "./models/userModel.js";
 import bcrypt from "bcryptjs";
 import fastify from "./index.js";
 import qrcode from "qrcode";
@@ -10,33 +6,34 @@ import { authenticator } from "otplib";
 
 /**
  * Logs the user
- * @param {Object} data - Payload to evaluate
+ * @param {Object} user - User to evaluate
+ * @param {String} password - Password to check
+ * @param {String} totp_token - TOTP for 2FA
  * @returns {Object} - An object with the user and a JWT if successful,
  *                     false if the password is incorrect,
  *                     null if the user does not exist
  */
-export async function loginUser(data) {
-  const user = await getUserByUsername(data.username);
-  if (!user) return null;
-  const isAuthorized = await bcrypt.compare(data.password, user.password);
+export async function loginUser(user, password, totp_token = null) {
+  const isAuthorized = await bcrypt.compare(password, user.password);
   if (!isAuthorized) return false;
-  // if (user.is_2fa_enabled == true) 2faLogin(user);
+  if (totp_token) {
+    const totpVerified = authenticator.check(totp_token, user.totp_secret);
+    if (!totpVerified) return false;
+  }
   const token = fastify.jwt.sign({ user: user.id });
   const result = Object.assign({}, user, { token });
   delete result.password;
+  delete result.totp_secret;
   await patchUser(user.id, { is_online: 1 });
   return result;
 }
 
-// TODO:
-// Continue working on this 2FA
-// currently it works, but needs
-// further integration with the login system
-//
-// What happens when the user scans the QR?
-// Check for scanning the QR so the next part
-// of the verification process (asking for the code)
-// can be achieved
+/**
+ * Starts the 2FA process by generating a secret and
+ * returning a QR for the user to scan
+ * @param {Object} user - The user to enable 2FA
+ * @returns {Object} - The QR code to scan
+ */
 export async function enable2fa(user) {
   const secret = authenticator.generateSecret();
   await patchUser(user.id, { pending_totp_secret: secret });
@@ -56,7 +53,7 @@ export async function verify2fa(user, totpCode) {
     token: totpCode,
     secret: user.pending_totp_secret,
   });
-  if (!totpVerified) return; //TODO: finish this
+  if (!totpVerified) return false;
   const secret = user.pending_totp_secret;
   await patchUser(user.id, {
     pending_totp_secret: null,

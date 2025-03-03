@@ -16,7 +16,7 @@ export default function createMatchRoutes(fastify) {
       url: "/matches",
       handler: asyncHandler(async (req, res) => {
         const matchs = await getMatchs();
-        res.code(200).send(matchs);
+        return res.code(200).send(matchs);
       }),
     },
     {
@@ -35,7 +35,7 @@ export default function createMatchRoutes(fastify) {
         )
           return;
         const match = await createMatch(req.body);
-        res.code(201).send(match);
+        return res.code(201).send(match);
       }),
     },
     {
@@ -44,7 +44,7 @@ export default function createMatchRoutes(fastify) {
       url: "/matches/:id",
       handler: asyncHandler(async (req, res) => {
         const match = await getMatchByID(req.params.id);
-        res.code(200).send(match);
+        return res.code(200).send(match);
       }),
     },
     {
@@ -63,7 +63,7 @@ export default function createMatchRoutes(fastify) {
         )
           return;
         const match = await putMatch(req.params.id, req.body);
-        res.code(200).send(match);
+        return res.code(200).send(match);
       }),
     },
     {
@@ -73,7 +73,7 @@ export default function createMatchRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, [])) return;
         const match = await patchMatch(req.params.id, req.body);
-        res.code(200).send(match);
+        return res.code(200).send(match);
       }),
     },
     {
@@ -82,7 +82,7 @@ export default function createMatchRoutes(fastify) {
       url: "/matches/:id",
       handler: asyncHandler(async (req, res) => {
         await deleteMatch(req.params.id);
-        res.code(204);
+        return res.code(204);
       }),
     },
   ];

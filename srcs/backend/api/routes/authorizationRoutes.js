@@ -1,7 +1,7 @@
 import { asyncHandler, validateInput } from "../utils.js";
 import { loginUser, registerUser, enable2fa, verify2fa } from "../authUtils.js";
 import { resetUserPassword, verifyUserResetToken } from "../passwordReset.js";
-import { getUserByID } from "../models/userModel.js";
+import { getUserByID, getUserByUsername } from "../models/userModel.js";
 
 export default function createAuthRoutes(fastify) {
   return [
@@ -10,10 +10,16 @@ export default function createAuthRoutes(fastify) {
       url: "/login",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["username", "password"])) return;
-        const result = await loginUser(req.body);
-        if (result == false) res.code(403).send({ authorization: "failed" });
-        if (result == null) res.code(404).send({ error: "user not found" });
-        res.code(200).send(result);
+        const user = await getUserByUsername(req.body.username);
+        if (!user) return res.code(404).send({ error: "User not found" });
+        if (!req.body.totp && user.is_2fa_enabled)
+          return res
+            .code(202)
+            .send({ message: "2FA is enabled, TOTP code required" });
+        const result = await loginUser(user, req.body.password, req.body.totp);
+        if (result == false)
+          return res.code(401).send({ authorization: "failed" });
+        return res.code(200).send(result);
       }),
     },
     {
@@ -30,9 +36,9 @@ export default function createAuthRoutes(fastify) {
         )
           return;
         if (req.body.password != req.body.confirm_password)
-          res.code(400).send({ error: "passwords don't match" });
+          return res.code(400).send({ error: "passwords don't match" });
         const result = await registerUser(req.body);
-        res.code(201).send(result);
+        return res.code(201).send(result);
       }),
     },
     {
@@ -41,8 +47,9 @@ export default function createAuthRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["email"])) return;
         const result = await resetUserPassword(req.body);
-        if (result == null) res.code(404).send({ error: "user not found" });
-        res.code(200).send(result);
+        if (result == null)
+          return res.code(404).send({ error: "user not found" });
+        return res.code(200).send(result);
       }),
     },
     {
@@ -53,20 +60,23 @@ export default function createAuthRoutes(fastify) {
           req.query.token,
           req.query.id,
         );
-        if (result == null) res.code(404).send({ error: "user not found" });
-        if (result == false) res.code(403).send({ authorization: "failed" });
-        res.code(200).send(result);
+        if (result == null)
+          return res.code(404).send({ error: "user not found" });
+        if (result == false)
+          return res.code(403).send({ authorization: "failed" });
+        return res.code(200).send(result);
       }),
     },
     {
       onRequest: [fastify.authenticate],
-      method: "POST",
+      method: "GET",
       url: "/2fa/enable",
       handler: asyncHandler(async (req, res) => {
-        if (!validateInput(req, res, ["id"])) return;
-        const user = await getUserByID(req.body.id);
+        const user = await getUserByID(req.userId);
+        if (user.is_2fa_enabled === 1)
+          return res.code(400).send({ error: "2FA already enabled" });
         const qr = await enable2fa(user);
-        res.code(200).send(qr);
+        return res.code(200).send(qr);
       }),
     },
     {
@@ -74,10 +84,12 @@ export default function createAuthRoutes(fastify) {
       method: "POST",
       url: "/2fa/verify",
       handler: asyncHandler(async (req, res) => {
-        if (!validateInput(req, res, ["id", "totp_code"])) return;
-        const user = await getUserByID(req.body.id);
+        if (!validateInput(req, res, ["totp_code"])) return;
+        const user = await getUserByID(req.userId);
         const result = await verify2fa(user, req.body.totp_code);
-        res.code(200).send(result);
+        if (result === false)
+          return res.code(400).send({ error: "Unable to verify TOTP code" });
+        return res.code(200).send(result);
       }),
     },
   ];
