@@ -45,5 +45,5 @@
 ### (M) 2FA and JWT
 
 - 2FA (SMS, authenticator apps, emails)
-  - Needs final integration between existing login and 2fa login
-  - Enabling of 2fa should be done, only thing missing is the display of the qr
+  - Enabling of 2fa should be done,
+    only thing missing is the display of the qr in the frontend

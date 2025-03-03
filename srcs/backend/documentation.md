@@ -47,7 +47,7 @@ La estructura de la documentación es la siguiente:
 
 Estos endpoints devuelven un JWT / no necesitan un JWT
 
-`POST` `/login` `{username, password}` Loguea al usuario,
+`POST` `/login` `{username, password, ?totp}` Loguea al usuario,
 devuelve toda la info del usuario
 
 ```json
@@ -65,6 +65,33 @@ devuelve toda la info del usuario
   "wins": 0,
   "losses": 0,
   "token": "verylongandsecurejwt"
+}
+```
+
+#### 2FA
+
+Si el usuario ha activado 2FA previamente, se pedirá un TOTP.
+Si no se encuentra el token TOTP, el servidor responderá con
+`CODE 202` `{message: "2FA is enabled, TOTP code required"}`.
+Si se encuentra el token TOTP, se procederá al login de forma habitual,
+comprobando el token en el proceso
+
+`GET` `/2fa/enable` Empieza la activación de 2FA
+
+```json
+{
+  "qr_code": "data:image/png;base64..."
+}
+```
+
+El usuario deberá escanear el QR y registrarlo con una aplicación para
+obtener un código de contraseña temporal (TOTP)
+
+`POST` `/2fa/verify` `{totp_code}` Finaliza la activación del 2FA
+
+```json
+{
+  "success": "2FA successfully enabled for user with ID 1"
 }
 ```
 
