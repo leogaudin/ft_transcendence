@@ -6,7 +6,7 @@ import path from "path";
 import handlebars from "handlebars";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { getUserByEmail, getUserByID, patchUser } from "./models/userModel.js";
+import { getUserByEmail, patchUser } from "./models/userModel.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -30,8 +30,7 @@ export async function resetUserPassword(data) {
   const resetToken = crypto.randomBytes(32).toString("hex");
   const hash = await bcrypt.hash(resetToken, 10);
   await patchUser(user.id, { reset_token: hash });
-  // This should go to the frontend, and after the user
-  // fills a form, the new password gets sent to /resetToken endpoint
+  // TODO: Change to frontend page
   const link = `http://localhost:9000/resetToken?token=${resetToken}&id=${user.id}`;
   const template = await fs.promises.readFile(
     path.resolve(__dirname, "./templates/passwordReset.html"),
@@ -52,22 +51,17 @@ export async function resetUserPassword(data) {
 }
 
 /**
- * Checks the token sent by the user against the reset token
- * to verify them for password changing
- * @param {String} token - Random string sent back
- * @param {Number} id - ID of the user
- * @returns {Boolean} - True if successful,
- *                      false if not
+ * Completes the change of password, checking the token first
+ * @param {Object} user - User to change password
+ * @param {String} token - Reset token
+ * @param {String} new_password - New password to update with
+ * @returns {Boolean} - true if successful,
+ *                      false if token does not match
  */
-export async function verifyUserResetToken(token, id) {
-  const user = await getUserByID(id);
-  if (!user) return null;
+export async function verifyUserResetToken(user, token, new_password) {
   if (!user.reset_token) return false;
   const isAuthorized = await bcrypt.compare(token, user.reset_token);
   if (!isAuthorized) return false;
-  console.log("User is able to reset password");
-  // Reset password logic
-  // patchUser(id, {password: newPassword})
-  patchUser(user.id, { reset_token: null }); // Null the reset_token after changin pass
+  await patchUser(user.id, { password: new_password, reset_token: null });
   return true;
 }

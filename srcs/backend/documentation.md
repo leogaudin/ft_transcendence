@@ -81,6 +81,34 @@ devuelve toda la info del usuario
 
 `POST` `/reset` `{email}` Manda un correo al usuario para resetear su contraseña
 
+```json
+{
+  "accepted": ["user@mail.com"],
+  "rejected": [],
+  "ehlo": [
+    "SIZE 35882577",
+    "8BITMIME",
+    "AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH",
+    "ENHANCEDSTATUSCODES",
+    "PIPELINING",
+    "CHUNKING",
+    "SMTPUTF8"
+  ],
+  "envelopeTime": 521,
+  "messageTime": 587,
+  "messageSize": 1042,
+  "response": "250 2.0.0 OK  1741175147 ffacd0b85a97d-390e485db82sm20400744f8f.88 - gsmtp",
+  "envelope": {
+    "from": "transcendence42mlg@gmail.com",
+    "to": ["user@mail.com"]
+  },
+  "messageId": "<0537e65e-6dff-d162-b271-ccfed0392b61@gmail.com>"
+}
+```
+
+`POST` `/resetToken` `{token, id, password, confirm_password}` Actualiza la contraseña
+del usuario si el token de reseteo es correcto
+
 #### 2FA
 
 Si el usuario ha activado 2FA previamente, se pedirá un TOTP.
