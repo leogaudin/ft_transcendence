@@ -8,16 +8,18 @@ function parseSessionForm(username, password, email = "Default", confirmPassword
 
     if (!username || !email || !password || !confirmPassword)
         msg = "Fill in all the fields";
-    else if (username.length < 6)
-        msg = "Username too short";
-    else if (!/^[a-z0-9]+$/gi.test(username))
-        msg = "Username can only contain lowercase and digits";
-    else if (password !== confirmPassword)
-        msg = "Passwords don't match";
-    else if (password.length < 9)
-        msg = "Password too short";
-    else if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[*\.\-_]/.test(password))
-        msg = "Please use at least one uppercase, lowercase, number and '*.-_'";
+    else if (email !== "Default") {
+        if (username.length < 6)
+            msg = "Username too short";
+        else if (!/^[a-z0-9]+$/gi.test(username))
+            msg = "Username can only contain lowercase and digits";
+        else if (password !== confirmPassword)
+            msg = "Passwords don't match";
+        else if (password.length < 9)
+            msg = "Password too short";
+        else if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[*\.\-_]/.test(password))
+            msg = "Please use at least one uppercase, lowercase, number and '*.-_'";
+    }
 
     return (msg);
 }
@@ -39,12 +41,12 @@ async function handleLogin() {
                 throw new Error(response["error"]);
         }
         else
-            alert("User entered successfully");
+            showAlert("User entered successfully");
         return (true);
     }
     catch (error){
         console.error(`Error: `, error);
-        alert(error);
+        showAlert(error);
         return (false);
     }
 }
@@ -72,12 +74,12 @@ async function handleRegister() {
                 throw new Error(response["error"]);
         }
         else
-            alert("User create successfully");
+            showAlert("User create successfully");
         return (true);
     }
     catch (error) {
         console.error(`Error: `, error);
-        alert(error);
+        showAlert(error);
         return (false);
     }
 }

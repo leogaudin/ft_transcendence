@@ -66,3 +66,18 @@ function popUp() {
     resetPassword.style.display = "flex";
     resetPassword.showModal();
 }
+
+const toastAlert = document.getElementById("toast-default");
+const toastText = document.getElementById("toast-message");
+document.addEventListener("DOMContentLoaded", () =>{
+    toastAlert.addEventListener("click", function (event) {
+        if (event.target.classList.contains("close-icon")) {
+            toastAlert.style.display = "none";
+        }
+    });
+});
+
+function showAlert(msg) {
+    toastText.innerText = msg;
+    toastAlert.style.display = "flex";
+}

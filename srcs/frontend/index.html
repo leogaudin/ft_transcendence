@@ -104,17 +104,28 @@
       </div>
       <div id="pink-divider"></div>
       <form id="recover-password-form" class="flex justify-center items-center">
-        <input type="email" id="email-password-recovery" class="text-black w-2/3 p-1 m-2 rounded-md" placeholder="Introduce your email">
+        <input type="email" id="email-password-recovery" class="text-black w-2/3 p-1 m-2 rounded-md"
+          placeholder="Introduce your email">
         <button type="submit" class="signin-user p-1 m-2 rounded-md">Submit</button>
       </form>
       <p class="m-2.5">We'll send you an email to reset your password</p>
     </div>
   </dialog>
 
+  <div id="toast-default"
+    class="flex items-center justify-between p-4 text-gray-500 bg-white rounded-lg shadow-sm dark:text-gray-400 dark:bg-gray-800"
+    role="alert">
+    <div class="flex flex-row items-center m-2">
+      <div class="error-icon"></div>
+      <div id="toast-message" class="flex ms-3 text-sm font-normal">Set yourself free.</div>
+    </div>
+    <div class="close-icon"></div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/particles.js"></script>
   <script src="js/init.js"></script>
   <script src="js/loginPage.js"></script>
-  <script src="js/fLoginPage.js"></script>
+  <script src="js/loginFetch.js"></script>
 </body>
 
 </html>
