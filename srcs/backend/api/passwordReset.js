@@ -51,23 +51,11 @@ export async function resetUserPassword(data) {
   return info;
 }
 
-/**
- * Checks the token sent by the user against the reset token
- * to verify them for password changing
- * @param {String} token - Random string sent back
- * @param {Number} id - ID of the user
- * @returns {Boolean} - True if successful,
- *                      false if not
- */
-export async function verifyUserResetToken(token, id) {
-  const user = await getUserByID(id);
-  if (!user) return null;
+export async function verifyUserResetToken(user, token, new_password) {
   if (!user.reset_token) return false;
   const isAuthorized = await bcrypt.compare(token, user.reset_token);
   if (!isAuthorized) return false;
   console.log("User is able to reset password");
-  // Reset password logic
-  // patchUser(id, {password: newPassword})
-  patchUser(user.id, { reset_token: null }); // Null the reset_token after changin pass
+  await patchUser(user.id, { password: new_password, reset_token: null });
   return true;
 }
