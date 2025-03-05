@@ -30,8 +30,7 @@ export async function resetUserPassword(data) {
   const resetToken = crypto.randomBytes(32).toString("hex");
   const hash = await bcrypt.hash(resetToken, 10);
   await patchUser(user.id, { reset_token: hash });
-  // This should go to the frontend, and after the user
-  // fills a form, the new password gets sent to /resetToken endpoint
+  // TODO: Change to frontend page
   const link = `http://localhost:9000/resetToken?token=${resetToken}&id=${user.id}`;
   const template = await fs.promises.readFile(
     path.resolve(__dirname, "./templates/passwordReset.html"),
@@ -51,11 +50,18 @@ export async function resetUserPassword(data) {
   return info;
 }
 
+/**
+ * Completes the change of password, checking the token first
+ * @param {Object} user - User to change password
+ * @param {String} token - Reset token
+ * @param {String} new_password - New password to update with
+ * @returns {Boolean} - true if successful,
+ *                      false if token does not match
+ */
 export async function verifyUserResetToken(user, token, new_password) {
   if (!user.reset_token) return false;
   const isAuthorized = await bcrypt.compare(token, user.reset_token);
   if (!isAuthorized) return false;
-  console.log("User is able to reset password");
   await patchUser(user.id, { password: new_password, reset_token: null });
   return true;
 }
