@@ -48,7 +48,7 @@ La estructura de la documentación es la siguiente:
 Estos endpoints devuelven un JWT / no necesitan un JWT
 
 `POST` `/login` `{username, password, ?totp}` Loguea al usuario,
-devuelve toda la info del usuario
+devuelve toda la info del usuario.
 
 ```json
 {
@@ -111,6 +111,8 @@ del usuario si el token de reseteo es correcto
 
 #### 2FA
 
+El endpoint para loguear a un usuario con 2FA es el mismo que 
+el logueo normal (/login).
 Si el usuario ha activado 2FA previamente, se pedirá un TOTP.
 Si no se encuentra el token TOTP, el servidor responderá con
 `CODE 202` `{message: "2FA is enabled, TOTP code required"}`.
