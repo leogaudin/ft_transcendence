@@ -141,7 +141,7 @@ h1 {
 
 /* --> Login Page <-- */
 
-#login-page, #sign-up-page {
+#login-page, #sign-up-page, #terms-and-conditions {
 	background-color: var(--dark-blue);
 	border-radius: 15px;
 	box-shadow: var(--violet) 0px 0px 20px;
@@ -275,4 +275,18 @@ h1 {
 	height: 30px;
 	background-size: cover;
 	transition: background-image 0.3s ease;
+}
+
+#terms-and-conditions {
+	display: none;
+	max-height: 800px;
+	max-width: 80%;
+	overflow-y: scroll;
+	overflow-x: hidden;
+}
+
+@media only screen and (max-width: 767px) {
+	#terms-and-conditions {
+		max-width: 90%;
+	}
 }

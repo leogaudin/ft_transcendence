@@ -81,3 +81,38 @@ function showAlert(msg) {
     toastText.innerText = msg;
     toastAlert.style.display = "flex";
 }
+
+
+
+async function fetchDisplayTerms() {
+    try {
+        const response = await fetch(`./privacy-policy.html`);
+        const content = await response.text();
+        const sectionCondition = document.querySelector("#privacy-policy");
+        sectionCondition.innerHTML = content;
+    }
+    catch (error) {
+        console.error(`Error during fetch in ${method} ${endpoint}:`, error);
+        return false;
+    }
+}
+
+
+document.addEventListener("DOMContentLoaded", async function() {
+    const termsButton = document.querySelector("#terms-conditions-button");
+    const termsPage = document.querySelector("#terms-and-conditions");
+    await fetchDisplayTerms();
+    termsButton.addEventListener("click", () => {
+        if (!termsPage.style.display || termsPage.style.display === "none") {
+            signInPage.style.display = "none";
+            signUpPage.style.display = "none";
+            termsPage.style.display = "flex";
+            termsButton.innerText = "Sign In";
+        }
+        else {
+            signInPage.style.display = "flex";
+            termsPage.style.display = "none";
+            termsButton.innerText = "Privacy and Terms Conditions";
+        }
+    })
+  });
