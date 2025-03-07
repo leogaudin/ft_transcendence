@@ -47,8 +47,8 @@ La estructura de la documentación es la siguiente:
 
 Estos endpoints devuelven un JWT / no necesitan un JWT
 
-`POST` `/login` `{username, password}` Loguea al usuario,
-devuelve toda la info del usuario
+`POST` `/login` `{username, password, ?totp}` Loguea al usuario,
+devuelve toda la info del usuario.
 
 ```json
 {
@@ -80,6 +80,63 @@ devuelve toda la info del usuario
 ```
 
 `POST` `/reset` `{email}` Manda un correo al usuario para resetear su contraseña
+
+```json
+{
+  "accepted": ["user@mail.com"],
+  "rejected": [],
+  "ehlo": [
+    "SIZE 35882577",
+    "8BITMIME",
+    "AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH",
+    "ENHANCEDSTATUSCODES",
+    "PIPELINING",
+    "CHUNKING",
+    "SMTPUTF8"
+  ],
+  "envelopeTime": 521,
+  "messageTime": 587,
+  "messageSize": 1042,
+  "response": "250 2.0.0 OK  1741175147 ffacd0b85a97d-390e485db82sm20400744f8f.88 - gsmtp",
+  "envelope": {
+    "from": "transcendence42mlg@gmail.com",
+    "to": ["user@mail.com"]
+  },
+  "messageId": "<0537e65e-6dff-d162-b271-ccfed0392b61@gmail.com>"
+}
+```
+
+`POST` `/resetToken` `{token, id, password, confirm_password}` Actualiza la contraseña
+del usuario si el token de reseteo es correcto
+
+#### 2FA
+
+El endpoint para loguear a un usuario con 2FA es el mismo que 
+el logueo normal (/login).
+Si el usuario ha activado 2FA previamente, se pedirá un TOTP.
+Si no se encuentra el token TOTP, el servidor responderá con
+`CODE 202` `{message: "2FA is enabled, TOTP code required"}`.
+Si se encuentra el token TOTP, se procederá al login de forma habitual,
+comprobando el token en el proceso
+
+`GET` `/2fa/enable` Empieza la activación de 2FA
+
+```json
+{
+  "qr_code": "data:image/png;base64..."
+}
+```
+
+El usuario deberá escanear el QR y registrarlo con una aplicación para
+obtener un código de contraseña temporal (TOTP)
+
+`POST` `/2fa/verify` `{totp_code}` Finaliza la activación del 2FA
+
+```json
+{
+  "success": "2FA successfully enabled for user with ID 1"
+}
+```
 
 #### El resto de endpoints requiren un JWT además de lo que cada uno necesite
 

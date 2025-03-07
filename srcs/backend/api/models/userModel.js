@@ -71,6 +71,7 @@ export function getUserByID(id) {
       delete user.friends_ids;
       delete user.blocked_ids;
       delete user.password;
+      delete user.totp_secret;
       anonymize(user);
       resolve(user);
     });

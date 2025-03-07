@@ -9,7 +9,7 @@ export default function createAvatarRoutes(fastify) {
         const data = await req.file();
         if (!data) return res.code(400).send({ error: "No file uploaded" });
         const result = await saveAvatar(req.userId, data);
-        res.code(200).send(result);
+        return res.code(200).send(result);
       }),
     },
   ];
