@@ -111,7 +111,7 @@ del usuario si el token de reseteo es correcto
 
 #### 2FA
 
-El endpoint para loguear a un usuario con 2FA es el mismo que 
+El endpoint para loguear a un usuario con 2FA es el mismo que
 el logueo normal (/login).
 Si el usuario ha activado 2FA previamente, se pedirá un TOTP.
 Si no se encuentra el token TOTP, el servidor responderá con
@@ -230,6 +230,25 @@ cf. la tabla en cuestión para ver lo que devuelve
 ```json
 {
   "success": "friend removed"
+}
+```
+
+`POST` `/users/blocks` `{blocked_id}` Añade un usuario a la lista de
+bloqueados de otro usuario
+
+```json
+{
+  "user_id": 1,
+  "blocked_id": 2
+}
+```
+
+`PATCH` `/users/blocks` `{blocked_id}` Elimina un usuario de la lista de
+bloqueados de otro usuario
+
+```json
+{
+  "success": "block removed"
 }
 ```
 
