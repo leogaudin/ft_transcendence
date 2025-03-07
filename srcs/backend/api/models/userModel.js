@@ -308,6 +308,13 @@ export function getUserByEmail(email) {
   });
 }
 
+/**
+ * Checks if a user has another blocked
+ * @param {Number} user_id - ID of the user
+ * @param {Number} blocked_id - ID of the possibly blocked user
+ * @returns {Boolean} - true if it is blocked,
+ *                      false if it isn't
+ */
 export async function isBlocked(user_id, blocked_id) {
   return new Promise((resolve, reject) => {
     const sql = `
