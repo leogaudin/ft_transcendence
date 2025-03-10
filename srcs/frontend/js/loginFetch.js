@@ -75,7 +75,7 @@ async function handleRegister() {
         }
         else
             showAlert("User create successfully");
-        return (true);
+        return (true);farola
     }
     catch (error) {
         console.error(`Error: `, error);
@@ -99,4 +99,17 @@ async function sendRequest(method, endpoint, body = null) {
         console.error(`Error during fetch in ${method} ${endpoint}:`, error);
         return false;
     }
+}
+
+const recoverPasswordSubmit = document.getElementById("recover-password-form");
+recoverPasswordSubmit.addEventListener("submit", recoverPassword);
+
+async function recoverPassword() {
+    const email = document.getElementById("email-password-recovery").value;
+    const response = await sendRequest('POST', 'reset', {email: email});
+    console.log(response);
+    if (response["error"])
+        showAlert("Email not found in database");
+    else
+        showAlert("Email sent successfully");
 }
