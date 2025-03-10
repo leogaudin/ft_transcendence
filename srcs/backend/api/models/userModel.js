@@ -307,3 +307,29 @@ export function getUserByEmail(email) {
     });
   });
 }
+
+/**
+ * Checks if a user has another blocked
+ * @param {Number} user_id - ID of the user
+ * @param {Number} blocked_id - ID of the possibly blocked user
+ * @returns {Boolean} - true if it is blocked,
+ *                      false if it isn't
+ */
+export async function isBlocked(user_id, blocked_id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT EXISTS (
+      SELECT 1
+      FROM user_blocks
+      WHERE user_id = ? AND blocked_id = ?)
+      AS is_blocked;`;
+    const params = [user_id, blocked_id];
+    db.get(sql, params, function (err, row) {
+      if (err) {
+        console.error("Error accessing user_blocks:", err.message);
+        return reject(err);
+      }
+      resolve(row.is_blocked === 1);
+    });
+  });
+}
