@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () =>{
 });
 
 const resetPassButton = document.getElementById("forgot-password");
-const resetPassword = document.getElementById("reset-password");
+const resetPassword = document.getElementById("recover-password");
 
 document.addEventListener("DOMContentLoaded", () =>{
     resetPassButton.addEventListener("click", () => {

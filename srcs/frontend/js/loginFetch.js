@@ -24,7 +24,8 @@ function parseSessionForm(username, password, email = "Default", confirmPassword
     return (msg);
 }
 
-async function handleLogin() {
+async function handleLogin(e) {
+    e.preventDefault();
     const username = document.getElementById("login-username").value;
     const password = document.getElementById("password").value;
 
@@ -51,7 +52,8 @@ async function handleLogin() {
     }
 }
 
-async function handleRegister() {
+async function handleRegister(e) {
+    e.preventDefault();
     const username = document.getElementById("username").value;
     const email = document.getElementById("signup-email").value;
     const password = document.getElementById("new-password").value;
@@ -75,7 +77,7 @@ async function handleRegister() {
         }
         else
             showAlert("User create successfully");
-        return (true);
+        return (true);farola
     }
     catch (error) {
         console.error(`Error: `, error);
@@ -99,4 +101,17 @@ async function sendRequest(method, endpoint, body = null) {
         console.error(`Error during fetch in ${method} ${endpoint}:`, error);
         return false;
     }
+}
+
+const recoverPasswordSubmit = document.getElementById("recover-password-form");
+recoverPasswordSubmit.addEventListener("submit", recoverPassword);
+
+async function recoverPassword() {
+    const email = document.getElementById("email-password-recovery").value;
+    const response = await sendRequest('POST', 'reset', {email: email});
+    console.log(response);
+    if (response["error"])
+        showAlert("Email not found in database");
+    else
+        showAlert("Email sent successfully");
 }
