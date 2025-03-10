@@ -29,7 +29,7 @@ export async function resetUserPassword(user) {
   const hash = await bcrypt.hash(resetToken, 10);
   await patchUser(user.id, { reset_token: hash });
   // TODO: Change to frontend page
-  const link = `http://localhost:9000/resetToken?token=${resetToken}&id=${user.id}`;
+  const link = `http://localhost:8000/resetPassword?token=${resetToken}&id=${user.id}`;
   const template = await fs.promises.readFile(
     path.resolve(__dirname, "./templates/passwordReset.html"),
     "utf-8",
