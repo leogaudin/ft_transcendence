@@ -6,7 +6,7 @@ import { anonymize } from "../utils.js";
  * Returns the ID, username and email of all avaliable users
  * @returns {Array} - All avaliable users
  */
-export async function getUsers() {
+export function getUsers() {
   return new Promise((resolve, reject) => {
     const sql = ` SELECT u.id, u.username, u.email, u.is_deleted FROM users u `;
     db.all(sql, (err, rows) => {
@@ -315,7 +315,7 @@ export function getUserByEmail(email) {
  * @returns {Boolean} - true if it is blocked,
  *                      false if it isn't
  */
-export async function isBlocked(user_id, blocked_id) {
+export function isBlocked(user_id, blocked_id) {
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT EXISTS (

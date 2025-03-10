@@ -87,18 +87,11 @@ export default function createUserRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         const table = req.params.str;
         var data;
-        if (table == "messages") {
-          data = await getMessagesOfUser(req.userId);
-        }
-        if (table == "chats") {
-          data = await getChatsOfUser(req.userId);
-        }
-        if (table == "matches") {
-          data = await getMatchesOfUser(req.userId);
-        }
-        if (table == "tournaments") {
+        if (table == "messages") data = await getMessagesOfUser(req.userId);
+        else if (table == "chats") data = await getChatsOfUser(req.userId);
+        else if (table == "matches") data = await getMatchesOfUser(req.userId);
+        else if (table == "tournaments")
           data = await getTournamentsOfUser(req.userId);
-        }
         return res.code(200).send(data);
       }),
     },

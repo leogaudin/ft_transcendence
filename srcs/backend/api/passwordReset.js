@@ -6,7 +6,7 @@ import path from "path";
 import handlebars from "handlebars";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import { getUserByEmail, patchUser } from "./models/userModel.js";
+import { patchUser } from "./models/userModel.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
