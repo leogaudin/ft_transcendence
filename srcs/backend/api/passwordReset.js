@@ -21,12 +21,10 @@ const transporter = nodemailer.createTransport({
 
 /**
  * Sends the user a link to reset their password
- * @param {Object} data - Payload to check
+ * @param {Object} user - The user to reset their password
  * @returns {Object} - Object with success or failure
  */
-export async function resetUserPassword(data) {
-  const user = await getUserByEmail(data.email);
-  if (!user) return null;
+export async function resetUserPassword(user) {
   const resetToken = crypto.randomBytes(32).toString("hex");
   const hash = await bcrypt.hash(resetToken, 10);
   await patchUser(user.id, { reset_token: hash });

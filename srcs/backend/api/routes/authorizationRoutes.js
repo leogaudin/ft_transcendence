@@ -1,7 +1,11 @@
 import { asyncHandler, validateInput } from "../utils.js";
 import { loginUser, registerUser, enable2fa, verify2fa } from "../authUtils.js";
 import { resetUserPassword, verifyUserResetToken } from "../passwordReset.js";
-import { getUserByID, getUserByUsername } from "../models/userModel.js";
+import {
+  getUserByID,
+  getUserByEmail,
+  getUserByUsername,
+} from "../models/userModel.js";
 
 export default function createAuthRoutes(fastify) {
   return [
@@ -46,7 +50,9 @@ export default function createAuthRoutes(fastify) {
       url: "/reset",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["email"])) return;
-        const result = await resetUserPassword(req.body);
+        const user = await getUserByEmail(req.body.email);
+        if (!user) return res.code(404).send({ error: "user not found" });
+        const result = await resetUserPassword(user);
         if (result == null)
           return res.code(404).send({ error: "user not found" });
         return res.code(200).send(result);
