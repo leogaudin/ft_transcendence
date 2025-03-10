@@ -24,7 +24,8 @@ function parseSessionForm(username, password, email = "Default", confirmPassword
     return (msg);
 }
 
-async function handleLogin() {
+async function handleLogin(e) {
+    e.preventDefault();
     const username = document.getElementById("login-username").value;
     const password = document.getElementById("password").value;
 
@@ -51,7 +52,8 @@ async function handleLogin() {
     }
 }
 
-async function handleRegister() {
+async function handleRegister(e) {
+    e.preventDefault();
     const username = document.getElementById("username").value;
     const email = document.getElementById("signup-email").value;
     const password = document.getElementById("new-password").value;
