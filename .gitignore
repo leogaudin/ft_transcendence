@@ -60,3 +60,6 @@ __pycache__
 # Frontend #
 # Tailwind CSS #
 srcs/frontend/node_modules/
+
+# supervisord #
+supervisord.pid
