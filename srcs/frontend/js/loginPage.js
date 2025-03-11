@@ -1,8 +1,18 @@
 "use strict";
-const dropdownButton = document.getElementById("menu-button");
-const dropdownOptions = document.getElementById("language-options");
 
-document.addEventListener("DOMContentLoaded", () => {
+export function initLoginEvents() {
+    dropDown();
+    switchSigns();
+    resetPassword();
+    displayToast();
+    displayTerms();
+    
+    // handleCredentialResponse();
+}
+
+function dropDown(){
+    const dropdownButton = document.getElementById("menu-button");
+    const dropdownOptions = document.getElementById("language-options");
     dropdownButton.addEventListener("click", () => {
         dropdownButton.focus();
     });
@@ -16,9 +26,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const key = e.target.getAttribute('language_key');
         changeLanguage(key);
     });
-});
+}
 
 function changeLanguage(option) {
+    const dropdownButton = document.getElementById("menu-button");
     const languages = [
         { key: 'es', label: 'Español' },
         { key: 'en', label: 'English' },
@@ -26,15 +37,18 @@ function changeLanguage(option) {
     ];
 
     const language = languages.find((elem) => elem.key == option);
-    dropdownButton.innerText = language.label;
+    if (!language || language === undefined)
+        dropdownButton.innerText = "English";
+    else
+        dropdownButton.innerText = language.label;
 }
 
-const signUpButton = document.getElementById("sign-up-button");
-const signInButton = document.getElementById("sign-in-button");
-const signUpPage = document.getElementById("sign-up-page");
-const signInPage = document.getElementById("login-page");
 
-document.addEventListener("DOMContentLoaded", () =>{
+function switchSigns() {
+    const signUpButton = document.getElementById("sign-up-button");
+    const signInButton = document.getElementById("sign-in-button");
+    const signUpPage = document.getElementById("sign-up-page");
+    const signInPage = document.getElementById("login-page");
     signUpButton.addEventListener("click", () => {
         signInPage.style.display = "none";
         signUpPage.style.display = "flex";
@@ -43,12 +57,12 @@ document.addEventListener("DOMContentLoaded", () =>{
         signInPage.style.display = "flex";
         signUpPage.style.display = "none";
     });
-});
+}
 
-const resetPassButton = document.getElementById("forgot-password");
-const resetPassword = document.getElementById("recover-password");
 
-document.addEventListener("DOMContentLoaded", () =>{
+function resetPassword() {
+    const resetPassButton = document.getElementById("forgot-password");
+    const resetPassword = document.getElementById("recover-password");
     resetPassButton.addEventListener("click", () => {
         popUp();
         document.getElementById("visual-div").style.opacity = "0.5";
@@ -60,24 +74,26 @@ document.addEventListener("DOMContentLoaded", () =>{
             resetPassword.close();
         }
     });
-});
+}
 
 function popUp() {
+    const resetPassword = document.getElementById("recover-password");
     resetPassword.style.display = "flex";
     resetPassword.showModal();
 }
 
-const toastAlert = document.getElementById("toast-default");
-const toastText = document.getElementById("toast-message");
-document.addEventListener("DOMContentLoaded", () =>{
+function displayToast() {
+    const toastAlert = document.getElementById("toast-default");
     toastAlert.addEventListener("click", function (event) {
         if (event.target.classList.contains("close-icon")) {
             toastAlert.style.display = "none";
         }
     });
-});
+}
 
-function showAlert(msg) {
+export function showAlert(msg) {
+    const toastText = document.getElementById("toast-message");
+    const toastAlert = document.getElementById("toast-default");
     toastText.innerText = msg;
     toastAlert.style.display = "flex";
 }
@@ -98,7 +114,9 @@ async function fetchDisplayTerms() {
 }
 
 
-document.addEventListener("DOMContentLoaded", async function() {
+async function displayTerms() {
+    const signUpPage = document.getElementById("sign-up-page");
+    const signInPage = document.getElementById("login-page");
     const termsButton = document.querySelector("#terms-conditions-button");
     const termsPage = document.querySelector("#terms-and-conditions");
     await fetchDisplayTerms();
@@ -115,4 +133,4 @@ document.addEventListener("DOMContentLoaded", async function() {
             termsButton.innerText = "Privacy and Terms Conditions";
         }
     })
-  });
+}

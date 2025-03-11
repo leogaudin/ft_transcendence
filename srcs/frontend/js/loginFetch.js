@@ -1,7 +1,16 @@
-const signupSubmit = document.getElementById("signup-form");
-const loginSubmit = document.getElementById("login-form");
-signupSubmit.addEventListener("submit", handleRegister);
-loginSubmit.addEventListener("submit", handleLogin);
+"use strict";
+
+import { showAlert } from "./loginPage.js";
+
+export function initLoginFetches() {
+    const signupSubmit = document.getElementById("signup-form");
+    const loginSubmit = document.getElementById("login-form");
+    const recoverPasswordSubmit = document.getElementById("recover-password-form");
+    signupSubmit.addEventListener("submit", handleRegister);
+    loginSubmit.addEventListener("submit", handleLogin);
+    recoverPasswordSubmit.addEventListener("submit", recoverPassword);
+}
+
 
 function parseSessionForm(username, password, email = "Default", confirmPassword = password) {
     let msg = "Ok";
@@ -77,7 +86,7 @@ async function handleRegister(e) {
         }
         else
             showAlert("User create successfully");
-        return (true);farola
+        return (true);
     }
     catch (error) {
         console.error(`Error: `, error);
@@ -103,8 +112,6 @@ async function sendRequest(method, endpoint, body = null) {
     }
 }
 
-const recoverPasswordSubmit = document.getElementById("recover-password-form");
-recoverPasswordSubmit.addEventListener("submit", recoverPassword);
 
 async function recoverPassword() {
     const email = document.getElementById("email-password-recovery").value;
