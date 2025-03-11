@@ -1,9 +1,10 @@
 const routes = [
+	{ path: "/", url: "../index.html"},
     { path: "/reset-password", url: "../reset-password.html" }
 ];
 
 const testButton = document.getElementById("test-button");
-testButton.addEventListener("click", () => navigateTo(routes[0].path));
+testButton.addEventListener("click", () => navigateTo(routes[1].path));
 
 function navigateTo(path) {
     console.log(`Navegando a: ${path}`);
@@ -29,11 +30,13 @@ async function loadContent(path) {
 }
 // Manejar la navegación con botones de "Atrás" y "Adelante"
 window.onpopstate = () => {
+	console.log("I entered in onpopstate, window.location.pathname: ", window.location.pathname);
     loadContent(window.location.pathname);
 };
 
 // Cargar la página correcta si se accede directamente a una ruta
 document.addEventListener("DOMContentLoaded", () => {
+	console.log("window.location.pathname: ", window.location.pathname);
     loadContent(window.location.pathname);
 });
 
