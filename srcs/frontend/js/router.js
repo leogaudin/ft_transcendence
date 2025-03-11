@@ -28,13 +28,14 @@ async function loadContent(path) {
 		console.error("Error al cargar la página:", error);
 	}
 }
-// Manejar la navegación con botones de "Atrás" y "Adelante"
+
+// Managing back and forward button
 window.onpopstate = () => {
 	console.log("I entered in onpopstate, window.location.pathname: ", window.location.pathname);
     loadContent(window.location.pathname);
 };
 
-// Cargar la página correcta si se accede directamente a una ruta
+// Load page correctly when writing it directly on navbar
 document.addEventListener("DOMContentLoaded", () => {
 	console.log("window.location.pathname: ", window.location.pathname);
     loadContent(window.location.pathname);
