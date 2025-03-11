@@ -868,7 +868,7 @@ canvas {
   background-position: 50% 50%;
 }
 
-#visual-div {
+#visual-div{
   min-height: 100vh;
 }
 
@@ -1051,7 +1051,7 @@ h1 {
   padding-left: 10px;
 }
 
-#recover-password {
+#recover-password, #reset-password {
   display: none;
   background-color: var(--dark-pink);
   box-shadow: var(--accent-pink) 0px 0px 20px;
@@ -1113,6 +1113,12 @@ h1 {
   }
 }
 
+#reset-password {
+  display: flex;
+  position: relative;
+  z-index: 1;
+}
+
 .hover\:bg-gray-50:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
@@ -1135,4 +1141,3 @@ h1 {
     color: rgb(156 163 175 / var(--tw-text-opacity, 1));
   }
 }
-
