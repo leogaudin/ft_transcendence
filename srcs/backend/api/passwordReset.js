@@ -47,6 +47,11 @@ export async function resetUserPassword(user) {
   return info;
 }
 
+export async function checkNewPassword(user, new_password) {
+  const result = await bcrypt.compare(new_password, user.password);
+  return result;
+}
+
 /**
  * Completes the change of password, checking the token first
  * @param {Object} user - User to change password
@@ -56,9 +61,9 @@ export async function resetUserPassword(user) {
  *                      false if token does not match
  */
 export async function verifyUserResetToken(user, token, new_password) {
-  if (!user.reset_token) return false;
   const isAuthorized = await bcrypt.compare(token, user.reset_token);
+  await patchUser(user.id, { reset_token: null });
   if (!isAuthorized) return false;
-  await patchUser(user.id, { password: new_password, reset_token: null });
+  await patchUser(user.id, { password: new_password });
   return true;
 }

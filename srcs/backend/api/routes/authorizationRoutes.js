@@ -1,6 +1,16 @@
 import { asyncHandler, validateInput } from "../utils.js";
-import { loginUser, registerUser, enable2fa, verify2fa } from "../authUtils.js";
-import { resetUserPassword, verifyUserResetToken } from "../passwordReset.js";
+import {
+  loginUser,
+  loginGoogleUser,
+  registerUser,
+  enable2fa,
+  verify2fa,
+} from "../authUtils.js";
+import {
+  resetUserPassword,
+  checkNewPassword,
+  verifyUserResetToken,
+} from "../passwordReset.js";
 import {
   getUserByID,
   getUserByEmail,
@@ -23,6 +33,16 @@ export default function createAuthRoutes(fastify) {
         const result = await loginUser(user, req.body.password, req.body.totp);
         if (result == false)
           return res.code(401).send({ authorization: "failed" });
+        return res.code(200).send(result);
+      }),
+    },
+    {
+      method: "POST",
+      url: "/google/login",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["credential"]))
+          return res.code(400).send({ error: "Credential not found" });
+        const result = await loginGoogleUser(req.body.credential);
         return res.code(200).send(result);
       }),
     },
@@ -75,14 +95,19 @@ export default function createAuthRoutes(fastify) {
           return res.code(400).send({ error: "passwords don't match" });
         const user = await getUserByID(req.body.id);
         if (!user) return res.code(404).send({ error: "user not found" });
+        if (!user.reset_token)
+          return res.code(403).send({ error: "reset token has expired" });
+        const isSamePassword = await checkNewPassword(user, req.body.password);
+        if (isSamePassword)
+          return res.code(400).send({ error: "new password matches old one" });
         const result = await verifyUserResetToken(
           user,
           req.body.token,
           req.body.password,
         );
         if (result == false)
-          return res.code(403).send({ authorization: "failed" });
-        return res.code(200).send(result);
+          return res.code(403).send({ error: "authorization failed" });
+        return res.code(200).send({ success: "password successfully updated" });
       }),
     },
     {

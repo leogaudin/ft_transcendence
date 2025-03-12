@@ -43,7 +43,7 @@ La estructura de la documentación es la siguiente:
 }
 ```
 
-### Autorización
+### Auntentificación
 
 Estos endpoints devuelven un JWT / no necesitan un JWT
 
@@ -67,6 +67,13 @@ devuelve toda la info del usuario.
   "token": "verylongandsecurejwt"
 }
 ```
+
+`POST` `/google/login` `{credential}` Loguea al usuario a
+través de Google, creando su cuenta
+o accediendo a una existente
+
+Si el usuario existe, el resultado es idéntico al endpoint `/login`,
+si no existe, el resultado es idéntico al endpoint `/register`
 
 `POST` `/register` `{username, email, password, confirm_password}` Registra al usuario
 

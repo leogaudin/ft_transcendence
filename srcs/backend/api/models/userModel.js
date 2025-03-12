@@ -40,6 +40,19 @@ export async function createUser(data) {
   });
 }
 
+export function createGoogleUser(data) {
+  return new Promise((resolve, reject) => {
+    const sql = `INSERT INTO users (username, email, google_id) VALUES (?,?,?)`;
+    const params = [data.username, data.email, data.googleId];
+    db.run(sql, params, function (err) {
+      if (err) {
+        console.error("Error inserting user:", err.message);
+        return reject(err);
+      }
+      resolve({ id: this.lastID, username: data.username, email: data.email });
+    });
+  });
+}
 /**
  * Finds a user by a given ID if it exists
  * @param {Number} id - ID of the user
@@ -72,6 +85,7 @@ export function getUserByID(id) {
       delete user.blocked_ids;
       delete user.password;
       delete user.totp_secret;
+      delete user.google_id;
       anonymize(user);
       resolve(user);
     });

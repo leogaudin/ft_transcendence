@@ -1,8 +1,15 @@
-import { createUser, patchUser } from "./models/userModel.js";
+import {
+  createUser,
+  createGoogleUser,
+  getUserByEmail,
+  patchUser,
+} from "./models/userModel.js";
 import bcrypt from "bcryptjs";
 import fastify from "./index.js";
 import qrcode from "qrcode";
 import { authenticator } from "otplib";
+import { OAuth2Client } from "google-auth-library";
+import { saveAvatar } from "./utils.js";
 
 /**
  * Logs the user
@@ -25,6 +32,40 @@ export async function loginUser(user, password, totp_token = null) {
   delete result.password;
   delete result.totp_secret;
   await patchUser(user.id, { is_online: 1 });
+  return result;
+}
+
+/**
+ * Logs the user through Google
+ * @param {String} credential - The authentication token
+ * @returns {Object} - The logged in user, with a JWT
+ */
+export async function loginGoogleUser(credential) {
+  const client = new OAuth2Client(process.env.CLIENT_ID);
+  const ticket = await client.verifyIdToken({
+    idToken: credential,
+    audience: process.env.CLIENT_ID,
+  });
+  const payload = ticket.getPayload();
+  console.log("payload: ", payload);
+  const googleId = payload["sub"];
+  const email = payload["email"];
+  const name = email.split("@")[0];
+  let user = await getUserByEmail(email);
+  if (!user) {
+    user = await createGoogleUser({
+      username: name,
+      email: email,
+      googleId: googleId,
+    });
+  } else {
+    await patchUser(user.id, { google_id: googleId });
+    delete user.password;
+    delete user.totp_secret;
+    delete user.google_id;
+  }
+  const token = fastify.jwt.sign({ user: user.id });
+  const result = Object.assign({}, user, { token });
   return result;
 }
 
