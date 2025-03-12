@@ -1,21 +1,7 @@
 import { initLoginEvents } from "./loginPage.js";
 import { initLoginFetches } from "./loginFetch.js";
-
-// function handleCredentialResponse(response) {
-//     console.log("Encoded JWT ID token: " + response.credential);
-// }
-
-// window.onload = function () {
-// google.accounts.id.initialize({
-// 	client_id: "YOUR_GOOGLE_CLIENT_ID",
-// 	callback: handleCredentialResponse
-// });
-// google.accounts.id.renderButton(
-// 	document.getElementById("buttonDiv"),
-// 	{ theme: "outline", size: "large" }  // customization attributes
-// );
-// google.accounts.id.prompt(); // also display the One Tap dialog
-// }
+import { recoverPasswordFetches } from "./loginFetch.js";
+import { displayToast } from "./loginPage.js";
 
 const routes = [
 	{ path: "/", url: ""},
@@ -56,7 +42,10 @@ function loadEvents(path) {
 			loadLoginPage();
 			break;
 		case "/reset-password":
-			console.log("executing events for reset-password");
+			console.log("Entrando en inicialización de eventos de recuperación de contraseña");
+			recoverPasswordFetches();
+			displayToast();
+			console.log("Saliendo en inicialización de eventos de recuperación de contraseña");
 			break;
 		// default:
 		//     loadNotFoundPage();
