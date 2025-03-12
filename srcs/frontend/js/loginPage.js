@@ -6,8 +6,6 @@ export function initLoginEvents() {
     resetPassword();
     displayToast();
     displayTerms();
-    
-    // handleCredentialResponse();
 }
 
 function dropDown(){
@@ -82,7 +80,7 @@ function popUp() {
     resetPassword.showModal();
 }
 
-function displayToast() {
+export function displayToast() {
     const toastAlert = document.getElementById("toast-default");
     toastAlert.addEventListener("click", function (event) {
         if (event.target.classList.contains("close-icon")) {

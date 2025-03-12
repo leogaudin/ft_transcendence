@@ -11,6 +11,11 @@ export function initLoginFetches() {
     recoverPasswordSubmit.addEventListener("submit", recoverPassword);
 }
 
+export function recoverPasswordFetches() {
+    const resetPasswordSubmit = document.getElementById("reset-password-form");
+    resetPasswordSubmit.addEventListener("submit", resetPassword);
+}
+
 
 function parseSessionForm(username, password, email = "Default", confirmPassword = password) {
     let msg = "Ok";
@@ -113,7 +118,8 @@ async function sendRequest(method, endpoint, body = null) {
 }
 
 
-async function recoverPassword() {
+async function recoverPassword(e) {
+    e.preventDefault();
     const email = document.getElementById("email-password-recovery").value;
     const response = await sendRequest('POST', 'reset', {email: email});
     console.log(response);
@@ -121,4 +127,22 @@ async function recoverPassword() {
         showAlert("Email not found in database");
     else
         showAlert("Email sent successfully");
+}
+
+async function resetPassword(e) {
+    e.preventDefault();
+    const params = new URLSearchParams(document.location.search);
+    const token = params.get("token");
+    const id = params.get("id");
+    const password = document.getElementById("first-password-recovery").value;
+    const repeatPassword = document.getElementById("second-password-recovery").value;
+
+    const response = await sendRequest('POST', 'resetToken', {token: token, id: id, password: password, confirm_password: repeatPassword});
+    console.log(response);
+    if (response === true) {
+        const msg = document.getElementById("reset-password-message");
+        msg.innerText = "Change of password was successful. You can now return to login page!";
+    }
+    else
+        showAlert("Error during password recovery");
 }
