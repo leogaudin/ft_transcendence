@@ -83,9 +83,10 @@ export function getUserByID(id) {
       };
       delete user.friends_ids;
       delete user.blocked_ids;
-      delete user.password;
-      delete user.totp_secret;
-      delete user.google_id;
+      //TODO: Find a way of removing the password on demand
+      // delete user.password;
+      // delete user.totp_secret;
+      // delete user.google_id;
       anonymize(user);
       resolve(user);
     });
