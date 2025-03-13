@@ -1,7 +1,7 @@
 import {
+  getUser,
   createUser,
   createGoogleUser,
-  getUserByEmail,
   patchUser,
 } from "./models/userModel.js";
 import bcrypt from "bcryptjs";
@@ -9,7 +9,6 @@ import fastify from "./index.js";
 import qrcode from "qrcode";
 import { authenticator } from "otplib";
 import { OAuth2Client } from "google-auth-library";
-import { saveAvatar } from "./utils.js";
 
 /**
  * Logs the user
@@ -51,7 +50,7 @@ export async function loginGoogleUser(credential) {
   const googleId = payload["sub"];
   const email = payload["email"];
   const name = email.split("@")[0];
-  let user = await getUserByEmail(email);
+  let user = await getUser(email, true);
   if (!user) {
     user = await createGoogleUser({
       username: name,

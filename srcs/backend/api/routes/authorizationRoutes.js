@@ -11,11 +11,7 @@ import {
   checkNewPassword,
   verifyUserResetToken,
 } from "../passwordReset.js";
-import {
-  getUserByID,
-  getUserByEmail,
-  getUserByUsername,
-} from "../models/userModel.js";
+import { getUser } from "../models/userModel.js";
 
 export default function createAuthRoutes(fastify) {
   return [
@@ -24,7 +20,7 @@ export default function createAuthRoutes(fastify) {
       url: "/login",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["username", "password"])) return;
-        const user = await getUserByUsername(req.body.username);
+        const user = await getUser(req.body.username, true);
         if (!user) return res.code(404).send({ error: "User not found" });
         if (!req.body.totp && user.is_2fa_enabled)
           return res
@@ -70,7 +66,7 @@ export default function createAuthRoutes(fastify) {
       url: "/reset",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["email"])) return;
-        const user = await getUserByEmail(req.body.email);
+        const user = await getUser(req.body.email);
         if (!user) return res.code(404).send({ error: "user not found" });
         const result = await resetUserPassword(user);
         if (result == null)
@@ -93,7 +89,7 @@ export default function createAuthRoutes(fastify) {
           return;
         if (req.body.password != req.body.confirm_password)
           return res.code(400).send({ error: "Passwords don't match" });
-        const user = await getUserByID(req.body.id);
+        const user = await getUser(req.body.id, true);
         if (!user) return res.code(404).send({ error: "User not found" });
         if (!user.reset_token)
           return res.code(403).send({ error: "Reset token has expired" });
@@ -117,7 +113,7 @@ export default function createAuthRoutes(fastify) {
       method: "GET",
       url: "/2fa/enable",
       handler: asyncHandler(async (req, res) => {
-        const user = await getUserByID(req.userId);
+        const user = await getUser(req.userId);
         if (user.is_2fa_enabled === 1)
           return res.code(400).send({ error: "2FA already enabled" });
         const qr = await enable2fa(user);
@@ -130,7 +126,7 @@ export default function createAuthRoutes(fastify) {
       url: "/2fa/verify",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["totp_code"])) return;
-        const user = await getUserByID(req.userId);
+        const user = await getUser(req.userId);
         const result = await verify2fa(user, req.body.totp_code);
         if (result === false)
           return res.code(400).send({ error: "Unable to verify TOTP code" });

@@ -53,45 +53,6 @@ export function createGoogleUser(data) {
     });
   });
 }
-/**
- * Finds a user by a given ID if it exists
- * @param {Number} id - ID of the user
- * @returns {Object} - The found user
- */
-export function getUserByID(id) {
-  return new Promise((resolve, reject) => {
-    const sql = `
-      SELECT u.*,
-      GROUP_CONCAT(DISTINCT uf.friend_id) AS friends_ids,
-      GROUP_CONCAT(DISTINCT ub.blocked_id) AS blocked_ids
-      FROM users u
-      LEFT JOIN user_friends uf ON u.id = uf.user_id
-      LEFT JOIN user_blocks ub ON u.id = ub.user_id
-      WHERE id = ?
-      GROUP BY u.id`;
-
-    db.get(sql, [id], (err, row) => {
-      if (err) {
-        console.error("Error getting user:", err.message);
-        return reject(err);
-      }
-      if (!row) return reject({ message: "user not found" });
-      const user = {
-        ...row,
-        friends: row.friends_ids ? row.friends_ids.split(",").map(Number) : [],
-        blocks: row.blocked_ids ? row.blocked_ids.split(",").map(Number) : [],
-      };
-      delete user.friends_ids;
-      delete user.blocked_ids;
-      //TODO: Find a way of removing the password on demand
-      // delete user.password;
-      // delete user.totp_secret;
-      // delete user.google_id;
-      anonymize(user);
-      resolve(user);
-    });
-  });
-}
 
 /**
  * Fully modifies a user
@@ -116,7 +77,7 @@ export async function putUser(id, data) {
       if (this.changes === 0) {
         return reject(new Error("User not found"));
       }
-      resolve(getUserByID(id));
+      resolve(getUser(id));
     });
   });
 }
@@ -284,46 +245,6 @@ export function removeUserBlock(id, blocked_id) {
 }
 
 /**
- * Finds a user by a given username
- * @param {String} username - Name of the user
- * @returns {Object} - Found user
- */
-export function getUserByUsername(username) {
-  return new Promise((resolve, reject) => {
-    const sql = `
-      SELECT * FROM users
-      WHERE username = ? AND is_deleted = 0 `;
-    db.get(sql, username, function (err, row) {
-      if (err) {
-        console.error("Error getting user:", err.message);
-        return reject(err);
-      }
-      resolve(row);
-    });
-  });
-}
-
-/**
- * Finds a user by a given email
- * @param {String} email - Email of the user
- * @returns {Object} - Found user
- */
-export function getUserByEmail(email) {
-  return new Promise((resolve, reject) => {
-    const sql = `
-      SELECT * FROM users
-      WHERE email = ? AND is_deleted = 0 `;
-    db.get(sql, email, function (err, row) {
-      if (err) {
-        console.error("Error getting user:", err.message);
-        return reject(err);
-      }
-      resolve(row);
-    });
-  });
-}
-
-/**
  * Checks if a user has another blocked
  * @param {Number} user_id - ID of the user
  * @param {Number} blocked_id - ID of the possibly blocked user
@@ -345,6 +266,61 @@ export function isBlocked(user_id, blocked_id) {
         return reject(err);
       }
       resolve(row.is_blocked === 1);
+    });
+  });
+}
+
+/**
+ * Finds a user by a given ID, username, or email, keeping or not their credentials
+ * @param {Any} identifier - ID, username or email of the user
+ * @param {Boolean} keepCredentials - True if you want to keep credentials,
+ *                                    defaults to false
+ * @returns {Object} - The found user
+ */
+export function getUser(identifier, keepCredentials = null) {
+  return new Promise((resolve, reject) => {
+    let whereClause;
+
+    if (identifier === undefined || identifier === null)
+      return reject(new Error("Identifier is required in getUser()"));
+    else if (
+      typeof identifier === "number" ||
+      (typeof identifier === "string" && /^\d+$/.test(identifier))
+    )
+      whereClause = "u.id = ?";
+    else if (typeof identifier === "string" && identifier.includes("@"))
+      whereClause = "u.email = ?";
+    else if (typeof identifier === "string") whereClause = "u.username = ?";
+    else return reject(new Error("Invalid identifier type"));
+    const sql = `
+      SELECT u.*,
+      GROUP_CONCAT(DISTINCT uf.friend_id) AS friends_ids,
+      GROUP_CONCAT(DISTINCT ub.blocked_id) AS blocked_ids
+      FROM users u
+      LEFT JOIN user_friends uf ON u.id = uf.user_id
+      LEFT JOIN user_blocks ub ON u.id = ub.user_id
+      WHERE ${whereClause}
+      GROUP BY u.id`;
+    db.get(sql, [identifier], (err, row) => {
+      if (err) {
+        console.error("error getting user:", err.message);
+        return reject(err);
+      }
+      if (!row) return reject(new Error("User not found"));
+      const user = {
+        ...row,
+        friends: row.friends_ids ? row.friends_ids.split(",").map(Number) : [],
+        blocks: row.blocked_ids ? row.blocked_ids.split(",").map(Number) : [],
+      };
+      delete user.friends_ids;
+      delete user.blocked_ids;
+      if (!keepCredentials) {
+        delete user.password;
+        delete user.totp_secret;
+        delete user.google_id;
+      }
+      anonymize(user);
+      resolve(user);
     });
   });
 }

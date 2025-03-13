@@ -1,7 +1,7 @@
 import { asyncHandler, validateInput } from "../utils.js";
 import {
   createUser,
-  getUserByID,
+  getUser,
   getUsers,
   putUser,
   patchUser,
@@ -47,7 +47,7 @@ export default function createUserRoutes(fastify) {
       method: "GET",
       url: "/users",
       handler: asyncHandler(async (req, res) => {
-        const user = await getUserByID(req.userId);
+        const user = await getUser(req.userId);
         return res.code(200).send(user);
       }),
     },
