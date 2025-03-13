@@ -848,6 +848,8 @@ video {
   --violet: #522B66;
   --alert: #C60001;
   --accent-alert: #FF504F;
+  --success: #537A1C;
+  --accent-success: #79B329;
 }
 
 body {
@@ -1092,14 +1094,30 @@ h1 {
   position: absolute;
   right: 10px;
   bottom: 10px;
-  background-color: var(--alert);
-  box-shadow: var(--accent-alert) 0px 0px 10px;
-  color: white;
   z-index: 2;
+  color: white;
+}
+
+.toast-error {
+  background-color: var(--alert) !important;
+  box-shadow: var(--accent-alert) 0px 0px 10px !important;
+}
+
+.toast-success {
+  background-color: var(--success) !important;
+  box-shadow: var(--accent-success) 0px 0px 10px !important;
 }
 
 .error-icon {
   background-image: url("../resources/img/error_icon.svg");
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  transition: background-image 0.3s ease;
+}
+
+.check-icon {
+  background-image: url("../resources/img/check_icon.svg");
   width: 30px;
   height: 30px;
   background-size: cover;

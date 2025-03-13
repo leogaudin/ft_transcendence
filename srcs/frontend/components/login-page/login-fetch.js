@@ -39,6 +39,7 @@ async function handleLogin(e) {
 	e.preventDefault();
 	const username = document.getElementById("login-username").value;
 	const password = document.getElementById("password").value;
+	document.getElementById("login-form").reset();
 
 	try {
 		const msg = parseSessionForm(username, password);
@@ -57,8 +58,8 @@ async function handleLogin(e) {
 		return (true);
 	}
 	catch (error){
-		console.error(`Error: `, error);
-		showAlert(error);
+		console.log("I'm entering here");
+		showAlert(error, "toast-error");
 		return (false);
 	}
 }
@@ -69,6 +70,7 @@ async function handleRegister(e) {
 	const email = document.getElementById("signup-email").value;
 	const password = document.getElementById("new-password").value;
 	const confirmPassword = document.getElementById("confirm-password").value;
+	document.getElementById("signup-form").reset();
 
 	try {
 		const msg = parseSessionForm(username, password, email, confirmPassword);
@@ -87,12 +89,12 @@ async function handleRegister(e) {
 				throw new Error(response["error"]);
 		}
 		else
-			showAlert("User create successfully");
+			showAlert("User create successfully", "toast-success");
 		return (true);
 	}
 	catch (error) {
 		console.error(`Error: `, error);
-		showAlert(error);
+		showAlert(error, "toast-error");
 		return (false);
 	}
 }
@@ -118,6 +120,7 @@ export async function sendRequest(method, endpoint, body = null) {
 async function recoverPassword(e) {
 	e.preventDefault();
 	const email = document.getElementById("email-password-recovery").value;
+	document.getElementById("recover-password-form").reset();
 	try {
 		const response = await sendRequest('POST', 'reset', {email: email});
 		if (response["error"])
@@ -129,7 +132,7 @@ async function recoverPassword(e) {
 
 	}
 	catch (error){
-		showAlert(error);
+		showAlert(error, "toast-error");
 	}
 }
 

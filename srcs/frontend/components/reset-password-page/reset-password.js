@@ -27,6 +27,7 @@ async function resetPassword(e) {
 	const id = params.get("id");
 	const password = document.getElementById("first-password-recovery").value;
 	const repeatPassword = document.getElementById("second-password-recovery").value;
+	document.getElementById("reset-password-form").reset();
 
 	try {
 		const msg = parseSessionForm("username", password, "default@test.com", repeatPassword);
@@ -42,6 +43,6 @@ async function resetPassword(e) {
 			throw new Error(response["error"]);
 	}
 	catch (error) {
-		showAlert(error);
+		showAlert(error, "toast-error");
 	}
 }
