@@ -1,18 +1,17 @@
-import { initLoginEvents } from "./loginPage.js";
-import { initLoginFetches } from "./loginFetch.js";
-import { recoverPasswordFetches } from "./loginFetch.js";
-import { displayToast } from "./loginPage.js";
+import { initLoginEvents } from "./components/login-page/login-page.js";
+import { initResetPasswordEvents } from "./components/reset-password-page/reset-password.js";
+import { displayToast } from "./components/toast-alert/toast-alert.js";
 
 const routes = [
 	{ path: "/", url: ""},
-	{ path: "/login",url: "../login.html"},
-    { path: "/reset-password", url: "../reset-password.html" }
+	{ path: "/login",url: "./components/login-page/login-page.html"},
+	{ path: "/reset-password", url: "./components/reset-password-page/reset-password.html" }
 ];
 
-function navigateTo(path) {
-    console.log(`Navegando a: ${path}`);
-    history.pushState(null, "", path);
-    loadContent(path);
+export function navigateTo(path) {
+	console.log(`Navegando a: ${path}`);
+	history.pushState(null, "", path);
+	loadContent(path);
 }
 
 async function loadContent(path) {
@@ -37,19 +36,28 @@ function loadEvents(path) {
 	switch (path) {
 		case "/":
 			console.log("executing events for home");
-            break;
+			break;
 		case "/login":
-			loadLoginPage();
+			initLoginEvents();
 			break;
 		case "/reset-password":
-			console.log("Entrando en inicialización de eventos de recuperación de contraseña");
-			recoverPasswordFetches();
-			displayToast();
-			console.log("Saliendo en inicialización de eventos de recuperación de contraseña");
+			initResetPasswordEvents();
 			break;
 		// default:
 		//     loadNotFoundPage();
 		//     break;
+	}
+}
+
+async function initBaseEvents() {
+	try {
+		const response = await fetch("./components/toast-alert/toast-alert.html");
+		const content = await response.text();
+		document.getElementById("base").innerHTML = content;
+		displayToast();
+	}
+	catch (error) {
+		console.error("Error al cargar la página:", error);
 	}
 }
 			
@@ -62,11 +70,6 @@ window.onpopstate = () => {
 // Load page correctly when writing it directly on navbar
 document.addEventListener("DOMContentLoaded", () => {
 	console.log("window.location.pathname: ", window.location.pathname);
+	initBaseEvents();
 	loadContent(window.location.pathname);
 });
-			
-			
-function loadLoginPage() {
-	initLoginEvents();
-	initLoginFetches();
-}
