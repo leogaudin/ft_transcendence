@@ -15,15 +15,21 @@
         </form>
       </section>
       <p class="flex justify-center">or</p>
-      <div id="buttonDiv"></div>
-      <section id="google-authentication">
-        <!-- <script src="https://accounts.google.com/gsi/client" async></script> -->
-        <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID"
-          data-login_uri="https://your.domain/your_login_endpoint" data-auto_prompt="false">
+      <div id="google-authentication" class="flex justify-center">
+        <div id="g_id_onload"
+            data-client_id="452280297275-kdnrh7dq20hf3kqj54jjp45cb2eb5v8g.apps.googleusercontent.com"
+            data-auto_prompt="false"
+            data-callback="handleGoogleLogin">
         </div>
-        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
-          data-shape="rectangular" data-logo_alignment="left"></div>
-      </section>
+        <div class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="sign_in_with"
+            data-shape="rectangular"
+            data-logo_alignment="left">
+        </div>
+      </div>
       <button id="forgot-password" class="flex justify-center cursor-pointer text-[var(--dark-pink)]">
         <div>Forgot password?</div>
       </button>
@@ -104,8 +110,8 @@
     </footer>
 </div>
 
-  <!-- Reset Password modal -->
-  <dialog id="recover-password">
+<!-- Reset Password modal -->
+<dialog id="recover-password">
     <div id="recover-password-modal" class="w-full h-full">
       <div class="flex justify-between items-center m-2.5">
         <h1 class="text-white text-3xl">Recover your password</h1>
@@ -119,4 +125,4 @@
       </form>
       <p id="recover-password-message" class="m-2.5 flex justify-center">We'll send you an email to reset your password</p>
     </div>
-  </dialog>
+</dialog>

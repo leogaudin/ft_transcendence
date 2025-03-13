@@ -166,3 +166,17 @@ async function displayTerms() {
 		}
 	})
 }
+
+window.handleGoogleLogin = async (response) => {
+	try {
+		console.log(response);
+		const data = await sendRequest('POST', 'google/login', response);
+		if (data["token"])
+			navigateTo("/home");
+		else
+			throw new Error(data["error"]);
+	}
+	catch (error) {
+		console.log(error);
+	}
+}

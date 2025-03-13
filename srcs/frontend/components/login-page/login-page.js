@@ -1,12 +1,14 @@
 "use strict";
 
-import { initLoginFetches } from "./login-fetch.js"
+import { navigateTo } from "../../router.js";
+import { initLoginFetches, sendRequest } from "./login-fetch.js"
 
 export function initLoginEvents() {
 	dropDown();
 	switchSigns();
 	resetPassword();
 	initLoginFetches();
+	googleSignIn();
 }
 
 function dropDown(){
@@ -81,6 +83,8 @@ function popUp() {
 	resetPassword.showModal();
 }
 
-
-
-
+function googleSignIn() {
+	var s = document.createElement( 'script' );
+	s.setAttribute( 'src', "https://accounts.google.com/gsi/client" );
+	document.body.appendChild( s );
+};
