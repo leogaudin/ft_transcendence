@@ -4,6 +4,7 @@ import { displayToast } from "./components/toast-alert/toast-alert.js";
 
 const routes = [
 	{ path: "/", url: ""},
+	{ path: "/home",url: "./components/home-page/home-page.html"},
 	{ path: "/login",url: "./components/login-page/login-page.html"},
 	{ path: "/reset-password", url: "./components/reset-password-page/reset-password.html" }
 ];

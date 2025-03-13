@@ -1,6 +1,6 @@
 import { showAlert } from "../toast-alert/toast-alert.js";
+import { parseSessionForm, sendRequest } from "../login-page/login-fetch.js";
 import { navigateTo } from "../../router.js";
-import { parseSessionForm } from "../login-page/login-fetch.js";
 
 export function initResetPasswordEvents() {
 	moveToLogin();
