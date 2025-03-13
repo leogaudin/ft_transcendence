@@ -1,6 +1,5 @@
 "use strict";
 
-import { navigateTo } from "../../router.js";
 import { initLoginFetches, sendRequest } from "./login-fetch.js"
 
 export function initLoginEvents() {
@@ -53,10 +52,12 @@ function switchSigns() {
 	signUpButton.addEventListener("click", () => {
 		signInPage.style.display = "none";
 		signUpPage.style.display = "flex";
+		document.getElementById("login-form").reset();
 	});
 	signInButton.addEventListener("click", () => {
 		signInPage.style.display = "flex";
 		signUpPage.style.display = "none";
+		document.getElementById("signup-form").reset();
 	});
 }
 
@@ -67,6 +68,7 @@ function resetPassword() {
 	resetPassButton.addEventListener("click", () => {
 		popUp();
 		document.getElementById("visual-div").style.opacity = "0.5";
+		document.getElementById("login-form").reset();
 	});
 	resetPassword.addEventListener("click", function (event) {
 		if (event.target.classList.contains("close-icon")) {
