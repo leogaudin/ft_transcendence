@@ -6,10 +6,11 @@ RUN apk add --no-cache nodejs npm supervisor
 
 # TODO: CHANGE THIS WHEN DEVELOPMENT IS DONE
 RUN sed -i "s|user  nginx;|user  root;|g" /etc/nginx/nginx.conf
+RUN mkdir -p /var/log/supervisord
 
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY config/nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY package.json .
-COPY supervisor.conf /etc/supervisor.conf
+COPY config/supervisor.conf /etc/supervisor.conf
 
-CMD ["sh", "start_front.sh"]
+CMD ["sh", "config/start_front.sh"]
