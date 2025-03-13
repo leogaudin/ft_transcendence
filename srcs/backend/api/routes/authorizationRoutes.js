@@ -92,22 +92,24 @@ export default function createAuthRoutes(fastify) {
         )
           return;
         if (req.body.password != req.body.confirm_password)
-          return res.code(400).send({ error: "passwords don't match" });
+          return res.code(400).send({ error: "Passwords don't match" });
         const user = await getUserByID(req.body.id);
-        if (!user) return res.code(404).send({ error: "user not found" });
+        if (!user) return res.code(404).send({ error: "User not found" });
         if (!user.reset_token)
-          return res.code(403).send({ error: "reset token has expired" });
+          return res.code(403).send({ error: "Reset token has expired" });
         const isSamePassword = await checkNewPassword(user, req.body.password);
         if (isSamePassword)
-          return res.code(400).send({ error: "new password matches old one" });
+          return res
+            .code(400)
+            .send({ error: "New password matches the old one" });
         const result = await verifyUserResetToken(
           user,
           req.body.token,
           req.body.password,
         );
         if (result == false)
-          return res.code(403).send({ error: "authorization failed" });
-        return res.code(200).send({ success: "password successfully updated" });
+          return res.code(403).send({ error: "Authorization failed" });
+        return res.code(200).send({ success: "Password successfully updated" });
       }),
     },
     {
