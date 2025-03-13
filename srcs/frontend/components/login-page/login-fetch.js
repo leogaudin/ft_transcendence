@@ -1,6 +1,7 @@
 "use strict";
 
 import { showAlert } from "../toast-alert/toast-alert.js";
+import { navigateTo } from "../../router.js";
 
 export function initLoginFetches() {
 	const signupSubmit = document.getElementById("signup-form");
@@ -52,7 +53,7 @@ async function handleLogin(e) {
 				throw new Error(response["error"]);
 		}
 		else
-			showAlert("User entered successfully");
+			navigateTo("/home");
 		return (true);
 	}
 	catch (error){
@@ -97,7 +98,7 @@ async function handleRegister(e) {
 }
 
 
-async function sendRequest(method, endpoint, body = null) {
+export async function sendRequest(method, endpoint, body = null) {
 	try {
 		const response = await fetch(`http://localhost:9000/${endpoint}`, {
 			method,
@@ -134,14 +135,14 @@ async function recoverPassword(e) {
 
 async function fetchDisplayTerms() {
 	try {
-		const response = await fetch(`./privacy-policy.html`);
+		const response = await fetch(`./components/login-page/privacy-policy.html`);
 		const content = await response.text();
 		const sectionCondition = document.querySelector("#privacy-policy");
 		sectionCondition.innerHTML = content;
 	}
 	catch (error) {
 		console.error(`Error during fetch in ${method} ${endpoint}:`, error);
-		return false;
+		return (false);
 	}
 }
 
