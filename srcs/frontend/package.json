@@ -1,9 +1,7 @@
 {
   "devDependencies": {
-    "tailwindcss": "^3.4.17"
-  },
-  "type": "module",
-  "dependencies": {
+    "tailwindcss": "^3.4.17",
     "typescript": "^5.8.2"
-  }
+  },
+  "type": "module"
 }
