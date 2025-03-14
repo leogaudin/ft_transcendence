@@ -275,7 +275,7 @@ export function isBlocked(user_id, blocked_id) {
  * @param {Any} identifier - ID, username or email of the user
  * @param {Boolean} keepCredentials - True if you want to keep credentials,
  *                                    defaults to false
- * @returns {Object} - The found user
+ * @returns {Object} - The found user, null if it doesn't exist
  */
 export function getUser(identifier, keepCredentials = null) {
   return new Promise((resolve, reject) => {
@@ -306,7 +306,7 @@ export function getUser(identifier, keepCredentials = null) {
         console.error("error getting user:", err.message);
         return reject(err);
       }
-      if (!row) return reject(new Error("User not found"));
+      if (!row) return resolve(null);
       const user = {
         ...row,
         friends: row.friends_ids ? row.friends_ids.split(",").map(Number) : [],

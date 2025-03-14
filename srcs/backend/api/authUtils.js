@@ -46,7 +46,6 @@ export async function loginGoogleUser(credential) {
     audience: process.env.CLIENT_ID,
   });
   const payload = ticket.getPayload();
-  console.log("payload: ", payload);
   const googleId = payload["sub"];
   const email = payload["email"];
   const name = email.split("@")[0];
