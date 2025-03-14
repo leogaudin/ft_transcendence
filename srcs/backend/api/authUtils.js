@@ -16,21 +16,20 @@ import { OAuth2Client } from "google-auth-library";
  * @param {String} password - Password to check
  * @param {String} totp_token - TOTP for 2FA
  * @returns {Object} - An object with the user and a JWT if successful,
- *                     false if the password is incorrect,
- *                     null if the user does not exist
+ *                     or with an error if not
  */
 export async function loginUser(user, password, totp_token = null) {
   const isAuthorized = await bcrypt.compare(password, user.password);
-  if (!isAuthorized) return false;
+  if (!isAuthorized) return { error: "Incorrect password" };
   if (totp_token) {
     const totpVerified = authenticator.check(totp_token, user.totp_secret);
-    if (!totpVerified) return false;
+    if (!totpVerified) return { error: "Invalid 2FA code" };
   }
   const token = fastify.jwt.sign({ user: user.id });
-  const result = Object.assign({}, user, { token });
+  const result = Object.assign({}, user, { token, success: true });
   delete result.password;
   delete result.totp_secret;
-  await patchUser(user.id, { is_online: 1 });
+  // await patchUser(user.id, { is_online: 1 });
   return result;
 }
 
@@ -63,7 +62,7 @@ export async function loginGoogleUser(credential) {
     delete user.google_id;
   }
   const token = fastify.jwt.sign({ user: user.id });
-  const result = Object.assign({}, user, { token });
+  const result = Object.assign({}, user, { token, success: true });
   return result;
 }
 
@@ -112,6 +111,6 @@ export async function verify2fa(user, totpCode) {
 export async function registerUser(data) {
   const user = await createUser(data);
   const token = fastify.jwt.sign({ user: user.id });
-  const result = Object.assign({}, user, { token });
+  const result = Object.assign({}, user, { token, success: true });
   return result;
 }

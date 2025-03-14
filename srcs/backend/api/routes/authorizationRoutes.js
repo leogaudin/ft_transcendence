@@ -22,13 +22,12 @@ export default function createAuthRoutes(fastify) {
         if (!validateInput(req, res, ["username", "password"])) return;
         const user = await getUser(req.body.username, true);
         if (!user) return res.code(404).send({ error: "User not found" });
+        const result = await loginUser(user, req.body.password, req.body.totp);
+        if (result["error"]) return res.code(401).send(result);
         if (!req.body.totp && user.is_2fa_enabled)
           return res
             .code(202)
             .send({ twoFactor: "2FA is enabled, TOTP code required" });
-        const result = await loginUser(user, req.body.password, req.body.totp);
-        if (result == false)
-          return res.code(401).send({ authorization: "failed" });
         return res.code(200).send(result);
       }),
     },
@@ -56,7 +55,7 @@ export default function createAuthRoutes(fastify) {
         )
           return;
         if (req.body.password != req.body.confirm_password)
-          return res.code(400).send({ error: "passwords don't match" });
+          return res.code(400).send({ error: "Passwords don't match" });
         const result = await registerUser(req.body);
         return res.code(201).send(result);
       }),
@@ -67,10 +66,10 @@ export default function createAuthRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["email"])) return;
         const user = await getUser(req.body.email);
-        if (!user) return res.code(404).send({ error: "user not found" });
+        if (!user) return res.code(404).send({ error: "User not found" });
         const result = await resetUserPassword(user);
         if (result == null)
-          return res.code(404).send({ error: "user not found" });
+          return res.code(404).send({ error: "User not found" });
         return res.code(200).send(result);
       }),
     },
@@ -93,17 +92,19 @@ export default function createAuthRoutes(fastify) {
         if (!user) return res.code(404).send({ error: "User not found" });
         if (!user.reset_token)
           return res.code(403).send({ error: "Reset token has expired" });
-        const isSamePassword = await checkNewPassword(user, req.body.password);
-        if (isSamePassword)
-          return res
-            .code(400)
-            .send({ error: "New password matches the old one" });
-        const result = await verifyUserResetToken(
+        if (user.password) {
+          const samePassword = await checkNewPassword(user, req.body.password);
+          if (samePassword)
+            return res
+              .code(400)
+              .send({ error: "New password matches the old one" });
+        }
+        const verified = await verifyUserResetToken(
           user,
           req.body.token,
           req.body.password,
         );
-        if (result == false)
+        if (verified === false)
           return res.code(403).send({ error: "Authorization failed" });
         return res.code(200).send({ success: "Password successfully updated" });
       }),
