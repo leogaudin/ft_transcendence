@@ -144,7 +144,7 @@ h1 {
 
 /* --> Login Page <-- */
 
-#login-page, #sign-up-page, #terms-and-conditions {
+#login-page, #sign-up-page, #terms-and-conditions, #twoFA-page {
 	background-color: var(--dark-blue);
 	border-radius: 15px;
 	box-shadow: var(--violet) 0px 0px 20px;

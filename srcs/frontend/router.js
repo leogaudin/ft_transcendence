@@ -1,31 +1,32 @@
 import { initLoginEvents } from "./components/login-page/login-page.js";
 import { initResetPasswordEvents } from "./components/reset-password-page/reset-password.js";
+import { initTwoFactorEvents } from "./components/two-factor-page/two-factor.js";
 import { displayToast } from "./components/toast-alert/toast-alert.js";
 
 const routes = [
 	{ path: "/", url: ""},
 	{ path: "/home",url: "./components/home-page/home-page.html"},
 	{ path: "/login",url: "./components/login-page/login-page.html"},
-	{ path: "/reset-password", url: "./components/reset-password-page/reset-password.html" }
+	{ path: "/reset-password", url: "./components/reset-password-page/reset-password.html" },
+	{ path: "/two-factor", url: "./components/two-factor-page/two-factor.html"}
 ];
 
-export function navigateTo(path) {
+export function navigateTo(path, argument = null) {
 	console.log(`Navegando a: ${path}`);
 	history.pushState(null, "", path);
-	loadContent(path);
+	loadContent(path, argument);
 }
 
-async function loadContent(path) {
+async function loadContent(path, argument = null) {
 	try {
 		const route = routes.find(r => r.path === path);
-		console.log("route: ", route);
 		if (!route)
 			throw ("Ruta no encontrada");
 		
 		const response = await fetch(route.url);
 		const content = await response.text();
 		document.getElementById("app").innerHTML = content;
-		loadEvents(path);
+		loadEvents(path, argument);
 	}
 	catch (error) {
 		console.error("Error al cargar la página:", error);
@@ -33,7 +34,7 @@ async function loadContent(path) {
 }
 
 
-function loadEvents(path) {
+function loadEvents(path, argument = null) {
 	switch (path) {
 		case "/":
 			console.log("executing events for home");
@@ -43,6 +44,9 @@ function loadEvents(path) {
 			break;
 		case "/reset-password":
 			initResetPasswordEvents();
+			break;
+		case "/two-factor":
+			initTwoFactorEvents(argument);
 			break;
 		// default:
 		//     loadNotFoundPage();
