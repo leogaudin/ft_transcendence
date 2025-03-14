@@ -57,7 +57,7 @@ async function handleLogin(e) {
 				throw new Error(response["error"]);
 		}
 		else
-			navigateTo("\home");
+			navigateTo("/home");
 		return (true);
 	}
 	catch (error){
