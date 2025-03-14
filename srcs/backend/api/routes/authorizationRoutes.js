@@ -114,6 +114,7 @@ export default function createAuthRoutes(fastify) {
       url: "/2fa/enable",
       handler: asyncHandler(async (req, res) => {
         const user = await getUser(req.userId);
+        if (!user) return res.code(404).send({ error: "User not found" });
         if (user.is_2fa_enabled === 1)
           return res.code(400).send({ error: "2FA already enabled" });
         const qr = await enable2fa(user);
@@ -127,6 +128,7 @@ export default function createAuthRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["totp_code"])) return;
         const user = await getUser(req.userId);
+        if (!user) return res.code(404).send({ error: "User not found" });
         const result = await verify2fa(user, req.body.totp_code);
         if (result === false)
           return res.code(400).send({ error: "Unable to verify TOTP code" });
