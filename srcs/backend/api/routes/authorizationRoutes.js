@@ -25,7 +25,7 @@ export default function createAuthRoutes(fastify) {
         if (!req.body.totp && user.is_2fa_enabled)
           return res
             .code(202)
-            .send({ message: "2FA is enabled, TOTP code required" });
+            .send({ twoFactor: "2FA is enabled, TOTP code required" });
         const result = await loginUser(user, req.body.password, req.body.totp);
         if (result == false)
           return res.code(401).send({ authorization: "failed" });

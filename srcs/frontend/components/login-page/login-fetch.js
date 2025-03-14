@@ -2,6 +2,7 @@
 
 import { showAlert } from "../toast-alert/toast-alert.js";
 import { navigateTo } from "../../router.js";
+import { twoFactorAuth } from "../two-factor-page/two-factor.js"
 
 export function initLoginFetches() {
 	const signupSubmit = document.getElementById("signup-form");
@@ -48,17 +49,18 @@ async function handleLogin(e) {
 		
 		const response = await sendRequest('POST', 'login', {username: username, password: password});
 		if (!response["id"]) {
-			if ((response["error"] && response["error"].includes("user")) || response["authorization"] === 'failed')
+			if (response["twoFactor"] === "2FA is enabled, TOTP code required")
+				navigateTo("/two-factor", { username: username, password: password });
+			else if ((response["error"] && response["error"].includes("user")) || response["authorization"] === 'failed')
 				throw new Error("Username or Password may be incorrect");
 			else
 				throw new Error(response["error"]);
 		}
 		else
-			navigateTo("/home");
+			navigateTo("\home");
 		return (true);
 	}
 	catch (error){
-		console.log("I'm entering here");
 		showAlert(error, "toast-error");
 		return (false);
 	}
@@ -183,3 +185,6 @@ window.handleGoogleLogin = async (response) => {
 		console.log(error);
 	}
 }
+
+
+
