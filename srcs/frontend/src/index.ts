@@ -3,7 +3,7 @@ import { initResetPasswordEvents } from "./reset-password-page/reset-password.js
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
 import { displayToast } from "./toast-alert/toast-alert.js";
 import { LoginObject } from "./types.js";
-console.log("Hello from index.ts");
+
 const routes = [
 	{
 		path: "/",

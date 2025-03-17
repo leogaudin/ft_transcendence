@@ -170,7 +170,7 @@ async function recoverPassword(e: Event) {
 
 async function fetchDisplayTerms() {
 	try {
-		const response = await fetch(`./components/login-page/privacy-policy.html`);
+		const response = await fetch(`../src/login-page/privacy-policy.html`);
 		const content = await response.text();
 		const sectionCondition = document.querySelector("#privacy-policy");
 		if (sectionCondition)
