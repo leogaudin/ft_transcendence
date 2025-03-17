@@ -1,7 +1,8 @@
-import { initLoginEvents } from "./components/login-page/login-page.js";
-import { initResetPasswordEvents } from "./components/reset-password-page/reset-password.js";
-import { initTwoFactorEvents } from "./components/two-factor-page/two-factor.js";
-import { displayToast } from "./components/toast-alert/toast-alert.js";
+import { initLoginEvents } from "./login-page/login-page";
+import { initResetPasswordEvents } from "./reset-password-page/reset-password";
+import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
+import { displayToast } from "./toast-alert/toast-alert.js";
+import { LoginObject } from "./types.js";
 
 const routes = [
 	{ 
@@ -31,19 +32,19 @@ const routes = [
 	{ 
 		path: "/two-factor", 
 		url: "./components/two-factor-page/two-factor.html", 
-		event: (data) => {
-			initTwoFactorEvents(data)
+		event: (data: object) => {
+			initTwoFactorEvents(data as LoginObject);
 		} 
 	}
 ];
 
-export function navigateTo(path, data = null) {
+export function navigateTo(path: string, data: object = {}) {
 	console.log(`Navegando a: ${path}`);
 	history.pushState(null, "", path);
 	loadContent(path, data);
 }
 
-async function loadContent(path, data = null) {
+async function loadContent(path: string, data: object = {}) {
 	try {
 		const route = routes.find(r => r.path === path);
 		if (!route)
@@ -51,7 +52,9 @@ async function loadContent(path, data = null) {
 		
 		const response = await fetch(route.url);
 		const content = await response.text();
-		document.getElementById("app").innerHTML = content;
+		const app = document.getElementById("app");
+		if (app)
+			app.innerHTML = content;
 		route.event(data);
 	}
 	catch (error) {
@@ -63,7 +66,9 @@ async function initBaseEvents() {
 	try {
 		const response = await fetch("./components/toast-alert/toast-alert.html");
 		const content = await response.text();
-		document.getElementById("base").innerHTML = content;
+		const base = document.getElementById("base");
+		if (base)
+			base.innerHTML = content;
 		displayToast();
 	}
 	catch (error) {

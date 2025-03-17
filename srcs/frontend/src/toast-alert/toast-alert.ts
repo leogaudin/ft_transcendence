@@ -1,13 +1,15 @@
-let toastTimeout;
+let toastTimeout: number;
 
 const toastFeatures = [
 	{type: "toast-error", icon: "error-icon"},
 	{type: "toast-success", icon: "check-icon"}
 ];
 
-function defineToastFeatures(type) {
+function defineToastFeatures(type: string) {
 	const toast = document.getElementById("toast-default");
 	const icon = document.getElementById("toast-icon");
+	if (!toast || !icon)
+		return ;
 
 	for (let i = 0; i < toastFeatures.length; i++) {
 		if (toast.classList.contains(toastFeatures[i].type))
@@ -23,17 +25,23 @@ function defineToastFeatures(type) {
 }
 
 export function displayToast() {
-	const toastAlert = document.querySelector("#toast-default");
-	toastAlert.addEventListener("click", function (event) {
-		if (event.target.classList.contains("close-icon")) {
+	const toastAlert = document.getElementById("toast-default");
+	if (!toastAlert)
+		return ;
+
+	toastAlert.addEventListener("click", (e: Event) => {
+		const target = e.target as HTMLElement;
+		if (target && target.classList.contains("close-icon")) {
 			toastAlert.style.display = "none";
 		}
 	});
 }
 
-export function showAlert(msg, toastType) {
+export function showAlert(msg: string, toastType: string) {
 	const toastText = document.getElementById("toast-message");
 	const toastAlert = document.getElementById("toast-default");
+	if (!toastText || !toastAlert)
+		return;
 	
 	defineToastFeatures(toastType);
 	toastText.innerText = msg;
