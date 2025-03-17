@@ -42,7 +42,7 @@ export function showAlert(msg: string, toastType: string) {
 	const toastAlert = document.getElementById("toast-default");
 	if (!toastText || !toastAlert)
 		return;
-	
+
 	defineToastFeatures(toastType);
 	toastText.innerText = msg;
 	toastAlert.style.display = "flex";

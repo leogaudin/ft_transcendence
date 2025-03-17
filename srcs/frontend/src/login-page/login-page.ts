@@ -1,6 +1,6 @@
 "use strict";
 
-import { initLoginFetches } from "./login-fetch"
+import { initLoginFetches } from "./login-fetch.js";
 
 export function initLoginEvents() {
 	dropDown();

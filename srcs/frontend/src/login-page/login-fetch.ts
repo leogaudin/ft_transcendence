@@ -1,6 +1,6 @@
-import { showAlert } from "../toast-alert/toast-alert";
-import { navigateTo } from "../router";
-import { LoginObject } from "../types";
+import { showAlert } from "../toast-alert/toast-alert.js";
+import { navigateTo } from "../index.js";
+import { LoginObject } from "../types.js";
 
 export function initLoginFetches() {
 	const signupSubmit = document.getElementById("signup-form");
@@ -51,12 +51,12 @@ async function handleLogin(e: Event) {
 
 	const username = usernameField.value;
 	const password = passwordField.value;
-	
+
 	try {
 		const msg = parseSessionForm(username, password);
 		if (msg !== "Ok")
 			throw new Error(msg);
-		
+
 		const response = await sendRequest('POST', 'login', { username, password });
 		if (!response["id"]) {
 			if (response["twoFactor"] === "2FA is enabled, TOTP code required") {

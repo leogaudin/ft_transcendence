@@ -1,22 +1,22 @@
-# Environments 
-.env 
-.venv 
-env/ 
-venv/ 
-ENV/ 
-env.bak/ 
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
 venv.bak/
 .env.development.local
 .env.test.local
 .env.production.local
 .env.local
 
-# Visual Studio Code # 
-.vscode/* 
-!.vscode/settings.json 
-!.vscode/tasks.json 
-!.vscode/launch.json 
-!.vscode/extensions.json 
+# Visual Studio Code #
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 .history
 
 # Logs
@@ -49,7 +49,7 @@ jspm_packages/
 .next
 out
 
-#Database 
+#Database
 *.db
 avatars/
 !avatars/default.jpg
@@ -63,3 +63,6 @@ srcs/frontend/node_modules/
 
 # supervisord #
 supervisord.pid
+
+dist/
+.DS_Store
