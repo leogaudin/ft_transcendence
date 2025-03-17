@@ -1,13 +1,14 @@
-"use strict";
-
 import { showAlert } from "../toast-alert/toast-alert.js";
-import { navigateTo } from "../../router.js";
-import { twoFactorAuth } from "../two-factor-page/two-factor.js"
+import { navigateTo } from "../index.js";
+import { LoginObject } from "../types.js";
 
 export function initLoginFetches() {
 	const signupSubmit = document.getElementById("signup-form");
 	const loginSubmit = document.getElementById("login-form");
 	const recoverPasswordSubmit = document.getElementById("recover-password-form");
+
+	if (!signupSubmit || !loginSubmit || !recoverPasswordSubmit)
+		return;
 	signupSubmit.addEventListener("submit", handleRegister);
 	loginSubmit.addEventListener("submit", handleLogin);
 	recoverPasswordSubmit.addEventListener("submit", recoverPassword);
@@ -15,8 +16,13 @@ export function initLoginFetches() {
 }
 
 
-export function parseSessionForm(username, password, email = "Default", confirmPassword = password) {
-	let msg = "Ok";
+export function parseSessionForm(
+	username: string,
+	password: string,
+	email: string = "Default",
+	confirmPassword: string = password
+) {
+	let msg: string = "Ok";
 
 	if (!username || !email || !password || !confirmPassword)
 		msg = "Fill in all the fields";
@@ -36,21 +42,27 @@ export function parseSessionForm(username, password, email = "Default", confirmP
 	return (msg);
 }
 
-async function handleLogin(e) {
+async function handleLogin(e: Event) {
 	e.preventDefault();
-	const username = document.getElementById("login-username").value;
-	const password = document.getElementById("password").value;
-	document.getElementById("login-form").reset();
+	const usernameField = document.getElementById("login-username") as HTMLInputElement;
+	const passwordField = document.getElementById("password") as HTMLInputElement;
+	if (!usernameField || !passwordField)
+		return ;
+
+	const username = usernameField.value;
+	const password = passwordField.value;
 
 	try {
 		const msg = parseSessionForm(username, password);
 		if (msg !== "Ok")
 			throw new Error(msg);
-		
-		const response = await sendRequest('POST', 'login', {username: username, password: password});
+
+		const response = await sendRequest('POST', 'login', { username, password });
 		if (!response["id"]) {
-			if (response["twoFactor"] === "2FA is enabled, TOTP code required")
-				navigateTo("/two-factor", { username: username, password: password });
+			if (response["twoFactor"] === "2FA is enabled, TOTP code required") {
+				const data: LoginObject = { username, password };
+				navigateTo("/two-factor", data);
+			}
 			else if ((response["error"] && response["error"].includes("user")) || response["authorization"] === 'failed')
 				throw new Error("Username or Password may be incorrect");
 			else
@@ -58,28 +70,37 @@ async function handleLogin(e) {
 		}
 		else
 			navigateTo("/home");
+		const form = document.getElementById("login-form") as HTMLFormElement;
+		if (form)
+			form.reset();
 		return (true);
 	}
-	catch (error){
-		showAlert(error, "toast-error");
+	catch (error) {
+		showAlert((error as Error).message, "toast-error");
 		return (false);
 	}
 }
 
-async function handleRegister(e) {
+async function handleRegister(e: Event) {
 	e.preventDefault();
-	const username = document.getElementById("username").value;
-	const email = document.getElementById("signup-email").value;
-	const password = document.getElementById("new-password").value;
-	const confirmPassword = document.getElementById("confirm-password").value;
-	document.getElementById("signup-form").reset();
+	const usernameField = document.getElementById("username") as HTMLInputElement;
+	const emailField = document.getElementById("signup-email") as HTMLInputElement;
+	const passwordField = document.getElementById("new-password") as HTMLInputElement;
+	const confirmPasswordField = document.getElementById("confirm-password") as HTMLInputElement;
+	if (!usernameField || !emailField || !passwordField || !confirmPasswordField)
+		return ;
+
+	const username = usernameField.value;
+	const email = emailField.value;
+	const password = passwordField.value;
+	const confirm_password = confirmPasswordField.value;
 
 	try {
-		const msg = parseSessionForm(username, password, email, confirmPassword);
+		const msg = parseSessionForm(username, password, email, confirm_password);
 		if (msg !== "Ok")
 			throw new Error(msg);
 
-		const response = await sendRequest('POST', 'register', {username: username, email: email, password: password, confirm_password: confirmPassword});
+		const response = await sendRequest("POST", "register", {username, email, password, confirm_password});
 		if (response["error"]) {
 			if (response["error"].includes("username"))
 				throw new Error("Username already exists");
@@ -92,23 +113,26 @@ async function handleRegister(e) {
 		}
 		else
 			showAlert("User create successfully", "toast-success");
+		const form = document.getElementById("signup-form") as HTMLFormElement;
+		if (form)
+			form.reset();
 		return (true);
 	}
 	catch (error) {
 		console.error(`Error: `, error);
-		showAlert(error, "toast-error");
+		showAlert((error as Error).message , "toast-error");
 		return (false);
 	}
 }
 
 
-export async function sendRequest(method, endpoint, body = null) {
+export async function sendRequest(method: string, endpoint: string, body: object = {}) {
 	try {
 		const response = await fetch(`http://localhost:9000/${endpoint}`, {
 			method,
 			credentials: 'include',
 			headers: { 'Content-Type': 'application/json' },
-			body: body ? JSON.stringify(body) : null
+			body: JSON.stringify(body)
 		});
 		return await response.json();
 	}
@@ -119,34 +143,41 @@ export async function sendRequest(method, endpoint, body = null) {
 }
 
 
-async function recoverPassword(e) {
+async function recoverPassword(e: Event) {
 	e.preventDefault();
-	const email = document.getElementById("email-password-recovery").value;
-	document.getElementById("recover-password-form").reset();
+	const emailField = document.getElementById("email-password-recovery") as HTMLInputElement;
+	if (!emailField)
+		return ;
+
+	const email = emailField.value;
 	try {
-		const response = await sendRequest('POST', 'reset', {email: email});
+		const response = await sendRequest('POST', 'reset', {email});
 		if (response["error"])
 			throw new Error(response["error"]);
 		else {
-			const msg = document.getElementById("recover-password-message");
+			const msg = document.getElementById("recover-password-message") as HTMLElement;
 			msg.innerText = "Email sent succesfully! Go check it to reset your password";
 		}
+		const form = document.getElementById("recover-password-form") as HTMLFormElement;
+		if (form)
+			form.reset();
 
 	}
-	catch (error){
-		showAlert(error, "toast-error");
+	catch (error) {
+		showAlert((error as Error).message, "toast-error");
 	}
 }
 
 async function fetchDisplayTerms() {
 	try {
-		const response = await fetch(`./components/login-page/privacy-policy.html`);
+		const response = await fetch(`../src/login-page/privacy-policy.html`);
 		const content = await response.text();
 		const sectionCondition = document.querySelector("#privacy-policy");
-		sectionCondition.innerHTML = content;
+		if (sectionCondition)
+			sectionCondition.innerHTML = content;
 	}
 	catch (error) {
-		console.error(`Error during fetch in ${method} ${endpoint}:`, error);
+		console.error(`Error in fetchDisplayTerms`, error);
 		return (false);
 	}
 }
@@ -154,9 +185,12 @@ async function fetchDisplayTerms() {
 async function displayTerms() {
 	const signUpPage = document.getElementById("sign-up-page");
 	const signInPage = document.getElementById("login-page");
-	const termsButton = document.querySelector("#terms-conditions-button");
-	const termsPage = document.querySelector("#terms-and-conditions");
+	const termsButton = document.getElementById("terms-conditions-button");
+	const termsPage = document.getElementById("terms-and-conditions");
 	await fetchDisplayTerms();
+
+	if (!signUpPage || !signInPage || !termsButton || !termsPage)
+		return ;
 	termsButton.addEventListener("click", () => {
 		if (!termsPage.style.display || termsPage.style.display === "none") {
 			signInPage.style.display = "none";
@@ -172,9 +206,8 @@ async function displayTerms() {
 	})
 }
 
-window.handleGoogleLogin = async (response) => {
+(window as any).handleGoogleLogin = async (response: object) => {
 	try {
-		console.log(response);
 		const data = await sendRequest('POST', 'google/login', response);
 		if (data["token"])
 			navigateTo("/home");

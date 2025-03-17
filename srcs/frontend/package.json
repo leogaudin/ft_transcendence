@@ -1,6 +1,12 @@
 {
+  "name": "frontend",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
   "devDependencies": {
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.8.2"
   },
   "type": "module"
 }
