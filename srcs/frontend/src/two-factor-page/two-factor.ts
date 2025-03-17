@@ -1,7 +1,7 @@
-import { showAlert } from "../toast-alert/toast-alert";
-import { sendRequest } from "../login-page/login-fetch";
-import { navigateTo } from "../router";
-import { LoginObject } from "../types";
+import { showAlert } from "../toast-alert/toast-alert.js";
+import { sendRequest } from "../login-page/login-fetch.js";
+import { navigateTo } from "../index.js";
+import { LoginObject } from "../types.js";
 
 
 export function initTwoFactorEvents(data: LoginObject) {
@@ -39,7 +39,7 @@ export function twoFactorAuth(data: LoginObject) {
     submitCode.addEventListener("submit", async (e: Event) => {
         try {
             e.preventDefault();
-            
+
             const inputs = Array.from(document.getElementsByClassName("twoFA-input"));
             const valueCode = inputs.map(input => (input as HTMLInputElement).value).join("");
             submitCode.reset();
@@ -57,7 +57,7 @@ export function twoFactorAuth(data: LoginObject) {
 				throw new Error("Invalid code");
             else
 				navigateTo("/home");
-        } 
+        }
 		catch (error) {
             showAlert((error as Error).message, "toast-error");
             return false;

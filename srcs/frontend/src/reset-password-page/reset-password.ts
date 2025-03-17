@@ -1,6 +1,6 @@
-import { showAlert } from "../toast-alert/toast-alert";
-import { parseSessionForm, sendRequest } from "../login-page/login-fetch";
-import { navigateTo } from "../router";
+import { showAlert } from "../toast-alert/toast-alert.js";
+import { parseSessionForm, sendRequest } from "../login-page/login-fetch.js";
+import { navigateTo } from "../index.js";
 
 export function initResetPasswordEvents() {
 	moveToLogin();
@@ -39,7 +39,7 @@ async function resetPassword(e: Event) {
 		const msg: string = parseSessionForm("username", password, "default@test.com", repeatPassword);
 		if (msg !== "Ok")
 			throw new Error(msg);
-		
+
 		const response = await sendRequest('POST', 'resetToken', {token: token, id: id, password: password, confirm_password: repeatPassword});
 		if (response["success"]) {
 			const passwordMessage = document.getElementById("reset-password-message");
