@@ -25,8 +25,8 @@ export function getMessages() {
  */
 export function createMessage(data) {
   return new Promise((resolve, reject) => {
-    const sql = `INSERT INTO messages (sender_id, chat_id, body) VALUES (?,?,?)`;
-    const params = [data.sender_id, data.chat_id, data.body];
+    const sql = `INSERT INTO messages (sender_id, receiver_id, chat_id, body) VALUES (?,?,?,?)`;
+    const params = [data.sender_id, data.receiver_id, data.chat_id, data.body];
 
     db.run(sql, params, function (err) {
       if (err) {
@@ -36,6 +36,7 @@ export function createMessage(data) {
       resolve({
         id: this.lastID,
         sender_id: data.sender_id,
+        receiver_id: data.receiver_id,
         chat_id: data.chat_id,
         body: data.body,
       });
@@ -145,19 +146,76 @@ export function deleteMessage(id) {
 }
 
 /**
- * Finds all messages of a given user
+ * Returns all avaliable chats and messages of
+ * those chats of a given user
  * @param {Number} id - ID of the user
- * @returns {Array} - All found messages
+ * @returns {Array} - An array of chats, with an array messages inside
  */
 export function getMessagesOfUser(id) {
   return new Promise((resolve, reject) => {
-    const sql = ` SELECT * FROM messages WHERE sender_id = ? `;
-    db.all(sql, [id], (err, rows) => {
+    const sql = `
+      SELECT
+      c.id AS chat_id,
+      c.first_user_id,
+      c.second_user_id,
+      first_user.username AS first_username,
+      first_user.is_deleted AS first_user_deleted,
+      second_user.username AS second_username,
+      second_user.is_deleted AS second_user_deleted,
+      m.id AS message_id,
+      m.sender_id,
+      m.receiver_id,
+      sender.username AS sender_username,
+      sender.is_deleted AS sender_deleted,
+      receiver.username AS receiver_username,
+      receiver.is_deleted AS receiver_deleted,
+      m.body,
+      m.sent_at
+      FROM chats c
+      JOIN users first_user ON c.first_user_id = first_user.id
+      JOIN users second_user ON c.second_user_id = second_user.id
+      JOIN messages m ON c.id = m.chat_id
+      JOIN users sender ON m.sender_id = sender.id
+      JOIN users receiver ON m.receiver_id = receiver.id
+      WHERE c.first_user_id = ? OR c.second_user_id = ?
+      ORDER BY c.id, m.sent_at
+      `;
+    db.all(sql, [id, id], (err, rows) => {
       if (err) {
-        console.error("Error getting messagess:", err.message);
+        console.error("Error getting chats and messages of user:", err.message);
         return reject(err);
       }
-      resolve(rows);
+      const chatMap = {};
+      rows.forEach((row) => {
+        if (!chatMap[row.chat_id]) {
+          chatMap[row.chat_id] = {
+            chat_id: row.chat_id,
+            first_user_id: row.first_user_id,
+            first_username: row.first_user_deleted
+              ? "anonymous"
+              : row.first_username,
+            second_user_id: row.second_user_id,
+            second_username: row.second_user_deleted
+              ? "anonymous"
+              : row.second_username,
+            messages: [],
+          };
+        }
+        chatMap[row.chat_id].messages.push({
+          message_id: row.message_id,
+          sender_id: row.sender_id,
+          sender_username: row.sender_deleted
+            ? "anonymous"
+            : row.sender_username,
+          receiver_id: row.receiver_id,
+          receiver_username: row.receiver_deleted
+            ? "anonymous"
+            : row.receiver_username,
+          body: row.body,
+          send_at: row.sent_at,
+        });
+      });
+      resolve(Object.values(chatMap));
     });
   });
 }

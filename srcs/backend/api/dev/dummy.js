@@ -109,23 +109,25 @@ async function debugChat(user, second_user) {
 }
 
 /**
- * @param {Object} user - Main user
+ * @param {Object} sender - Sender user
+ * @param {Object} receiver - Receiver user
  * @param {Object} chat - Chat between main user and another user
  * @param {String} body - Text of message
  */
-async function debugMessage(user, chat, body) {
+async function debugMessage(sender, receiver, chat, body) {
   process.stdout.write(
-    `Creating message from user ${user.name} in chat ${chat.id}...`,
+    `Creating message from ${sender.name} to ${receiver.name} in chat ${chat.id}...`,
   );
   try {
     let res = await fetch("http://localhost:9000/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,
+        Authorization: `Bearer ${sender.token}`,
       },
       body: JSON.stringify({
-        sender_id: user.id,
+        sender_id: sender.id,
+        receiver_id: receiver.id,
         chat_id: chat.id,
         body: body,
       }),
@@ -223,16 +225,19 @@ import { patchUser } from "../models/userModel.js";
   for (let i = 1; i < 10; i++) {
     await debugMessage(
       foo,
+      bar,
       foo_bar_chat,
       `Test message from ${foo.name} number ${i}`,
     );
     await debugMessage(
       bar,
+      foo,
       foo_bar_chat,
       `Test message from ${bar.name} number ${i}`,
     );
     await debugMessage(
       foo,
+      baz,
       foo_baz_chat,
       `Test message from ${foo.name} number ${i}`,
     );

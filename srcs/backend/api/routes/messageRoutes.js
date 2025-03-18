@@ -24,7 +24,15 @@ export default function createMessageRoutes(fastify) {
       method: "POST",
       url: "/messages",
       handler: asyncHandler(async (req, res) => {
-        if (!validateInput(req, res, ["sender_id", "chat_id", "body"])) return;
+        if (
+          !validateInput(req, res, [
+            "sender_id",
+            "receiver_id",
+            "chat_id",
+            "body",
+          ])
+        )
+          return;
         const message = await createMessage(req.body);
         return res.code(201).send(message);
       }),
