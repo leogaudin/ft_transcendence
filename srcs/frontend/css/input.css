@@ -144,7 +144,7 @@ h1 {
 
 /* --> Login Page <-- */
 
-#login-page, #sign-up-page, #terms-and-conditions, #twoFA-page {
+#login-page, #sign-up-page, #terms-and-conditions, #twoFA-page, #chat-page {
 	background-color: var(--dark-blue);
 	border-radius: 15px;
 	box-shadow: var(--violet) 0px 0px 20px;
@@ -255,7 +255,7 @@ h1 {
 	width: 30px;
 	height: 30px;
 	background-size: cover;
-	transition: background-image 0.3s ease;
+	transition: 250ms ease-in-out;
 }
 
 .close-icon:hover {
@@ -287,7 +287,7 @@ h1 {
 	width: 30px;
 	height: 30px;
 	background-size: cover;
-	transition: background-image 0.3s ease;
+	transition: 250ms ease-in-out;
 }
 
 .check-icon {
@@ -295,7 +295,7 @@ h1 {
 	width: 30px;
 	height: 30px;
 	background-size: cover;
-	transition: background-image 0.3s ease;
+	transition: 250ms ease-in-out;
 }
 
 #terms-and-conditions {
@@ -331,7 +331,7 @@ h1 {
 	height: 30px;
 	background-size: contain;
 	background-repeat: no-repeat;
-	transition: background-image 0.3s ease;
+	transition: 250ms ease-in-out;
 }
 
 .home-icon:hover {
@@ -383,4 +383,93 @@ h1 {
 .twoFA-input:focus {
 	opacity: 90%;
 	box-shadow: var(--accent-pink) 0px 0px 10px;
+}
+
+/* --> Messages page <-- */
+#chat-page {
+	min-height: 85%;
+}
+
+#chat-box {
+	height: 75vh;
+	margin: 10px;
+}
+
+#conversation-list {
+	background-color: var(--dark-pink);
+	width: 20%;
+	height: 100%;
+	padding: 10px;
+	border-radius: 15px;
+}
+
+#conversation-history {
+	background-color: var(--violet);
+	width: 79%;
+	height: 100%;
+	padding: 10px;
+	border-radius: 15px;
+}
+
+#contact-info {
+	width: 100%;
+	height: 9%;
+	padding: 5px;
+	margin: 5px;
+	border-radius: 15px;
+	gap: 20px;
+}
+
+#contact-picture {
+	border-radius: 50%;
+	max-height: 50px;
+	max-width: 50px;
+}
+
+#message-divider {
+	border-bottom: 3px solid var(--accent-pink);
+	border-radius: 3px;
+	margin: 10px;
+	width: 100%;
+}
+
+#message-history {
+	width: 100%;
+	height: 79%;
+	border-radius: 15px;
+	background-image: url("../resources/img/cat_wallpaper.png");
+	background-size: 40%;
+ 	background-position: center;
+	opacity: 15%;
+}
+
+#message-box {
+	width: 100%;
+	height: 9%;
+}
+
+#message-box > input {
+	width: 100%;
+	height: 60%;
+	opacity: 80%;
+	border-radius: 5px;
+	margin: 5px;
+	padding: 5px;
+	color: var(--dark-purple);
+}
+
+#message-box > button {
+	height: 60%;
+	min-width: 5%;
+	padding: 5px;
+	margin: 5px;
+	background-image: url("../resources/img/send_icon.svg");
+	background-size: cover;
+ 	background-position: center;
+	transition: 250ms ease-in-out;
+}
+
+#message-box > button:hover {
+	cursor: pointer;
+	background-image: url("../resources/img/send_icon_hover.svg");
 }
