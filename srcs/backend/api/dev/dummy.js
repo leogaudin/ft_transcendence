@@ -3,6 +3,11 @@
  */
 
 /**
+ * Creates a user with the credentials:
+ *       username: name,
+ *       email: `${name}@gmail.com`,
+ *       password: `${name}.Password1`,
+ *       confirm_password: `${name}.Password1`,
  * @param {String} name - Name of user
  */
 async function debugRegister(name) {
@@ -15,9 +20,9 @@ async function debugRegister(name) {
       },
       body: JSON.stringify({
         username: name,
-        email: `${name}@mail.com`,
-        password: `${name}password`,
-        confirm_password: `${name}password`,
+        email: `${name}@gmail.com`,
+        password: `${name}.Password1`,
+        confirm_password: `${name}.Password1`,
       }),
     });
     const body = await res.json();
@@ -36,7 +41,7 @@ async function debugRegister(name) {
 async function debugFriend(user, friend) {
   process.stdout.write(`Adding friends to user ${user.name}...`);
   try {
-    res = await fetch("http://localhost:9000/users/friends", {
+    let res = await fetch("http://localhost:9000/users/friends", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +64,7 @@ async function debugFriend(user, friend) {
 async function debugBlock(user, blocked) {
   process.stdout.write(`Adding blocks to user ${user.name}...`);
   try {
-    res = await fetch("http://localhost:9000/users/blocks", {
+    let res = await fetch("http://localhost:9000/users/blocks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -84,7 +89,7 @@ async function debugChat(user, second_user) {
     `Creating chat between user ${user.name} and user ${second_user.name}...`,
   );
   try {
-    res = await fetch("http://localhost:9000/chats", {
+    let res = await fetch("http://localhost:9000/chats", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -113,7 +118,7 @@ async function debugMessage(user, chat, body) {
     `Creating message from user ${user.name} in chat ${chat.id}...`,
   );
   try {
-    res = await fetch("http://localhost:9000/messages", {
+    let res = await fetch("http://localhost:9000/messages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -140,7 +145,7 @@ async function debugTournament(user, name, players) {
   process.stdout.write(`Creating tournament ${name}...`);
   try {
     const ids = players.map((user) => user.id);
-    res = await fetch("http://localhost:9000/tournaments", {
+    let res = await fetch("http://localhost:9000/tournaments", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -170,7 +175,7 @@ async function debugMatch(user, second_user, result, winner, loser) {
     `Creating match between ${user.name} and ${second_user.name}...`,
   );
   try {
-    res = await fetch("http://localhost:9000/matches", {
+    let res = await fetch("http://localhost:9000/matches", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -190,9 +195,12 @@ async function debugMatch(user, second_user, result, winner, loser) {
   }
 }
 
+import { patchUser } from "../models/userModel.js";
+
 (async () => {
-  let foo = await debugRegister("foo");
-  let bar = await debugRegister("bar");
+  let foo = await debugRegister("alba.sansebastian5b");
+  await patchUser(foo.id, { is_2fa_enabled: true });
+  let bar = await debugRegister("alvarvg");
   let baz = await debugRegister("baz");
   let qud = await debugRegister("qud");
   let qux = await debugRegister("qux");
@@ -210,12 +218,24 @@ async function debugMatch(user, second_user, result, winner, loser) {
   await debugBlock(foo, bbar);
 
   let foo_bar_chat = await debugChat(foo, bar);
-  let bar_baz_chat = await debugChat(bar, baz);
+  let foo_baz_chat = await debugChat(foo, baz);
 
   for (let i = 1; i < 10; i++) {
-    await debugMessage(foo, foo_bar_chat, `Test message from foo number ${i}`);
-    await debugMessage(bar, foo_bar_chat, `Test message from bar number ${i}`);
-    await debugMessage(baz, bar_baz_chat, `Test message from baz number ${i}`);
+    await debugMessage(
+      foo,
+      foo_bar_chat,
+      `Test message from ${foo.name} number ${i}`,
+    );
+    await debugMessage(
+      bar,
+      foo_bar_chat,
+      `Test message from ${bar.name} number ${i}`,
+    );
+    await debugMessage(
+      foo,
+      foo_baz_chat,
+      `Test message from ${foo.name} number ${i}`,
+    );
   }
 
   await debugTournament(foo, "Test tournament one", [foo, bar, baz, qud]);
