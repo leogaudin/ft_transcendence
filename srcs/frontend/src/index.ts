@@ -1,3 +1,4 @@
+import { initHomeEvents } from "./home-page/home-fetch.js";
 import { initLoginEvents } from "./login-page/login-page.js";
 import { initResetPasswordEvents } from "./reset-password-page/reset-password.js";
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
@@ -13,7 +14,9 @@ const routes = [
 	{
 		path: "/home",
 		url: "../src/home-page/home-page.html",
-		event: () => {}
+		event: () => {
+			initHomeEvents();
+		}
 	},
 	{
 		path: "/login",
@@ -35,6 +38,11 @@ const routes = [
 		event: (data: object) => {
 			initTwoFactorEvents(data as LoginObject);
 		}
+	},
+	{
+		path: "/messages",
+		url: "../src/messages/messages-page.html",
+		event: () => {}
 	}
 ];
 
