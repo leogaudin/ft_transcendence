@@ -918,12 +918,34 @@ canvas {
   margin: 10px;
 }
 
-#profile-settings {
+#profile-button {
   border-radius: 50%;
   margin-left: 25px;
-  max-height: 100px;
-  max-width: 100px;
+  height: 100px;
+  width: 100px;
+  background-image: url("../resources/img/cat.jpg");
+  background-size: cover;
   transition: box-shadow 350ms ease-in-out;
+}
+
+#profile-options {
+  margin: 5px;
+  width: 175px;
+  border-radius: 5px;
+  background-color: var(--accent-pink);
+  box-shadow: 0 0 0 max(100vh, 100vw) rgba(0, 0, 0, .3);
+}
+
+.p-option {
+  display: flex;
+  color: var(--dark-blue);
+  transition: 350ms ease-in-out;
+}
+
+.p-option:hover {
+  background-color: var(--dark-blue);
+  color: var(--accent-pink);
+  padding-left: 10px;
 }
 
 #body-section {
@@ -958,7 +980,7 @@ canvas {
   transition: box-shadow 350ms ease-in-out;
 }
 
-.page-option:hover, #profile-settings:hover {
+.page-option:hover, #profile-button:hover {
   box-shadow: var(--accent-pink) 0px 0px 10px;
   cursor: pointer;
 }
@@ -991,7 +1013,7 @@ h1 {
 
 /* --> Login Page <-- */
 
-#login-page, #sign-up-page, #terms-and-conditions, #twoFA-page, #chat-page {
+#login-page, #sign-up-page, #terms-and-conditions, #twoFA-page, #chat-page, #settings-div, #settings-display {
   background-color: var(--dark-blue);
   border-radius: 15px;
   box-shadow: var(--violet) 0px 0px 20px;
@@ -1325,6 +1347,60 @@ h1 {
 #message-box > button:hover {
   cursor: pointer;
   background-image: url("../resources/img/send_icon_hover.svg");
+}
+
+/* --> Settings page <-- */
+
+.settings-option {
+  display: flex;
+  background-color: var(--dark-pink);
+  justify-content: space-between;
+  box-shadow: var(--accent-pink) 0px 0px 2px;
+  border-radius: 15px;
+  padding: 10px;
+  text-align: start;
+  width: 100%;
+  cursor: pointer;
+  color: white;
+  transition: 250ms ease-in-out;
+}
+
+.settings-option:hover {
+  color: var(--dark-pink);
+  background-color: var(--accent-pink);
+}
+
+.settings-option .icon {
+  transition: fill 0.3s ease-in-out;
+}
+
+.settings-option:hover .icon {
+  fill: var(--dark-pink);
+}
+
+.delete-option {
+  background-color: var(--alert);
+  box-shadow: var(--accent-alert) 0px 0px 2px;
+}
+
+.delete-option:hover {
+  color: var(--alert);
+  background-color: var(--accent-pink);
+}
+
+.delete-option:hover .icon {
+  fill: var(--alert);
+}
+
+.language-option {
+  justify-content: start;
+  align-items: center;
+  width: 50%;
+}
+
+.flag {
+  height: 30px;
+  width: 40px;
 }
 
 .hover\:bg-gray-50:hover {

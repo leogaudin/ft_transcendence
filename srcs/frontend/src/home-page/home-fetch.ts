@@ -1,6 +1,6 @@
 import { navigateTo } from "../index.js";
 
-export function initHomeEvents() {
+export function initHomeFetches() {
 	goMessages();
 }
 
