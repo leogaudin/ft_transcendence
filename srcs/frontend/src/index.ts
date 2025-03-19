@@ -1,4 +1,4 @@
-import { initHomeEvents } from "./home-page/home-fetch.js";
+import { initHomeEvents } from "./home-page/home-page.js";
 import { initLoginEvents } from "./login-page/login-page.js";
 import { initResetPasswordEvents } from "./reset-password-page/reset-password.js";
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
@@ -42,6 +42,11 @@ const routes = [
 	{
 		path: "/messages",
 		url: "../src/messages/messages-page.html",
+		event: () => {}
+	},
+	{
+		path: "/settings",
+		url: "../src/settings-page/settings-page.html",
 		event: () => {}
 	}
 ];
