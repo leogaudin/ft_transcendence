@@ -166,7 +166,7 @@ h1 {
 
 /* --> Login Page <-- */
 
-#login-page, #sign-up-page, #terms-and-conditions, #twoFA-page, #chat-page, #settings-div {
+#login-page, #sign-up-page, #terms-and-conditions, #twoFA-page, #chat-page, #settings-div, #settings-display {
 	background-color: var(--dark-blue);
 	border-radius: 15px;
 	box-shadow: var(--violet) 0px 0px 20px;
@@ -498,9 +498,53 @@ h1 {
 
 /* --> Settings page <-- */
 .settings-option {
+	display: flex;
 	background-color: var(--dark-pink);
+	justify-content: space-between;
 	box-shadow: var(--accent-pink) 0px 0px 2px;
 	border-radius: 15px;
 	padding: 10px;
 	text-align: start;
+	width: 100%;
+	cursor: pointer;
+	color: white;
+	transition: 250ms ease-in-out;
+}
+
+.settings-option:hover {
+	color: var(--dark-pink);
+	background-color: var(--accent-pink);
+}
+
+.settings-option .icon {
+    transition: fill 0.3s ease-in-out;
+}
+
+.settings-option:hover .icon {
+    fill: var(--dark-pink);
+}
+
+.delete-option {
+	background-color: var(--alert);
+	box-shadow: var(--accent-alert) 0px 0px 2px;
+}
+
+.delete-option:hover {
+	color: var(--alert);
+	background-color: var(--accent-pink);
+}
+
+.delete-option:hover .icon {
+	fill: var(--alert);
+}
+
+.language-option {
+	justify-content: start;
+	align-items: center;
+	width: 50%;
+}
+
+.flag {
+	height: 30px;
+	width: 40px;
 }
