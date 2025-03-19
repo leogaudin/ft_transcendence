@@ -4,6 +4,7 @@ import jwt from "@fastify/jwt";
 import multipart from "@fastify/multipart";
 import formbody from "@fastify/formbody";
 import createRoutes from "./routes/routes.js";
+import websocket from "@fastify/websocket";
 
 const fastify = Fastify({ logger: true });
 
@@ -22,6 +23,7 @@ await fastify.register(jwt, {
 });
 await fastify.register(multipart);
 await fastify.register(formbody);
+await fastify.register(websocket);
 
 /** Decorator for JWT verification */
 fastify.decorate("authenticate", async function (req, res) {
@@ -40,6 +42,7 @@ const { ADDRESS = "0.0.0.0", PORT = "9000" } = process.env;
 fastify.get("/", async function handler(request, reply) {
   return { hello: "world" };
 });
+
 const routes = createRoutes(fastify);
 routes.forEach((route) => {
   fastify.route(route);
