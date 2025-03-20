@@ -60,7 +60,7 @@ db.serialize(() => {
     user_id INTEGER NOT NULL,
     blocked_id INTEGER NOT NULL,
     PRIMARY KEY (user_id, blocked_id),
-    UNIQUE (user_id, blocked_id)
+    UNIQUE (user_id, blocked_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (blocked_id) REFERENCES users(id)
     )`,
