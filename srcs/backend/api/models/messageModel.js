@@ -215,7 +215,7 @@ export function getMessagesOfUser(id) {
           send_at: row.sent_at,
         });
       });
-      resolve(Object.values(chatMap));
+      resolve({ chats: chatMap });
     });
   });
 }
