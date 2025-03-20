@@ -1,5 +1,6 @@
 import { initHomeEvents } from "./home-page/home-page.js";
 import { initLoginEvents } from "./login-page/login-page.js";
+import { initMessagesEvents  } from "./messages/messages-page.js";
 import { initResetPasswordEvents } from "./reset-password-page/reset-password.js";
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
 import { displayToast } from "./toast-alert/toast-alert.js";
@@ -42,7 +43,9 @@ const routes = [
 	{
 		path: "/messages",
 		url: "../src/messages/messages-page.html",
-		event: () => {}
+		event: () => {
+			initMessagesEvents();
+		}
 	},
 	{
 		path: "/settings",

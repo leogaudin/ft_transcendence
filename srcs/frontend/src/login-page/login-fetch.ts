@@ -82,9 +82,7 @@ async function handleLogin(e: Event) {
 	}
 }
 
-function initSession(response: object) {
-	console.log(response);
-	
+async function initSession(response: object) {
 	Object.entries(response).forEach(([key, value])=> {
 		if (typeof value !== 'object' || value === null) {
 			localStorage.setItem(key, String(value));
@@ -95,7 +93,19 @@ function initSession(response: object) {
 			// console.log("storing: ", key, ", ", JSON.stringify(value));
 		}
 	});
+
 	
+	const token = localStorage.getItem("token");
+	if (!token)
+		return ;
+	const authorization = {Authorization: `Bearer ${token}`};
+	const messages = await sendRequest("GET", "users/messages", {}, authorization);
+	Object.entries(messages).forEach(([key, value])=> {
+			localStorage.setItem(key, JSON.stringify(value));
+			// console.log("storing: ", key, ", ", JSON.stringify(value));
+	});
+
+	console.log(messages);
 	navigateTo("/home");
 } 
 
@@ -144,14 +154,32 @@ async function handleRegister(e: Event) {
 }
 
 
-export async function sendRequest(method: string, endpoint: string, body: object = {}) {
+export async function sendRequest(method: string, endpoint: string, body: object = {}, header: object = {}) {
 	try {
-		const response = await fetch(`http://localhost:9000/${endpoint}`, {
-			method,
-			credentials: 'include',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(body)
-		});
+		let response;
+		
+		// Object.keys return an array, which contains the property names of the object.
+		if (Object.keys(body).length !== 0) {
+			response = await fetch(`http://localhost:9000/${endpoint}`, {
+				method,
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json',
+					...header
+				},
+				body: JSON.stringify(body)
+			});
+		}
+		else {
+			response = await fetch(`http://localhost:9000/${endpoint}`, {
+				method,
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json',
+					...header
+				},
+			});
+		}
 		return await response.json();
 	}
 	catch (error) {
@@ -228,7 +256,7 @@ async function displayTerms() {
 	try {
 		const data = await sendRequest('POST', 'google/login', response);
 		if (data["token"])
-			navigateTo("/home");
+			initSession(data);
 		else
 			throw new Error(data["error"]);
 	}
