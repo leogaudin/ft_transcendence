@@ -701,6 +701,10 @@ video {
        column-gap: 2.5rem;
 }
 
+.rounded-full {
+  border-radius: 9999px;
+}
+
 .rounded-lg {
   border-radius: 0.5rem;
 }
@@ -1359,6 +1363,25 @@ h1 {
 #message-box > button:hover .send-icon {
   cursor: pointer;
   fill: var(--dark-pink);
+}
+
+.recent-chat-card {
+  border-radius: 15px;
+  color: var(--dark-blue);
+  background-color: #fee0efc4;
+  padding: 5px;
+  margin: 5px;
+  transition: 250ms ease-in-out;
+}
+
+.recent-chat-card:hover {
+  background-color: var(--accent-pink);
+  box-shadow: var(--accent-pink) 0px 0px 5px;
+}
+
+#chat-avatar {
+  height: 60px;
+  width: 60px;
 }
 
 /* --> Settings page <-- */

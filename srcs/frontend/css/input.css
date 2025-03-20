@@ -500,6 +500,25 @@ h1 {
 	fill: var(--dark-pink);
 }
 
+.recent-chat-card {
+	border-radius: 15px;
+	color: var(--dark-blue);
+	background-color: #fee0efc4;
+	padding: 5px;
+	margin: 5px;
+	transition: 250ms ease-in-out;
+}
+
+.recent-chat-card:hover {
+	background-color: var(--accent-pink);
+	box-shadow: var(--accent-pink) 0px 0px 5px;
+}
+
+#chat-avatar {
+	height: 60px;
+	width: 60px;
+}
+
 /* --> Settings page <-- */
 .settings-option {
 	display: flex;
