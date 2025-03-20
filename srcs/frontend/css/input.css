@@ -82,21 +82,6 @@ canvas {
 	transition: 250ms ease-in-out;
 }
 
-/* .home-icon {
-	overflow: visible;
-	background-image: url("../resources/img/home_icon.svg");
-	width: 30px;
-	height: 30px;
-	background-size: contain;
-	background-repeat: no-repeat;
-	transition: 250ms ease-in-out;
-}
-
-.home-icon:hover {
-	cursor: pointer;
-	background-image: url("../resources/img/home_icon_hover.svg");
-} */
-
 .home-icon {
 	transition: 0.3s ease-in-out;
 }

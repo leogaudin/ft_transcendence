@@ -1,24 +1,27 @@
 <div id="visual-div" class="flex justify-center">
 	<main id="home-page" class="flex justify-center items-center flex-col">
-	<header id="header-section" class="flex justify-end items-center">
+	<header id="header-section" class="flex justify-between items-center">
 		<h1>Home Page</h1>
-			<div class="relative inline-block text-left" id="profile-photo">
+		<div class="relative inline-block text-left" id="profile-photo">
+			<div class="flex justify-center items-center">
+				<h2>Welcome<span id="username" class="text-[var(--dark-pink)]"> Username</span>!</h2>
 				<div>
 					<button type="button" id="profile-button"></button>
 				</div>
-		
-				<div class="absolute right-0 z-10 mt-2origin-top-right focus:outline-hidden" role="menu"
-				aria-orientation="vertical" aria-labelledby="profile-button" tabindex="-1">
-					<div class="hidden py-1" role="none" id="profile-options">
-						<div profile_key="modifyProfile" class="p-option px-4 py-2 text-sm text-gray-700" role="menuitem"
-						tabindex="-1">Modify profile</div>
-						<div profile_key="settings" class="p-option px-4 py-2 text-sm text-gray-700" role="menuitem"
-						tabindex="-1">Profile settings</div>
-						<div profile_key="logOut" class="p-option px-4 py-2 text-sm text-gray-700" role="menuitem"
-						tabindex="-1">Log out</div>
-					</div>
+			</div>
+	
+			<div class="absolute right-0 z-10 mt-2origin-top-right focus:outline-hidden" role="menu"
+			aria-orientation="vertical" aria-labelledby="profile-button" tabindex="-1">
+				<div class="hidden py-1" role="none" id="profile-options">
+					<div profile_key="modifyProfile" class="p-option px-4 py-2 text-sm text-gray-700" role="menuitem"
+					tabindex="-1">Modify profile</div>
+					<div profile_key="settings" class="p-option px-4 py-2 text-sm text-gray-700" role="menuitem"
+					tabindex="-1">Profile settings</div>
+					<div profile_key="logOut" class="p-option px-4 py-2 text-sm text-gray-700" role="menuitem"
+					tabindex="-1">Log out</div>
 				</div>
 			</div>
+		</div>
 	</header>
 	<section id="body-section" class="flex justify-evenly">
 		<section id="page-selector" class="grid md:grid-cols-2 gap-4">
