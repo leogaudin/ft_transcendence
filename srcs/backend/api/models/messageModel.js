@@ -1,4 +1,5 @@
 import db from "../database.js";
+import { getUser } from "./userModel.js";
 
 /**
  * Finds all avaliable messages
@@ -188,8 +189,22 @@ export function getMessagesOfUser(id) {
       const chatMap = {};
       rows.forEach((row) => {
         if (!chatMap[row.chat_id]) {
+          const first_user_id = row.first_user_id;
+          const second_user_id = row.second_user_id;
+
+          let receiverUsername;
+          if (id === first_user_id) {
+            receiverUsername = row.second_user_deleted
+              ? "anonymous"
+              : row.second_username;
+          } else {
+            receiverUsername = row.first_user_deleted
+              ? "anonymous"
+              : row.first_username;
+          }
           chatMap[row.chat_id] = {
             chat_id: row.chat_id,
+            receiver: receiverUsername,
             first_user_id: row.first_user_id,
             first_username: row.first_user_deleted
               ? "anonymous"
@@ -212,7 +227,7 @@ export function getMessagesOfUser(id) {
             ? "anonymous"
             : row.receiver_username,
           body: row.body,
-          send_at: row.sent_at,
+          sent_at: row.sent_at,
         });
       });
       resolve({ chats: chatMap });
