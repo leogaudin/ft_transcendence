@@ -68,8 +68,9 @@ async function handleLogin(e: Event) {
 			else
 				throw new Error(response["error"]);
 		}
-		else
-			navigateTo("/home");
+		else {
+			initSession(response);
+		}
 		const form = document.getElementById("login-form") as HTMLFormElement;
 		if (form)
 			form.reset();
@@ -80,6 +81,23 @@ async function handleLogin(e: Event) {
 		return (false);
 	}
 }
+
+function initSession(response: object) {
+	console.log(response);
+	
+	Object.entries(response).forEach(([key, value])=> {
+		if (typeof value !== 'object' || value === null) {
+			localStorage.setItem(key, String(value));
+			// console.log("storing: ", key, ", ", String(value));
+		}
+		else {
+			localStorage.setItem(key, JSON.stringify(value));
+			// console.log("storing: ", key, ", ", JSON.stringify(value));
+		}
+	});
+	
+	navigateTo("/home");
+} 
 
 async function handleRegister(e: Event) {
 	e.preventDefault();

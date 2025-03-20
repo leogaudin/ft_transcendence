@@ -623,8 +623,16 @@ video {
   height: 1.25rem;
 }
 
+.h-10 {
+  height: 2.5rem;
+}
+
 .h-full {
   height: 100%;
+}
+
+.w-10 {
+  width: 2.5rem;
 }
 
 .w-2\/3 {
@@ -896,6 +904,54 @@ canvas {
   background-position: 50% 50%;
 }
 
+/* --> ICONS <-- */
+
+.close-icon {
+  background-image: url("../resources/img/close_icon.svg");
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  transition: 250ms ease-in-out;
+}
+
+.close-icon:hover {
+  cursor: pointer;
+  background-image: url("../resources/img/close_icon_hover.svg");
+}
+
+.error-icon {
+  background-image: url("../resources/img/error_icon.svg");
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  transition: 250ms ease-in-out;
+}
+
+.check-icon {
+  background-image: url("../resources/img/check_icon.svg");
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  transition: 250ms ease-in-out;
+}
+
+.home-icon {
+  transition: 0.3s ease-in-out;
+}
+
+.home-icon:hover {
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 5px;
+  box-shadow: var(--accent-pink) 0px 0px 2px;
+}
+
+.send-icon {
+  transition: fill 0.3s ease-in-out;
+}
+
+/* --> Home Page <-- */
+
 #visual-div{
   min-height: 100vh;
   width: 100%;
@@ -1120,19 +1176,6 @@ h1 {
   margin: 10px;
 }
 
-.close-icon {
-  background-image: url("../resources/img/close_icon.svg");
-  width: 30px;
-  height: 30px;
-  background-size: cover;
-  transition: 250ms ease-in-out;
-}
-
-.close-icon:hover {
-  cursor: pointer;
-  background-image: url("../resources/img/close_icon_hover.svg");
-}
-
 #toast-default {
   display: none;
   position: absolute;
@@ -1150,22 +1193,6 @@ h1 {
 .toast-success {
   background-color: var(--success) !important;
   box-shadow: var(--accent-success) 0px 0px 10px !important;
-}
-
-.error-icon {
-  background-image: url("../resources/img/error_icon.svg");
-  width: 30px;
-  height: 30px;
-  background-size: cover;
-  transition: 250ms ease-in-out;
-}
-
-.check-icon {
-  background-image: url("../resources/img/check_icon.svg");
-  width: 30px;
-  height: 30px;
-  background-size: cover;
-  transition: 250ms ease-in-out;
 }
 
 #terms-and-conditions {
@@ -1192,21 +1219,6 @@ h1 {
 
 #reset-password-form {
   gap: 10px;
-}
-
-.home-icon {
-  overflow: visible;
-  background-image: url("../resources/img/home_icon.svg");
-  width: 30px;
-  height: 30px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  transition: 250ms ease-in-out;
-}
-
-.home-icon:hover {
-  cursor: pointer;
-  background-image: url("../resources/img/home_icon_hover.svg");
 }
 
 @media only screen and (max-width: 767px) {
@@ -1263,6 +1275,7 @@ h1 {
 
 #chat-page {
   min-height: 85%;
+  min-width: 70%;
 }
 
 #chat-box {
@@ -1327,26 +1340,25 @@ h1 {
   width: 100%;
   height: 60%;
   opacity: 80%;
-  border-radius: 5px;
-  margin: 5px;
+  border-radius: 5px 0px 0px 5px;
+  /* margin: 5px; */
   padding: 5px;
+  background-color: whitesmoke;
   color: var(--dark-purple);
 }
 
 #message-box > button {
-  height: 60%;
-  min-width: 5%;
   padding: 5px;
-  margin: 5px;
-  background-image: url("../resources/img/send_icon.svg");
-  background-size: cover;
-  background-position: center;
+  height: 60%;
+  opacity: 80%;
+  border-radius: 0px 5px 5px 0px;
+  background-color: whitesmoke;
   transition: 250ms ease-in-out;
 }
 
-#message-box > button:hover {
+#message-box > button:hover .send-icon {
   cursor: pointer;
-  background-image: url("../resources/img/send_icon_hover.svg");
+  fill: var(--dark-pink);
 }
 
 /* --> Settings page <-- */
@@ -1379,7 +1391,7 @@ h1 {
 }
 
 .delete-option {
-  background-color: var(--alert);
+  background-color: var(--accent-alert);
   box-shadow: var(--accent-alert) 0px 0px 2px;
 }
 

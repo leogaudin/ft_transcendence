@@ -3,7 +3,17 @@ import { initHomeFetches } from "./home-fetch.js"
 
 export function initHomeEvents() {
 	initHomeFetches();
+	setHomeAttributes();
 	dropDown();
+}
+
+function setHomeAttributes() {
+	const usernameText = document.getElementById("username") as HTMLSpanElement;
+	if (usernameText) {
+		const username = localStorage.getItem("username");
+		if (username)
+			usernameText.innerText = " " + username;
+	}
 }
 
 function dropDown(){

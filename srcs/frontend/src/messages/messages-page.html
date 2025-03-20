@@ -1,5 +1,10 @@
 <div id="chat-page">
-	<h1>Here you'll see your conversations with your friends</h1>
+	<div class="flex justify-between items-center">
+		<h1 class="m-4">Chat Room</h1>
+		<svg class="home-icon m-4 h-10 w-10" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
+			<path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
+		</svg>
+	</div>
 	<div id="chat-box" class="flex justify-between items-center">
 		<div id="conversation-list">Here I'll display the friends list you've chatted with</div>
 		<div id="conversation-history" class="flex flex-col justify-between items-center">
@@ -11,7 +16,11 @@
 			<div id="message-history">Aquí se cargan los mensajes</div>
 			<form id="message-box" class="flex justify-center items-center">
 				<input type="text" placeholder="Chat with your friends" class="outline-none">
-				<button type="submit" class="data-user signin-user"></button>
+				<button type="submit">
+					<svg class="send-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#54184D">
+						<path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/>
+					</svg>
+				</button>
 			</form>
 		</div>
 	</div>
