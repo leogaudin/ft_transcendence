@@ -22,6 +22,11 @@ clean: down
 repopulate:
 		@docker exec -it back node api/dev/dummy.js
 
+re: clean all
+
+db:
+		@docker exec -it back sqlite3 transcendence.db
+
 reset:
 		@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
 		@docker compose -f ./srcs/docker-compose.yml stop backend
@@ -31,4 +36,4 @@ reset:
 		@make back && sleep 3
 		@make repopulate
 
-.PHONY: all attach front back build down clean repopulate reset
+.PHONY: all attach front back build down clean repopulate reset re db
