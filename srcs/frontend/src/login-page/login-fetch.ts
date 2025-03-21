@@ -54,8 +54,7 @@ export function parseSessionForm(
 
 /**
  * @brief Checks the Login form when sent
- * @param e Submit event
- * @returns 
+ * @param e Submit event refresh the page, including e allows you to prevent it
  */
 async function handleLogin(e: Event) {
 	e.preventDefault();
@@ -97,6 +96,11 @@ async function handleLogin(e: Event) {
 	}
 }
 
+/**
+ * @brief Stores in localStorage the data of the user who just logged
+ * @param response The user data returned by the backend
+ * @returns If everything ok navigates you to the Home Page
+ */
 async function initSession(response: object) {
 	Object.entries(response).forEach(([key, value])=> {
 		if (typeof value !== 'object' || value === null) {
@@ -124,6 +128,11 @@ async function initSession(response: object) {
 	navigateTo("/home");
 } 
 
+/**
+ * @brief Checks the Register form when sent
+ * @param e Submit event refresh the page, including e allows you to prevent it
+ * @returns true if user was created | false if not
+ */
 async function handleRegister(e: Event) {
 	e.preventDefault();
 	const usernameField = document.getElementById("username") as HTMLInputElement;
@@ -168,7 +177,14 @@ async function handleRegister(e: Event) {
 	}
 }
 
-
+/**
+ * @brief Standard function to make Requests to the backend
+ * @param method 
+ * @param endpoint 
+ * @param body 
+ * @param header 
+ * @returns 
+ */
 export async function sendRequest(method: string, endpoint: string, body: object = {}, header: object = {}) {
 	try {
 		let response;
