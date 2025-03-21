@@ -2,6 +2,11 @@ import { showAlert } from "../toast-alert/toast-alert.js";
 import { navigateTo } from "../index.js";
 import { LoginObject } from "../types.js";
 
+
+/**
+ * @brief Inits the associated Login Fetches and buttons
+ * @note Export because it'll be called on login-page.js
+ */
 export function initLoginFetches() {
 	const signupSubmit = document.getElementById("signup-form");
 	const loginSubmit = document.getElementById("login-form");
@@ -15,7 +20,12 @@ export function initLoginFetches() {
 	displayTerms();
 }
 
-
+/**
+ * @brief Parses the auth forms before doing a fetch to assure everything is alright
+ * @param email Default value on Login Form
+ * @param confirmPassword Default value on Login Form
+ * @returns Personalized msg for all cases
+ */
 export function parseSessionForm(
 	username: string,
 	password: string,
@@ -42,6 +52,11 @@ export function parseSessionForm(
 	return (msg);
 }
 
+/**
+ * @brief Checks the Login form when sent
+ * @param e Submit event
+ * @returns 
+ */
 async function handleLogin(e: Event) {
 	e.preventDefault();
 	const usernameField = document.getElementById("login-username") as HTMLInputElement;
