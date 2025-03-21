@@ -6,7 +6,20 @@ import formbody from "@fastify/formbody";
 import createRoutes from "./routes/routes.js";
 import websocket from "@fastify/websocket";
 
-const fastify = Fastify({ logger: true });
+const fastify = Fastify({
+  logger: {
+    level: "debug",
+    transport: {
+      target: "pino-pretty",
+      options: {
+        translateTime: "HH:MM:ss Z",
+        ignore: "pid,hostname",
+        colorize: true,
+        singleLine: true,
+      },
+    },
+  },
+});
 
 /** Plugin registration */
 await fastify.register(cors, {
