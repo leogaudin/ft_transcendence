@@ -1,9 +1,12 @@
+import { Socket } from "socket.io";
 import { navigateTo } from "../index.js";
 import { Chat } from "../types.js"
 
 export function initMessagesEvents() {
 	moveToHome();
 	recentChats();
+  initializeChat();
+  setupMessageForm();
 }
 
 function moveToHome() {
@@ -20,7 +23,7 @@ function recentChats() {
   let chats = localStorage.getItem("chats");
   if (!chats)
     return;
-  
+
   const JSONchats = JSON.parse(chats);
   const recentChatsDiv = document.getElementById("conversation-list");
   if (recentChatsDiv) {
@@ -47,4 +50,72 @@ function recentChats() {
       recentChatsDiv.appendChild(subDiv);
     });
   }
+}
+
+function initializeChat() {
+
+  socket.onopen = () => {
+    console.log("WebSocket connection established");
+  };
+  socket.onmessage = () => {
+    const messageForm = document.getElementById("message-box") as HTMLFormElement;
+    if (!messageForm)
+      return;
+    let messageContainer = document.getElementById("message-history")
+    if (!messageContainer)
+      return ;
+    const input = messageForm.querySelector("input") as HTMLInputElement;
+    if (!input)
+      return;
+    const message = input.value.trim();
+    let el = document.createElement("div");
+    el.setAttribute("id", "message");
+    el.innerHTML = `
+       <div class="name">You</div>
+       <div class="text">${message}</div>
+    `;
+    socket.send(message.toString())
+    messageContainer.appendChild(el)
+    //El scrolleo no funciona correctamente
+    //messageContainer.scrollTop = messageContainer.scrollHeight - messageContainer.clientHeight;
+  };
+  socket.onerror = (error) => {
+    console.error("WebSocket error:", error);
+  };
+  socket.onclose = () => {
+    console.log("WebSocket connection closed");
+  };
+}
+
+const socket = new WebSocket("ws://localhost:9000/chat");
+
+function setupMessageForm() {
+  let chats = localStorage.getItem("chats");
+  if (!chats)
+      return;
+  const JSONchats = JSON.parse(chats);
+  Object.entries(JSONchats).forEach(([index, chat]) => {
+    const chatData = chat as Chat;
+    console.log(chatData);
+  })
+  initializeChat();
+  const messageForm = document.getElementById("message-box") as HTMLFormElement;
+  if (!messageForm)
+    return;
+  messageForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      const input = messageForm.querySelector("input") as HTMLInputElement;
+      if (!input)
+        return;
+      const message = input.value.trim();
+      if (message) {
+        let messageContainer = document.getElementById("message-history")
+      if (!messageContainer)
+        return ;
+      if (!socket)
+        return ;
+      socket.onmessage();
+      input.value = "";
+    }
+  });
 }

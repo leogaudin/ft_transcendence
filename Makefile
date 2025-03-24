@@ -18,6 +18,8 @@ down:
 
 clean: down
 		@docker system prune -a -f
+		@rm -rf ./srcs/backend/node_modules
+		@rm -rf ./srcs/frontend/node_modules
 
 repopulate:
 		@docker exec -it back node api/dev/dummy.js

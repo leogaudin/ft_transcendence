@@ -200,7 +200,7 @@ async function debugMatch(user, second_user, result, winner, loser) {
 import { patchUser } from "../models/userModel.js";
 
 (async () => {
-  let foo = await debugRegister("alba.sansebastian5b");
+  let foo = await debugRegister("nestorcruzgambero");
   await patchUser(foo.id, { is_2fa_enabled: true });
   let bar = await debugRegister("alvarvg");
   let baz = await debugRegister("baz");

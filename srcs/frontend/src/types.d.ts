@@ -11,4 +11,10 @@ export interface Chat {
 	second_user_id: number;
 	second_username: string;
 	receiver: string;
+	socket: WebSocket | null;
+}
+
+export interface User {
+	user_id: number;
+	socket: WebSocket | null;
 }
