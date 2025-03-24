@@ -61,7 +61,7 @@ function initializeChat() {
     const messageForm = document.getElementById("message-box") as HTMLFormElement;
     if (!messageForm)
       return;
-    let messageContainer = document.getElementById("message-history")
+    let messageContainer = document.getElementById("message-history");
     if (!messageContainer)
       return ;
     const input = messageForm.querySelector("input") as HTMLInputElement;
@@ -70,14 +70,27 @@ function initializeChat() {
     const message = input.value.trim();
     let el = document.createElement("div");
     el.setAttribute("id", "message");
-    el.innerHTML = `
-       <div class="name">You</div>
-       <div class="text">${message}</div>
-    `;
-    socket.send(message.toString())
-    messageContainer.appendChild(el)
-    //El scrolleo no funciona correctamente
-    //messageContainer.scrollTop = messageContainer.scrollHeight - messageContainer.clientHeight;
+
+    let friendMessage = document.createElement("div");
+    friendMessage.setAttribute("id", "friend-message");
+
+    if (Math.floor(Math.random() * (2) + 1) == 1) {
+      el.innerHTML = `
+         <div class="message self-message">${message}</div>
+      `;
+      socket.send(message.toString())
+      messageContainer.appendChild(el)
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
+    else {
+      friendMessage.innerHTML = `
+      <div class="message friend-message">${message}</div>
+      `;
+      socket.send(message.toString())
+      messageContainer.appendChild(friendMessage);
+      friendMessage.scrollIntoView({ behavior: 'smooth' });
+    }
+    
   };
   socket.onerror = (error) => {
     console.error("WebSocket error:", error);

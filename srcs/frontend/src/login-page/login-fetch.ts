@@ -178,7 +178,7 @@ async function handleRegister(e: Event) {
 }
 
 /**
- * @brief Standard function to make Requests to the backend
+ * Standard function to make Requests to the backend
  * @param method 
  * @param endpoint 
  * @param body 
