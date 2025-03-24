@@ -48,7 +48,7 @@ fastify.decorate("authenticate", async function (req, res) {
     res.send(err);
   }
 });
-
+//zod comentar para ver la libreria
 const { ADDRESS = "0.0.0.0", PORT = "9000" } = process.env;
 
 /** Declares the routes */

@@ -7,8 +7,10 @@ export default function createWebSocketsRoutes(fastify){
 			method: "GET",
 			websocket: true,
 			handler: asyncHandler(async (socket, req) =>{
+				console.log("cliente conectado");
 				socket.on("message", message => {
-					socket.send(message.toString());
+					const messageString = message.toString();
+					console.log(messageString);
 				})
 			})
 		}
