@@ -1,12 +1,20 @@
 import { navigateTo } from "../index.js";
 import { initHomeFetches } from "./home-fetch.js"
 
+/**
+ * @brief Inits the associated Home Events
+ * @note Export because it'll be called on index.js
+ */
 export function initHomeEvents() {
 	initHomeFetches();
 	setHomeAttributes();
 	dropDown();
 }
 
+
+/**
+ * @brief Displays username on welcoming message
+ */
 function setHomeAttributes() {
 	const usernameText = document.getElementById("username") as HTMLSpanElement;
 	if (usernameText) {
@@ -16,6 +24,10 @@ function setHomeAttributes() {
 	}
 }
 
+/**
+ * @brief Shows/hides a dropdown when the profile picture is clicked
+ * @note When clicked outside dropdown dissapears
+ */
 function dropDown(){
 	const dropdownButton = document.getElementById("profile-button");
 	const dropdownOptions = document.getElementById("profile-options");
@@ -39,6 +51,10 @@ function dropDown(){
 	});
 }
 
+/**
+ * @brief Navigates you to the selected profile picture option
+ * @param option The option you choosed (Modify profile, Settings or Log Out)
+ */
 function navigateProfileOptions(option: string) {
 	const dropdownButton = document.getElementById("profile-button");
 	if (!dropdownButton)

@@ -2,6 +2,11 @@ import { showAlert } from "../toast-alert/toast-alert.js";
 import { navigateTo } from "../index.js";
 import { LoginObject } from "../types.js";
 
+
+/**
+ * @brief Inits the associated Login Fetches and buttons
+ * @note Export because it'll be called on login-page.js
+ */
 export function initLoginFetches() {
 	const signupSubmit = document.getElementById("signup-form");
 	const loginSubmit = document.getElementById("login-form");
@@ -15,7 +20,12 @@ export function initLoginFetches() {
 	displayTerms();
 }
 
-
+/**
+ * @brief Parses the auth forms before doing a fetch to assure everything is alright
+ * @param email Default value on Login Form
+ * @param confirmPassword Default value on Login Form
+ * @returns Personalized msg for all cases
+ */
 export function parseSessionForm(
 	username: string,
 	password: string,
@@ -42,6 +52,10 @@ export function parseSessionForm(
 	return (msg);
 }
 
+/**
+ * @brief Checks the Login form when sent
+ * @param e Submit event refresh the page, including e allows you to prevent it
+ */
 async function handleLogin(e: Event) {
 	e.preventDefault();
 	const usernameField = document.getElementById("login-username") as HTMLInputElement;
@@ -82,6 +96,11 @@ async function handleLogin(e: Event) {
 	}
 }
 
+/**
+ * @brief Stores in localStorage the data of the user who just logged
+ * @param response The user data returned by the backend
+ * @returns If everything ok navigates you to the Home Page
+ */
 async function initSession(response: object) {
 	Object.entries(response).forEach(([key, value])=> {
 		if (typeof value !== 'object' || value === null) {
@@ -109,6 +128,11 @@ async function initSession(response: object) {
 	navigateTo("/home");
 } 
 
+/**
+ * @brief Checks the Register form when sent
+ * @param e Submit event refresh the page, including e allows you to prevent it
+ * @returns true if user was created | false if not
+ */
 async function handleRegister(e: Event) {
 	e.preventDefault();
 	const usernameField = document.getElementById("username") as HTMLInputElement;
@@ -153,7 +177,14 @@ async function handleRegister(e: Event) {
 	}
 }
 
-
+/**
+ * Standard function to make Requests to the backend
+ * @param method 
+ * @param endpoint 
+ * @param body 
+ * @param header 
+ * @returns 
+ */
 export async function sendRequest(method: string, endpoint: string, body: object = {}, header: object = {}) {
 	try {
 		let response;
