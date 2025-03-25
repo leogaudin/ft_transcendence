@@ -72,6 +72,16 @@ setTimeout(async () => {
     first_user_id: bar.id,
     second_user_id: bar2.id,
   });
+  console.log(`Creating chat between ${bar.username} and ${foo.username}...`);
+  let bar_foo_chat = await createChat({
+    first_user_id: bar.id,
+    second_user_id: foo.id,
+  });
+  console.log(`Creating chat between ${bar.username} and ${baz.username}...`);
+  let bar_baz_chat = await createChat({
+    first_user_id: bar.id,
+    second_user_id: baz.id,
+  });
   console.log(`Creating chat between ${baz.username} and ${baz2.username}...`);
   let baz_baz2_chat = await createChat({
     first_user_id: baz.id,
@@ -101,6 +111,18 @@ setTimeout(async () => {
       sender_id: bar.id,
       receiver_id: bar2.id,
       chat_id: bar_bar2_chat.id,
+      body: `Test message from ${bar.username} number ${i}`,
+    });
+    await createMessage({
+      sender_id: bar.id,
+      receiver_id: foo.id,
+      chat_id: bar_foo_chat.id,
+      body: `Test message from ${bar.username} number ${i}`,
+    });
+    await createMessage({
+      sender_id: bar.id,
+      receiver_id: baz.id,
+      chat_id: bar_baz_chat.id,
       body: `Test message from ${bar.username} number ${i}`,
     });
     await createMessage({
@@ -134,4 +156,4 @@ setTimeout(async () => {
       body: `Test message from ${qux2.username} number ${i}`,
     });
   }
-}, 1000);
+}, 2000);

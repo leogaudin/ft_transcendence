@@ -168,3 +168,49 @@ export function getChatsOfUser(id) {
     });
   });
 }
+
+/**
+ * Gets all chats of user and the last message of them
+ * @param {Number} id - ID of the user
+ * @returns {Object} - All chats with the last message,
+ *                     sorted by date
+ */
+export function getLastChatsOfUser(id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      WITH RankedMessages AS (
+      SELECT
+        c.id AS chat_id,
+        sender.username AS sender_username,
+        sender.is_deleted AS sender_deleted,
+        m.body,
+        m.sent_at,
+        ROW_NUMBER() OVER (PARTITION BY c.id ORDER BY m.sent_at DESC) AS message_rank
+        FROM chats c
+        JOIN users first_user ON c.first_user_id = first_user.id
+        JOIN users second_user ON c.second_user_id = second_user.id
+        JOIN messages m ON c.id = m.chat_id
+        JOIN users sender ON m.sender_id = sender.id
+        JOIN users receiver ON m.receiver_id = receiver.id
+        WHERE c.first_user_id = ? OR c.second_user_id = ?
+      )
+      SELECT *
+      FROM RankedMessages
+      WHERE message_rank = 1
+      ORDER BY sent_at DESC `;
+    db.all(sql, [id, id], (err, rows) => {
+      if (err) {
+        console.error("Error getting chats:", err.message);
+        return reject(err);
+      }
+      rows.forEach((row) => {
+        row.sender_username = row.sender_deleted
+          ? "anonymous"
+          : row.sender_username;
+        delete row.message_rank;
+        delete row.sender_deleted;
+      });
+      resolve(rows);
+    });
+  });
+}
