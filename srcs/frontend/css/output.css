@@ -1474,6 +1474,76 @@ h1 {
   width: 40px;
 }
 
+/* --> Games page <-- */
+
+/* #game-page {
+	background-color: var(--dark-purple);
+	display: flex;
+	position: relative;
+	z-index: 2;
+} */
+
+#game {
+  background-color: black;
+  overflow: hidden;
+  height: 70%;
+  width: 70%;
+  border: 20px solid white;
+  position: absolute;
+  top: 15%;
+  left: 15%;
+}
+
+#ball {
+  width: 20px;
+  height: 20px;
+  left: 50%;
+  top: 50%;
+  display: block;
+  border: 2px solid white;
+  position: absolute;
+  background-color: white;
+}
+
+.paddle {
+  width: 20px;
+  height: 120px;
+  background-color: white;
+  position: absolute;
+  top: 50%;
+}
+
+#paddleLeft {
+  left: 2%;
+}
+
+#paddleRight {
+  right: 2%;
+}
+
+#line {
+  width: 50%;
+  height: 100%;
+  border-right: 10px dashed white;
+  position: absolute;
+}
+
+.counter {
+  color: white;
+  position: absolute;
+  top: 10%;
+  font-size: 700%;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+#counter1 {
+  left: 25%;
+}
+
+#counter2 {
+  left: 65%;
+}
+
 .hover\:bg-gray-50:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));

@@ -5,6 +5,7 @@ import { initResetPasswordEvents } from "./reset-password-page/reset-password.js
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
 import { displayToast } from "./toast-alert/toast-alert.js";
 import { LoginObject } from "./types.js";
+import { pong } from "./games/game.js"
 
 const routes = [
 	{
@@ -45,6 +46,13 @@ const routes = [
 		url: "../src/messages/messages-page.html",
 		event: () => {
 			initMessagesEvents();
+		}
+	},
+	{
+		path: "/games",
+		url: "../src/games/games-page.html",
+		event: () => {
+			pong();
 		}
 	},
 	{
