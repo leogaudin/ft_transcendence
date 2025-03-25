@@ -1,4 +1,5 @@
 import { Chat } from "../types.js"
+import { Message } from "../types.js";
 
 export function loadInfo() {
 	recentChats();
@@ -14,6 +15,8 @@ function recentChats() {
 	if (recentChatsDiv) {
 	  Object.entries(JSONchats).forEach(([index, chat]) => {
 		const typedChat = chat as Chat;
+		const lastMessage = (typedChat.messages as Message[]).pop();
+		
 		var subDiv = document.createElement('div');
 		subDiv.innerHTML = `
 		  <div class="flex items-center gap-2 recent-chat-card">
@@ -22,6 +25,7 @@ function recentChats() {
 			  </div>
 			  <div class="chat-info">
 				  <h3>${typedChat.receiver}</h3>
+				   <p>${lastMessage?.body}</p>
 			  </div>
 		  </div>
 		`;
