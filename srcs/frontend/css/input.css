@@ -609,22 +609,30 @@ h1 {
 
 /* --> Games page <-- */
 
-/* #game-page {
-	background-color: var(--dark-purple);
-	display: flex;
-	position: relative;
-	z-index: 2;
-} */
+#games-page {
+    background-color: var(--dark-blue);
+	border-radius: 15px;
+	box-shadow: var(--violet) 0px 0px 20px;
+    padding: 1rem;
+    align-items: center;
+	justify-content: center;
+    position: relative;
+	min-height: 90vh;
+	width: 75vw;
+    display: flex;
+    flex-direction: column;
+}
 
 #game {
+	border-radius: 15px;
 	background-color: black;
 	overflow: hidden;
-	height: 70%;
 	width: 70%;
+	aspect-ratio: 2/1;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
 	border: 20px solid white;
-	position: absolute;
-	top: 15%;
-	left: 15%;
+	position: relative;
 }
 
 #ball {
