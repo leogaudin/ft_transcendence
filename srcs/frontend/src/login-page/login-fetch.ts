@@ -114,11 +114,13 @@ async function initSession(response: object) {
 	});
 
 	
-	const token = localStorage.getItem("token");
-	if (!token)
-		return ;
-	const authorization = {Authorization: `Bearer ${token}`};
-	const messages = await sendRequest("GET", "users/messages", {}, authorization);
+	// const token = localStorage.getItem("token");
+	// if (!token)
+	// 	return ;
+	// const authorization = {Authorization: `Bearer ${token}`};
+	// const messages = await sendRequest("GET", "users/messages", {}, authorization);
+
+	const messages = await sendRequest("GET", "users/messages");
 	Object.entries(messages).forEach(([key, value])=> {
 			localStorage.setItem(key, JSON.stringify(value));
 			// console.log("storing: ", key, ", ", JSON.stringify(value));
