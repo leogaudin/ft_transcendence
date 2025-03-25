@@ -35,7 +35,7 @@ reset:
 		@rm -f ./srcs/backend/transcendence.db
 		@find ./srcs/backend/api/avatars/ ! -name 'default.jpg' -type f -exec rm -f {} +
 		@echo -n "Repopulate with mockup data? [y/N] " && read ans && [ $${ans:-N} = y ]
-		@make back && sleep 3
+		@make back && sleep 1
 		@make repopulate
 
 .PHONY: all attach front back build down clean repopulate reset re db

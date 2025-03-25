@@ -3,7 +3,7 @@ import { asyncHandler, saveAvatar } from "../utils.js";
 export default function createAvatarRoutes(fastify) {
   return [
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "POST",
       url: "/avatar",
       handler: asyncHandler(async (req, res) => {

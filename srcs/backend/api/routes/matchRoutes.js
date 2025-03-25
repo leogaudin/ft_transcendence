@@ -11,7 +11,7 @@ import {
 export default function createMatchRoutes(fastify) {
   return [
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/matches",
       handler: asyncHandler(async (req, res) => {
@@ -20,7 +20,7 @@ export default function createMatchRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "POST",
       url: "/matches",
       handler: asyncHandler(async (req, res) => {
@@ -39,7 +39,7 @@ export default function createMatchRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/matches/:id",
       handler: asyncHandler(async (req, res) => {
@@ -48,7 +48,7 @@ export default function createMatchRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PUT",
       url: "/matches/:id",
       handler: asyncHandler(async (req, res) => {
@@ -67,7 +67,7 @@ export default function createMatchRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PATCH",
       url: "/matches/:id",
       handler: asyncHandler(async (req, res) => {
@@ -77,7 +77,7 @@ export default function createMatchRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "DELETE",
       url: "/matches/:id",
       handler: asyncHandler(async (req, res) => {

@@ -11,7 +11,7 @@ import {
 export default function createMessageRoutes(fastify) {
   return [
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/messages",
       handler: asyncHandler(async (req, res) => {
@@ -20,7 +20,7 @@ export default function createMessageRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "POST",
       url: "/messages",
       handler: asyncHandler(async (req, res) => {
@@ -38,7 +38,7 @@ export default function createMessageRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/messages/:id",
       handler: asyncHandler(async (req, res) => {
@@ -47,7 +47,7 @@ export default function createMessageRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PUT",
       url: "/messages/:id",
       handler: asyncHandler(async (req, res) => {
@@ -57,7 +57,7 @@ export default function createMessageRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PATCH",
       url: "/messages/:id",
       handler: asyncHandler(async (req, res) => {
@@ -67,7 +67,7 @@ export default function createMessageRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "DELETE",
       url: "/messages/:id",
       handler: asyncHandler(async (req, res) => {

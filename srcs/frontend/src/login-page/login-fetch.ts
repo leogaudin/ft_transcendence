@@ -286,8 +286,10 @@ async function displayTerms() {
 (window as any).handleGoogleLogin = async (response: object) => {
 	try {
 		const data = await sendRequest('POST', 'google/login', response);
-		if (data["token"])
-			initSession(data);
+		// if (data["token"])
+		// 	initSession(data);
+    if (data["success"])
+      initSession(data);
 		else
 			throw new Error(data["error"]);
 	}

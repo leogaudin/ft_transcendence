@@ -5,6 +5,7 @@ import multipart from "@fastify/multipart";
 import formbody from "@fastify/formbody";
 import createRoutes from "./routes/routes.js";
 import websocket from "@fastify/websocket";
+import fastifyCookie from "@fastify/cookie";
 
 const fastify = Fastify({
   logger: {
@@ -37,13 +38,19 @@ await fastify.register(jwt, {
 await fastify.register(multipart);
 await fastify.register(formbody);
 await fastify.register(websocket);
+await fastify.register(fastifyCookie, {
+  secret: process.env.COOKIE_SECRET,
+  hook: "preValidation",
+});
 
-/** Decorator for JWT verification */
+/** Decorator for Cookie / JWT verification */
 fastify.decorate("authenticate", async function (req, res) {
   try {
-    await req.jwtVerify();
-    const token = await req.jwtDecode();
-    req.userId = token.user;
+    const { valid, value } = req.unsignCookie(req.cookies.token);
+    if (!valid)
+      return res.code(401).send({ error: "Invalid cookie signature" });
+    const decoded = fastify.jwt.verify(value);
+    req.userId = decoded.user;
   } catch (err) {
     res.send(err);
   }

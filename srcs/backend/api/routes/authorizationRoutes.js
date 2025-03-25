@@ -5,6 +5,7 @@ import {
   registerUser,
   enable2fa,
   verify2fa,
+  setJWT,
 } from "../authUtils.js";
 import {
   resetUserPassword,
@@ -28,6 +29,7 @@ export default function createAuthRoutes(fastify) {
           return res
             .code(202)
             .send({ twoFactor: "2FA is enabled, TOTP code required" });
+        setJWT(res, result);
         return res.code(200).send(result);
       }),
     },
@@ -38,6 +40,7 @@ export default function createAuthRoutes(fastify) {
         if (!validateInput(req, res, ["credential"]))
           return res.code(400).send({ error: "Credential not found" });
         const result = await loginGoogleUser(req.body.credential);
+        setJWT(res, result);
         return res.code(200).send(result);
       }),
     },
@@ -57,6 +60,7 @@ export default function createAuthRoutes(fastify) {
         if (req.body.password != req.body.confirm_password)
           return res.code(400).send({ error: "Passwords don't match" });
         const result = await registerUser(req.body);
+        setJWT(res, result);
         return res.code(201).send(result);
       }),
     },
@@ -110,7 +114,7 @@ export default function createAuthRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/2fa/enable",
       handler: asyncHandler(async (req, res) => {
@@ -123,7 +127,7 @@ export default function createAuthRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "POST",
       url: "/2fa/verify",
       handler: asyncHandler(async (req, res) => {
