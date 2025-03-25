@@ -421,11 +421,12 @@ h1 {
 	height: 75vh;
 	width: 70vw;
 	margin: 10px;
+	gap: 10px;
 }
 
 #conversation-list {
 	background-color: var(--dark-pink);
-	width: 20%;
+	width: 275px;
 	height: 100%;
 	padding: 10px;
 	border-radius: 15px;
@@ -433,7 +434,7 @@ h1 {
 
 #conversation-history {
 	background-color: var(--violet);
-	width: 79%;
+	width: 80%;
 	height: 100%;
 	padding: 10px;
 	border-radius: 15px;
@@ -474,33 +475,34 @@ h1 {
 #message {
 	display: flex;
 	justify-content: flex-end;
-	padding-left: 50%;
+	padding-left: 30%;
 }
 
 #friend-message {
 	display: flex;
 	justify-content: flex-start;
-	padding-right: 50%;
+	padding-right: 30%;
 }
 
 .message {
 	white-space: wrap;
 	word-wrap: anywhere;
-	margin: 5px;
-	padding: 5px;
+	margin: 5px 10px;
+	padding: 10px;
 	width: fit-content;
 	display: inline-block;
-	border-radius: 15px;
 }
 
 .self-message {
 	display: flex;
 	background-color: var(--dark-pink);
+	border-radius: 15px 15px 1px 15px;
 }
 
 .friend-message {
 	display: flex;
 	background-color: var(--dark-blue);
+	border-radius: 15px 15px 15px 1px;
 }
 
 #message-box {
@@ -603,4 +605,74 @@ h1 {
 .flag {
 	height: 30px;
 	width: 40px;
+}
+
+/* --> Games page <-- */
+
+/* #game-page {
+	background-color: var(--dark-purple);
+	display: flex;
+	position: relative;
+	z-index: 2;
+} */
+
+#game {
+	background-color: black;
+	overflow: hidden;
+	height: 70%;
+	width: 70%;
+	border: 20px solid white;
+	position: absolute;
+	top: 15%;
+	left: 15%;
+}
+
+#ball {
+	width: 20px;
+	height: 20px;
+	left: 50%;
+	top: 50%;
+	display: block;
+	border: 2px solid white;
+	position: absolute;
+	background-color: white;
+}
+
+.paddle {
+	width: 20px;
+	height: 120px;
+	background-color: white;
+	position: absolute;
+	top: 50%;
+}
+
+#paddleLeft {
+	left: 2%;
+}
+
+#paddleRight {
+ 	right: 2%;
+}
+
+#line {
+	width: 50%;
+	height: 100%;
+	border-right: 10px dashed white;
+	position: absolute;
+}
+
+.counter {
+	color: white;
+	position: absolute;
+	top: 10%;
+	font-size: 700%;
+	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+#counter1 {
+	left: 25%;
+}
+
+#counter2 {
+	left: 65%;
 }

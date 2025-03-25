@@ -6,6 +6,7 @@ import { navigateTo } from "../index.js";
  */
 export function initHomeFetches() {
 	goMessages();
+	goGames();
 }
 
 /**
@@ -19,5 +20,15 @@ function goMessages() {
 
 	messagesPageButton.addEventListener("click", () => {
 		navigateTo("/messages");
+	});
+}
+
+function goGames() {
+	const gamePageButton = document.getElementById("games");
+	if (!gamePageButton)
+		return ;
+
+	gamePageButton.addEventListener("click", () => {
+		navigateTo("/games");
 	});
 }

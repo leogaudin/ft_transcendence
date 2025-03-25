@@ -14,6 +14,17 @@ export interface Chat {
 	socket: WebSocket | null;
 }
 
+export interface Message {
+	sender_username: string;
+	body: string;
+	message_id: number;
+	receiver_id: number;
+	receiver_username: string;
+	sender_id: number;
+	sender_username: string;
+	sent_at: string;
+}
+
 export interface User {
 	user_id: number;
 	socket: WebSocket | null;
