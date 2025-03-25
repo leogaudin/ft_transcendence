@@ -6,6 +6,7 @@ import {
   putChat,
   patchChat,
   deleteChat,
+  getLastChatsOfUser,
 } from "../models/chatModel.js";
 
 export default function createChatRoutes(fastify) {
@@ -67,6 +68,15 @@ export default function createChatRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         await deleteChat(req.params.id);
         return res.code(204);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/chats/last",
+      handler: asyncHandler(async (req, res) => {
+        const result = await getLastChatsOfUser(req.userId);
+        return res.code(200).send(result);
       }),
     },
   ];
