@@ -19,7 +19,7 @@ import { getTournamentsOfUser } from "../models/tournamentModel.js";
 export default function createUserRoutes(fastify) {
   return [
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/users/list",
       handler: asyncHandler(async (req, res) => {
@@ -28,7 +28,7 @@ export default function createUserRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "POST",
       url: "/users",
       handler: asyncHandler(async (req, res) => {
@@ -44,7 +44,7 @@ export default function createUserRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/users",
       handler: asyncHandler(async (req, res) => {
@@ -53,7 +53,7 @@ export default function createUserRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PUT",
       url: "/users",
       handler: asyncHandler(async (req, res) => {
@@ -63,7 +63,7 @@ export default function createUserRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PATCH",
       url: "/users",
       handler: asyncHandler(async (req, res) => {
@@ -73,7 +73,7 @@ export default function createUserRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "DELETE",
       url: "/users",
       handler: asyncHandler(async (req, res) => {
@@ -82,7 +82,7 @@ export default function createUserRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/users/:str",
       handler: asyncHandler(async (req, res) => {
@@ -97,7 +97,7 @@ export default function createUserRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "POST",
       url: "/users/friends",
       handler: asyncHandler(async (req, res) => {
@@ -107,7 +107,7 @@ export default function createUserRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PATCH",
       url: "/users/friends",
       handler: asyncHandler(async (req, res) => {
@@ -117,7 +117,7 @@ export default function createUserRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "POST",
       url: "/users/blocks",
       handler: asyncHandler(async (req, res) => {
@@ -127,7 +127,7 @@ export default function createUserRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PATCH",
       url: "/users/blocks",
       handler: asyncHandler(async (req, res) => {

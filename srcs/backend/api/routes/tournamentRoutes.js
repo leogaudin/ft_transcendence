@@ -11,7 +11,7 @@ import {
 export default function createTournamentRoutes(fastify) {
   return [
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/tournaments",
       handler: asyncHandler(async (req, res) => {
@@ -20,7 +20,7 @@ export default function createTournamentRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "POST",
       url: "/tournaments",
       handler: asyncHandler(async (req, res) => {
@@ -31,7 +31,7 @@ export default function createTournamentRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/tournaments/:id",
       handler: asyncHandler(async (req, res) => {
@@ -40,7 +40,7 @@ export default function createTournamentRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PUT",
       url: "/tournaments/:id",
       handler: asyncHandler(async (req, res) => {
@@ -51,7 +51,7 @@ export default function createTournamentRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PATCH",
       url: "/tournaments/:id",
       handler: asyncHandler(async (req, res) => {
@@ -61,7 +61,7 @@ export default function createTournamentRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "DELETE",
       url: "/tournaments/:id",
       handler: asyncHandler(async (req, res) => {

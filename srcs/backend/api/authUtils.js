@@ -15,7 +15,7 @@ import { OAuth2Client } from "google-auth-library";
  * @param {Object} user - User to evaluate
  * @param {String} password - Password to check
  * @param {String} totp_token - TOTP for 2FA
- * @returns {Object} - An object with the user and a JWT if successful,
+ * @returns {Object} - An object with the user,
  *                     or with an error if not
  */
 export async function loginUser(user, password, totp_token = null) {
@@ -25,8 +25,7 @@ export async function loginUser(user, password, totp_token = null) {
     const totpVerified = authenticator.check(totp_token, user.totp_secret);
     if (!totpVerified) return { error: "Invalid 2FA code" };
   }
-  const token = fastify.jwt.sign({ user: user.id });
-  const result = Object.assign({}, user, { token, success: true });
+  const result = Object.assign({}, user, { success: true });
   delete result.password;
   delete result.totp_secret;
   // await patchUser(user.id, { is_online: 1 });
@@ -61,8 +60,7 @@ export async function loginGoogleUser(credential) {
     delete user.totp_secret;
     delete user.google_id;
   }
-  const token = fastify.jwt.sign({ user: user.id });
-  const result = Object.assign({}, user, { token, success: true });
+  const result = Object.assign({}, user, { success: true });
   return result;
 }
 
@@ -110,7 +108,23 @@ export async function verify2fa(user, totpCode) {
  */
 export async function registerUser(data) {
   const user = await createUser(data);
-  const token = fastify.jwt.sign({ user: user.id });
-  const result = Object.assign({}, user, { token, success: true });
+  const result = Object.assign({}, user, { success: true });
   return result;
+}
+
+/**
+ * Sets the JWT cookie in the client's browser
+ * @param {Object} res - Response for the frontend
+ * @param {Object} user - User in question
+ */
+export function setJWT(res, user) {
+  const token = fastify.jwt.sign({ user: user.id });
+  res.cookie("token", token, {
+    signed: true,
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    maxAge: 3600 * 24 * 1000,
+    path: "/",
+  });
 }

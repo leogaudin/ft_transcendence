@@ -11,7 +11,7 @@ import {
 export default function createChatRoutes(fastify) {
   return [
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/chats",
       handler: asyncHandler(async (req, res) => {
@@ -20,7 +20,7 @@ export default function createChatRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "POST",
       url: "/chats",
       handler: asyncHandler(async (req, res) => {
@@ -31,7 +31,7 @@ export default function createChatRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/chats/:id",
       handler: asyncHandler(async (req, res) => {
@@ -40,7 +40,7 @@ export default function createChatRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PUT",
       url: "/chats/:id",
       handler: asyncHandler(async (req, res) => {
@@ -51,7 +51,7 @@ export default function createChatRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "PATCH",
       url: "/chats/:id",
       handler: asyncHandler(async (req, res) => {
@@ -61,7 +61,7 @@ export default function createChatRoutes(fastify) {
       }),
     },
     {
-      onRequest: [fastify.authenticate],
+      preHandler: [fastify.authenticate],
       method: "DELETE",
       url: "/chats/:id",
       handler: asyncHandler(async (req, res) => {
