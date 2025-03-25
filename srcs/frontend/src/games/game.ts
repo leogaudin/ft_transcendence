@@ -285,5 +285,5 @@ export function pong(): void{
 			player2.keyPress = false;
 	}
 
-	start();
+	// start();
 }
