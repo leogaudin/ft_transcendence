@@ -1,4 +1,10 @@
 export function pong(): void{
+	const gameElement = document.getElementById('game');
+	if (!gameElement) throw new Error("HTML 'game' element not found.");
+
+	let width = gameElement.clientWidth;
+	let height = gameElement.clientHeight;
+
 	class Player {
 		keyPress: boolean;
 		keyCode: string | null;
@@ -15,10 +21,14 @@ export function pong(): void{
 		}
 	}
 
+	const player1 = new Player(document.getElementById('paddleLeft') as HTMLElement);
+	const player2 = new Player(document.getElementById('paddleRight') as HTMLElement);
+
 	type GeneralDataType = {
 		time: number;
 		speed: number;
 		paddleSpeed: number;
+		paddleMargin: number;
 		controlGame: NodeJS.Timeout | null;
 	}
 
@@ -44,10 +54,20 @@ export function pong(): void{
 		controlAI: NodeJS.Timeout | null;
 	}
 
+	type OnrizeDataType = {
+		ballRelativeLeft: number;
+		ballRelativeTop: number;
+		player1RelativeTop: number;
+		player2RelativeTop: number;
+		velocityMagnitude: number;
+		newSpeed: number;
+	}
+
 	const generalData: GeneralDataType = {
 		time: 30,
-		speed: 25,
-		paddleSpeed: 20,
+		speed: 0.02,
+		paddleSpeed: 0.04,
+		paddleMargin: height * 0.05,
 		controlGame: null
 	}
 
@@ -69,17 +89,20 @@ export function pong(): void{
 		timeToRefresh: 1000,
 		targetY: 0,
 		timeToReach: 0,
-		activate: false,
+		activate: true,
 		controlAI: null
 	}
 
-	const gameElement = document.getElementById('game');
-	if (!gameElement) throw new Error("HTML 'game' element not found.");
+	const onresizeData: OnrizeDataType = {
+		ballRelativeLeft: 0,
+		ballRelativeTop: 0,
+		player1RelativeTop: 0,
+		player2RelativeTop: 0,
+		velocityMagnitude: 0,
+		newSpeed: 0
+	}
 
-	const width = gameElement.clientWidth - generalData.speed;
-	const height = gameElement.clientHeight - generalData.speed;
-	const player1 = new Player(document.getElementById('paddleLeft') as HTMLElement);
-	const player2 = new Player(document.getElementById('paddleRight') as HTMLElement);
+	setOnresize();
 
 	function start(): void {
 		init();
@@ -107,15 +130,15 @@ export function pong(): void{
 	}
 
 	function resetBall(): void {
-		generalData.speed = 10;
+		generalData.speed = 0.01;
 		ballData.ball.style.left = "50%";
 		ballData.ball.style.top = Math.floor(Math.random() * 100) + "%";
 		ballData.angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
 
-		ballData.velX = generalData.speed * Math.cos(ballData.angle)
+		ballData.velX = width * generalData.speed * Math.cos(ballData.angle)
 		if ((player1.counter + player2.counter) % 2 === 0)
 			ballData.velX *= -1;
-		ballData.velY = generalData.speed * Math.sin(ballData.angle);
+		ballData.velY = width * generalData.speed * Math.sin(ballData.angle);
 	}
 
 	function checkLost(): void {
@@ -180,14 +203,13 @@ export function pong(): void{
 	function setPaddleCollision(player: Player, paddle: HTMLElement): void {
         player.paddleCenter = paddle.offsetTop + paddle.clientHeight / 2;
         ballData.ballCenter = ballData.ball.offsetTop + ballData.ball.clientHeight / 2;
-        generalData.speed = 25;
 
         paddleCollisionData.offset = (ballData.ballCenter - player.paddleCenter) / (paddle.clientHeight / 2);
         paddleCollisionData.maxBounceAngle = Math.PI / 4;
 
+		generalData.speed = 0.02;
         ballData.angle = paddleCollisionData.offset * paddleCollisionData.maxBounceAngle;
-        generalData.speed == Math.max(10, Math.sqrt(ballData.velX ** 2 + ballData.velY ** 2));
-        paddleCollisionData.newVelX = generalData.speed * Math.cos(ballData.angle);
+        paddleCollisionData.newVelX = width * generalData.speed * Math.cos(ballData.angle);
     }
 
 	function handlePaddleCollision(player: Player, paddle: HTMLElement): void {
@@ -204,30 +226,30 @@ export function pong(): void{
             ballData.velX = paddleCollisionData.newVelX * -1;
         else
             ballData.velX = paddleCollisionData.newVelX * 1;
-        ballData.velY = generalData.speed * Math.sin(ballData.angle);
+        ballData.velY = height * generalData.speed * Math.sin(ballData.angle);
         
         if (paddle === player1.paddle)
-            ballData.ball.style.left = (paddle.offsetLeft + paddle.clientWidth) + "px"
+            ballData.ball.style.left = `${paddle.offsetLeft + paddle.clientWidth}px`;
         else if (paddle === player2.paddle)
-            ballData.ball.style.left = (paddle.offsetLeft - ballData.ball.clientWidth) + "px";
+            ballData.ball.style.left = `${paddle.offsetLeft - ballData.ball.clientWidth}px`;
     }
 
 	function movePaddle(): void {
 		if (player1.keyPress) {
-			if (player1.keyCode === "up" && player1.paddle.offsetTop >= 15)
-				player1.paddle.style.top = `${player1.paddle.offsetTop - generalData.paddleSpeed}px`;
-			if (player1.keyCode === "down" && (player1.paddle.offsetTop + player1.paddle.clientHeight) <= height)
-				player1.paddle.style.top = `${player1.paddle.offsetTop + generalData.paddleSpeed}px`;
+			if (player1.keyCode === "up" && player1.paddle.offsetTop >= generalData.paddleMargin)
+				player1.paddle.style.top = `${player1.paddle.offsetTop - height * generalData.paddleSpeed}px`;
+			if (player1.keyCode === "down" && (player1.paddle.offsetTop + player1.paddle.clientHeight) <= height - generalData.paddleMargin)
+				player1.paddle.style.top = `${player1.paddle.offsetTop + height * generalData.paddleSpeed}px`;
 		}
 		if (player2.keyPress) {
 			if (AIData.activate) {
 				if ((AIData.targetY >= player2.paddle.offsetTop) && (AIData.targetY <= (player2.paddle.offsetTop + player2.paddle.clientHeight)))
 					player2.keyPress = false;
 			}
-			if (player2.keyCode === "up" && player2.paddle.offsetTop >= 15)
-				player2.paddle.style.top = `${player2.paddle.offsetTop - generalData.paddleSpeed}px`;
-			if (player2.keyCode === "down" && (player2.paddle.offsetTop + player2.paddle.clientHeight) <= height)
-				player2.paddle.style.top = `${player2.paddle.offsetTop + generalData.paddleSpeed}px`;
+			if (player2.keyCode === "up" && player2.paddle.offsetTop >= generalData.paddleMargin)
+				player2.paddle.style.top = `${player2.paddle.offsetTop - height * generalData.paddleSpeed}px`;
+			if (player2.keyCode === "down" && (player2.paddle.offsetTop + player2.paddle.clientHeight) <= height - generalData.paddleMargin)
+				player2.paddle.style.top = `${player2.paddle.offsetTop + height * generalData.paddleSpeed}px`;
 		}
 	}
 
@@ -285,5 +307,52 @@ export function pong(): void{
 			player2.keyPress = false;
 	}
 
-	// start();
+	function setOnresize(): void {
+		onresizeData.ballRelativeLeft = ballData.ball.offsetLeft / width;
+		onresizeData.ballRelativeTop = ballData.ball.offsetTop / height;
+		onresizeData.player1RelativeTop = player1.paddle.offsetTop / height;
+		onresizeData.player2RelativeTop = player2.paddle.offsetTop / height;
+		onresizeData.velocityMagnitude = Math.sqrt(ballData.velX ** 2 + ballData.velY ** 2);
+
+		if (gameElement){
+			width = gameElement.clientWidth;
+			height = gameElement.clientHeight;
+		}
+		generalData.paddleMargin = height * 0.05;
+		
+		onresizeData.newSpeed = onresizeData.velocityMagnitude / Math.sqrt(width ** 2 + height ** 2);
+	}
+
+	window.onresize = function (): void {
+		setOnresize();
+
+		ballData.velX = Math.sign(ballData.velX) * width * onresizeData.newSpeed;
+		ballData.velY = Math.sign(ballData.velY) * height * onresizeData.newSpeed;
+	
+		ballData.ball.style.left = `${onresizeData.ballRelativeLeft * width}px`;
+		ballData.ball.style.top = `${onresizeData.ballRelativeTop * height}px`;
+
+		player1.paddle.style.top = `${onresizeData.player1RelativeTop * height}px`;
+		player2.paddle.style.top = `${onresizeData.player2RelativeTop * height}px`;
+	
+		if (ballData.ball.offsetLeft < 0) {
+			updateScore(player2.paddle);
+			resetBall();
+			return;
+		} else if (ballData.ball.offsetLeft + ballData.ball.clientWidth > width) {
+			updateScore(player1.paddle);
+			resetBall();
+			return;
+		}
+	
+		if (ballData.ball.offsetTop < 0) {
+			ballData.ball.style.top = `0px`;
+			ballData.velY = Math.abs(ballData.velY);
+		} else if (ballData.ball.offsetTop + ballData.ball.clientHeight > height) {
+			ballData.ball.style.top = `${height - ballData.ball.clientHeight}px`;
+			ballData.velY = -Math.abs(ballData.velY);
+		}
+	}
+
+	start();
 }

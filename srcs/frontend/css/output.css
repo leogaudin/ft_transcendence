@@ -701,16 +701,16 @@ video {
        column-gap: 2.5rem;
 }
 
-.rounded-full {
-  border-radius: 9999px;
-}
-
 .rounded-lg {
   border-radius: 0.5rem;
 }
 
 .rounded-md {
   border-radius: 0.375rem;
+}
+
+.rounded-full {
+  border-radius: 9999px;
 }
 
 .bg-white {
@@ -1503,8 +1503,8 @@ h1 {
 }
 
 #ball {
-  width: 20px;
-  height: 20px;
+  width: 2%;
+  height: 4%;
   left: 50%;
   top: 50%;
   display: block;
@@ -1514,8 +1514,8 @@ h1 {
 }
 
 .paddle {
-  width: 20px;
-  height: 120px;
+  width: 2%;
+  height: 20%;
   background-color: white;
   position: absolute;
   top: 50%;
@@ -1540,7 +1540,7 @@ h1 {
   color: white;
   position: absolute;
   top: 10%;
-  font-size: 700%;
+  font-size: 5vw;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
