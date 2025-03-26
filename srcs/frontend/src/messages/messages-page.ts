@@ -7,7 +7,10 @@ export function initMessagesEvents() {
 	recentChats();
   initializeChat();
   setupMessageForm();
+  //getClientID();
 }
+
+const socket = new WebSocket("ws://localhost:9000/chat");
 
 function moveToHome() {
 	const homeButton = document.getElementById("home-button");
@@ -55,7 +58,9 @@ function recentChats() {
 function initializeChat() {
 
   socket.onopen = () => {
-    console.log("WebSocket connection established");
+    let id = getClientID();
+    console.log("WebSocket connection established, sending id:", id);
+    socket.send(id.toString());
   };
   socket.onmessage = () => {
     const messageForm = document.getElementById("message-box") as HTMLFormElement;
@@ -100,17 +105,16 @@ function initializeChat() {
   };
 }
 
-const socket = new WebSocket("ws://localhost:9000/chat");
-
-function setupMessageForm() {
+function getClientID(): number {
   let chats = localStorage.getItem("chats");
   if (!chats)
-      return;
+    return 0;
   const JSONchats = JSON.parse(chats);
-  Object.entries(JSONchats).forEach(([index, chat]) => {
-    const chatData = chat as Chat;
-    console.log(chatData);
-  })
+  let id = JSONchats[1].first_user_id;
+  return id;
+}
+
+function setupMessageForm() {
   initializeChat();
   const messageForm = document.getElementById("message-box") as HTMLFormElement;
   if (!messageForm)
