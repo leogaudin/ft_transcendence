@@ -50,6 +50,7 @@ export function pong(): void{
 		timeToRefresh: number;
 		targetY: number;
 		timeToReach: number;
+		errorRate: number;
 		activate: boolean;
 		controlAI: NodeJS.Timeout | null;
 	}
@@ -59,7 +60,6 @@ export function pong(): void{
 		ballRelativeTop: number;
 		player1RelativeTop: number;
 		player2RelativeTop: number;
-		velocityMagnitude: number;
 		newSpeed: number;
 	}
 
@@ -67,7 +67,7 @@ export function pong(): void{
 		time: 30,
 		speed: 0.02,
 		paddleSpeed: 0.04,
-		paddleMargin: height * 0.05,
+		paddleMargin: height * 0.03,
 		controlGame: null
 	}
 
@@ -89,6 +89,7 @@ export function pong(): void{
 		timeToRefresh: 1000,
 		targetY: 0,
 		timeToReach: 0,
+		errorRate: 0,
 		activate: true,
 		controlAI: null
 	}
@@ -98,7 +99,6 @@ export function pong(): void{
 		ballRelativeTop: 0,
 		player1RelativeTop: 0,
 		player2RelativeTop: 0,
-		velocityMagnitude: 0,
 		newSpeed: 0
 	}
 
@@ -256,12 +256,20 @@ export function pong(): void{
 	function setAI(): void {
         AIData.timeToReach = (player2.paddle.offsetLeft - ballData.ball.offsetLeft) / ballData.velX;
         AIData.targetY = ballData.ball.offsetTop + ballData.velY * AIData.timeToReach;
-        player2.paddleCenter = player2.paddle.offsetTop + player2.paddle.clientHeight / 2;  
+		/* AIData.errorRate = Math.random() * height */
+		if (player2.paddleCenter < AIData.targetY)  // Recien añadido, parece ir bien
+			AIData.errorRate = Math.random() * height - player2.paddleCenter
+		else if (player2.paddleCenter > AIData.targetY)  // Recien añadido, parece ir bien
+			AIData.errorRate = Math.random() * player2.paddleCenter - 0
+        player2.paddleCenter = player2.paddle.offsetTop + player2.paddle.clientHeight / 2; 
     }
 
 	function moveAI(): void {
+		let random = Math.random();
 		setAI();
 
+		if (random < 0.03)  // Según internet las IAs suelen tener un 3% de tasa de error. SI falla, pero a lo mejor hay que aumentar
+			AIData.targetY = AIData.errorRate
 		while (AIData.targetY < 0 || AIData.targetY > height) {
 			if (AIData.targetY < 0) {
 				AIData.targetY *= -1;
@@ -312,15 +320,14 @@ export function pong(): void{
 		onresizeData.ballRelativeTop = ballData.ball.offsetTop / height;
 		onresizeData.player1RelativeTop = player1.paddle.offsetTop / height;
 		onresizeData.player2RelativeTop = player2.paddle.offsetTop / height;
-		onresizeData.velocityMagnitude = Math.sqrt(ballData.velX ** 2 + ballData.velY ** 2);
 
 		if (gameElement){
 			width = gameElement.clientWidth;
 			height = gameElement.clientHeight;
 		}
-		generalData.paddleMargin = height * 0.05;
-		
-		onresizeData.newSpeed = onresizeData.velocityMagnitude / Math.sqrt(width ** 2 + height ** 2);
+		generalData.paddleMargin = height * 0.03;
+
+		onresizeData.newSpeed = 0.01;
 	}
 
 	window.onresize = function (): void {
