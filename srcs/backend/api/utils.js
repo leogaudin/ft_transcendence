@@ -20,6 +20,26 @@ export const asyncHandler = (fn) => async (req, res) => {
   }
 };
 
+export const asyncWebSocketHandler = (fn) => {
+  return async (connection, req) => {
+    try {
+      return await fn(connection, req);
+    }
+    catch (err){
+      console.error("ERROR:", err.message);
+      try {
+        connection.socket.send(JSON.stringify({
+          error: true,
+          message: err.message
+        }));
+      }
+      catch (socketErr){
+        console.error("Failed to send error over WebSocket:", socketErr);
+      }
+    }
+  };
+};
+
 /**
  * Checks if a given request has specific fields
  * @param {Request} req - Request to check values from
