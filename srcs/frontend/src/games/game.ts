@@ -185,18 +185,11 @@ export function pong(): void{
 	}
 
 	function collidePlayer(paddle: HTMLElement): boolean {
-		if (paddle === player1.paddle){
-			if ((ballData.ball.offsetLeft <= (paddle.clientWidth + paddle.offsetLeft)) &&
-				(ballData.ball.offsetTop >= paddle.offsetTop) && 
-				(ballData.ball.offsetTop <= (paddle.offsetTop + paddle.clientHeight)))
-				return true;
-		}
-		else if (paddle === player2.paddle){
-			if (((ballData.ball.offsetLeft + ballData.ball.clientWidth) >= paddle.offsetLeft) &&
-				(ballData.ball.offsetTop >= paddle.offsetTop) && 
-				(ballData.ball.offsetTop <= (paddle.offsetTop + paddle.clientHeight)))
-				return true;
-		}
+		if (((ballData.ball.offsetLeft + ballData.ball.clientWidth) >= paddle.offsetLeft) &&
+			(ballData.ball.offsetLeft <= (paddle.offsetLeft + paddle.clientWidth)) &&
+			((ballData.ball.offsetTop + ballData.ball.clientHeight) >= paddle.offsetTop) &&
+			(ballData.ball.offsetTop <= (paddle.offsetTop + paddle.clientHeight)))
+			return true;
 		return false;
 	}
 
