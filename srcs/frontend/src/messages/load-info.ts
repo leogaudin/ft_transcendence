@@ -32,10 +32,10 @@ function recentChats() {
 		
 	  //   // Add click event to open this chat
 	  //   subDiv.addEventListener('click', () => {
-	  //     // Navigate to chat or load conversation
+	  //   // Navigate to chat or load conversation
 	  //     console.log(`Opening chat with ${typedChat.first_username}, chat ID: ${typedChat.chat_id}`);
 	  //   });
-		
+
 		recentChatsDiv.appendChild(subDiv);
 	  });
 	}
