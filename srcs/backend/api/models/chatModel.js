@@ -54,14 +54,31 @@ export function createChat(data) {
  */
 export function getChatByID(id) {
   return new Promise((resolve, reject) => {
-    const sql = "SELECT * FROM chats WHERE id = ?";
-
-    db.get(sql, [id], (err, row) => {
+    const sql = `
+      SELECT
+        m.id AS message_id,
+        m.sender_id,
+        m.receiver_id,
+        m.body,
+        m.sent_at,
+        s.username AS sender_username,
+        r.username AS receiver_username
+      FROM
+        messages m
+      JOIN
+        users s ON m.sender_id = s.id
+      JOIN
+        users r ON m.receiver_id = r.id
+      WHERE
+        m.chat_id = ?
+      ORDER BY
+        m.sent_at ASC`;
+    db.all(sql, [id], (err, rows) => {
       if (err) {
         console.error("Error getting chat:", err.message);
         return reject(err);
       }
-      resolve(row);
+      resolve(rows);
     });
   });
 }

@@ -3,6 +3,13 @@ export interface LoginObject {
 	password: string;
 }
 
+export interface LastMessage {
+	body: string;
+	chat_id: number;
+	sender_username: string;
+	sent_at: string;	
+}
+
 export interface Chat {
 	chat_id: number;
 	first_user_id: number;
@@ -15,7 +22,6 @@ export interface Chat {
 }
 
 export interface Message {
-	sender_username: string;
 	body: string;
 	message_id: number;
 	receiver_id: number;

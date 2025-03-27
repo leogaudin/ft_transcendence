@@ -818,6 +818,30 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
 
+.text-\[var\(--dark-purple\)\] {
+  color: var(--dark-purple);
+}
+
+.text-\[var\(--violet\)\] {
+  color: var(--violet);
+}
+
+.text-opacity-5 {
+  --tw-text-opacity: 0.05;
+}
+
+.text-opacity-0 {
+  --tw-text-opacity: 0;
+}
+
+.text-opacity-100 {
+  --tw-text-opacity: 1;
+}
+
+.opacity-50 {
+  opacity: 0.5;
+}
+
 .shadow-sm {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
@@ -1503,8 +1527,8 @@ h1 {
 }
 
 #ball {
-  width: 20px;
-  height: 20px;
+  width: 2%;
+  height: 4%;
   left: 50%;
   top: 50%;
   display: block;
@@ -1514,8 +1538,8 @@ h1 {
 }
 
 .paddle {
-  width: 20px;
-  height: 120px;
+  width: 2%;
+  height: 20%;
   background-color: white;
   position: absolute;
   top: 50%;
@@ -1540,7 +1564,7 @@ h1 {
   color: white;
   position: absolute;
   top: 10%;
-  font-size: 700%;
+  font-size: 5vw;
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
