@@ -32,6 +32,12 @@ export async function loginUser(user, password, totp_token = null) {
   return result;
 }
 
+function parseUsername(email) {
+  const name = email.split("@")[0].substring(0, 16);
+  const parsed = name.replace(/[^0-9a-z-A-Z ]/g, "").replace(/ +/, " ");
+  return parsed;
+}
+
 /**
  * Logs the user through Google
  * @param {String} credential - The authentication token
@@ -46,7 +52,7 @@ export async function loginGoogleUser(credential) {
   const payload = ticket.getPayload();
   const googleId = payload["sub"];
   const email = payload["email"];
-  const name = email.split("@")[0];
+  const name = parseUsername(email);
   let user = await getUser(email, true);
   if (!user) {
     user = await createGoogleUser({

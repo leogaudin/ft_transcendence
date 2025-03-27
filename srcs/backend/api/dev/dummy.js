@@ -20,7 +20,7 @@ async function debugRegister(name) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        username: name,
+        username: name.substring(0, 15),
         email: `${name}@gmail.com`,
         password: `${name}.Password1`,
         confirm_password: `${name}.Password1`,
@@ -44,13 +44,13 @@ import { createMessage } from "../models/messageModel.js";
 
 setTimeout(async () => {
   let foo = await debugRegister("alba.sansebastian5b");
-  let foo2 = await debugRegister("alba.sansebastian5b2");
+  let foo2 = await debugRegister("2alba.sansebastian5b");
   let bar = await debugRegister("alvarvg");
-  let bar2 = await debugRegister("alvarvg2");
+  let bar2 = await debugRegister("2alvarvg");
   let baz = await debugRegister("nestorcruzgambero");
-  let baz2 = await debugRegister("nestorcruzgambero2");
+  let baz2 = await debugRegister("2nestorcruzgambero");
   let qux = await debugRegister("estercastellanorios");
-  let qux2 = await debugRegister("estercastellanorios2");
+  let qux2 = await debugRegister("2estercastellanorios");
   await patchUser(foo.id, { is_2fa_enabled: true });
 
   console.log(`Adding friendship ${foo.username} - ${bar.username}...`);

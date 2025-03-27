@@ -196,28 +196,36 @@ export function getLastChatsOfUser(id) {
   return new Promise((resolve, reject) => {
     const sql = `
       WITH RankedMessages AS (
-      SELECT
-        c.id AS chat_id,
-        sender.username AS sender_username,
-        sender.is_deleted AS sender_deleted,
-        friend.username AS friend_username,
-        m.body,
-        m.sent_at,
-        ROW_NUMBER() OVER (PARTITION BY c.id ORDER BY m.sent_at DESC) AS message_rank
+        SELECT
+          c.id AS chat_id,
+          CASE 
+            WHEN c.first_user_id = ? THEN second_user.username
+            ELSE first_user.username
+          END AS friend_username,
+          sender.username AS sender_username,
+          sender.is_deleted AS sender_deleted,
+          m.body,
+          m.sent_at,
+          ROW_NUMBER() OVER (PARTITION BY c.id ORDER BY m.sent_at DESC) AS message_rank
         FROM chats c
         JOIN users first_user ON c.first_user_id = first_user.id
         JOIN users second_user ON c.second_user_id = second_user.id
         JOIN messages m ON c.id = m.chat_id
         JOIN users sender ON m.sender_id = sender.id
-        JOIN users friend ON m.receiver_id = friend.id
         JOIN users receiver ON m.receiver_id = receiver.id
         WHERE c.first_user_id = ? OR c.second_user_id = ?
       )
-      SELECT *
+      SELECT 
+        chat_id, 
+        friend_username,
+        sender_username, 
+        body, 
+        sent_at
       FROM RankedMessages
       WHERE message_rank = 1
-      ORDER BY sent_at DESC `;
-    db.all(sql, [id, id], (err, rows) => {
+      ORDER BY sent_at DESC
+`;
+    db.all(sql, [id, id, id], (err, rows) => {
       if (err) {
         console.error("Error getting chats:", err.message);
         return reject(err);
