@@ -119,7 +119,8 @@ function setupMessageForm() {
     const message = input.value.trim();
     if (message && socket){
       socket.send(JSON.stringify({
-        to: friendID, // get chat id esta hardcode
+        sender_id: getClientID(),
+        receiver_id: friendID,
         content: message
       }));
       displayMessage({
