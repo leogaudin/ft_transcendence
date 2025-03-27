@@ -7,6 +7,7 @@ export interface LastMessage {
 	body: string;
 	chat_id: number;
 	sender_username: string;
+	friend_username: string;
 	sent_at: string;	
 }
 

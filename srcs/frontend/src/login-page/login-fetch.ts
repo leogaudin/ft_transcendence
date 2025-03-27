@@ -39,6 +39,8 @@ export function parseSessionForm(
 	else if (email !== "Default") {
 		if (username.length < 4)
 			msg = "Username too short";
+		else if (username.length > 16)
+			msg = "Username too long (max 16 characters)";
 		else if (!/^[a-z0-9]+$/gi.test(username))
 			msg = "Username can only contain lowercase and digits";
 		else if (password !== confirmPassword)

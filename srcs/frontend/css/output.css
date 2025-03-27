@@ -655,8 +655,16 @@ video {
   flex-direction: row;
 }
 
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
 .flex-col {
   flex-direction: column;
+}
+
+.flex-col-reverse {
+  flex-direction: column-reverse;
 }
 
 .items-center {
@@ -699,6 +707,10 @@ video {
 .gap-x-10 {
   -moz-column-gap: 2.5rem;
        column-gap: 2.5rem;
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
 
 .rounded-full {
@@ -816,26 +828,6 @@ video {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
-}
-
-.text-\[var\(--dark-purple\)\] {
-  color: var(--dark-purple);
-}
-
-.text-\[var\(--violet\)\] {
-  color: var(--violet);
-}
-
-.text-opacity-5 {
-  --tw-text-opacity: 0.05;
-}
-
-.text-opacity-0 {
-  --tw-text-opacity: 0;
-}
-
-.text-opacity-100 {
-  --tw-text-opacity: 1;
 }
 
 .opacity-50 {
@@ -1275,11 +1267,6 @@ h1 {
   }
 }
 
-#app {
-  height: 100vh;
-  width: 100vw;
-}
-
 /* --> 2FA Page <-- */
 
 .twoFA-input {
@@ -1329,9 +1316,29 @@ h1 {
   border-radius: 15px;
 }
 
+@media (max-width: 768px) {
+  #chat-box {
+    justify-content: center;
+    height: 60vh;
+  }
+
+  #conversation-list {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  #conversation-history {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .mobile-chat-buttons {
+    width: 100%;
+  }
+}
+
 #contact-info {
   width: 100%;
-  height: 9%;
   padding: 5px;
   margin: 5px;
   border-radius: 15px;
@@ -1442,6 +1449,8 @@ h1 {
 #chat-avatar {
   height: 60px;
   width: 60px;
+  min-width: 60px;
+  min-height: 60px;
 }
 
 /* --> Settings page <-- */
@@ -1582,12 +1591,20 @@ h1 {
 }
 
 @media (min-width: 768px) {
+  .md\:flex {
+    display: flex;
+  }
+
   .md\:grid-cols-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .md\:grid-cols-6 {
     grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .md\:flex-row {
+    flex-direction: row;
   }
 }
 
