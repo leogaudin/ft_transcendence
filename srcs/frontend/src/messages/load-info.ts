@@ -3,6 +3,8 @@ import { LastMessage } from "../types.js"
 import { Chat } from "../types.js"
 import { Message } from "../types.js";
 
+let friendID: number;
+
 export function loadInfo() {
 	recentChats();
 }
@@ -19,8 +21,7 @@ async function recentChats() {
 			var subDiv = document.createElement('div');
 
 			let truncated = "";
-			if (chat.body)
-				chat.body.length > 15 ? truncated = chat.body.substring(0, 15) + "..." : truncated = chat.body;
+			chat.body?.length > 15 ? truncated = chat.body.substring(0, 15) + "..." : truncated = chat.body;
 
 			subDiv.innerHTML = `
 			<div id="chat-${chat.chat_id} "class="flex items-center gap-2 recent-chat-card">
@@ -42,12 +43,13 @@ async function recentChats() {
 			subDiv.addEventListener("click", () => {
 				if (last_chat !== chat.chat_id) {
 					last_chat = chat.chat_id;
-					chargeChat(chat.chat_id)
+					chargeChat(chat.chat_id);
 				}
 			});
 		})
 	}
 }
+
 
 async function chargeChat(chat_id: number) {
 	const chatDiv = document.getElementById("message-history");
@@ -61,14 +63,19 @@ async function chargeChat(chat_id: number) {
 			let div = document.createElement("div");
 			
 			const username = localStorage.getItem("username");
+			// let contactName = document.getElementById("contact-name");
 			if (username) {
 				if (message.sender_username !== username) {
 					div.setAttribute("id", "friend-message");
 					div.innerHTML = `<div class="message friend-message">${message.body}</div>`;
+					friendID = message.sender_id;
+					// contactName.innerText = message.sender_username;
 				}
 				else {
 					div.setAttribute("id", "message");
 					div.innerHTML = `<div class="message self-message">${message.body}</div>`;
+					friendID = message.receiver_id;
+					// contactName.innerText = message.receiver_username
 				}
 			}
 			div.scrollIntoView({ behavior: 'smooth' });
@@ -76,3 +83,5 @@ async function chargeChat(chat_id: number) {
 		});
 	}
 }
+
+export {friendID};
