@@ -24,16 +24,16 @@ export const asyncWebSocketHandler = (fn) => {
   return async (connection, req) => {
     try {
       return await fn(connection, req);
-    }
-    catch (err){
+    } catch (err) {
       console.error("ERROR:", err.message);
       try {
-        connection.socket.send(JSON.stringify({
-          error: true,
-          message: err.message
-        }));
-      }
-      catch (socketErr){
+        connection.socket.send(
+          JSON.stringify({
+            error: true,
+            message: err.message,
+          }),
+        );
+      } catch (socketErr) {
         console.error("Failed to send error over WebSocket:", socketErr);
       }
     }
@@ -69,6 +69,17 @@ export function validateInput(req, res, requiredFields) {
       !/[*\.\-_]/.test(password)
     )
       return res.code(400).send({ error: "Password composition is incorrect" });
+  }
+  if (requiredFields.includes("username")) {
+    const username = req.body.username;
+    if (username.length < 4)
+      return res
+        .code(400)
+        .send({ error: "Minimum username length is 4 characters" });
+    if (username.length > 16)
+      return res
+        .code(400)
+        .send({ error: "Maximum username length is 16 characters" });
   }
 
   return true;
