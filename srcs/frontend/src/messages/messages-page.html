@@ -1,13 +1,18 @@
-<div id="chat-page">
-	<div class="flex justify-between items-center">
+<div id="chat-page" class="flex flex-col items-center">
+	<div class="flex flex-col-reverse md:flex-row justify-between items-center w-full">
 		<h1 class="m-4">Chat Room</h1>
-		<svg id="home-button" class="home-icon m-4 h-10 w-10" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
-			<path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
-		</svg>
+		<div class="mobile-chat-buttons flex flex-row-reverse justify-between items-center">
+			<svg id="home-button" class="home-icon m-4 h-10 w-10" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
+				<path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
+			</svg>
+			<svg id="go-back-chat" class="home-icon m-4 hidden" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
+				<path d="M640-80 240-480l400-400 71 71-329 329 329 329-71 71Z"/>
+			</svg>
+		</div>
 	</div>
 	<div id="chat-box" class="flex justify-between items-center">
 		<div id="conversation-list"></div> <!-- Recent chats displayed here -->
-		<div id="conversation-history" class="flex flex-col justify-between items-center">
+		<div id="conversation-history" class="hidden md:flex flex-col justify-between items-center">
 			<div id="contact-info" class="flex justify-end items-center">
 				<h2 id="chat-friend-username" class="text-lg">Manuel el Ventanas</h2>
 				<img id="contact-picture" src="resources/img/cat.jpg" alt="Profile picture">
@@ -16,7 +21,7 @@
 			<div id="message-history" class="flex flex-col"></div> <!-- Messages displayed here -->
 			<form id="message-box" class="flex justify-center items-center">
 				<input type="text" placeholder="Chat with your friends" class="outline-none" maxlength="800">
-				<button type="submit">
+				<button type="submit" class="flex items-center">
 					<svg class="send-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#54184D">
 						<path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/>
 					</svg>

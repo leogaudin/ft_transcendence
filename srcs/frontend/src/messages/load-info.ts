@@ -6,9 +6,39 @@ let friendID: number;
 export function loadInfo() {
 	displayFirstChat();
 	recentChats();
+
+	const returnButton = document.getElementById("go-back-chat");
+	if (returnButton)
+		returnButton.addEventListener("click", () => {
+			toggleMobileDisplay();
+	});
+}
+
+function toggleMobileDisplay() {
+	const conversationList = document.getElementById("conversation-list");
+	const conversationHistory = document.getElementById("conversation-history");
+	const returnButton = document.getElementById("go-back-chat");
+
+	if (conversationList && conversationHistory && returnButton) {
+		if (conversationList.style.display !== 'none') {
+			conversationList.style.display = 'none';
+			conversationHistory.style.display = 'flex';
+			returnButton.style.display = 'flex';
+		}
+		else {
+			returnButton.style.display = 'none';
+			conversationHistory.style.display = 'none';
+			conversationList.style.display = 'block';
+			conversationList.innerHTML = "";
+			recentChats();
+		}
+	}
 }
 
 async function displayFirstChat() {
+	if (window.innerWidth < 768)
+		return ;
+
 	// Opens the most recent chat when navigated to messages page
 	const recentChats = await sendRequest('GET', 'chats/last');
 	const recentChatsTyped = recentChats as LastMessage[];
@@ -37,7 +67,7 @@ async function recentChats() {
 				<div id="chat-avatar">
 					<img class="rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
 				</div>
-				<div class="chat-info">
+				<div class="chat-info overflow-hidden">
 					<h3>${chat.friend_username}</h3>
 					<p class="opacity-50 text-sm">${truncated}</p>
 				</div>
@@ -55,8 +85,10 @@ async function recentChats() {
 	}
 }
 
-
 async function chargeChat(chat_id: number, friend_username: string) {
+	if (window.innerWidth < 768)
+		toggleMobileDisplay();
+
 	const chatDiv = document.getElementById("message-history");
 	let contactName = document.getElementById("chat-friend-username");
 	if (contactName)
@@ -83,8 +115,8 @@ async function chargeChat(chat_id: number, friend_username: string) {
 					friendID = message.receiver_id;
 				}
 			}
-			div.scrollIntoView({ behavior: 'smooth' });
 			chatDiv.appendChild(div);
+			div.scrollIntoView({ behavior: 'smooth' });
 		});
 	}
 }
