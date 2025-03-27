@@ -15,8 +15,13 @@ async function recentChats() {
 		const recentChats = await sendRequest('GET', 'chats/last');
 		const recentChatsTyped = recentChats as LastMessage[];
 
-		recentChatsTyped.forEach((chat) => {
+		recentChatsTyped.forEach((chat, index) => {
 			var subDiv = document.createElement('div');
+
+			let truncated = "";
+			if (chat.body)
+				chat.body.length > 15 ? truncated = chat.body.substring(0, 15) + "..." : truncated = chat.body;
+
 			subDiv.innerHTML = `
 			<div id="chat-${chat.chat_id} "class="flex items-center gap-2 recent-chat-card">
 				<div id="chat-avatar">
@@ -24,10 +29,14 @@ async function recentChats() {
 				</div>
 				<div class="chat-info">
 					<h3>${chat.sender_username}</h3>
-					<p>${chat?.body}</p>
+					<p class="opacity-50 text-sm">${truncated}</p>
 				</div>
 			</div>
 			`;
+
+			// Opens the most recent chat when navigated to messages page
+			if (index == 0)
+				chargeChat(chat.chat_id);
 
 			recentChatsDiv.appendChild(subDiv);
 			subDiv.addEventListener("click", () => {
