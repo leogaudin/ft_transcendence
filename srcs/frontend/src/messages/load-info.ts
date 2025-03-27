@@ -1,8 +1,6 @@
 import { sendRequest } from "../login-page/login-fetch.js";
 import { LastMessage } from "../types.js"
-import { Chat } from "../types.js"
 import { Message } from "../types.js";
-
 let friendID: number;
 
 export function loadInfo() {
@@ -19,6 +17,7 @@ async function recentChats() {
 
 		recentChatsTyped.forEach((chat, index) => {
 			var subDiv = document.createElement('div');
+			console.log("friend username: ", chat.friend_username);
 
 			let truncated = "";
 			chat.body?.length > 15 ? truncated = chat.body.substring(0, 15) + "..." : truncated = chat.body;
@@ -29,7 +28,7 @@ async function recentChats() {
 					<img class="rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
 				</div>
 				<div class="chat-info">
-					<h3>${chat.sender_username}</h3>
+					<h3>${chat.friend_username}</h3>
 					<p class="opacity-50 text-sm">${truncated}</p>
 				</div>
 			</div>
@@ -37,13 +36,13 @@ async function recentChats() {
 
 			// Opens the most recent chat when navigated to messages page
 			if (index == 0)
-				chargeChat(chat.chat_id);
+				chargeChat(chat.chat_id, chat.friend_username);
 
 			recentChatsDiv.appendChild(subDiv);
 			subDiv.addEventListener("click", () => {
 				if (last_chat !== chat.chat_id) {
 					last_chat = chat.chat_id;
-					chargeChat(chat.chat_id);
+					chargeChat(chat.chat_id, chat.friend_username);
 				}
 			});
 		})
@@ -51,8 +50,11 @@ async function recentChats() {
 }
 
 
-async function chargeChat(chat_id: number) {
+async function chargeChat(chat_id: number, friend_username: string) {
 	const chatDiv = document.getElementById("message-history");
+	let contactName = document.getElementById("chat-friend-username");
+	if (contactName)
+		contactName.innerText = friend_username
 
 	if (chatDiv) {
 		if (chatDiv.children.length > 0)
@@ -63,19 +65,16 @@ async function chargeChat(chat_id: number) {
 			let div = document.createElement("div");
 			
 			const username = localStorage.getItem("username");
-			// let contactName = document.getElementById("contact-name");
 			if (username) {
 				if (message.sender_username !== username) {
 					div.setAttribute("id", "friend-message");
 					div.innerHTML = `<div class="message friend-message">${message.body}</div>`;
 					friendID = message.sender_id;
-					// contactName.innerText = message.sender_username;
 				}
 				else {
 					div.setAttribute("id", "message");
 					div.innerHTML = `<div class="message self-message">${message.body}</div>`;
 					friendID = message.receiver_id;
-					// contactName.innerText = message.receiver_username
 				}
 			}
 			div.scrollIntoView({ behavior: 'smooth' });
