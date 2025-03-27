@@ -4,7 +4,17 @@ import { Message } from "../types.js";
 let friendID: number;
 
 export function loadInfo() {
+	displayFirstChat();
 	recentChats();
+}
+
+async function displayFirstChat() {
+	// Opens the most recent chat when navigated to messages page
+	const recentChats = await sendRequest('GET', 'chats/last');
+	const recentChatsTyped = recentChats as LastMessage[];
+
+	if (recentChatsTyped)
+		chargeChat(recentChatsTyped[0].chat_id, recentChatsTyped[0].friend_username);
 }
 
 async function recentChats() {
@@ -15,7 +25,7 @@ async function recentChats() {
 		const recentChats = await sendRequest('GET', 'chats/last');
 		const recentChatsTyped = recentChats as LastMessage[];
 
-		recentChatsTyped.forEach((chat, index) => {
+		recentChatsTyped.forEach((chat) => {
 			var subDiv = document.createElement('div');
 			console.log("friend username: ", chat.friend_username);
 
@@ -33,10 +43,6 @@ async function recentChats() {
 				</div>
 			</div>
 			`;
-
-			// Opens the most recent chat when navigated to messages page
-			if (index == 0)
-				chargeChat(chat.chat_id, chat.friend_username);
 
 			recentChatsDiv.appendChild(subDiv);
 			subDiv.addEventListener("click", () => {

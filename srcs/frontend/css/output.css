@@ -594,6 +594,10 @@ video {
   margin-top: 1.25rem;
 }
 
+.mt-\[30px\] {
+  margin-top: 30px;
+}
+
 .block {
   display: block;
 }
@@ -1253,11 +1257,6 @@ h1 {
     width: 40px;
     height: 40px;
   }
-}
-
-#app {
-  height: 100vh;
-  width: 100vw;
 }
 
 /* --> 2FA Page <-- */

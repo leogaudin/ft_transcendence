@@ -387,12 +387,6 @@ h1 {
 	}
 }
 
-#app {
-	height: 100vh;
-	width: 100vw;
-}
-
-
 /* --> 2FA Page <-- */
 .twoFA-input {
 	width:  75px;
