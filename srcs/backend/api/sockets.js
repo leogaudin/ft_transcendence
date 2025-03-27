@@ -1,3 +1,5 @@
+import { getChatBetweenUsers } from "./models/chatModel.js";
+import { createMessage } from "./models/messageModel.js";
 import { getUser, getUsers } from "./models/userModel.js";
 import { asyncHandler, asyncWebSocketHandler } from "./utils.js";
 
@@ -12,7 +14,7 @@ export default function createWebSocketsRoutes(fastify){
 			handler: asyncWebSocketHandler(async (socket, req) =>{
 				console.log("Client connected");
 				let userId = null;
-				socket.on("message", message => {
+				socket.on("message", async message => {
 					const messageString = message.toString();
 					if (userId === null){
 						try{
@@ -41,8 +43,15 @@ export default function createWebSocketsRoutes(fastify){
 					else{
 						const data = JSON.parse(messageString);
 						console.log(data);
-						if (data.to && data.content){
-							const id = parseInt(data.to);
+						if (data.receiver_id && data.content){
+							const id = parseInt(data.receiver_id);
+							const chat_id = await getChatBetweenUsers(data.sender_id, data.receiver_id);
+							createMessage({
+								sender_id: data.sender_id,
+								receiver_id: data.receiver_id,
+								chat_id: chat_id,
+								body: data.content
+							})
 							if (sockets.has(id)){
 								const receiver = sockets.get(id);
 								console.log(receiver)

@@ -241,3 +241,23 @@ export function getLastChatsOfUser(id) {
     });
   });
 }
+
+export function getChatBetweenUsers(user_id, friend_id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+    SELECT id
+    FROM chats
+    WHERE
+      first_user_id = ? AND second_user_id = ?
+    OR
+      first_user_id = ? AND second_user_id = ?
+    `;
+    db.get(sql, [user_id, friend_id, friend_id, user_id], (err, row) => {
+      if (err) {
+        console.error("Error getting chats:", err.message);
+        return reject(err);
+      }
+      resolve(row.id);
+    });
+  });
+}
