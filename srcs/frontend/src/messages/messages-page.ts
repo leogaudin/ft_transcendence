@@ -1,5 +1,7 @@
 import { loadInfo } from "./load-info.js";
 import { navigateTo } from "../index.js";
+import { Message } from "../types.js";
+import { friendID } from "./load-info.js"
 
 let socket: WebSocket | null = null;
 
@@ -117,7 +119,7 @@ function setupMessageForm() {
     const message = input.value.trim();
     if (message && socket){
       socket.send(JSON.stringify({
-        to: 6, // get chat id esta hardcode
+        to: friendID, // get chat id esta hardcode
         content: message
       }));
       displayMessage({
