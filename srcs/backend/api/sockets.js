@@ -12,7 +12,6 @@ export default function createWebSocketsRoutes(fastify){
 			method: "GET",
 			websocket: true,
 			handler: asyncWebSocketHandler(async (socket, req) =>{
-				console.log("Client connected");
 				let userId = null;
 				socket.on("message", async message => {
 					const messageString = message.toString();
@@ -54,9 +53,10 @@ export default function createWebSocketsRoutes(fastify){
 							})
 							if (sockets.has(id)){
 								const receiver = sockets.get(id);
-								console.log(receiver)
 								receiver.send(JSON.stringify({
-									from: userId,
+									sender_id: userId,
+									receiver_id: id,
+									chat_id: chat_id,
 									content: data.content
 								}))
 							}

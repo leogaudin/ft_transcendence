@@ -39,7 +39,6 @@ function createSocketConnection() {
       return ;
     socket.onopen = () => {
       let id = getClientID();
-      console.log(id);
       console.log("WebSocket connection established, sending id:", id);
       if (id === -1){
         console.error("Invalid ID, cannot connect to back")
@@ -87,14 +86,13 @@ function displayMessage(data: any){
       return ;
     let el = document.createElement("div");
     const whoSender = data.userId;
-    console.log(whoSender);
     if (whoSender === getClientID()){
       el.setAttribute("id", "message");
       el.innerHTML = `
          <div class="message self-message">${data.content}</div>
       `;
     }
-    else{
+    else if (friendID === data.receiver_id){
       el.setAttribute("id", "friend-message");
       el.innerHTML = `
          <div class="message friend-message">${data.content}</div>
@@ -105,9 +103,6 @@ function displayMessage(data: any){
 }
 
 function setupMessageForm() {
-  let friendName = document.getElementById("chat-friend-username") as HTMLTextAreaElement;
-  if (friendName)
-    console.log("friendName: ", friendName.innerText);
   const messageForm = document.getElementById("message-box") as HTMLFormElement;
   if (!messageForm)
     return;

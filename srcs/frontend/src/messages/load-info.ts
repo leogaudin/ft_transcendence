@@ -47,6 +47,8 @@ async function displayFirstChat() {
 		chargeChat(recentChatsTyped[0].chat_id, recentChatsTyped[0].friend_username);
 }
 
+
+// Refrescar cuando se recibe un mensaje en segundo plano no funciona bien
 async function recentChats() {
 	let last_chat = 0;
 	const recentChatsDiv = document.getElementById("conversation-list");
