@@ -12,6 +12,25 @@ export function loadInfo() {
 		returnButton.addEventListener("click", () => {
 			toggleMobileDisplay();
 	});
+	window.addEventListener("resize", changedWindowSize);
+}
+
+function changedWindowSize() {
+	const conversationList = document.getElementById("conversation-list");
+	const conversationHistory = document.getElementById("conversation-history");
+	const returnButton = document.getElementById("go-back-chat");
+	if (conversationList && conversationHistory && returnButton) {
+		if (window.innerWidth > 768) {
+			conversationList.style.display = 'block';
+			conversationHistory.style.display = 'flex';
+			returnButton.style.display = 'none';
+		}
+		else {
+			conversationList.style.display = 'block';
+			conversationHistory.style.display = 'none';
+			returnButton.style.display = 'none';
+		  }
+	}
 }
 
 function toggleMobileDisplay() {
