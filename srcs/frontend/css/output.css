@@ -1310,7 +1310,7 @@ h1 {
 
 #conversation-history {
   background-color: var(--violet);
-  width: 80%;
+  width: 100%;
   height: 100%;
   padding: 10px;
   border-radius: 15px;
