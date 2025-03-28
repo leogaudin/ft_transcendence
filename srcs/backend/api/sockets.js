@@ -42,22 +42,24 @@ export default function createWebSocketsRoutes(fastify){
 					else{
 						const data = JSON.parse(messageString);
 						console.log(data);
-						if (data.receiver_id && data.content){
+						if (data.receiver_id && data.body){
 							const id = parseInt(data.receiver_id);
 							const chat_id = await getChatBetweenUsers(data.sender_id, data.receiver_id);
 							createMessage({
+								body: data.body,
 								sender_id: data.sender_id,
 								receiver_id: data.receiver_id,
 								chat_id: chat_id,
-								body: data.content
 							})
 							if (sockets.has(id)){
 								const receiver = sockets.get(id);
+								console.log(data);
 								receiver.send(JSON.stringify({
-									sender_id: userId,
-									receiver_id: id,
+									body: data.body,
 									chat_id: chat_id,
-									content: data.content
+									receiver_id: id,
+									sender_id: userId,
+									sent_at: data.sent_at,
 								}))
 							}
 						}
