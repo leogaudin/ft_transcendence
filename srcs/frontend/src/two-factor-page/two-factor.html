@@ -1,22 +1,25 @@
-<main id="twoFA-page" class="flex flex-col">
-	<header class="w-full p-2 flex flex-col justify-center items-center">
-	  <h1>Validate 2FA</h1>
-	  <p class="text-center">Introduce the 6-digits code associated to your account</p>
-	  <!-- <img id="login-page-img" src="resources/img/sleeping-cat.png" alt="sleeping cat"> -->
-	</header>
-	<div id="divider"></div>
-	<section id="QR-2FA">
-	  <!-- Append QR here (as image) -->
-	</section>
-	<form id="twoFA-code" class="flex flex-col gap-4 items-center">
-		<div class="grid md:grid-cols-6 grid-cols-3 gap-2">
-			<input type="text" maxlength="1" class="twoFA-input outline-none" />
-			<input type="text" maxlength="1" class="twoFA-input outline-none" />
-			<input type="text" maxlength="1" class="twoFA-input outline-none" />
-			<input type="text" maxlength="1" class="twoFA-input outline-none" />
-			<input type="text" maxlength="1" class="twoFA-input outline-none" />
-			<input type="text" maxlength="1" class="twoFA-input outline-none" />
-		</div>
-		<button type="submit" class="data-user signin-user">Submit</button>
-	</form>
-</main>
+
+<div class="screen-set">
+	<main id="twoFA-page" class="flex flex-col">
+		<header class="w-full p-2 flex flex-col justify-center items-center">
+		<h1>Validate 2FA</h1>
+		<p class="text-center">Introduce the 6-digits code associated to your account</p>
+		<!-- <img id="login-page-img" src="resources/img/sleeping-cat.png" alt="sleeping cat"> -->
+		</header>
+		<div id="divider"></div>
+		<section id="QR-2FA">
+		<!-- Append QR here (as image) -->
+		</section>
+		<form id="twoFA-code" class="flex flex-col gap-4 items-center">
+			<div class="grid md:grid-cols-6 grid-cols-3 gap-2">
+				<input type="text" maxlength="1" class="twoFA-input outline-none" />
+				<input type="text" maxlength="1" class="twoFA-input outline-none" />
+				<input type="text" maxlength="1" class="twoFA-input outline-none" />
+				<input type="text" maxlength="1" class="twoFA-input outline-none" />
+				<input type="text" maxlength="1" class="twoFA-input outline-none" />
+				<input type="text" maxlength="1" class="twoFA-input outline-none" />
+			</div>
+			<button type="submit" class="data-user signin-user">Submit</button>
+		</form>
+	</main>
+</div>
