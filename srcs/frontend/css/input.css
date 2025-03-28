@@ -441,14 +441,17 @@ h1 {
     }
     
     #conversation-list {
-        width: 100%;
-        max-width: 400px;
+		min-width: 78vw;
+        width: 95%;
+        max-height: 75vh;
+        margin-bottom: 10px;
     }
 
-	#conversation-history {
-		width: 100%;
-        max-width: 400px;
-	}
+    #conversation-history {
+		min-width: 78vw;
+        width: 95%;
+        max-height: 75vh;
+    }
 	
 	.mobile-chat-buttons {
 		width: 100%;

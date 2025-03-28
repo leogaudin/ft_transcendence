@@ -647,6 +647,10 @@ video {
   cursor: pointer;
 }
 
+.resize {
+  resize: both;
+}
+
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -1323,13 +1327,16 @@ h1 {
   }
 
   #conversation-list {
-    width: 100%;
-    max-width: 400px;
+    min-width: 78vw;
+    width: 95%;
+    max-height: 75vh;
+    margin-bottom: 10px;
   }
 
   #conversation-history {
-    width: 100%;
-    max-width: 400px;
+    min-width: 78vw;
+    width: 95%;
+    max-height: 75vh;
   }
 
   .mobile-chat-buttons {
@@ -1591,6 +1598,10 @@ h1 {
 }
 
 @media (min-width: 768px) {
+  .md\:block {
+    display: block;
+  }
+
   .md\:flex {
     display: flex;
   }
