@@ -506,9 +506,19 @@ h1 {
 	white-space: wrap;
 	word-wrap: anywhere;
 	margin: 5px 10px;
-	padding: 10px;
+	padding: 15px 10px;
+	/* padding: 10px; */
 	width: fit-content;
 	display: inline-block;
+	position: relative;
+}
+
+.message > .hour {
+	position: absolute;
+	font-size: x-small;
+	opacity: 50%;
+	right: 7.5px;
+	bottom: 2.5px;
 }
 
 .self-message {

@@ -85,7 +85,7 @@ async function displayFirstChat() {
 
 
 // Refrescar cuando se recibe un mensaje en segundo plano no funciona bien
-async function recentChats() {
+export async function recentChats() {
 	let last_chat = 0;
 	const recentChatsDiv = document.getElementById("conversation-list");
 
@@ -102,7 +102,6 @@ async function recentChats() {
 
 		recentChatsTyped.forEach((chat) => {
 			var subDiv = document.createElement('div');
-			console.log("friend username: ", chat.friend_username);
 
 			let truncated = "";
 			chat.body?.length > 15 ? truncated = chat.body.substring(0, 15) + "..." : truncated = chat.body;
@@ -149,14 +148,22 @@ async function chargeChat(chat_id: number, friend_username: string) {
 			
 			const username = localStorage.getItem("username");
 			if (username) {
+				const sent_at = message.sent_at.substring(11, 16);
 				if (message.sender_username !== username) {
 					div.setAttribute("id", "friend-message");
-					div.innerHTML = `<div class="message friend-message">${message.body}</div>`;
+					div.innerHTML = `
+					<div class="message friend-message">
+						<p>${message.body}</p>
+						<p class="hour">${sent_at}</p>
+					</div>`;
 					friendID = message.sender_id;
 				}
 				else {
 					div.setAttribute("id", "message");
-					div.innerHTML = `<div class="message self-message">${message.body}</div>`;
+					div.innerHTML = `<div class="message self-message">
+						<p>${message.body}<\p>
+						<p class="hour">${sent_at}</p>
+					</div>`;
 					friendID = message.receiver_id;
 				}
 			}

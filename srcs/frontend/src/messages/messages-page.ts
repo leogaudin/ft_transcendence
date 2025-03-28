@@ -2,6 +2,7 @@ import { loadInfo } from "./load-info.js";
 import { navigateTo } from "../index.js";
 import { Message } from "../types.js";
 import { friendID } from "./load-info.js"
+import { recentChats } from "./load-info.js";
 
 let socket: WebSocket | null = null;
 
@@ -89,17 +90,22 @@ function displayMessage(data: any){
     if (whoSender === getClientID()){
       el.setAttribute("id", "message");
       el.innerHTML = `
-         <div class="message self-message">${data.content}</div>
-      `;
+        <div class="message self-message">
+          <p>${data.content}</p>
+          <p class="hour">${data.sent_at}</p>
+        </div>`;
     }
     else if (friendID === data.receiver_id){
       el.setAttribute("id", "friend-message");
       el.innerHTML = `
-         <div class="message friend-message">${data.content}</div>
-      `;
+      <div class="message friend-message">
+        <p>${data.content}</p>
+        <p class="hour">${data.sent_at}</p>
+      </div>`;
     }
     messageContainer.appendChild(el);
     el.scrollIntoView({ behavior: 'smooth'});
+    recentChats();
 }
 
 function setupMessageForm() {
