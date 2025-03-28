@@ -6,6 +6,7 @@ let friendID: number;
 export function loadInfo() {
 	displayFirstChat();
 	recentChats();
+	searchChatFriend();
 
 	const returnButton = document.getElementById("go-back-chat");
 	if (returnButton)
@@ -13,6 +14,23 @@ export function loadInfo() {
 			toggleMobileDisplay();
 	});
 	window.addEventListener("resize", changedWindowSize);
+
+	
+}
+
+function searchChatFriend() {
+	const searchFriend = document.getElementById("search-friend-chat");
+	if (searchFriend) {
+		searchFriend.addEventListener("submit", (e) => {
+			e.preventDefault();
+			const input = searchFriend.querySelector("input") as HTMLInputElement;
+			if (!input)
+			return;
+
+			// Here goes the functionality of searching a friend
+			input.value = "";
+		});
+	}
 }
 
 function changedWindowSize() {
@@ -48,7 +66,6 @@ function toggleMobileDisplay() {
 			returnButton.style.display = 'none';
 			conversationHistory.style.display = 'none';
 			conversationList.style.display = 'block';
-			conversationList.innerHTML = "";
 			recentChats();
 		}
 	}
@@ -73,6 +90,13 @@ async function recentChats() {
 	const recentChatsDiv = document.getElementById("conversation-list");
 
 	if (recentChatsDiv) {
+		const searchForm = document.getElementById("search-friend-chat");
+		const chatEntries = recentChatsDiv.querySelectorAll("div:not(#search-friend-chat)");
+		chatEntries.forEach(entry => {
+		  if (entry !== searchForm)
+			entry.remove();
+		});
+
 		const recentChats = await sendRequest('GET', 'chats/last');
 		const recentChatsTyped = recentChats as LastMessage[];
 
