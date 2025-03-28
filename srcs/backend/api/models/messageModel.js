@@ -40,6 +40,7 @@ export function createMessage(data) {
         receiver_id: data.receiver_id,
         chat_id: data.chat_id,
         body: data.body,
+        sent_at: data.sent_at,
       });
     });
   });

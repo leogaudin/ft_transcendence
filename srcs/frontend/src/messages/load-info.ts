@@ -2,6 +2,7 @@ import { sendRequest } from "../login-page/login-fetch.js";
 import { LastMessage } from "../types.js"
 import { Message } from "../types.js";
 let friendID: number;
+let actual_chat_id: number;
 
 export function loadInfo() {
 	displayFirstChat();
@@ -170,7 +171,8 @@ async function chargeChat(chat_id: number, friend_username: string) {
 			chatDiv.appendChild(div);
 			div.scrollIntoView({ behavior: 'smooth' });
 		});
+		actual_chat_id = chat_id;
 	}
 }
-
+export {actual_chat_id}; // Forma sucia para recibir el chat_id, en proceso de buscar una forma nueva de arreglarlo
 export {friendID};

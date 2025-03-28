@@ -24,11 +24,12 @@ export interface Chat {
 
 export interface Message {
 	body: string;
-	message_id: number;
+	message_id?: number;
+	chat_id?: number;
 	receiver_id: number;
-	receiver_username: string;
+	receiver_username?: string;
 	sender_id: number;
-	sender_username: string;
+	sender_username?: string;
 	sent_at: string;
 }
 

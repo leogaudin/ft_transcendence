@@ -2,6 +2,7 @@ import { loadInfo } from "./load-info.js";
 import { navigateTo } from "../index.js";
 import { Message } from "../types.js";
 import { friendID } from "./load-info.js"
+import { actual_chat_id } from "./load-info.js";
 import { recentChats } from "./load-info.js";
 
 let socket: WebSocket | null = null;
@@ -57,11 +58,9 @@ function createSocketConnection() {
     socket.onmessage = (event) => {
       try{
         const data = JSON.parse(event.data);
-        if (data.type === "message" || data.from) {
-          displayMessage({
-            userId: data.from,
-            content: data.content
-          });
+        if (data.type === "message" || data.sender_id) {
+          console.log(data);
+          displayMessage(data);
         }
       }
       catch(err) {
@@ -81,26 +80,29 @@ function createSocketConnection() {
   }
 }
 
-function displayMessage(data: any){
+function displayMessage(data: Message){
     let messageContainer = document.getElementById("message-history");
     if (!messageContainer)
       return ;
     let el = document.createElement("div");
-    const whoSender = data.userId;
-    if (whoSender === getClientID()){
+    console.log(data.body)
+    const sent_at = data.sent_at.substring(11, 16);
+    if (data.sender_id === getClientID()){
+      console.log("Yo envio:", data);
       el.setAttribute("id", "message");
       el.innerHTML = `
         <div class="message self-message">
-          <p>${data.content}</p>
-          <p class="hour">${data.sent_at}</p>
+          <p>${data.body}</p>
+          <p class="hour">${sent_at}</p>
         </div>`;
     }
-    else if (friendID === data.receiver_id){
+    else if (data.receiver_id === getClientID() && actual_chat_id === data.chat_id){
+      console.log("Yo recibo:", data);
       el.setAttribute("id", "friend-message");
       el.innerHTML = `
       <div class="message friend-message">
-        <p>${data.content}</p>
-        <p class="hour">${data.sent_at}</p>
+        <p>${data.body}</p>
+        <p class="hour">${sent_at}</p>
       </div>`;
     }
     messageContainer.appendChild(el);
@@ -119,15 +121,16 @@ function setupMessageForm() {
       return;
     const message = input.value.trim();
     if (message && socket){
-      socket.send(JSON.stringify({
-        sender_id: getClientID(),
-        receiver_id: friendID,
-        content: message
-      }));
-      displayMessage({
-        userId: getClientID(),
-        content: message
-      });
+      const date = new Date();
+      date.setHours(date.getHours() + 1);
+      let fullMessage: Message = {
+        body: message,
+	      receiver_id: friendID,
+	      sender_id: getClientID(),
+        sent_at: date.toISOString(),
+      }
+      socket.send(JSON.stringify(fullMessage));
+      displayMessage(fullMessage);
     }
     input.value = "";
   });
