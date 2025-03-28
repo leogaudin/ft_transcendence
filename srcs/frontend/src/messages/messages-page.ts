@@ -2,6 +2,7 @@ import { loadInfo } from "./load-info.js";
 import { navigateTo } from "../index.js";
 import { Message } from "../types.js";
 import { friendID } from "./load-info.js"
+import { actual_chat_id } from "./load-info.js";
 
 let socket: WebSocket | null = null;
 
@@ -56,9 +57,12 @@ function createSocketConnection() {
     socket.onmessage = (event) => {
       try{
         const data = JSON.parse(event.data);
-        if (data.type === "message" || data.from) {
+        if (data.type === "message" || data.sender_id) {
+          console.log(data);
           displayMessage({
-            userId: data.from,
+            sender_id: data.sender_id,
+            receiver_id: data.receiver_id,
+            chat_id: data.chat_id,
             content: data.content
           });
         }
@@ -85,14 +89,17 @@ function displayMessage(data: any){
     if (!messageContainer)
       return ;
     let el = document.createElement("div");
-    const whoSender = data.userId;
-    if (whoSender === getClientID()){
+    console.log(data);
+    console.log(friendID)
+    if (data.sender_id === getClientID()){
+      console.log("Yo envio:", data);
       el.setAttribute("id", "message");
       el.innerHTML = `
          <div class="message self-message">${data.content}</div>
       `;
     }
-    else if (friendID === data.receiver_id){
+    else if (data.receiver_id === getClientID() && actual_chat_id === data.chat_id){
+      console.log("Yo recibo:", data);
       el.setAttribute("id", "friend-message");
       el.innerHTML = `
          <div class="message friend-message">${data.content}</div>
@@ -119,7 +126,8 @@ function setupMessageForm() {
         content: message
       }));
       displayMessage({
-        userId: getClientID(),
+        sender_id: getClientID(),
+        receiver_id: friendID,
         content: message
       });
     }
