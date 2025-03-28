@@ -428,7 +428,7 @@ h1 {
 
 #conversation-history {
 	background-color: var(--violet);
-	width: 80%;
+	width: 100%;
 	height: 100%;
 	padding: 10px;
 	border-radius: 15px;
@@ -441,14 +441,17 @@ h1 {
     }
     
     #conversation-list {
-        width: 100%;
-        max-width: 400px;
+		min-width: 78vw;
+        width: 95%;
+        max-height: 75vh;
+        margin-bottom: 10px;
     }
 
-	#conversation-history {
-		width: 100%;
-        max-width: 400px;
-	}
+    #conversation-history {
+		min-width: 78vw;
+        width: 95%;
+        max-height: 75vh;
+    }
 	
 	.mobile-chat-buttons {
 		width: 100%;
@@ -503,9 +506,19 @@ h1 {
 	white-space: wrap;
 	word-wrap: anywhere;
 	margin: 5px 10px;
-	padding: 10px;
+	padding: 15px 10px;
+	/* padding: 10px; */
 	width: fit-content;
 	display: inline-block;
+	position: relative;
+}
+
+.message > .hour {
+	position: absolute;
+	font-size: x-small;
+	opacity: 50%;
+	right: 7.5px;
+	bottom: 2.5px;
 }
 
 .self-message {
@@ -520,27 +533,30 @@ h1 {
 	border-radius: 15px 15px 15px 1px;
 }
 
-#message-box {
+#message-box, #search-friend-chat {
 	width: 100%;
 	height: 9%;
 }
 
-#message-box > input {
+#message-box > input, #search-friend-chat > input{
 	width: 100%;
 	height: 60%;
 	opacity: 80%;
-	border-radius: 5px 0px 0px 5px;
-	/* margin: 5px; */
+	border-radius: 15px 0px 0px 15px;
 	padding: 5px;
 	background-color: whitesmoke;
 	color: var(--dark-purple);
+}
+
+#search-friend-chat > input {
+	border-radius: 15px;
 }
 
 #message-box > button {
 	padding: 5px;
 	height: 60%;
 	opacity: 80%;
-	border-radius: 0px 5px 5px 0px;
+	border-radius: 0px 15px 15px 0px;
 	background-color: whitesmoke;
 	transition: 250ms ease-in-out;
 }
