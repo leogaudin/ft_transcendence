@@ -8,6 +8,10 @@ RUN mkdir -p /etc/transcendence/certs && openssl req -x509 -nodes -days 365 -new
   -keyout /etc/transcendence/certs/key.pem -out /etc/transcendence/certs/cert.pem \
   -subj "/C=ES/ST=Malaga/L=Malaga/O=42Malaga/OU=DefaultUnit/CN=localhost"
 
+RUN mkdir -p /etc/ssl/certs/
+
+RUN cat /etc/transcendence/certs/cert.pem  >> /etc/ssl/certs/ca-certificates.crt
+
 
 COPY package.json .
 
