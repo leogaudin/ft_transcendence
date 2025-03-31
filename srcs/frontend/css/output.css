@@ -582,6 +582,11 @@ video {
   margin: 1rem;
 }
 
+.mx-4 {
+  margin-left: 1rem;
+  margin-right: 1rem;
+}
+
 .-mr-1 {
   margin-right: -0.25rem;
 }
@@ -651,6 +656,10 @@ video {
   resize: both;
 }
 
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .grid-cols-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
@@ -669,6 +678,10 @@ video {
 
 .flex-col-reverse {
   flex-direction: column-reverse;
+}
+
+.items-end {
+  align-items: flex-end;
 }
 
 .items-center {
@@ -1101,7 +1114,7 @@ h1 {
 
 /* --> Login Page <-- */
 
-#login-page, #sign-up-page, #terms-and-conditions, #twoFA-page, #chat-page, #settings-div, #settings-display {
+#login-page, #sign-up-page, #terms-and-conditions, #twoFA-page, #chat-page, #settings-div, #settings-display, #card {
   background-color: var(--dark-blue);
   border-radius: 15px;
   box-shadow: var(--violet) 0px 0px 20px;
@@ -1611,6 +1624,50 @@ h1 {
 
 #counter2 {
   left: 65%;
+}
+
+/* --> Friends Page <-- */
+
+#screen-support {
+  height: 85vh;
+  margin: 7.5vh;
+}
+
+#card {
+  min-width: 65vw;
+  height: 100%;
+}
+
+#friends-header {
+  height: 15%;
+}
+
+#friends-main {
+  height: 80%;
+}
+
+#friend-id, #friend-profile {
+  /* Change dinamically when friend showed */
+  width: 100%;
+  height: -moz-fit-content;
+  height: fit-content;
+  /* width: 50%; */
+  border-radius: 15px;
+  background-color: var(--dark-purple);
+  opacity: 80%;
+  box-shadow: var(--dark-pink) 0px 0px 10px;
+  padding: 10px;
+  margin: 5px;
+}
+
+#friend-avatar {
+  height: 4rem;
+  width: 4rem;
+  margin: 5px;
+}
+
+#friend-profile {
+  height: 100%;
 }
 
 .hover\:bg-gray-50:hover {

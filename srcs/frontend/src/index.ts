@@ -56,6 +56,11 @@ const routes = [
 		}
 	},
 	{
+		path: "/friends",
+		url: "../src/friends/friends-page.html",
+		event: () => {}
+	},
+	{
 		path: "/settings",
 		url: "../src/settings-page/settings-page.html",
 		event: () => {}
