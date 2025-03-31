@@ -1646,11 +1646,6 @@ h1 {
   height: 80%;
 }
 
-#friend-list {
-  display: flex;
-  height: 100%;
-}
-
 #friend-id, #friend-profile {
   /* Change dinamically when friend showed */
   width: 100%;
