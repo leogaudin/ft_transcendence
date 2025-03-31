@@ -1,6 +1,7 @@
 import Fastify from "fastify";
 import createRoutes from "./routes/routes.js";
 import pluginRegistration from "./indexRegister.js";
+import fs from "fs";
 
 const fastify = Fastify({
   logger: {
@@ -14,6 +15,10 @@ const fastify = Fastify({
         singleLine: true,
       },
     },
+  },
+  https: {
+    key: fs.readFileSync("/etc/transcendence/certs/key.pem"),
+    cert: fs.readFileSync("/etc/transcendence/certs/cert.pem"),
   },
 });
 
