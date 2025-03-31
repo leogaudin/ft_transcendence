@@ -7,6 +7,7 @@ import { navigateTo } from "../index.js";
 export function initHomeFetches() {
 	goMessages();
 	goGames();
+	goFriends();
 }
 
 /**
@@ -30,5 +31,15 @@ function goGames() {
 
 	gamePageButton.addEventListener("click", () => {
 		navigateTo("/games");
+	});
+}
+
+function goFriends() {
+	const friendsPageButton = document.getElementById("friends");
+	if (!friendsPageButton)
+		return ;
+
+	friendsPageButton.addEventListener("click", () => {
+		navigateTo("/friends");
 	});
 }
