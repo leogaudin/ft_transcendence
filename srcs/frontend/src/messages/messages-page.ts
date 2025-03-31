@@ -1,9 +1,6 @@
-import { loadInfo } from "./load-info.js";
+import { friendID, actual_chat_id, recentChats, loadInfo } from "./load-info.js"
 import { navigateTo } from "../index.js";
 import { Message } from "../types.js";
-import { friendID } from "./load-info.js"
-import { actual_chat_id } from "./load-info.js";
-import { recentChats } from "./load-info.js";
 
 let socket: WebSocket | null = null;
 
@@ -32,7 +29,7 @@ function getClientID(): number {
 }
 
 function createSocketConnection() {
-  if (socket &&socket.readyState !== WebSocket.CLOSED){
+  if (socket && socket.readyState !== WebSocket.CLOSED){
     socket.close();
   }
   try{
@@ -41,7 +38,7 @@ function createSocketConnection() {
       return ;
     socket.onopen = () => {
       let id = getClientID();
-      console.log("WebSocket connection established, sending id:", id);
+      //console.log("WebSocket connection established, sending id:", id);
       if (id === -1){
         console.error("Invalid ID, cannot connect to back")
       }
@@ -52,13 +49,13 @@ function createSocketConnection() {
           userId: id,
           action: "identify"
         }));
-        console.log("ID succesfully sent");
+        //console.log("ID succesfully sent");
       }
     };
     socket.onmessage = (event) => {
       try{
         const data = JSON.parse(event.data);
-        if (data.type === "message" || data.sender_id) {
+        if (data.sender_id && data.body) {
           console.log(data);
           displayMessage(data);
         }
@@ -85,10 +82,8 @@ function displayMessage(data: Message){
     if (!messageContainer)
       return ;
     let el = document.createElement("div");
-    console.log(data.body)
     const sent_at = data.sent_at.substring(11, 16);
     if (data.sender_id === getClientID()){
-      console.log("Yo envio:", data);
       el.setAttribute("id", "message");
       el.innerHTML = `
         <div class="message self-message">
@@ -97,7 +92,6 @@ function displayMessage(data: Message){
         </div>`;
     }
     else if (data.receiver_id === getClientID() && actual_chat_id === data.chat_id){
-      console.log("Yo recibo:", data);
       el.setAttribute("id", "friend-message");
       el.innerHTML = `
       <div class="message friend-message">
@@ -135,3 +129,5 @@ function setupMessageForm() {
     input.value = "";
   });
 }
+
+export { getClientID };
