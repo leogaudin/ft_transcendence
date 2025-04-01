@@ -767,4 +767,16 @@ h1 {
 
 #friend-profile {
 	height: 100%;
+	padding: 10px;
+	gap: 5px;
+}
+
+#friend-data {
+	padding: 10px;
+	height: 60%;
+}
+
+#friend-profile-photo {
+	height: 12rem;
+	width: 12rem;
 }

@@ -17,8 +17,8 @@
 					</svg>
 				</button>
 			</form>
-			<div id="friend-list" class="flex justify-between gap-2 w-full h-full grid grid-cols-2">
-				<div id="friend-id" class="flex justify-between items-center gap-2">
+			<div id="friend-list" class="flex justify-between gap-2 w-full h-full">
+				<section id="friend-id" class="flex justify-between items-center gap-2">
 					<div class="flex items-center gap-4">
 						<img id="friend-avatar" class="rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
 						<div class="flex flex-col">
@@ -30,8 +30,31 @@
 						<p>Online</p>
 						<img src="../../resources/img/online.svg" alt="Online status">
 					</div>
-				</div>
-				<div id="friend-profile">Aquí el amigo</div>
+				</section>
+				<section id="friend-profile" class="flex flex-col">
+					<div id="friend-data" class="flex justify-between items-center">
+						<div class="flex flex-col">
+							<h2 class="font-bold">Username: <span id="friend-name" class="font-thin">Manuel el Ventanas</span></h2>
+							<h2 class="font-bold">Nick: <span id="friend-nick" class="font-thin">El Ventis</span></h2>
+							<div id="friend-status" class="flex gap-2">
+								<h2 class="font-bold">Status: <span class="font-thin">Online</span></h2>
+								<img src="../../resources/img/online.svg" alt="Online status">
+							</div>
+							<h2 class="font-bold">Description: <span id="friend-description" class="italic font-thin">Me gustan las ventanas</span></h2>
+						</div>
+						<div class="flex flex-col items-center">
+							<img id="friend-profile-photo" class="rounded-full" src="../../resources/img/cat.jpg" alt="Profile photo">
+						</div>
+					</div>
+					<div class="flex flex-col items-center">
+						<h2 class="font-bold">Pong Games Played: <span class="font-thin">None</span></h2>
+						<h2 class="font-bold">Pong Wins Rate: <span class="font-thin">0</span></h2>
+						<h2 class="font-bold">Pong Loses Rate: <span class="font-thin">0</span></h2>
+						<h2 class="font-bold">Connect Four Games Played: <span class="font-thin">None</span></h2>
+						<h2 class="font-bold">Connect Four Wins Rate: <span class="font-thin">0</span></h2>
+						<h2 class="font-bold">Connect Four Loses Rate: <span class="font-thin">0</span></h2>
+					</div>
+				</section>
 			</div>
 		</main>
 	</div>
