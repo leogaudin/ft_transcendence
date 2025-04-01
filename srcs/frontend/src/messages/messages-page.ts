@@ -121,7 +121,7 @@ function setupMessageForm() {
     const message = input.value.trim();
     if (message && socket){
       const date = new Date();
-      date.setHours(date.getHours() + 1);
+      date.setHours(date.getHours() + 2);
       let fullMessage: Message = {
         body: message,
 	      receiver_id: friendID,
