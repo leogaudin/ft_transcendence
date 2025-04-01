@@ -50,6 +50,7 @@ export default function createWebSocketsRoutes(fastify){
 								sender_id: data.sender_id,
 								receiver_id: data.receiver_id,
 								chat_id: chat_id,
+								sent_at: data.sent_at
 							})
 							if (socketsChat.has(id)){
 								const receiver = socketsChat.get(id);
@@ -66,7 +67,7 @@ export default function createWebSocketsRoutes(fastify){
 				})
 				socket.on("close", () => {
 					console.log("Client disconnected");
-					sockets.delete(userId)
+					socketsChat.delete(userId)
 				})
 			})
 		},

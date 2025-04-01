@@ -15,8 +15,13 @@ function moveToHome() {
 	const homeButton = document.getElementById("home-button");
 	if (!homeButton)
 		return;
-
+  /*addEventListener("popstate", () =>{
+    if (socket)
+      socket.close()
+  })*/
 	homeButton.addEventListener("click", () => {
+    if (socket)
+      socket.close()
 		navigateTo("/home");
 	});
 }
@@ -38,7 +43,7 @@ function createSocketConnection() {
       return ;
     socket.onopen = () => {
       let id = getClientID();
-      //console.log("WebSocket connection established, sending id:", id);
+      console.log("WebSocket connection established, sending id:", id);
       if (id === -1){
         console.error("Invalid ID, cannot connect to back")
       }
@@ -49,7 +54,7 @@ function createSocketConnection() {
           userId: id,
           action: "identify"
         }));
-        //console.log("ID succesfully sent");
+        console.log("ID succesfully sent");
       }
     };
     socket.onmessage = (event) => {
