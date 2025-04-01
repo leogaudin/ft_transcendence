@@ -3,6 +3,7 @@ import { initLoginEvents } from "./login-page/login-page.js";
 import { initMessagesEvents  } from "./messages/messages-page.js";
 import { initResetPasswordEvents } from "./reset-password-page/reset-password.js";
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
+import { initFriendsEvents } from "./friends/friends-page.js"
 import { displayToast } from "./toast-alert/toast-alert.js";
 import { LoginObject } from "./types.js";
 import { pong } from "./games/game.js"
@@ -58,7 +59,9 @@ const routes = [
 	{
 		path: "/friends",
 		url: "../src/friends/friends-page.html",
-		event: () => {}
+		event: () => {
+			initFriendsEvents();
+		}
 	},
 	{
 		path: "/settings",

@@ -742,11 +742,19 @@ h1 {
 	height: 15%;
 }
 
+.friend-selector {
+	transition: 250ms ease-in-out;
+}
+
+.friend-selector:hover {
+	color: var(--dark-pink);
+}
+
 #friends-main {
 	height: 80%;
 }
 
-#friend-id, #friend-profile {
+.friend-card {
 	/* Change dinamically when friend showed */
 	width: 100%;
 	height: fit-content;
@@ -759,7 +767,7 @@ h1 {
 	margin: 5px;
 }
 
-#friend-avatar {
+.card-avatar {
 	height: 4rem;
 	width: 4rem;
 	margin: 5px;
@@ -773,10 +781,74 @@ h1 {
 
 #friend-data {
 	padding: 10px;
-	height: 60%;
+	/* height: 60%; */
 }
 
 #friend-profile-photo {
-	height: 12rem;
-	width: 12rem;
+	width: 200px;
+	aspect-ratio: 1/1;
+	box-shadow: var(--dark-pink) 0px 0px 10px;
+}
+
+#friend-statistics {
+	background-color: #7d48778f;
+	padding: 15px;
+	gap: 3px;
+	margin-top: 15px;
+	border-radius: 15px;
+	width: 75%;
+}
+
+.button {
+	background-color: var(--dark-pink);
+	padding: 10px;
+	min-width: 5vw;
+	border-radius: 15px;
+	transition: 250ms ease-in-out;
+}
+
+.button:hover {
+	box-shadow: var(--dark-pink) 0px 0px 5px;
+}
+
+#block-friend {
+	background-color: var(--alert);
+}
+
+.add-remove-icon {
+	fill: var(--accent-pink);
+	border-radius: 5px;
+	width: 40px;
+	padding: 5px;
+	aspect-ratio: 1/1;
+	transition: 0.3s ease-in-out;
+}
+
+.add {
+	background-color: var(--success);
+}
+
+.add:hover {
+	fill: var(--success);
+	background-color: var(--accent-success);
+	box-shadow: var(--success) 0px 0px 2px;
+}
+
+.remove {
+	background-color: var(--alert);
+}
+
+.remove:hover {
+	fill: var(--alert);
+	background-color: var(--accent-alert);
+	box-shadow: var(--alert) 0px 0px 2px;
+}
+
+.add-remove-icon:hover {
+	cursor: pointer;
+	padding: 7px;
+}
+
+#invitation-list {
+	display: none;
 }
