@@ -1,14 +1,16 @@
 FROM nginx:alpine
 
-WORKDIR /usr/share/nginx/html
+RUN apk add --no-cache \
+      nodejs=22.13.1-r0 \
+      npm=10.9.1-r0 \
+      supervisor=4.2.5-r5 \
+      openssl=3.3.3-r0
 
-RUN apk add --no-cache nodejs npm supervisor openssl
-
-RUN mkdir -p /etc/nginx/ssl
-
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-  -keyout /etc/nginx/ssl/privkey.pem -out /etc/nginx/ssl/fullchain.pem \
+RUN mkdir -p /etc/nginx/ssl &&  openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout /etc/nginx/ssl/key.pem -out /etc/nginx/ssl/cert.pem \
   -subj "/C=ES/ST=Malaga/L=Malaga/O=42Malaga/OU=DefaultUnit/CN=localhost"
+
+WORKDIR /usr/share/nginx/html
 
 # TODO: CHANGE THIS WHEN DEVELOPMENT IS DONE
 RUN sed -i "s|user  nginx;|user  root;|g" /etc/nginx/nginx.conf

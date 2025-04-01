@@ -1,0 +1,61 @@
+
+<div id="screen-support" class="flex justify-center">
+	<div id="card" class="flex flex-col">
+		<header id="friends-header" class="flex justify-between items-end mx-4">
+			<h1>Friends List</h1>
+			<svg id="home-button" class="home-icon m-4 h-10 w-10" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
+				<path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
+			</svg>
+		</header>
+		<div id="pink-divider" class="flex justify-center"></div>
+		<main id="friends-main" class="flex flex-col h-full justify-center items-center">
+			<form id="message-box" class="flex justify-center items-center">
+				<input type="text" id="friend-input" placeholder="Search a friend" class="outline-none">
+				<button type="submit" class="flex items-center">
+					<svg class="send-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#54184D">
+						<path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
+					</svg>
+				</button>
+			</form>
+			<div id="friend-list" class="flex justify-between gap-2 w-full h-full">
+				<section id="friend-id" class="flex justify-between items-center gap-2">
+					<div class="flex items-center gap-4">
+						<img id="friend-avatar" class="rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
+						<div class="flex flex-col">
+							<h3>Manuel el Ventanas</h3>
+							<p class="opacity-50 text-sm">Me gustan las ventanas</p>
+						</div>
+					</div>
+					<div id="friend-status" class="flex gap-2 px-4">
+						<p>Online</p>
+						<img src="../../resources/img/online.svg" alt="Online status">
+					</div>
+				</section>
+				<section id="friend-profile" class="flex flex-col">
+					<div id="friend-data" class="flex justify-between items-center">
+						<div class="flex flex-col">
+							<h2 class="font-bold">Username: <span id="friend-name" class="font-thin">Manuel el Ventanas</span></h2>
+							<h2 class="font-bold">Nick: <span id="friend-nick" class="font-thin">El Ventis</span></h2>
+							<div id="friend-status" class="flex gap-2">
+								<h2 class="font-bold">Status: <span class="font-thin">Online</span></h2>
+								<img src="../../resources/img/online.svg" alt="Online status">
+							</div>
+							<h2 class="font-bold">Description: <span id="friend-description" class="italic font-thin">Me gustan las ventanas</span></h2>
+						</div>
+						<div class="flex flex-col items-center">
+							<img id="friend-profile-photo" class="rounded-full" src="../../resources/img/cat.jpg" alt="Profile photo">
+						</div>
+					</div>
+					<div class="flex flex-col items-center">
+						<h2 class="font-bold">Pong Games Played: <span class="font-thin">None</span></h2>
+						<h2 class="font-bold">Pong Wins Rate: <span class="font-thin">0</span></h2>
+						<h2 class="font-bold">Pong Loses Rate: <span class="font-thin">0</span></h2>
+						<h2 class="font-bold">Connect Four Games Played: <span class="font-thin">None</span></h2>
+						<h2 class="font-bold">Connect Four Wins Rate: <span class="font-thin">0</span></h2>
+						<h2 class="font-bold">Connect Four Loses Rate: <span class="font-thin">0</span></h2>
+					</div>
+				</section>
+			</div>
+		</main>
+	</div>
+</div>
