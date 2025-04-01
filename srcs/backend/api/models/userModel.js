@@ -326,3 +326,34 @@ export function getUser(identifier, keepCredentials = null) {
     });
   });
 }
+
+/**
+ * Finds all users that start with the given username
+ * @param {String} username - Partial username to look for
+ * @returns {Array} - Found users
+ */
+export function findMatchingUsers(username) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT
+        id,
+        username,
+        avatar
+      FROM
+        users
+      WHERE
+        username
+      LIKE
+        ?
+      AND
+        is_deleted = 0
+    `;
+    db.all(sql, [username + "%"], (err, rows) => {
+      if (err) {
+        console.error("Error getting users:", err.message);
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}

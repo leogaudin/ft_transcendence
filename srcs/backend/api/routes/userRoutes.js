@@ -10,6 +10,7 @@ import {
   removeUserFriend,
   addUserBlock,
   removeUserBlock,
+  findMatchingUsers,
 } from "../models/userModel.js";
 import { getMessagesOfUser } from "../models/messageModel.js";
 import { getChatsOfUser } from "../models/chatModel.js";
@@ -93,6 +94,15 @@ export default function createUserRoutes(fastify) {
         else if (table == "matches") data = await getMatchesOfUser(req.userId);
         else if (table == "tournaments")
           data = await getTournamentsOfUser(req.userId);
+        return res.code(200).send(data);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "POST",
+      url: "/users/search",
+      handler: asyncHandler(async (req, res) => {
+        const data = await findMatchingUsers(req.body.username);
         return res.code(200).send(data);
       }),
     },
