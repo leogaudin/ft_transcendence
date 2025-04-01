@@ -1,9 +1,10 @@
 import { getChatBetweenUsers } from "./models/chatModel.js";
 import { createMessage } from "./models/messageModel.js";
-import { getUser, getUsers } from "./models/userModel.js";
-import { asyncHandler, asyncWebSocketHandler } from "./utils.js";
+//import { getUser, getUsers } from "./models/userModel.js";
+import { asyncWebSocketHandler } from "./utils.js";
 
-const sockets = new Map();
+const socketsChat = new Map();
+const socketsToast = new Map();
 
 export default function createWebSocketsRoutes(fastify){
 	return [
@@ -11,7 +12,7 @@ export default function createWebSocketsRoutes(fastify){
 			url: "/chat",
 			method: "GET",
 			websocket: true,
-			handler: asyncWebSocketHandler(async (socket, req) =>{
+			handler: asyncWebSocketHandler(async (socket, req) => {
 				let userId = null;
 				socket.on("message", async message => {
 					const messageString = message.toString();
@@ -23,7 +24,7 @@ export default function createWebSocketsRoutes(fastify){
 							  userId = data.userId;
 							}
 							if (userId){
-							  sockets.set(userId, socket);
+							  socketsChat.set(userId, socket);
 							  socket.send(JSON.stringify({
 								type: "connection",
 								status: "success",
@@ -41,7 +42,6 @@ export default function createWebSocketsRoutes(fastify){
 					}
 					else{
 						const data = JSON.parse(messageString);
-						console.log(data);
 						if (data.receiver_id && data.body){
 							const id = parseInt(data.receiver_id);
 							const chat_id = await getChatBetweenUsers(data.sender_id, data.receiver_id);
@@ -50,10 +50,10 @@ export default function createWebSocketsRoutes(fastify){
 								sender_id: data.sender_id,
 								receiver_id: data.receiver_id,
 								chat_id: chat_id,
+								sent_at: data.sent_at
 							})
-							if (sockets.has(id)){
-								const receiver = sockets.get(id);
-								console.log(data);
+							if (socketsChat.has(id)){
+								const receiver = socketsChat.get(id);
 								receiver.send(JSON.stringify({
 									body: data.body,
 									chat_id: chat_id,
@@ -67,9 +67,52 @@ export default function createWebSocketsRoutes(fastify){
 				})
 				socket.on("close", () => {
 					console.log("Client disconnected");
-					sockets.delete(userId)
+					socketsChat.delete(userId)
 				})
 			})
-		}
+		},
+		/*{
+			url: "/toast",
+			method: "GET",
+			websocket: true,
+			handler: asyncWebSocketHandler(async (socket, req) => {
+				let userId = null;
+				socket.on("message", async notification => {
+					const toast = notification.toString();
+					if (userId === null){
+						try{
+							userId = parseInt(toast);
+							if (isNaN(userId)) {
+							  const data = JSON.parse(toast);
+							  userId = data.userId;
+							}
+							if (userId){
+							  socketsToast.set(userId, socket);
+							  socket.send(JSON.stringify({
+								type: "connection",
+								status: "success",
+								message: "Connected"
+							  }));
+							}
+						  }
+						  catch (err){
+							console.error("Error can't get ID:", err);
+							socket.send(JSON.stringify({
+							  type: "error",
+							  message: "Invalid Id"
+							}));
+						}
+					}
+					else{
+						const data = JSON.parse(notification);
+						if (data.body){
+							if (socketsToast.has(id)){
+
+							}
+						}
+					}
+				})
+			})
+		}*/
 	]
 }

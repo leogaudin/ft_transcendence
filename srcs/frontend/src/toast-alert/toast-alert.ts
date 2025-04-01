@@ -1,10 +1,62 @@
+import { getClientID } from "../messages/messages-page.js"
+
 let toastTimeout: number;
+let socket: WebSocket | null;
 
 const toastFeatures = [
 	{type: "toast-error", icon: "error-icon"},
-	{type: "toast-success", icon: "check-icon"}
+	{type: "toast-success", icon: "check-icon"},
 ];
 
+/*function createSocketConnection() {
+	if (socket &&socket.readyState !== WebSocket.CLOSED){
+	  socket.close();
+	}
+	try{
+	  socket = new WebSocket("ws://localhost:9000/toast")
+	  if (!socket)
+		return ;
+	  socket.onopen = () => {
+		let id = getClientID();
+		console.log("WebSocket connection established, sending id:", id);
+		if (id === -1){
+		  console.error("Invalid ID, cannot connect to back")
+		}
+		else{
+		  if (!socket)
+			return ;
+		  socket.send(JSON.stringify({
+			userId: id,
+			action: "identify"
+		  }));
+		  console.log("ID succesfully sent");
+		}
+	  };
+	  socket.onmessage = (event) => {
+		try{
+		  const data = JSON.parse(event.data);
+		  if (data.type === "toast" && data.body) {
+			console.log(data);
+			displayToast(data.body);
+		  }
+		}
+		catch(err) {
+		  console.error("Error on message", err);
+		}
+	  };
+	  socket.onerror = (error) => {
+		console.error("WebSocket error:", error);
+	  };
+	  socket.onclose = () => {
+		console.log("WebSocket connection closed");
+		socket = null;
+	  };
+	}
+	catch(err){
+	  console.error("Error creating WebSocket:", err);
+	}
+}
+*/
 function defineToastFeatures(type: string) {
 	const toast = document.getElementById("toast-default");
 	const icon = document.getElementById("toast-icon");
