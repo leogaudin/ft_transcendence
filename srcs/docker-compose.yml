@@ -14,8 +14,6 @@ services:
     build:
       context: backend
     container_name: back
-    ports:
-      - "9000:9000"
     env_file:
       - .env
     volumes:

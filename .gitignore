@@ -66,3 +66,4 @@ supervisord.pid
 
 dist/
 .DS_Store
+certs/

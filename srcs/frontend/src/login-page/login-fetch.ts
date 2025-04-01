@@ -195,7 +195,7 @@ export async function sendRequest(method: string, endpoint: string, body: object
 		
 		// Object.keys return an array, which contains the property names of the object.
 		if (Object.keys(body).length !== 0) {
-			response = await fetch(`https://${window.location.hostname}:9000/${endpoint}`, {
+			response = await fetch(`https://${window.location.hostname}:8443/api/${endpoint}`, {
 				method,
 				credentials: 'include',
 				headers: {
@@ -206,7 +206,7 @@ export async function sendRequest(method: string, endpoint: string, body: object
 			});
 		}
 		else {
-			response = await fetch(`https://${window.location.hostname}:9000/${endpoint}`, {
+			response = await fetch(`https://${window.location.hostname}:8443/api/${endpoint}`, {
 				method,
 				credentials: 'include',
 				headers: {

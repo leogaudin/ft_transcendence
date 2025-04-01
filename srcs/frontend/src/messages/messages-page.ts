@@ -36,7 +36,7 @@ function createSocketConnection() {
     socket.close();
   }
   try{
-    socket = new WebSocket("wss://localhost:9000/chat")
+    socket = new WebSocket(`wss://${window.location.hostname}:8443/ws/chat`)
     if (!socket)
       return ;
     socket.onopen = () => {
