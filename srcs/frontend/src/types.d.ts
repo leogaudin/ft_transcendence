@@ -38,3 +38,18 @@ export interface User {
 	user_id: number;
 	socket: WebSocket | null;
 }
+
+export interface UserMatches {
+	user_id: number;
+	username: string;
+	avatar: string;
+	is_friend: number;
+}
+
+export interface FriendList {
+	user_id: number;
+	username: string;
+	status: string | null;
+	avatar: string;
+	is_online: number;
+}

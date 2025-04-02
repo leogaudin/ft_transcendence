@@ -84,7 +84,8 @@ export async function createDebug() {
     console.log(`Adding friendship ${qux.username} - ${foo.username}...`);
     await addUserFriendPending(qux.id, foo.id);
     await acceptUserFriend(qux.id, foo.id);
-
+    await addUserFriendPending(foo.id, foo2.id);
+  
     console.log(
       `Creating chat between ${foo.username} and ${foo2.username}...`,
     );
