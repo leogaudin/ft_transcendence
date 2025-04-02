@@ -336,7 +336,7 @@ export function findMatchingUsers(username) {
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT
-        id,
+        id AS user_id,
         username,
         avatar
       FROM
