@@ -37,3 +37,9 @@ export interface User {
 	user_id: number;
 	socket: WebSocket | null;
 }
+
+export interface UserMatches {
+	user_id: number;
+	username: string;
+	avatar: string;
+}
