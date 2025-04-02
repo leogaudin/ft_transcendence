@@ -1,4 +1,3 @@
-
 <div id="screen-support" class="flex justify-center">
 	<div id="card" class="flex flex-col">
 		<header id="friends-header" class="flex justify-between items-end mx-4">
@@ -13,22 +12,22 @@
 		<div id="pink-divider" class="flex justify-center"></div>
 		<main id="friends-main" class="flex flex-col h-full justify-center items-center">
 			<form id="message-box" class="flex justify-center items-center">
-				<input list="search-friend" id="friend-input" placeholder="Search a friend" class="outline-none">
-				<!-- <input list="ice-cream-flavors" id="ice-cream-choice" name="ice-cream-choice" id="friend-input" placeholder="Search a friend" class="outline-none"/> -->
+				<div class="relative w-full">
+					<input autocomplete="off" list="" id="friend-input" placeholder="Search a friend" class="outline-none w-full">
+					<datalist id="search-friend" role="listbox">
+						<option>Alvaro</option>
+						<option>Alba</option>
+						<option>Ester</option>
+						<option>Néstor</option>
+						<option>Elisa</option>
+					</datalist>
+				</div>
 				<button type="submit" class="flex items-center">
 					<svg class="send-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#54184D">
 						<path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z"/>
 					</svg>
 				</button>
 			</form>
-			<datalist id="search-friend" >
-			  <option value="Chocolate"></option>
-			  <option value="Coconut"></option>
-			  <option value="Mint"></option>
-			  <option value="Strawberry"></option>
-			  <option value="Vanilla"></option>
-			</datalist>
-
 			<!-- Friends List Page -->
 			<div id="friend-list" class="flex justify-between gap-2 w-full h-full">
 				<section id="friend-id" class="friend-card flex justify-between items-center gap-2">
@@ -74,22 +73,29 @@
 				</section>
 			</div>
 			<!-- Invitation page -->
-			<div id="invitation-list" class="flex flex-col h-full w-full items-center0.">
-				<section id="invitation-id" class="friend-card flex justify-between items-center gap-2">
-					<div class="flex items-center gap-4">
-						<img id="invitation-avatar" class="card-avatar rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
-						<div class="flex flex-col">
-							<h3>Duquesa de Alba</h3>
-							<p class="opacity-50 text-sm">Me gustan los menores de 60</p>
+			<div id="invitation-list" class="flex grid grid-cols-2 h-full w-full gap-4">
+				<section id="invitation-received" class="flex flex-col w-full">
+					<div id="invitation-id" class="friend-card flex justify-between items-center gap-2">
+						<div class="flex items-center gap-4">
+							<img id="invitation-avatar" class="card-avatar rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
+							<div class="flex flex-col">
+								<h3>Duquesa de Alba</h3>
+								<p class="opacity-50 text-sm">Me gustan los menores de 60</p>
+							</div>
+						</div>
+						<div id="invitation-options" class="flex gap-2 px-4">
+							<svg id="accept-invitation" class="add-remove-icon add" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+								<path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
+							</svg>
+							<svg id="deny-invitation" class="add-remove-icon remove" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+								<path d="M640-520v-80h240v80H640Zm-280 40q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
+							</svg>
 						</div>
 					</div>
-					<div id="invitation-options" class="flex gap-2 px-4">
-						<svg id="accept-invitation" class="add-remove-icon add" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-							<path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
-						</svg>
-						<svg id="deny-invitation" class="add-remove-icon remove" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-							<path d="M640-520v-80h240v80H640Zm-280 40q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
-						</svg>
+				</section>
+				<section id="invitation-sent" class="flex flex-col w-full">
+					<div id="invitation-id" class="friend-card flex justify-between items-center gap-2">
+						MIAUMIAU
 					</div>
 				</section>
 			</div>
