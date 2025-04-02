@@ -1,7 +1,7 @@
 import { showAlert } from "../toast-alert/toast-alert.js";
 import { navigateTo } from "../index.js";
 import { LoginObject } from "../types.js";
-
+import { createsocketToastConnection } from "../toast-alert/toast-alert.js";
 
 /**
  * @brief Inits the associated Login Fetches and buttons
@@ -139,7 +139,7 @@ async function initSession(response: object) {
 			localStorage.setItem(key, JSON.stringify(value));
 			// console.log("storing: ", key, ", ", JSON.stringify(value));
 	});
-
+	createsocketToastConnection();
 	console.log(messages);
 	navigateTo("/home");
 } 

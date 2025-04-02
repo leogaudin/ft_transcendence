@@ -7,6 +7,7 @@ import { initFriendsEvents } from "./friends/friends-page.js"
 import { displayToast } from "./toast-alert/toast-alert.js";
 import { LoginObject } from "./types.js";
 import { pong } from "./games/game.js"
+import { socket } from "./messages/messages-page.js"
 
 const routes = [
 	{
@@ -110,6 +111,8 @@ async function initBaseEvents() {
 
 // Managing back and forward button
 window.onpopstate = () => {
+	if (socket)
+		socket.close();
 	loadContent(window.location.pathname);
 };
 
