@@ -15,10 +15,6 @@ function moveToHome() {
 	const homeButton = document.getElementById("home-button");
 	if (!homeButton)
 		return;
-  /*addEventListener("popstate", () =>{
-    if (socket)
-      socket.close()
-  })*/
 	homeButton.addEventListener("click", () => {
     if (socket)
       socket.close()
@@ -136,3 +132,4 @@ function setupMessageForm() {
 }
 
 export { getClientID };
+export { socket };

@@ -67,11 +67,11 @@ export default function createWebSocketsRoutes(fastify){
 				})
 				socket.on("close", () => {
 					console.log("Client disconnected");
-					socketsChat.delete(userId)
+					socketsChat.delete(userId);
 				})
 			})
 		},
-		/*{
+		{
 			url: "/toast",
 			method: "GET",
 			websocket: true,
@@ -112,7 +112,11 @@ export default function createWebSocketsRoutes(fastify){
 						}
 					}
 				})
+				socket.on("close", () => {
+					console.log("Client disconnected");
+					socketsChat.delete(userId);
+				})
 			})
-		}*/
+		}
 	]
 }
