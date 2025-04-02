@@ -1,6 +1,7 @@
 import { friendID, actual_chat_id, recentChats, loadInfo } from "./load-info.js"
 import { navigateTo } from "../index.js";
 import { Message } from "../types.js";
+import { socketToast } from "../toast-alert/toast-alert.js";
 
 let socket: WebSocket | null = null;
 

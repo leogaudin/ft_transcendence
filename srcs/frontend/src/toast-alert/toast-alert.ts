@@ -34,7 +34,9 @@ function createsocketToastConnection() {
 	  };
 	  socketToast.onmessage = (event) => {
 		try{
-			
+			const data = JSON.parse(event.data);
+			if (data.body)
+				showAlert(data.body, "toast-success");
 		}
 		catch(err) {
 		  console.error("Error on message", err);
@@ -98,3 +100,6 @@ export function showAlert(msg: string, toastType: string) {
 	if (toastTimeout) { clearTimeout(toastTimeout); }
 	toastTimeout = setTimeout(() => { toastAlert.style.display = "none"; }, 5000);
 }
+
+export { createsocketToastConnection }
+export { socketToast }

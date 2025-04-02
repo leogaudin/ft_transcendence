@@ -61,6 +61,14 @@ export default function createWebSocketsRoutes(fastify){
 									sender_id: userId,
 									sent_at: data.sent_at,
 								}))
+								
+							}
+							else if (socketsToast.has(id)){
+								const toastReceiver = socketsToast.get(id);
+								console.log("Llego desde aqui");
+								toastReceiver.send(JSON.stringify({
+									body: "You have a message from ",
+								}))
 							}
 						}
 					}
@@ -81,6 +89,7 @@ export default function createWebSocketsRoutes(fastify){
 					const toast = notification.toString();
 					if (userId === null){
 						try{
+							console.log(toast)
 							userId = parseInt(toast);
 							if (isNaN(userId)) {
 							  const data = JSON.parse(toast);
@@ -105,16 +114,22 @@ export default function createWebSocketsRoutes(fastify){
 					}
 					else{
 						const data = JSON.parse(notification);
+						console.log(socketsToast);
+						console.log("Soy toast")
 						if (data.body){
-							if (socketsToast.has(id)){
-
-							}
+							console.log(socketsToast)
+							/*if (socketsToast.has(id)){
+								const toastReceiver = socketsToast.get(id);
+								toastReceiver.send(JSON.stringify({
+									body: "You have a message",
+								}))
+							}*/
 						}
 					}
 				})
 				socket.on("close", () => {
 					console.log("Client disconnected");
-					socketsChat.delete(userId);
+					socketsToast.delete(userId);
 				})
 			})
 		}
