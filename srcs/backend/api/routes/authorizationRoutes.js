@@ -12,7 +12,7 @@ import {
   checkNewPassword,
   verifyUserResetToken,
 } from "../passwordReset.js";
-import { getUser } from "../models/userModel.js";
+import { getUser, patchUser } from "../models/userModel.js";
 
 // TODO: Remove when done
 import { isDebugUser } from "../dev/dummy.js";
@@ -26,6 +26,8 @@ export default function createAuthRoutes(fastify) {
         //TODO: DEBUG USER BYPASS, REMOVE ME WHEN DEV IS DONE !!!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (isDebugUser(req.body)) {
           const user = await getUser(req.body.username, true);
+          await patchUser(user.id, { is_online: 1 });
+          user.is_online = 1;
           setJWT(res, user);
           return res.code(200).send(user);
         }

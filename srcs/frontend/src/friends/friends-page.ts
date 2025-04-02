@@ -1,5 +1,10 @@
+import { moveToHome } from "../messages/messages-page.js"
+import { initFriendFetches } from "./friends-fetch.js"
+
 export function initFriendsEvents() {
 	changeFriendPage();
+	moveToHome();
+	initFriendFetches();
 }
 
 function changeFriendPage() {

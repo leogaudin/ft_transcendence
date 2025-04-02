@@ -28,7 +28,7 @@ export async function loginUser(user, password, totp_token = null) {
   const result = Object.assign({}, user, { success: true });
   delete result.password;
   delete result.totp_secret;
-  // await patchUser(user.id, { is_online: 1 });
+  await patchUser(user.id, { is_online: 1 });
   return result;
 }
 
@@ -66,6 +66,7 @@ export async function loginGoogleUser(credential) {
     delete user.totp_secret;
     delete user.google_id;
   }
+  await patchUser(user.id, { is_online: 1 });
   const result = Object.assign({}, user, { success: true });
   return result;
 }

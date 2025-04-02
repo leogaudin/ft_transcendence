@@ -72,7 +72,7 @@ const routes = [
 ];
 
 export function navigateTo(path: string, data: object = {}) {
-	console.log(`Navegando a: ${path}`);
+	// console.log(`Navegando a: ${path}`);
 	history.pushState(null, "", path);
 	loadContent(path, data);
 }

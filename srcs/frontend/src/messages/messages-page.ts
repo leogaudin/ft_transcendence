@@ -11,7 +11,7 @@ export function initMessagesEvents() {
   setupMessageForm();
 }
 
-function moveToHome() {
+export function moveToHome() {
 	const homeButton = document.getElementById("home-button");
 	if (!homeButton)
 		return;
