@@ -42,5 +42,5 @@ export interface UserMatches {
 	user_id: number;
 	username: string;
 	avatar: string;
-	isfriend: boolean;
+	is_friend: number;
 }

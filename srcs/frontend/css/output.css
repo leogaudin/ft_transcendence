@@ -1740,11 +1740,16 @@ h1 {
 
 .add-remove-icon {
   fill: var(--accent-pink);
-  border-radius: 5px;
+  border-radius: 99%;
   width: 40px;
   padding: 5px;
   aspect-ratio: 1/1;
   transition: 0.3s ease-in-out;
+}
+
+.add-remove-icon:hover {
+  cursor: pointer;
+  padding: 7px;
 }
 
 .add {
@@ -1767,9 +1772,24 @@ h1 {
   box-shadow: var(--alert) 0px 0px 2px;
 }
 
-.add-remove-icon:hover {
-  cursor: pointer;
-  padding: 7px;
+.pending {
+  background-color: var(--accent-pink);
+  fill: var(--dark-pink);
+  border-radius: 99%;
+  width: 40px;
+  padding: 5px;
+  aspect-ratio: 1/1;
+  transition: 0.3s ease-in-out;
+}
+
+.message {
+  background-color: var(--dark-pink);
+}
+
+.message:hover {
+  fill: var(--dark-pink);
+  background-color: var(--accent-pink);
+  box-shadow: var(--accent-pink) 0px 0px 2px;
 }
 
 #invitation-list {
