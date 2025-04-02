@@ -1676,12 +1676,24 @@ h1 {
   height: 80%;
 }
 
+#friend-list {
+  overflow-y: overlay;
+  overflow-x: hidden;
+  /* width: 98%; */
+}
+
+#friend-id {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+
 .friend-card {
   /* Change dinamically when friend showed */
-  width: 100%;
+  width: 98%;
   height: -moz-fit-content;
   height: fit-content;
-  /* width: 50%; */
   border-radius: 15px;
   background-color: var(--dark-purple);
   opacity: 80%;
@@ -1697,14 +1709,13 @@ h1 {
 }
 
 #friend-profile {
-  height: 100%;
+  height: 98%;
   padding: 10px;
   gap: 5px;
 }
 
 #friend-data {
   padding: 10px;
-  /* height: 60%; */
 }
 
 #friend-profile-photo {

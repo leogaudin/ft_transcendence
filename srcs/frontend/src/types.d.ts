@@ -45,3 +45,11 @@ export interface UserMatches {
 	avatar: string;
 	is_friend: number;
 }
+
+export interface FriendList {
+	user_id: number;
+	username: string;
+	status: string | null;
+	avatar: string;
+	is_online: number;
+}

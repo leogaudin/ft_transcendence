@@ -1,9 +1,11 @@
 import { UserMatches } from "../types.js"
+import { FriendList } from "../types.js"
 import { sendRequest } from "../login-page/login-fetch.js";
 
 export function initFriendFetches() {
 	const friendInput = document.getElementById("friend-input") as HTMLInputElement;
 	const searchFriend = document.getElementById("search-friend") as any;
+	displayFriends();
 	
 	if (friendInput && searchFriend) {
 		friendInput.onfocus = function () {
@@ -89,6 +91,32 @@ function debounce(callback: Function, wait: number) {
 	};
 }
 
-// async function displayFriends() {
+async function displayFriends() {
+	const friendListPage = document.getElementById("friends-holder");
+	const friendListTyped = await sendRequest('GET', 'users/friends') as FriendList[];
+	if (!friendListTyped || !friendListPage)
+		return;
 
-// }
+	friendListTyped.forEach((friend) => {
+		console.log("Estoy enseñando amigos, espero");
+		const section = document.createElement("section");
+		section.setAttribute("id", "friend-id");
+		section.setAttribute("class", "friend-card");
+		section.innerHTML = `
+					<div class="flex items-center gap-4">
+						<img id="friend-avatar" class="card-avatar rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
+						<div class="flex flex-col">
+							<h3>${friend.username}</h3>
+							<p class="opacity-50 text-sm">${friend.status}</p>
+						</div>
+					</div>
+					<div id="friend-status" class="flex gap-2 px-4">
+						${friend.is_online === 1 ?
+							'<p>Online</p><img src="../../resources/img/online.svg" alt="Online status">' :
+							'<p>Offline</p><img src="../../resources/img/offline.svg" alt="Offline status">'
+						}
+					</div>
+				`;
+			friendListPage.appendChild(section);
+		});
+}
