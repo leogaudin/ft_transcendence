@@ -445,3 +445,36 @@ export function getUsername(id) {
     });
   });
 }
+
+/**
+ * Returns all friends of the given user
+ * @param {Number} id - ID of the user
+ * @returns {Array} - All friends of user
+ */
+export function getUserFriends(id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT DISTINCT
+        u.id AS user_id,
+        u.username,
+        u.status,
+        u.avatar,
+        u.is_online
+      FROM
+        users u
+      JOIN
+        user_friends uf ON (u.id = uf.friend_id AND uf.user_id = ?)
+        OR (u.id = uf.user_id AND uf.friend_id = ?)
+      WHERE
+        uf.pending = 0
+        AND u.is_deleted = 0
+    `;
+    db.all(sql, [id, id], (err, rows) => {
+      if (err) {
+        console.error("Error getting users:", err.message);
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}
