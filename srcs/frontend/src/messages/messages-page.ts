@@ -1,7 +1,6 @@
 import { friendID, actual_chat_id, recentChats, loadInfo } from "./load-info.js"
 import { navigateTo } from "../index.js";
 import { Message } from "../types.js";
-import { socketToast } from "../toast-alert/toast-alert.js";
 
 let socket: WebSocket | null = null;
 
@@ -58,7 +57,6 @@ function createSocketConnection() {
       try{
         const data = JSON.parse(event.data);
         if (data.sender_id && data.body) {
-          console.log(data);
           displayMessage(data);
         }
       }
@@ -80,6 +78,7 @@ function createSocketConnection() {
 }
 
 function displayMessage(data: Message){
+    console.log(actual_chat_id);
     let messageContainer = document.getElementById("message-history");
     if (!messageContainer)
       return ;
@@ -121,9 +120,11 @@ function setupMessageForm() {
       date.setHours(date.getHours() + 2);
       let fullMessage: Message = {
         body: message,
+        chat_id: actual_chat_id,
 	      receiver_id: friendID,
 	      sender_id: getClientID(),
         sent_at: date.toISOString(),
+        read: false,
       }
       socket.send(JSON.stringify(fullMessage));
       displayMessage(fullMessage);

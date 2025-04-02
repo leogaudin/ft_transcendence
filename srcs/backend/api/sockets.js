@@ -1,6 +1,6 @@
 import { getChatBetweenUsers } from "./models/chatModel.js";
 import { createMessage } from "./models/messageModel.js";
-//import { getUser, getUsers } from "./models/userModel.js";
+import { getUsername, isBlocked } from "./models/userModel.js";
 import { asyncWebSocketHandler } from "./utils.js";
 
 const socketsChat = new Map();
@@ -42,7 +42,7 @@ export default function createWebSocketsRoutes(fastify){
 					}
 					else{
 						const data = JSON.parse(messageString);
-						if (data.receiver_id && data.body){
+						if (data.receiver_id && data.body && await isBlocked(data.sender_id, data.receiver_id) === false){
 							const id = parseInt(data.receiver_id);
 							const chat_id = await getChatBetweenUsers(data.sender_id, data.receiver_id);
 							createMessage({
@@ -50,7 +50,8 @@ export default function createWebSocketsRoutes(fastify){
 								sender_id: data.sender_id,
 								receiver_id: data.receiver_id,
 								chat_id: chat_id,
-								sent_at: data.sent_at
+								sent_at: data.sent_at,
+								read: false
 							})
 							if (socketsChat.has(id)){
 								const receiver = socketsChat.get(id);
@@ -60,14 +61,14 @@ export default function createWebSocketsRoutes(fastify){
 									receiver_id: id,
 									sender_id: userId,
 									sent_at: data.sent_at,
+									read: false,
 								}))
-								
 							}
 							else if (socketsToast.has(id)){
 								const toastReceiver = socketsToast.get(id);
-								console.log("Llego desde aqui");
+								let username = await getUsername(data.sender_id)
 								toastReceiver.send(JSON.stringify({
-									body: "You have a message from ",
+									body: `You have a message from ${username}`,
 								}))
 							}
 						}
@@ -89,7 +90,6 @@ export default function createWebSocketsRoutes(fastify){
 					const toast = notification.toString();
 					if (userId === null){
 						try{
-							console.log(toast)
 							userId = parseInt(toast);
 							if (isNaN(userId)) {
 							  const data = JSON.parse(toast);
@@ -129,6 +129,7 @@ export default function createWebSocketsRoutes(fastify){
 				})
 				socket.on("close", () => {
 					console.log("Client disconnected");
+					//poner usuario desconectado
 					socketsToast.delete(userId);
 				})
 			})
