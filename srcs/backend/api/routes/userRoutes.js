@@ -6,11 +6,12 @@ import {
   putUser,
   patchUser,
   deleteUser,
-  addUserFriend,
   removeUserFriend,
   addUserBlock,
   removeUserBlock,
   findMatchingUsers,
+  addUserFriendPending,
+  acceptUserFriend,
 } from "../models/userModel.js";
 import { getMessagesOfUser } from "../models/messageModel.js";
 import { getChatsOfUser } from "../models/chatModel.js";
@@ -102,7 +103,7 @@ export default function createUserRoutes(fastify) {
       method: "POST",
       url: "/users/search",
       handler: asyncHandler(async (req, res) => {
-        const data = await findMatchingUsers(req.body.username);
+        const data = await findMatchingUsers(req.body.username, req.userId);
         return res.code(200).send(data);
       }),
     },
@@ -112,7 +113,17 @@ export default function createUserRoutes(fastify) {
       url: "/users/friends",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["friend_id"])) return;
-        const data = await addUserFriend(req.userId, req.body.friend_id);
+        const data = await addUserFriendPending(req.userId, req.body.friend_id);
+        return res.code(200).send(data);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "POST",
+      url: "/users/friends/confirm",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["friend_id"])) return;
+        const data = await acceptUserFriend(req.userId, req.body.friend_id);
         return res.code(200).send(data);
       }),
     },

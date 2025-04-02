@@ -56,7 +56,7 @@ async function debugRegister(name, email) {
 }
 
 import { patchUser } from "../models/userModel.js";
-import { addUserFriend } from "../models/userModel.js";
+import { addUserFriendPending, acceptUserFriend } from "../models/userModel.js";
 import { createChat } from "../models/chatModel.js";
 import { createMessage } from "../models/messageModel.js";
 
@@ -73,13 +73,17 @@ export async function createDebug() {
     await patchUser(foo.id, { is_2fa_enabled: true });
 
     console.log(`Adding friendship ${foo.username} - ${bar.username}...`);
-    await addUserFriend(foo.id, bar.id);
+    await addUserFriendPending(foo.id, bar.id);
+    await acceptUserFriend(foo.id, bar.id);
     console.log(`Adding friendship ${foo.username} - ${baz.username}...`);
-    await addUserFriend(foo.id, baz.id);
+    await addUserFriendPending(foo.id, baz.id);
+    await acceptUserFriend(foo.id, baz.id);
     console.log(`Adding friendship ${bar.username} - ${baz.username}...`);
-    await addUserFriend(bar.id, baz.id);
+    await addUserFriendPending(bar.id, baz.id);
+    await acceptUserFriend(bar.id, baz.id);
     console.log(`Adding friendship ${qux.username} - ${foo.username}...`);
-    await addUserFriend(qux.id, foo.id);
+    await addUserFriendPending(qux.id, foo.id);
+    await acceptUserFriend(qux.id, foo.id);
 
     console.log(
       `Creating chat between ${foo.username} and ${foo2.username}...`,

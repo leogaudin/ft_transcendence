@@ -143,12 +143,49 @@ export function deleteUser(id) {
 }
 
 /**
- * Adds a friend to a user
+ * Confirms the pending friendship between two users
  * @param {Number} id - ID of the user
  * @param {Number} friend_id - ID of the friend
  * @returns {Object} - Object with the IDs of the users
  */
-export function addUserFriend(id, friend_id) {
+export function acceptUserFriend(id, friend_id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      UPDATE
+        user_friends
+      SET
+        pending = 0
+      WHERE
+        user_id = ? AND friend_id = ?
+      OR
+        user_id = ? AND friend_id = ?
+    `;
+    const params = [id, friend_id, friend_id, id];
+    db.run(sql, params, function (err) {
+      if (err) {
+        console.error("Error updating user friends:", err.message);
+        return reject(err);
+      }
+      if (this.changes === 0) {
+        return reject(new Error("User not found"));
+      }
+      resolve({
+        success: true,
+        user_id: id,
+        friend_id: friend_id,
+        pending: false,
+      });
+    });
+  });
+}
+
+/**
+ * Creates a pending friendship between two users
+ * @param {Number} id - ID of the user
+ * @param {Number} friend_id - ID of the friend
+ * @returns {Object} - Status of query
+ */
+export function addUserFriendPending(id, friend_id) {
   return new Promise((resolve, reject) => {
     const sql = `
       INSERT INTO user_friends (user_id, friend_id)
@@ -162,10 +199,16 @@ export function addUserFriend(id, friend_id) {
       if (this.changes === 0) {
         return reject(new Error("User not found"));
       }
-      resolve({ success: true, user_id: id, friend_id: friend_id });
+      resolve({
+        success: true,
+        user_id: id,
+        friend_id: friend_id,
+        pending: true,
+      });
     });
   });
 }
+
 /**
  * Deletes a friend for a user
  * @param {Number} id - ID of the user
@@ -330,25 +373,43 @@ export function getUser(identifier, keepCredentials = null) {
 /**
  * Finds all users that start with the given username
  * @param {String} username - Partial username to look for
+ * @param {Number} user_id - ID of the original user
  * @returns {Array} - Found users
  */
-export function findMatchingUsers(username) {
+export function findMatchingUsers(username, user_id) {
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT
-        id AS user_id,
-        username,
-        avatar
+        u.id AS user_id,
+        u.username,
+        u.avatar,
+        CASE
+          WHEN uf1.friend_id IS NOT NULL THEN 
+            CASE 
+              WHEN uf1.pending = 1 THEN 2
+              ELSE 1
+            END
+          WHEN uf2.user_id IS NOT NULL THEN
+            CASE
+              WHEN uf2.pending = 1 THEN 2
+              ELSE 1
+            END
+          ELSE 0
+        END AS is_friend
       FROM
-        users
+        users u
+      LEFT JOIN
+        user_friends uf1 ON u.id = uf1.friend_id AND uf1.user_id = ?
+      LEFT JOIN
+        user_friends uf2 ON u.id = uf2.user_id AND uf2.friend_id = ?
       WHERE
-        username
-      LIKE
-        ?
+        u.username LIKE ?
       AND
-        is_deleted = 0
+        u.is_deleted = 0
+      AND
+        u.id IS NOT ?
     `;
-    db.all(sql, [username + "%"], (err, rows) => {
+    db.all(sql, [user_id, user_id, username + "%", user_id], (err, rows) => {
       if (err) {
         console.error("Error getting users:", err.message);
         return reject(err);
