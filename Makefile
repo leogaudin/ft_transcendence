@@ -22,7 +22,7 @@ clean: down
 		@rm -rf ./srcs/frontend/node_modules
 
 repopulate:
-		@docker exec -it back node api/dev/dummy.js
+		@docker exec -it back node -e 'require("./api/dev/dummy.js").createDebug();'
 
 re: clean all
 

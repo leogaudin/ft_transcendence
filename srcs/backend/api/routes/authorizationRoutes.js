@@ -14,12 +14,21 @@ import {
 } from "../passwordReset.js";
 import { getUser } from "../models/userModel.js";
 
+// TODO: Remove when done
+import { isDebugUser } from "../dev/dummy.js";
+
 export default function createAuthRoutes(fastify) {
   return [
     {
       method: "POST",
       url: "/login",
       handler: asyncHandler(async (req, res) => {
+        //TODO: DEBUG USER BYPASS, REMOVE ME WHEN DEV IS DONE !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (isDebugUser(req.body)) {
+          const user = await getUser(req.body.username, true);
+          setJWT(res, user);
+          return res.code(200).send(user);
+        }
         if (!validateInput(req, res, ["username", "password"])) return;
         const user = await getUser(req.body.username, true);
         if (!user) return res.code(404).send({ error: "User not found" });
@@ -48,6 +57,12 @@ export default function createAuthRoutes(fastify) {
       method: "POST",
       url: "/register",
       handler: asyncHandler(async (req, res) => {
+        //TODO: DEBUG USER BYPASS, REMOVE ME WHEN DEV IS DONE !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (isDebugUser(req.body)) {
+          const result = await registerUser(req.body);
+          setJWT(res, result);
+          return res.code(201).send(result);
+        }
         if (
           !validateInput(req, res, [
             "username",

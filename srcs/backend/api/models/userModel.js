@@ -357,3 +357,30 @@ export function findMatchingUsers(username) {
     });
   });
 }
+
+/**
+ * Returns the username of the given user
+ * @param {Number} id - ID of the user
+ * @returns {String} - Username of user
+ */
+export function getUsername(id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT
+        username
+      FROM
+        users
+      WHERE
+        id = ?
+      AND
+        is_deleted = 0
+    `;
+    db.get(sql, [id], (err, row) => {
+      if (err) {
+        console.error("error getting user:", err.message);
+        return reject(err);
+      }
+      resolve(row.username);
+    });
+  });
+}
