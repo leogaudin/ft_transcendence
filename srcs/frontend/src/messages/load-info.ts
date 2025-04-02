@@ -130,6 +130,7 @@ export async function recentChats() {
 	}
 }
 
+//Marcar en leido aqui
 async function chargeChat(chat_id: number, friend_username: string) {
 	if (window.innerWidth < 768)
 		toggleMobileDisplay();
