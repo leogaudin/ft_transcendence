@@ -42,6 +42,7 @@ db.serialize(() => {
     CREATE TABLE IF NOT EXISTS user_friends (
     user_id INTEGER NOT NULL,
     friend_id INTEGER NOT NULL,
+    pending BOOLEAN DEFAULT 1,
     PRIMARY KEY (user_id, friend_id),
     UNIQUE (user_id, friend_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
