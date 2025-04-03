@@ -14,6 +14,7 @@ import {
   acceptUserFriend,
   getUserFriends,
   getFriendOfUser,
+  getInvitationsOfUser,
 } from "../models/userModel.js";
 import { getMessagesOfUser } from "../models/messageModel.js";
 import { getChatsOfUser } from "../models/chatModel.js";
@@ -160,10 +161,20 @@ export default function createUserRoutes(fastify) {
     },
     {
       preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/users/invitations",
+      handler: asyncHandler(async (req, res) => {
+        const data = await getInvitationsOfUser(req.userId);
+        return res.code(200).send(data);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
       method: "POST",
       url: "/users/blocks",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["blocked_id"])) return;
+        await removeUserFriend(req.userId, req.body.blocked_id);
         const data = await addUserBlock(req.userId, req.body.blocked_id);
         return res.code(200).send(data);
       }),
