@@ -61,19 +61,6 @@ canvas {
 
 /* --> ICONS <-- */
 
-.close-icon {
-	background-image: url("../resources/img/close_icon.svg");
-	width: 30px;
-	height: 30px;
-	background-size: cover;
-	transition: 250ms ease-in-out;
-}
-
-.close-icon:hover {
-	cursor: pointer;
-	background-image: url("../resources/img/close_icon_hover.svg");
-}
-
 .error-icon {
 	background-image: url("../resources/img/error_icon.svg");
 	width: 30px;
@@ -790,6 +777,7 @@ h1 {
 	height: 98%;
 	padding: 10px;
 	gap: 5px;
+	overflow: visible scroll;
 }
 
 #friend-data {
@@ -827,6 +815,7 @@ h1 {
 	background-color: var(--alert);
 }
 
+
 .add-remove-icon {
 	fill: var(--accent-pink);
 	border-radius: 99%;
@@ -839,6 +828,18 @@ h1 {
 .add-remove-icon:hover {
 	cursor: pointer;
 	padding: 7px;
+}
+
+.close-icon {
+	width: 40px;
+	padding: 5px;
+	aspect-ratio: 1/1;
+	transition: 0.3s ease-in-out;
+}
+
+.close-icon:hover {
+	fill: var(--accent-pink);
+	cursor: pointer;
 }
 
 .add {
@@ -914,4 +915,22 @@ option {
 	border-radius: 15px;
 	transition: background-color 0.2s ease;
 	margin: 3px;
+}
+
+.block {
+	background-color: var(--alert);
+	transition: 0.2s ease;
+}
+
+.block:hover {
+	box-shadow: var(--accent-alert) 0px 0px 5px;
+}
+
+.cancel {
+	background-color: var(--dark-purple);
+	transition: 0.2s ease;
+}
+
+.cancel:hover {
+	box-shadow: var(--violet) 0px 0px 5px;
 }

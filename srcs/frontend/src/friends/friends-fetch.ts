@@ -3,24 +3,28 @@ import { FriendList } from "../types.js"
 import { sendRequest } from "../login-page/login-fetch.js";
 
 export function initFriendFetches() {
+	const searchForm = document.getElementById("message-box") as HTMLFormElement;
 	const friendInput = document.getElementById("friend-input") as HTMLInputElement;
 	const searchFriend = document.getElementById("search-friend") as any;
+	if (!friendInput || !searchFriend || !searchForm)
+		return;
 	displayFriends();
-	
-	if (friendInput && searchFriend) {
-		friendInput.onfocus = function () {
-			searchFriend.style.display = 'block';
-			friendInput.style.boxShadow = "0 0 0 max(100vh, 100vw) rgba(0, 0, 0, .3)";
-		  };
-		  for (let option of searchFriend.options) {
-			option.onclick = function () {
-				friendInput.value = option.value;
-				searchFriend.style.display = 'none';
-				friendInput.style.boxShadow = "";
-			}
-		  };
-		  friendInput.oninput = debounce(() => {showMatches(friendInput.value)}, 500);
-	}
+
+	document.addEventListener("click", (event) => {
+		const target = event.target as Node;
+		// If click is outside the search form
+		if (!searchForm.contains(target)) {
+			friendInput.style.boxShadow = "";
+			friendInput.value = "";
+			searchFriend.innerHTML = "";
+			searchFriend.style.display = 'none';
+		}
+	});
+	friendInput.addEventListener("focusin", () => {
+		searchFriend.style.display = 'block';
+		friendInput.style.boxShadow = "0 0 0 max(100vh, 100vw) rgba(0, 0, 0, .3)";
+	});
+	friendInput.oninput = debounce(() => {showMatches(friendInput.value)}, 500);
 }
 
 function emptyMatches(datalist: HTMLElement) {
@@ -98,7 +102,6 @@ async function displayFriends() {
 		return;
 
 	friendListTyped.forEach((friend) => {
-		console.log("Estoy enseñando amigos, espero");
 		const section = document.createElement("section");
 		section.setAttribute("id", "friend-id");
 		section.setAttribute("class", "friend-card");
