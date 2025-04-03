@@ -653,6 +653,11 @@ video {
   width: 100%;
 }
 
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -794,6 +799,18 @@ video {
 
 .text-center {
   text-align: center;
+}
+
+.indent-1 {
+  text-indent: 0.25rem;
+}
+
+.indent-2 {
+  text-indent: 0.5rem;
+}
+
+.indent-4 {
+  text-indent: 1rem;
 }
 
 .text-3xl {
@@ -1224,7 +1241,7 @@ h1 {
   padding-left: 10px;
 }
 
-#recover-password, #reset-password {
+#recover-password, #reset-password, #block-user {
   display: none;
   background-color: var(--dark-pink);
   box-shadow: var(--accent-pink) 0px 0px 20px;
@@ -1793,11 +1810,11 @@ h1 {
   transition: 0.3s ease-in-out;
 }
 
-.message {
+.message-icon {
   background-color: var(--dark-pink);
 }
 
-.message:hover {
+.message-icon:hover {
   fill: var(--dark-pink);
   background-color: var(--accent-pink);
   box-shadow: var(--accent-pink) 0px 0px 2px;

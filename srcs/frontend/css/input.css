@@ -310,7 +310,7 @@ h1 {
 	padding-left: 10px;
 }
 
-#recover-password, #reset-password {
+#recover-password, #reset-password, #block-user {
 	display: none;
 	background-color: var(--dark-pink);
 	box-shadow: var(--accent-pink) 0px 0px 20px;
@@ -872,11 +872,11 @@ h1 {
 	transition: 0.3s ease-in-out;
 }
 
-.message {
+.message-icon {
 	background-color: var(--dark-pink);
 }
 
-.message:hover {
+.message-icon:hover {
 	fill: var(--dark-pink);
 	background-color: var(--accent-pink);
 	box-shadow: var(--accent-pink) 0px 0px 2px;
