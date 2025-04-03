@@ -1,5 +1,8 @@
+import { sendRequest } from "../login-page/login-fetch.js";
+import { friendID } from "../messages/load-info.js";
 import { moveToHome } from "../messages/messages-page.js"
 import { initFriendFetches } from "./friends-fetch.js"
+import { blockFriend } from "./friends-fetch.js";
 
 export function initFriendsEvents() {
 	moveToHome();
@@ -29,22 +32,24 @@ function changeFriendPage() {
 	});
 }
 
-export function displayBlockPopUp() {
+export function displayBlockPopUp(friendId: string) {
 	const blockUser = document.getElementById("block-user") as HTMLDialogElement;
-	const closeButton = document.getElementsByClassName("close-icon")[0];
-	const cancelButton = document.getElementsByClassName("cancel")[0];
-	const blockButton = document.getElementsByClassName("block")[0];
+	const closeButton = document.getElementsByClassName("close-icon")[0] as HTMLButtonElement;
+	const cancelButton = document.getElementsByClassName("cancel")[0] as HTMLButtonElement;
+	const blockButton = document.getElementsByClassName("block")[0] as HTMLButtonElement;
 	if (!blockUser || !closeButton || !cancelButton || !blockButton)
 		return;
 	blockUser.style.display = "flex";
 	blockUser.showModal();
 
-	closeButton.addEventListener("click", () => { closeModal(blockUser) });
-	cancelButton.addEventListener("click", () => { closeModal(blockUser) });
-	// blockButton.addEventListener("click", () => { blockFriend() })
+	closeButton.onclick = () => { closeModal(blockUser) };
+    cancelButton.onclick = () => { closeModal(blockUser) };
+    blockButton.onclick = () => { blockFriend(friendId) };
 }
 
-function closeModal(modal: HTMLDialogElement) {
+
+ 
+export function closeModal(modal: HTMLDialogElement) {
 	modal.style.display = "none";
 	modal.close();
 }

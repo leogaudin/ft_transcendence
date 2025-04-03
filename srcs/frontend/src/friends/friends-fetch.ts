@@ -1,7 +1,7 @@
 import { UserMatches } from "../types.js"
 import { FriendList } from "../types.js"
 import { sendRequest } from "../login-page/login-fetch.js";
-import { displayBlockPopUp } from "./friends-page.js"
+import { displayBlockPopUp, closeModal } from "./friends-page.js"
 
 export function initFriendFetches() {
 	const searchForm = document.getElementById("message-box") as HTMLFormElement;
@@ -38,7 +38,9 @@ async function clickFriendProfile(e: Event) {
     const friendElement = target.closest('[id^="friend-id-"]') as HTMLElement;
     
     if (friendElement) {
+		console.log("friendElementId: ", friendElement.id);
         const friendId = friendElement.id.replace("friend-id-", "");
+		console.log("friendId: ", friendId );
         try {
             const friendProfileTyped = await sendRequest('GET', `/users/friends/${friendId}`) as FriendList;
             if (!friendProfileTyped)
@@ -47,7 +49,7 @@ async function clickFriendProfile(e: Event) {
             const friendProfileDiv = document.getElementById("friend-profile");
             if (!friendProfileDiv)
                 return;
-                
+            
             friendProfileDiv.innerHTML = ` 
 					<div id="friend-data" class="flex justify-between items-center gap-4 w-full">
 						<div class="flex flex-col ml-4">
@@ -79,10 +81,10 @@ async function clickFriendProfile(e: Event) {
 					</div>
 					`
 
-				friendProfileDiv.style.display = 'flex';
-				const blockFriendButton = document.getElementById("block-friend");
-				if (blockFriendButton)
-					blockFriendButton.addEventListener("click", () => { displayBlockPopUp() });
+			friendProfileDiv.style.display = 'flex';
+			const blockFriendButton = document.getElementById("block-friend");
+			if (blockFriendButton)
+				blockFriendButton.addEventListener("click", () => { displayBlockPopUp(friendId) });
         }
         catch (error) {
             console.error(error);
@@ -127,7 +129,7 @@ async function showMatches(input: string) {
 				else if (matchesTyped[i].is_friend === 1) {
 					option.innerHTML = `
 					${matchesTyped[i].username}
-					<svg xmlns="http://www.w3.org/2000/svg" class="add-remove-icon message-icon" viewBox="0 -960 960 960">
+					<svg xmlns="http://www.w3.org/2000/svg" id="friend-chat" class="add-remove-icon message-icon" viewBox="0 -960 960 960">
 						<path d="M880-80 720-240H320q-33 0-56.5-23.5T240-320v-40h440q33 0 56.5-23.5T760-440v-280h40q33 0 56.5 23.5T880-640v560ZM160-473l47-47h393v-280H160v327ZM80-280v-520q0-33 23.5-56.5T160-880h440q33 0 56.5 23.5T680-800v280q0 33-23.5 56.5T600-440H240L80-280Zm80-240v-280 280Z"/>
 					</svg>
 					`
@@ -145,6 +147,11 @@ async function showMatches(input: string) {
 			option.setAttribute("class", "match-option");
 			datalist.appendChild(option);
 		}
+
+		// Here comes the navigation to the friend chat
+		// const messageButton = document.getElementById("friend-chat");
+		// if (messageButton)
+		// 	messageButton.addEventListener("click", () => { goFriendChat() });
 	}
 }
 
@@ -159,32 +166,61 @@ function debounce(callback: Function, wait: number) {
 }
 
 async function displayFriends() {
-	const friendListPage = document.getElementById("friends-holder");
-	const friendListTyped = await sendRequest('GET', 'users/friends') as FriendList[];
-	if (!friendListTyped || !friendListPage)
-		return;
+	try {
+		const friendListPage = document.getElementById("friends-holder");
+		const friendListTyped = await sendRequest('GET', 'users/friends') as FriendList[];
+		if (!friendListTyped || !friendListPage)
+			throw new Error("Error during display friends");
 
-	friendListTyped.forEach((friend) => {
-		const section = document.createElement("section");
-		section.setAttribute("id", `friend-id-${friend.user_id}`);
-		section.setAttribute("class", "friend-class");
-		section.setAttribute("class", "friend-card");
-		section.innerHTML = `
-					<div class="flex items-center gap-4">
-						<img id="friend-avatar" class="card-avatar rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
-						<div class="flex flex-col">
-							<h3>${friend.username}</h3>
-							<p class="opacity-50 text-sm">${friend.status}</p>
+		if (friendListPage.children.length > 0)
+			friendListPage.innerHTML = "";
+
+		friendListTyped.forEach((friend) => {
+			const section = document.createElement("section");
+			section.setAttribute("id", `friend-id-${friend.user_id}`);
+			section.setAttribute("class", "friend-class");
+			section.setAttribute("class", "friend-card");
+			section.innerHTML = `
+						<div class="flex items-center gap-4">
+							<img id="friend-avatar" class="card-avatar rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
+							<div class="flex flex-col">
+								<h3>${friend.username}</h3>
+								<p class="opacity-50 text-sm">${friend.status}</p>
+							</div>
 						</div>
-					</div>
-					<div id="friend-status" class="flex gap-2 px-4">
-						${friend.is_online === 1 ?
-							'<p>Online</p><img src="../../resources/img/online.svg" alt="Online status">' :
-							'<p>Offline</p><img src="../../resources/img/offline.svg" alt="Offline status">'
-						}
-					</div>
-				`;
-		friendListPage.appendChild(section);
-	});
+						<div id="friend-status" class="flex gap-2 px-4">
+							${friend.is_online === 1 ?
+								'<p>Online</p><img src="../../resources/img/online.svg" alt="Online status">' :
+								'<p>Offline</p><img src="../../resources/img/offline.svg" alt="Offline status">'
+							}
+						</div>
+					`;
+			friendListPage.appendChild(section);
+		});
+	}
+	catch(error) {
+		console.error(error);
+	}
 
+}
+
+export async function blockFriend(friendId: string) {
+	try {
+		console.log("friendId: ", friendId);
+		const response = await sendRequest('POST', '/users/blocks', {blocked_id: friendId});
+		if (!response)
+			throw new Error("Error during block friend fetch");
+
+		const modal = document.getElementById("block-user") as HTMLDialogElement;
+		const friendProfile = document.getElementById("friend-profile");
+		if (modal && friendProfile) {
+			closeModal(modal);
+			friendProfile.style.display = 'none';
+		}
+
+		displayFriends();
+	}
+	catch (error) {
+		console.error(error);
+	}
 }
