@@ -1,9 +1,9 @@
 import { moveToHome } from "../messages/messages-page.js"
-import { initFriendFetches } from "./friends-fetch.js"
+import { initFriendFetches, displayInvitations, blockFriend } from "./friends-fetch.js"
 
 export function initFriendsEvents() {
-	changeFriendPage();
 	moveToHome();
+	changeFriendPage();
 	initFriendFetches();
 }
 
@@ -19,6 +19,7 @@ function changeFriendPage() {
 		if (friendListPage.style.display !== 'none') {
 			friendListPage.style.display = 'none';
 			invitationListPage.style.display = 'flex';
+			displayInvitations();
 		}
 	});
 	friendListButton.addEventListener("click", () => {
@@ -27,4 +28,26 @@ function changeFriendPage() {
 			invitationListPage.style.display = 'none';
 		}
 	});
+}
+
+export function displayBlockPopUp(friendId: string) {
+	const blockUser = document.getElementById("block-user") as HTMLDialogElement;
+	const closeButton = document.getElementsByClassName("close-icon")[0] as HTMLButtonElement;
+	const cancelButton = document.getElementsByClassName("cancel")[0] as HTMLButtonElement;
+	const blockButton = document.getElementsByClassName("block")[0] as HTMLButtonElement;
+	if (!blockUser || !closeButton || !cancelButton || !blockButton)
+		return;
+	blockUser.style.display = "flex";
+	blockUser.showModal();
+
+	closeButton.onclick = () => { closeModal(blockUser) };
+    cancelButton.onclick = () => { closeModal(blockUser) };
+    blockButton.onclick = () => { blockFriend(friendId) };
+}
+
+
+ 
+export function closeModal(modal: HTMLDialogElement) {
+	modal.style.display = "none";
+	modal.close();
 }

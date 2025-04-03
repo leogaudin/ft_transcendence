@@ -49,7 +49,26 @@ export interface UserMatches {
 export interface FriendList {
 	user_id: number;
 	username: string;
+	alias?: string;
 	status: string | null;
 	avatar: string;
 	is_online: number;
+	pong_games_played?: number;
+	pong_games_won?: number;
+	pong_games_lost?: number;
+	connect_four_games_played?: number;
+	connect_four_games_won?: number;
+	connect_four_games_lost?: number;
+}
+
+export interface InvitationList {
+	sender_id: number;
+	sender_username: string;
+	sender_status: string;
+	sender_avatar: string;
+	receiver_id: number;
+	receiver_username: string;
+	receiver_status: string;
+	receiver_avatar: string;
+	invitation_type: string;
 }

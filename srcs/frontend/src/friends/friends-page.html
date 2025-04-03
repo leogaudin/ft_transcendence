@@ -3,24 +3,20 @@
 		<header id="friends-header" class="flex justify-between items-end mx-4">
 			<div>
 				<h1>Friends</h1>
-				<h2><span id="friend-list-page" class="friend-selector cursor-pointer">Friends List</span> | <span id="friend-invitation-page" class="friend-selector cursor-pointer">Invitations</span></h2>
+				<p><span id="friend-list-page" class="friend-selector cursor-pointer">Friends List</span> | <span id="friend-invitation-page" class="friend-selector cursor-pointer">Invitations</span></p>
 			</div>
 			<svg id="home-button" class="home-icon m-4 h-10 w-10" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
 				<path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
 			</svg>
 		</header>
+
 		<div id="pink-divider" class="flex justify-center"></div>
+
 		<main id="friends-main" class="flex flex-col h-full justify-center items-center">
 			<form id="message-box" class="flex justify-center items-center">
 				<div class="relative w-full">
-					<input autocomplete="off" list="" id="friend-input" placeholder="Search a friend" class="outline-none w-full">
-					<datalist id="search-friend" role="listbox">
-						<!-- <option>Alvaro</option>
-						<option>Alba</option>
-						<option>Ester</option>
-						<option>Néstor</option>
-						<option>Elisa</option> -->
-					</datalist>
+					<input autocomplete="off" list="" id="friend-input" placeholder="Search a friend" class="outline-none w-full indent-2">
+					<datalist id="search-friend" role="listbox"></datalist>
 				</div>
 				<button type="submit" class="flex items-center">
 					<svg class="send-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#54184D">
@@ -28,65 +24,83 @@
 					</svg>
 				</button>
 			</form>
+
 			<!-- Friends List Page -->
 			<div id="friend-list" class="flex gap-2 h-full w-full justify-between items-center">
 				<section id="friends-holder" class="flex flex-col items-center w-full h-full"></section>
-				<section id="friend-profile" class="friend-card flex flex-col items-center justify-center">
-					<div id="friend-data" class="flex justify-between items-center gap-4">
-						<div class="flex flex-col">
-							<h2 class="font-bold">Username: <span id="friend-name" class="font-thin">Manuel el Ventanas</span></h2>
-							<h2 class="font-bold">Nick: <span id="friend-nick" class="font-thin">El Ventis</span></h2>
-							<div id="friend-status" class="flex gap-2">
-								<h2 class="font-bold">Status: <span class="font-thin">Online</span></h2>
-								<img src="../../resources/img/online.svg" alt="Online status">
-							</div>
-							<h2 class="font-bold">Description: <span id="friend-description" class="italic font-thin">Me gustan las ventanas</span></h2>
-							<div class="flex justify-center gap-10 my-4">
-								<button id="delete-friend" class="button">Delete</button>
-								<button id="block-friend" class="button">Block</button>
-							</div>
-						</div>
-						<div class="flex flex-col items-center">
-							<img id="friend-profile-photo" class="rounded-full" src="../../resources/img/cat.jpg" alt="Profile photo">
-						</div>
-					</div>
-					<div id="friend-statistics" class="flex flex-col items-center">
-						<h2 class="font-bold">Pong Games Played: <span class="font-thin">None</span></h2>
-						<h2 class="font-bold">Pong Wins Rate: <span class="font-thin">0</span></h2>
-						<h2 class="font-bold">Pong Loses Rate: <span class="font-thin">0</span></h2>
-						<h2 class="font-bold">Connect Four Games Played: <span class="font-thin">None</span></h2>
-						<h2 class="font-bold">Connect Four Wins Rate: <span class="font-thin">0</span></h2>
-						<h2 class="font-bold">Connect Four Loses Rate: <span class="font-thin">0</span></h2>
-					</div>
-				</section>
+				<section id="friend-profile" class="friend-card flex flex-col items-center justify-center"></section>
 			</div>
+
 			<!-- Invitation page -->
 			<div id="invitation-list" class="flex grid grid-cols-2 h-full w-full gap-4">
-				<section id="invitation-received" class="flex flex-col w-full">
-					<div id="invitation-id" class="friend-card flex justify-between items-center gap-2">
-						<div class="flex items-center gap-4">
-							<img id="invitation-avatar" class="card-avatar rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
-							<div class="flex flex-col">
-								<h3>Duquesa de Alba</h3>
-								<p class="opacity-50 text-sm">Me gustan los menores de 60</p>
+				<div class="flex flex-col w-full">
+					<div class="flex items-center gap-2 m-2">
+						<p class="w-fit text-lg">Received</p>
+						<div id="pink-divider" class="w-full"></div>
+					</div>
+					<section id="invitation-received" class="flex flex-col w-full">
+						<!-- <div id="invitation-id" class="friend-card flex justify-between items-center gap-2">
+							<div class="flex items-center gap-4">
+								<img id="invitation-avatar" class="card-avatar rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
+								<div class="flex flex-col">
+									<h3>Duquesa de Alba</h3>
+									<p class="opacity-50 text-sm">Me gustan los menores de 60</p>
+								</div>
 							</div>
-						</div>
-						<div id="invitation-options" class="flex gap-2 px-4">
-							<svg id="accept-invitation" class="add-remove-icon add" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-								<path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
-							</svg>
-							<svg id="deny-invitation" class="add-remove-icon remove" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
-								<path d="M640-520v-80h240v80H640Zm-280 40q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
-							</svg>
-						</div>
+							<div id="invitation-options" class="flex gap-2 px-4">
+								<svg id="accept-invitation" class="add-remove-icon add" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+									<path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
+								</svg>
+								<svg id="deny-invitation" class="add-remove-icon remove" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+									<path d="M640-520v-80h240v80H640Zm-280 40q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
+								</svg>
+							</div>
+						</div> -->
+					</section>
+				</div>
+				<div class="flex flex-col w-full">
+					<div class="flex items-center gap-2 m-2">
+						<p class="w-fit text-lg">Sent</p>
+						<div id="pink-divider" class="w-full"></div>
 					</div>
-				</section>
-				<section id="invitation-sent" class="flex flex-col w-full">
-					<div id="invitation-id" class="friend-card flex justify-between items-center gap-2">
-						MIAUMIAU
-					</div>
-				</section>
+					<section id="invitation-sent" class="flex flex-col w-full">
+						<!-- <div id="invitation-id" class="friend-card flex justify-between items-center gap-2">
+							<div class="flex items-center gap-4">
+								<img id="invitation-avatar" class="card-avatar rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
+								<div class="flex flex-col">
+									<h3>Lady Gaga</h3>
+									<p class="opacity-50 text-sm">I don't wanna be french</p>
+								</div>
+							</div>
+							<div id="invitation-options" class="flex gap-2 px-4">
+								<svg xmlns="http://www.w3.org/2000/svg" class="pending" viewBox="0 -960 960 960">
+									<path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/>
+								</svg>
+							</div>
+						</div> -->
+					</section>
+				</div>
 			</div>
 		</main>
 	</div>
 </div>
+
+<dialog id="block-user">
+	<div class="w-full h-full">
+		<div class="flex justify-between items-center m-2.5">
+			<h1 class="text-white text-3xl">Block a friend</h1>
+			<svg class="close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#3B0034">
+				<path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+			</svg>
+		</div>
+		<div id="pink-divider"></div>
+		<div class="flex gap-10 justify-center">
+			<button class="button cancel">Cancel</button>
+			<button class="button block">Block</button>
+		</div>
+		<div class="flex flex-col w-full m-2.5 justify-center items-center">
+			<p>Are you sure you want to <span class="text-[var(--alert)]">block</span> your friend?<p>
+			<p>Once done you can revert it in <span class="text-[var(--violet)]">settings</span></p>
+		</div>
+	  </div>
+</dialog>
