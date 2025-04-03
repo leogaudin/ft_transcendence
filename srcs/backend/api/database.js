@@ -21,7 +21,7 @@ db.serialize(() => {
     avatar TEXT DEFAULT "/usr/transcendence/api/avatars/default.jpg",
     created_at DATETIME DEFAULT (datetime('now', '+2 hours')),
     is_online BOOLEAN DEFAULT 0,
-    status TEXT,
+    status TEXT DEFAULT "Hello World!",
     last_login DATETIME DEFAULT (datetime('now', '+2 hours')),
     reset_token TEXT,
     pending_totp_secret TEXT,

@@ -478,3 +478,43 @@ export function getUserFriends(id) {
     });
   });
 }
+
+export function getFriendOfUser(friend_id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT
+        u.id AS user_id,
+        u.username,
+        u.status,
+        u.avatar,
+        u.is_online
+      FROM
+        users u
+      WHERE
+        id = ?
+      AND
+        u.is_deleted = 0
+    `;
+    db.get(sql, [friend_id], (err, row) => {
+      if (err) {
+        console.error("error getting user:", err.message);
+        return reject(err);
+      }
+      // Don't harcode this, figure out matches table
+      Object.assign(row, {
+        pong_games_played: 4,
+        pong_games_won: 2,
+        pong_games_lost: 2,
+        connect_four_games_played: 2,
+        connect_four_games_won: 1,
+        connect_four_games_lost: 1,
+      });
+      resolve(row);
+    });
+  });
+}
+
+/*TODO: Endpoints:
+ * Friend invitations pending
+ * Friend invitations recieved pending
+ */
