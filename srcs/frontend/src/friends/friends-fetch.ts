@@ -1,6 +1,7 @@
 import { UserMatches } from "../types.js"
 import { FriendList } from "../types.js"
 import { sendRequest } from "../login-page/login-fetch.js";
+import { displayBlockPopUp } from "./friends-page.js"
 
 export function initFriendFetches() {
 	const searchForm = document.getElementById("message-box") as HTMLFormElement;
@@ -9,6 +10,11 @@ export function initFriendFetches() {
 	if (!friendInput || !searchFriend || !searchForm)
 		return;
 	displayFriends();
+
+	const friendHolder = document.getElementById("friends-holder");
+	if (friendHolder) {
+		friendHolder.addEventListener("click", (e) => { clickFriendProfile(e) });
+	}
 
 	document.addEventListener("click", (event) => {
 		const target = event.target as Node;
@@ -25,6 +31,63 @@ export function initFriendFetches() {
 		friendInput.style.boxShadow = "0 0 0 max(100vh, 100vw) rgba(0, 0, 0, .3)";
 	});
 	friendInput.oninput = debounce(() => {showMatches(friendInput.value)}, 500);
+}
+
+async function clickFriendProfile(e: Event) {
+    const target = e.target as HTMLElement;
+    const friendElement = target.closest('[id^="friend-id-"]') as HTMLElement;
+    
+    if (friendElement) {
+        const friendId = friendElement.id.replace("friend-id-", "");
+        try {
+            const friendProfileTyped = await sendRequest('GET', `/users/friends/${friendId}`) as FriendList;
+            if (!friendProfileTyped)
+                throw new Error("Error while fetching friend profile");
+            
+            const friendProfileDiv = document.getElementById("friend-profile");
+            if (!friendProfileDiv)
+                return;
+                
+            friendProfileDiv.innerHTML = ` 
+					<div id="friend-data" class="flex justify-between items-center gap-4 w-full">
+						<div class="flex flex-col ml-4">
+							<p class="font-bold">Username: <span id="friend-name" class="font-thin">${friendProfileTyped.username}</span></p>
+							<p class="font-bold">Nick: <span id="friend-nick" class="font-thin">${friendProfileTyped.alias}</span></p>
+							<div id="friend-status" class="flex gap-2">
+								${friendProfileTyped.is_online === 1 ?
+								'<p>Online</p><img src="../../resources/img/online.svg" alt="Online status">' :
+								'<p>Offline</p><img src="../../resources/img/offline.svg" alt="Offline status">'
+								}
+							</div>
+							<p class="font-bold">Description: <span id="friend-description" class="italic font-thin">${friendProfileTyped.status}</span></p>
+							<div class="flex justify-center gap-10 my-4">
+								<button id="delete-friend" class="button">Delete</button>
+								<button id="block-friend" class="button">Block</button>
+							</div>
+						</div>
+						<div class="flex flex-col items-center mr-4">
+							<img id="friend-profile-photo" class="rounded-full" src="../../resources/img/cat.jpg" alt="Profile photo">
+						</div>
+					</div>
+					<div id="friend-statistics" class="flex flex-col items-center">
+						<p class="font-bold text-center">Pong Games Played: <span class="font-thin">${friendProfileTyped.pong_games_played}</span></p>
+						<p class="font-bold text-center">Pong Wins Rate: <span class="font-thin">${friendProfileTyped.pong_games_won}</span></p>
+						<p class="font-bold text-center">Pong Loses Rate: <span class="font-thin">${friendProfileTyped.pong_games_lost}</span></p>
+						<p class="font-bold text-center">Connect Four Games Played: <span class="font-thin">${friendProfileTyped.connect_four_games_played}</span></p>
+						<p class="font-bold text-center">Connect Four Wins Rate: <span class="font-thin">${friendProfileTyped.connect_four_games_played}</span></p>
+						<p class="font-bold text-center">Connect Four Loses Rate: <span class="font-thin">${friendProfileTyped.connect_four_games_played}</span></p>
+					</div>
+					`
+
+				friendProfileDiv.style.display = 'flex';
+				const blockFriendButton = document.getElementById("block-friend");
+				if (blockFriendButton)
+					blockFriendButton.addEventListener("click", () => { displayBlockPopUp() });
+        }
+        catch (error) {
+            console.error(error);
+        }
+    }
 }
 
 function emptyMatches(datalist: HTMLElement) {
@@ -103,7 +166,8 @@ async function displayFriends() {
 
 	friendListTyped.forEach((friend) => {
 		const section = document.createElement("section");
-		section.setAttribute("id", "friend-id");
+		section.setAttribute("id", `friend-id-${friend.user_id}`);
+		section.setAttribute("class", "friend-class");
 		section.setAttribute("class", "friend-card");
 		section.innerHTML = `
 					<div class="flex items-center gap-4">
@@ -120,6 +184,7 @@ async function displayFriends() {
 						}
 					</div>
 				`;
-			friendListPage.appendChild(section);
-		});
+		friendListPage.appendChild(section);
+	});
+
 }

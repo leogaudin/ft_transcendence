@@ -604,6 +604,14 @@ video {
   margin-top: 1.25rem;
 }
 
+.ml-4 {
+  margin-left: 1rem;
+}
+
+.mr-4 {
+  margin-right: 1rem;
+}
+
 .block {
   display: block;
 }
@@ -656,6 +664,10 @@ video {
 
 .w-full {
   width: 100%;
+}
+
+.w-3\/4 {
+  width: 75%;
 }
 
 .cursor-pointer {
@@ -1686,11 +1698,12 @@ h1 {
   /* width: 98%; */
 }
 
-#friend-id {
+[id^="friend-id"] {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 8px;
+  cursor: pointer;
 }
 
 .friend-card {
@@ -1713,6 +1726,7 @@ h1 {
 }
 
 #friend-profile {
+  display: none;
   height: 98%;
   padding: 10px;
   gap: 5px;

@@ -496,6 +496,7 @@ export function getFriendOfUser(friend_id) {
       SELECT
         u.id AS user_id,
         u.username,
+        u.alias,
         u.status,
         u.avatar,
         u.is_online
