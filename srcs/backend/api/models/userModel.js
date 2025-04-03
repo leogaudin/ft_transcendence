@@ -414,7 +414,18 @@ export function findMatchingUsers(username, user_id) {
         console.error("Error getting users:", err.message);
         return reject(err);
       }
-      resolve(rows);
+      const blockingPromises = rows.map(async (row) => {
+        const blocked =
+          (await isBlocked(user_id, row.user_id)) ||
+          (await isBlocked(row.user_id, user_id));
+        return { row, blocked };
+      });
+      Promise.all(blockingPromises).then((results) => {
+        const filteredRows = results
+          .filter((result) => !result.blocked)
+          .map((result) => result.row);
+        resolve(filteredRows);
+      });
     });
   });
 }

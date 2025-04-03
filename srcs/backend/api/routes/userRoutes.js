@@ -174,6 +174,7 @@ export default function createUserRoutes(fastify) {
       url: "/users/blocks",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["blocked_id"])) return;
+        await removeUserFriend(req.userId, req.body.blocked_id);
         const data = await addUserBlock(req.userId, req.body.blocked_id);
         return res.code(200).send(data);
       }),
