@@ -596,20 +596,20 @@ video {
   margin-right: -0.25rem;
 }
 
-.ms-3 {
-  margin-inline-start: 0.75rem;
-}
-
-.mt-5 {
-  margin-top: 1.25rem;
-}
-
 .ml-4 {
   margin-left: 1rem;
 }
 
 .mr-4 {
   margin-right: 1rem;
+}
+
+.ms-3 {
+  margin-inline-start: 0.75rem;
+}
+
+.mt-5 {
+  margin-top: 1.25rem;
 }
 
 .block {
@@ -664,10 +664,6 @@ video {
 
 .w-full {
   width: 100%;
-}
-
-.w-3\/4 {
-  width: 75%;
 }
 
 .cursor-pointer {
@@ -1832,6 +1828,13 @@ h1 {
   fill: var(--dark-pink);
   background-color: var(--accent-pink);
   box-shadow: var(--accent-pink) 0px 0px 2px;
+}
+
+#invitation-id {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
 }
 
 #invitation-list {

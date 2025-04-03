@@ -1,8 +1,5 @@
-import { sendRequest } from "../login-page/login-fetch.js";
-import { friendID } from "../messages/load-info.js";
 import { moveToHome } from "../messages/messages-page.js"
-import { initFriendFetches } from "./friends-fetch.js"
-import { blockFriend } from "./friends-fetch.js";
+import { initFriendFetches, displayInvitations, blockFriend } from "./friends-fetch.js"
 
 export function initFriendsEvents() {
 	moveToHome();
@@ -22,6 +19,7 @@ function changeFriendPage() {
 		if (friendListPage.style.display !== 'none') {
 			friendListPage.style.display = 'none';
 			invitationListPage.style.display = 'flex';
+			displayInvitations();
 		}
 	});
 	friendListButton.addEventListener("click", () => {

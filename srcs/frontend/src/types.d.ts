@@ -60,3 +60,15 @@ export interface FriendList {
 	connect_four_games_won?: number;
 	connect_four_games_lost?: number;
 }
+
+export interface InvitationList {
+	sender_id: number;
+	sender_username: string;
+	sender_status: string;
+	sender_avatar: string;
+	receiver_id: number;
+	receiver_username: string;
+	receiver_status: string;
+	receiver_avatar: string;
+	invitation_type: string;
+}

@@ -532,16 +532,16 @@ export function getInvitationsOfUser(id) {
       SELECT DISTINCT
         f.starter_id AS sender_id,
         u1.username AS sender_username,
-        u1.alias AS sender_alias,
         u1.avatar AS sender_avatar,
+        u1.status AS sender_status,
       CASE 
         WHEN f.starter_id = f.user_id THEN f.friend_id
         ELSE f.user_id
       END AS 
         receiver_id,
         u2.username AS receiver_username,
-        u2.alias AS receiver_alias,
         u2.avatar AS receiver_avatar,
+        u2.status AS receiver_status,
       CASE 
         WHEN f.starter_id = ? THEN 'sent'
         ELSE 'received'

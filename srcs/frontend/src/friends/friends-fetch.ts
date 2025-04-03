@@ -1,5 +1,4 @@
-import { UserMatches } from "../types.js"
-import { FriendList } from "../types.js"
+import { UserMatches, FriendList, InvitationList } from "../types.js"
 import { sendRequest } from "../login-page/login-fetch.js";
 import { displayBlockPopUp, closeModal } from "./friends-page.js"
 
@@ -38,9 +37,8 @@ async function clickFriendProfile(e: Event) {
     const friendElement = target.closest('[id^="friend-id-"]') as HTMLElement;
     
     if (friendElement) {
-		console.log("friendElementId: ", friendElement.id);
         const friendId = friendElement.id.replace("friend-id-", "");
-		console.log("friendId: ", friendId );
+		
         try {
             const friendProfileTyped = await sendRequest('GET', `/users/friends/${friendId}`) as FriendList;
             if (!friendProfileTyped)
@@ -85,11 +83,41 @@ async function clickFriendProfile(e: Event) {
 			const blockFriendButton = document.getElementById("block-friend");
 			if (blockFriendButton)
 				blockFriendButton.addEventListener("click", () => { displayBlockPopUp(friendId) });
+
+			const deleteFriendButton = document.getElementById("delete-friend");
+			if (deleteFriendButton)
+				deleteFriendButton.addEventListener("click", () => { deleteFriend(friendId) });
         }
         catch (error) {
             console.error(error);
         }
     }
+}
+
+async function deleteFriend(friendId: string) {
+	try {
+		const response = await sendRequest('PATCH', 'users/friends', {friend_id: friendId});
+		if (!response)
+			throw new Error("Error during delete friend fetch");
+
+		const friendProfile = document.getElementById("friend-profile");
+		if (friendProfile)
+			friendProfile.style.display = 'none';
+
+		const friendListPage = document.getElementById("friend-list");
+		const invitationListPage = document.getElementById("invitation-list");
+		if (!friendListPage || !invitationListPage)
+			return ;
+
+		if (invitationListPage.style.display === 'flex') {
+			displayInvitations();
+		}
+		else
+			displayFriends();
+	}
+	catch (error) {
+		console.error(error);
+	}
 }
 
 function emptyMatches(datalist: HTMLElement) {
@@ -121,7 +149,7 @@ async function showMatches(input: string) {
 				if (matchesTyped[i].is_friend === 0) {
 					option.innerHTML = `
 					${matchesTyped[i].username}
-					<svg id="accept-invitation" class="add-remove-icon add" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+					<svg id="accept-invitation-${matchesTyped[i].user_id}" class="add-remove-icon add" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
 						<path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
 					</svg>
 					`;
@@ -148,10 +176,30 @@ async function showMatches(input: string) {
 			datalist.appendChild(option);
 		}
 
+		const acceptInvitationButtons = document.getElementsByClassName("add");
+		if (acceptInvitationButtons) {
+			for (const element of acceptInvitationButtons) {
+				const friendId = element.id.replace("accept-invitation-", "");
+				(element as HTMLButtonElement).onclick = () => { friendInvitations(friendId, input) };
+			}
+		}
 		// Here comes the navigation to the friend chat
 		// const messageButton = document.getElementById("friend-chat");
 		// if (messageButton)
 		// 	messageButton.addEventListener("click", () => { goFriendChat() });
+	}
+}
+
+async function friendInvitations(friendId: string, input: string) {
+	try {
+		const response = await sendRequest('POST', '/users/friends', {friend_id: friendId});
+		if (!response)
+			throw new Error("Error during friend invitation fetch");
+
+		showMatches(input);
+	}
+	catch (error) {
+		console.error(error);
 	}
 }
 
@@ -202,6 +250,94 @@ async function displayFriends() {
 		console.error(error);
 	}
 
+}
+
+export async function displayInvitations() {
+	const invitationsReceived = document.getElementById("invitation-received");
+	const invitationsSent = document.getElementById("invitation-sent");
+	if (!invitationsReceived || !invitationsSent)
+		return ;
+
+	invitationsReceived.innerHTML = "";
+	invitationsSent.innerHTML = "";
+	try {
+		const invitationsList = await sendRequest('GET', '/users/invitations') as InvitationList[];
+		if (!invitationsList)
+			throw new Error("Error during invitation list fetch");
+
+		invitationsList.forEach((invitation) => {
+			const card = document.createElement("div");
+			card.setAttribute("id", "invitation-id");
+			card.setAttribute("class", "friend-card");
+			if (invitation.invitation_type === "sent") {
+				card.innerHTML = `
+					<div class="flex items-center gap-4">
+						<img id="invitation-avatar" class="card-avatar rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
+						<div class="flex flex-col">
+							<h3>${invitation.receiver_username}</h3>
+							<p class="opacity-50 text-sm">${invitation.receiver_status}</p>
+						</div>
+					</div>
+					<div id="invitation-options" class="flex gap-2 px-4">
+						<svg xmlns="http://www.w3.org/2000/svg" class="pending" viewBox="0 -960 960 960">
+							<path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/>
+						</svg>
+					</div>
+				`
+				invitationsSent.appendChild(card);
+			}
+			else {
+				card.innerHTML = `
+					<div class="flex items-center gap-4">
+						<img id="invitation-avatar" class="card-avatar rounded-full" src="../../resources/img/cat.jpg" alt="Avatar">
+						<div class="flex flex-col">
+							<h3>${invitation.sender_username}</h3>
+							<p class="opacity-50 text-sm">${invitation.sender_status}</p>
+						</div>
+					</div>
+					<div id="invitation-options" class="flex gap-2 px-4">
+						<svg id="accept-invitation-${invitation.sender_id}" class="add-remove-icon add" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+							<path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
+						</svg>
+						<svg id="deny-invitation-${invitation.sender_id}" class="add-remove-icon remove" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+							<path d="M640-520v-80h240v80H640Zm-280 40q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
+						</svg>
+					</div>
+				`
+				invitationsReceived.appendChild(card);
+			}
+
+		});
+
+		const acceptInvitationButtons = document.getElementsByClassName("add");
+		const declineInvitationButton = document.getElementsByClassName("remove");
+		if (acceptInvitationButtons && declineInvitationButton) {
+			for (const element of acceptInvitationButtons) {
+				const friendId = element.id.replace("accept-invitation-", "");
+				(element as HTMLButtonElement).onclick = () => { confirmInvitation(friendId) };
+			}
+			for (const element of declineInvitationButton) {
+				const friendId = element.id.replace("deny-invitation-", "");
+				(element as HTMLButtonElement).onclick = () => { deleteFriend(friendId) };
+			}
+		}
+	}
+	catch (error) {
+		console.error(error);
+	}
+}
+
+async function confirmInvitation(friendId: string) {
+	try {
+		const response = await sendRequest('POST', 'users/friends/confirm', {friend_id: friendId});
+		if (!response)
+			throw new Error("Error while fetching confirm invitation");
+
+		displayInvitations();
+	}	
+	catch (error) {
+		console.error(error);
+	}
 }
 
 export async function blockFriend(friendId: string) {

@@ -885,6 +885,13 @@ h1 {
 	box-shadow: var(--accent-pink) 0px 0px 2px;
 }
 
+#invitation-id {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+}
+
 #invitation-list {
 	display: none;
 }
