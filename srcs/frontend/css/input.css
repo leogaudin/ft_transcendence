@@ -61,19 +61,6 @@ canvas {
 
 /* --> ICONS <-- */
 
-.close-icon {
-	background-image: url("../resources/img/close_icon.svg");
-	width: 30px;
-	height: 30px;
-	background-size: cover;
-	transition: 250ms ease-in-out;
-}
-
-.close-icon:hover {
-	cursor: pointer;
-	background-image: url("../resources/img/close_icon_hover.svg");
-}
-
 .error-icon {
 	background-image: url("../resources/img/error_icon.svg");
 	width: 30px;
@@ -310,7 +297,7 @@ h1 {
 	padding-left: 10px;
 }
 
-#recover-password, #reset-password {
+#recover-password, #reset-password, #block-user {
 	display: none;
 	background-color: var(--dark-pink);
 	box-shadow: var(--accent-pink) 0px 0px 20px;
@@ -761,11 +748,12 @@ h1 {
 	/* width: 98%; */
 }
 
-#friend-id {
+[id^="friend-id"] {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
 	gap: 8px;
+	cursor: pointer;
 }
 
 .friend-card {
@@ -787,9 +775,11 @@ h1 {
 }
 
 #friend-profile {
+	display: none;
 	height: 98%;
 	padding: 10px;
 	gap: 5px;
+	overflow: visible scroll;
 }
 
 #friend-data {
@@ -827,6 +817,7 @@ h1 {
 	background-color: var(--alert);
 }
 
+
 .add-remove-icon {
 	fill: var(--accent-pink);
 	border-radius: 99%;
@@ -839,6 +830,18 @@ h1 {
 .add-remove-icon:hover {
 	cursor: pointer;
 	padding: 7px;
+}
+
+.close-icon {
+	width: 40px;
+	padding: 5px;
+	aspect-ratio: 1/1;
+	transition: 0.3s ease-in-out;
+}
+
+.close-icon:hover {
+	fill: var(--accent-pink);
+	cursor: pointer;
 }
 
 .add {
@@ -872,14 +875,21 @@ h1 {
 	transition: 0.3s ease-in-out;
 }
 
-.message {
+.message-icon {
 	background-color: var(--dark-pink);
 }
 
-.message:hover {
+.message-icon:hover {
 	fill: var(--dark-pink);
 	background-color: var(--accent-pink);
 	box-shadow: var(--accent-pink) 0px 0px 2px;
+}
+
+#invitation-id {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
 }
 
 #invitation-list {
@@ -914,4 +924,22 @@ option {
 	border-radius: 15px;
 	transition: background-color 0.2s ease;
 	margin: 3px;
+}
+
+.block {
+	background-color: var(--alert);
+	transition: 0.2s ease;
+}
+
+.block:hover {
+	box-shadow: var(--accent-alert) 0px 0px 5px;
+}
+
+.cancel {
+	background-color: var(--dark-purple);
+	transition: 0.2s ease;
+}
+
+.cancel:hover {
+	box-shadow: var(--violet) 0px 0px 5px;
 }

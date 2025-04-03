@@ -173,8 +173,10 @@ export default function createUserRoutes(fastify) {
       method: "POST",
       url: "/users/blocks",
       handler: asyncHandler(async (req, res) => {
+        console.log("Inside blocks:", req.body);
         if (!validateInput(req, res, ["blocked_id"])) return;
-        await removeUserFriend(req.userId, req.body.blocked_id);
+        // if user is friend
+        // await removeUserFriend(req.userId, req.body.blocked_id);
         const data = await addUserBlock(req.userId, req.body.blocked_id);
         return res.code(200).send(data);
       }),
