@@ -21,7 +21,7 @@ db.serialize(() => {
     avatar TEXT DEFAULT "/usr/transcendence/api/avatars/default.jpg",
     created_at DATETIME DEFAULT (datetime('now', '+2 hours')),
     is_online BOOLEAN DEFAULT 0,
-    status TEXT,
+    status TEXT DEFAULT "Hello World!",
     last_login DATETIME DEFAULT (datetime('now', '+2 hours')),
     reset_token TEXT,
     pending_totp_secret TEXT,
@@ -43,11 +43,13 @@ db.serialize(() => {
     CREATE TABLE IF NOT EXISTS user_friends (
     user_id INTEGER NOT NULL,
     friend_id INTEGER NOT NULL,
+    starter_id INTEGER NOT NULL,
     pending BOOLEAN DEFAULT 1,
     PRIMARY KEY (user_id, friend_id),
     UNIQUE (user_id, friend_id),
     FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (friend_id) REFERENCES users(id)
+    FOREIGN KEY (friend_id) REFERENCES users(id),
+    FOREIGN KEY (starter_id) REFERENCES users(id)
     )`,
     (err) => {
       if (err) {

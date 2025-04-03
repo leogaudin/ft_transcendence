@@ -13,6 +13,8 @@ import {
   addUserFriendPending,
   acceptUserFriend,
   getUserFriends,
+  getFriendOfUser,
+  getInvitationsOfUser,
 } from "../models/userModel.js";
 import { getMessagesOfUser } from "../models/messageModel.js";
 import { getChatsOfUser } from "../models/chatModel.js";
@@ -120,6 +122,16 @@ export default function createUserRoutes(fastify) {
     },
     {
       preHandler: [fastify.authenticate],
+      method: "POST",
+      url: "/users/friends/confirm",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["friend_id"])) return;
+        const data = await acceptUserFriend(req.userId, req.body.friend_id);
+        return res.code(200).send(data);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
       method: "GET",
       url: "/users/friends",
       handler: asyncHandler(async (req, res) => {
@@ -129,11 +141,11 @@ export default function createUserRoutes(fastify) {
     },
     {
       preHandler: [fastify.authenticate],
-      method: "POST",
-      url: "/users/friends/confirm",
+      method: "GET",
+      url: "/users/friends/:id",
       handler: asyncHandler(async (req, res) => {
-        if (!validateInput(req, res, ["friend_id"])) return;
-        const data = await acceptUserFriend(req.userId, req.body.friend_id);
+        // Maybe add check if main user is friend with other user?
+        const data = await getFriendOfUser(req.params.id);
         return res.code(200).send(data);
       }),
     },
@@ -149,10 +161,20 @@ export default function createUserRoutes(fastify) {
     },
     {
       preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/users/invitations",
+      handler: asyncHandler(async (req, res) => {
+        const data = await getInvitationsOfUser(req.userId);
+        return res.code(200).send(data);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
       method: "POST",
       url: "/users/blocks",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["blocked_id"])) return;
+        await removeUserFriend(req.userId, req.body.blocked_id);
         const data = await addUserBlock(req.userId, req.body.blocked_id);
         return res.code(200).send(data);
       }),

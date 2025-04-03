@@ -14,7 +14,10 @@ build:
 		@docker compose -f ./srcs/docker-compose.yml build
 
 down:
-		@docker compose -f ./srcs/docker-compose.yml down
+		@docker compose -f ./srcs/docker-compose.yml down -t 1
+
+stop:
+		@docker compose -f ./srcs/docker-compose.yml stop -t 1
 
 clean: down
 		@docker system prune -a -f
@@ -31,11 +34,11 @@ db:
 
 reset:
 		@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
-		@docker compose -f ./srcs/docker-compose.yml stop backend
+		@docker compose -f ./srcs/docker-compose.yml stop -t 1 backend
 		@rm -f ./srcs/backend/transcendence.db
 		@find ./srcs/backend/api/avatars/ ! -name 'default.jpg' -type f -exec rm -f {} +
 		@echo -n "Repopulate with mockup data? [y/N] " && read ans && [ $${ans:-N} = y ]
 		@make back && sleep 1
 		@make repopulate
 
-.PHONY: all attach front back build down clean repopulate reset re db
+.PHONY: all attach front back build down stop clean repopulate reset re db
