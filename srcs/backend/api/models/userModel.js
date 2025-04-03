@@ -188,9 +188,9 @@ export function acceptUserFriend(id, friend_id) {
 export function addUserFriendPending(id, friend_id) {
   return new Promise((resolve, reject) => {
     const sql = `
-      INSERT INTO user_friends (user_id, friend_id)
-      VALUES (?,?), (?,?)`;
-    const params = [id, friend_id, friend_id, id];
+      INSERT INTO user_friends (user_id, friend_id, starter_id)
+      VALUES (?,?,?), (?,?,?)`;
+    const params = [id, friend_id, id, friend_id, id, id];
     db.run(sql, params, function (err) {
       if (err) {
         console.error("Error updating user friends:", err.message);
@@ -391,7 +391,7 @@ export function findMatchingUsers(username, user_id) {
             END
           WHEN uf2.user_id IS NOT NULL THEN
             CASE
-              WHEN uf2.pending = 1 THEN 2
+              WHEN uf2.pending = 1 THEN 3
               ELSE 1
             END
           ELSE 0
@@ -514,7 +514,41 @@ export function getFriendOfUser(friend_id) {
   });
 }
 
-/*TODO: Endpoints:
- * Friend invitations pending
- * Friend invitations recieved pending
- */
+export function getInvitationsOfUser(id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT DISTINCT
+        f.starter_id AS sender_id,
+        u1.username AS sender_username,
+        u1.alias AS sender_alias,
+        u1.avatar AS sender_avatar,
+      CASE 
+        WHEN f.starter_id = f.user_id THEN f.friend_id
+        ELSE f.user_id
+      END AS 
+        receiver_id,
+        u2.username AS receiver_username,
+        u2.alias AS receiver_alias,
+        u2.avatar AS receiver_avatar,
+      CASE 
+        WHEN f.starter_id = ? THEN 'sent'
+        ELSE 'received'
+      END AS
+        invitation_type
+      FROM
+        user_friends f
+      JOIN users u1 ON f.starter_id = u1.id
+      JOIN users u2 ON (CASE WHEN f.starter_id = f.user_id THEN f.friend_id ELSE f.user_id END) = u2.id
+      WHERE (f.user_id = ? OR f.friend_id = ?)
+      AND f.pending = 1
+      ORDER BY invitation_type, u1.username
+    `;
+    db.all(sql, [id, id, id], (err, rows) => {
+      if (err) {
+        console.error("Error getting users:", err.message);
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}
