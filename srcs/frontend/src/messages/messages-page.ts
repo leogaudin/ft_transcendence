@@ -1,6 +1,6 @@
-import { friendID, actual_chat_id, recentChats, loadInfo } from "./load-info.js"
+import { getChatInfo ,actual_chat_id, recentChats, loadInfo } from "./load-info.js"
 import { navigateTo } from "../index.js";
-import { Message, MessageObject } from "../types.js";
+import { Message, MessageObject, ChatInfo } from "../types.js";
 
 let socket: WebSocket | null = null;
 
@@ -105,16 +105,20 @@ function displayMessage(data: Message){
     recentChats();
 }
 
-function setupMessageForm() {
+async function setupMessageForm() {
   const messageForm = document.getElementById("message-box") as HTMLFormElement;
   if (!messageForm)
     return;
-  messageForm.addEventListener("submit", function(event){
+  messageForm.addEventListener("submit", async function(event){
     event.preventDefault();
     const input = messageForm.querySelector("input") as HTMLInputElement;
     if (!input)
       return;
     const message = input.value.trim();
+    const chatInfo = await getChatInfo(actual_chat_id);
+    if (!chatInfo)
+      return ;
+    const friendID = chatInfo.friend_id;
     if (message && socket){
       const date = new Date();
       date.setHours(date.getHours() + 2);

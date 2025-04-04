@@ -4,7 +4,6 @@ import { displayBlockPopUp, closeModal } from "./friends-page.js"
 import { socketToast } from "../toast-alert/toast-alert.js";
 import { getClientID } from "../messages/messages-page.js";
 import { navigateTo } from "../index.js";
-import { chargeChat } from "../messages/load-info.js";
 
 export function initFriendFetches() {
 	const searchForm = document.getElementById("message-box") as HTMLFormElement;
@@ -225,6 +224,9 @@ async function friendInvitations(friendId: string, input: string) {
 			}))
 		}
 		showMatches(input);
+		const invitationPage = document.getElementById("invitation-list");
+		if (invitationPage?.style.display !== 'none')
+			displayInvitations();
 	}
 	catch (error) {
 		console.error(error);

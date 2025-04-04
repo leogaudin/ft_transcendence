@@ -9,6 +9,7 @@ import {
   getLastChatsOfUser,
   getChatBetweenUsers,
   isChat,
+  getInfoAboutChat,
 } from "../models/chatModel.js";
 
 export default function createChatRoutes(fastify) {
@@ -89,9 +90,9 @@ export default function createChatRoutes(fastify) {
         if (!validateInput(req, res, ["friend_id"])) return;
         const first_user_id = req.userId;
         const second_user_id = req.body.friend_id;
+        // No seas un hijodeputa y arregla esto
         // if (!isChat(first_user_id, second_user_id))
-        // {
-        console.log("There is no chat");
+        // {  
         await createChat({ first_user_id, second_user_id });
         // }
         const result = await getChatBetweenUsers(
@@ -106,7 +107,7 @@ export default function createChatRoutes(fastify) {
       method: "GET",
       url: "/chats/identify/:id",
       handler: asyncHandler(async (req, res) => {
-        const result = await getInfoAboutChat(req.params.id);
+        const result = await getInfoAboutChat(req.params.id, req.userId);
         return res.code(200).send(result);
       }),
     },
