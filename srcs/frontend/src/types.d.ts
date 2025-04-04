@@ -34,6 +34,11 @@ export interface Message {
 	read?: boolean;
 }
 
+export interface MessageObject {
+	chat_id: number;
+	friend_username: string;
+}
+
 export interface User {
 	user_id: number;
 	socket: WebSocket | null;

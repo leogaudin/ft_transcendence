@@ -313,6 +313,30 @@ export function isBlocked(user_id, blocked_id) {
   });
 }
 
+export function isFriend(user_id, friend_id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT EXISTS (
+        SELECT 1
+        FROM
+          user_friends
+        WHERE
+          user_id = ? AND friend_id = ?
+        OR
+          user_id = ? AND friend_id = ?)
+      AS is_friend;`;
+    const params = [user_id, friend_id, friend_id, user_id];
+    db.get(sql, params, function (err, row) {
+      if (err) {
+        console.error("Error accessing user_friends:", err.message);
+        return reject(err);
+      }
+      console.log(row.is_friend === 1);
+      resolve(row.is_friend === 1);
+    });
+  });
+}
+
 /**
  * Finds a user by a given ID, username, or email, keeping or not their credentials
  * @param {Any} identifier - ID, username or email of the user

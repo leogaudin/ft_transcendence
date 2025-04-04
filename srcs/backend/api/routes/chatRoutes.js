@@ -7,6 +7,8 @@ import {
   patchChat,
   deleteChat,
   getLastChatsOfUser,
+  getChatBetweenUsers,
+  isChat,
 } from "../models/chatModel.js";
 
 export default function createChatRoutes(fastify) {
@@ -76,6 +78,35 @@ export default function createChatRoutes(fastify) {
       url: "/chats/last",
       handler: asyncHandler(async (req, res) => {
         const result = await getLastChatsOfUser(req.userId);
+        return res.code(200).send(result);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "POST",
+      url: "/chats/identify",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["friend_id"])) return;
+        const first_user_id = req.userId;
+        const second_user_id = req.body.friend_id;
+        // if (!isChat(first_user_id, second_user_id))
+        // {
+        console.log("There is no chat");
+        await createChat({ first_user_id, second_user_id });
+        // }
+        const result = await getChatBetweenUsers(
+          req.userId,
+          req.body.friend_id,
+        );
+        return res.code(200).send(result);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/chats/identify/:id",
+      handler: asyncHandler(async (req, res) => {
+        const result = await getInfoAboutChat(req.params.id);
         return res.code(200).send(result);
       }),
     },
