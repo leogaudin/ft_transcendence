@@ -1,4 +1,5 @@
 import { getClientID } from "../messages/messages-page.js"
+import { displayFriends } from "../friends/friends-fetch.js";
 
 let toastTimeout: number;
 let socketToast: WebSocket | null;
@@ -9,7 +10,7 @@ const toastFeatures = [
 ];
 
 function createsocketToastConnection() {
-	if (socketToast &&socketToast.readyState !== WebSocket.CLOSED){
+	if (socketToast && socketToast.readyState !== WebSocket.CLOSED){
 	  socketToast.close();
 	}
 	try{
@@ -35,8 +36,19 @@ function createsocketToastConnection() {
 	  socketToast.onmessage = (event) => {
 		try{
 			const data = JSON.parse(event.data);
-			if (data.body)
-				showAlert(data.body, "toast-success");
+			if (data.type === "friendRequest"){
+				if (data.info === "request"){
+					if (data.body)
+						showAlert(data.body, "toast-success");
+					socketToast?.send(JSON.stringify({
+						type: "friendRequest",
+						info: "confirmation"
+					}))
+				}
+				else if (data.info === "confirmation"){
+					displayFriends()
+				}
+			}
 		}
 		catch(err) {
 		  console.error("Error on message", err);
