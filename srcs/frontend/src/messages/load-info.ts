@@ -1,11 +1,10 @@
 import { sendRequest } from "../login-page/login-fetch.js";
-import { LastMessage } from "../types.js"
-import { Message } from "../types.js";
+import { LastMessage, Message, MessageObject } from "../types.js"
 let friendID: number;
 let actual_chat_id: number;
 
-export function loadInfo() {
-	displayFirstChat();
+export function loadInfo(data: MessageObject) {
+	displayFirstChat(data);
 	recentChats();
 	searchChatFriend();
 
@@ -15,8 +14,6 @@ export function loadInfo() {
 			toggleMobileDisplay();
 	});
 	window.addEventListener("resize", changedWindowSize);
-
-	
 }
 
 function searchChatFriend() {
@@ -72,10 +69,11 @@ function toggleMobileDisplay() {
 	}
 }
 
-async function displayFirstChat() {
+async function displayFirstChat(data: MessageObject) {
 	if (window.innerWidth < 768)
 		return ;
 
+	console.log("data", data);
 	// Opens the most recent chat when navigated to messages page
 	try {
 		const recentChats = await sendRequest('GET', 'chats/last');
@@ -83,10 +81,14 @@ async function displayFirstChat() {
 			throw new Error("Error displaying the first chat");
 
 		const recentChatsTyped = recentChats as LastMessage[];
-		if (recentChatsTyped)
-			chargeChat(recentChatsTyped[0].chat_id, recentChatsTyped[0].friend_username);
+		if (recentChatsTyped) {
+			if (Object.keys(data).length !== 0)
+				chargeChat(data.chat_id, data.friend_username);
+			else
+				chargeChat(recentChatsTyped[0].chat_id, recentChatsTyped[0].friend_username);
+		}
 	}
-	catch(error) {
+	catch (error) {
 		console.error(error);
 	}
 }
@@ -144,12 +146,14 @@ export async function recentChats() {
 }
 
 //Marcar en leido aqui
-async function chargeChat(chat_id: number, friend_username: string) {
+export async function chargeChat(chat_id: number, friend_username: string) {
 	if (window.innerWidth < 768)
 		toggleMobileDisplay();
 
+	console.log("chat_id: ", chat_id);
 	const chatDiv = document.getElementById("message-history");
 	let contactName = document.getElementById("chat-friend-username");
+
 	if (contactName)
 		contactName.innerText = friend_username;
 
@@ -161,6 +165,7 @@ async function chargeChat(chat_id: number, friend_username: string) {
 			if (!chatHistoryTyped)
 				throw new Error("Error fetching the chat selected");
 
+			console.log("chatHistory: ", chatHistoryTyped);
 			chatHistoryTyped.forEach((message) => {
 				let div = document.createElement("div");
 				
@@ -193,7 +198,10 @@ async function chargeChat(chat_id: number, friend_username: string) {
 			console.error(error);
 		}
 		actual_chat_id = chat_id;
+
 	}
 }
-export {actual_chat_id}; // Forma sucia para recibir el chat_id, en proceso de buscar una forma nueva de arreglarlo
-export {friendID};
+
+
+
+export {actual_chat_id, friendID}; // Forma sucia para recibir el chat_id, en proceso de buscar una forma nueva de arreglarlo

@@ -1,5 +1,5 @@
 import { moveToHome } from "../messages/messages-page.js"
-import { initFriendFetches, displayInvitations, blockFriend } from "./friends-fetch.js"
+import { initFriendFetches, displayFriends, displayInvitations, blockFriend } from "./friends-fetch.js"
 
 export function initFriendsEvents() {
 	moveToHome();
@@ -26,6 +26,7 @@ function changeFriendPage() {
 		if (friendListPage.style.display !== 'flex') {
 			friendListPage.style.display = 'flex';
 			invitationListPage.style.display = 'none';
+			displayFriends();
 		}
 	});
 }
