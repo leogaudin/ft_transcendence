@@ -294,7 +294,7 @@ export function isChat(first_user_id, second_user_id) {
   });
 }
 
-export function getInfoAboutChat(id) {
+export function getInfoAboutChat(id, user_id) {
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT
@@ -311,8 +311,9 @@ export function getInfoAboutChat(id) {
       }
       const first_user_username = await getUsername(row.first_user_id);
       const second_user_username = await getUsername(row.second_user_id);
-      Object.assign(row, { first_user_username, second_user_username });
-      resolve(result);
+      const friend_id = row.first_user_id === user_id ? row.second_user_id : row.first_user_id;
+      Object.assign(row, { first_user_username, second_user_username, friend_id });
+      resolve(row);
     });
   });
 }

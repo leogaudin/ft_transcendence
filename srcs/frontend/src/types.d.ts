@@ -22,6 +22,15 @@ export interface Chat {
 	socket: WebSocket | null;
 }
 
+export interface ChatInfo {
+	id: number;
+	first_user_id: number;
+	second_user_id: number;
+	first_user_username: string;
+	second_user_username: string;
+	friend_id: number;
+}
+
 export interface Message {
 	body: string;
 	message_id?: number;

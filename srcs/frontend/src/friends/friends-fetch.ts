@@ -225,6 +225,9 @@ async function friendInvitations(friendId: string, input: string) {
 			}))
 		}
 		showMatches(input);
+		const invitationPage = document.getElementById("invitation-list");
+		if (invitationPage?.style.display !== 'none')
+			displayInvitations();
 	}
 	catch (error) {
 		console.error(error);

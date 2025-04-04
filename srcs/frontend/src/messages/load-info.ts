@@ -1,6 +1,5 @@
 import { sendRequest } from "../login-page/login-fetch.js";
-import { LastMessage, Message, MessageObject } from "../types.js"
-let friendID: number;
+import { LastMessage, Message, MessageObject, ChatInfo } from "../types.js"
 let actual_chat_id: number;
 
 export function loadInfo(data: MessageObject) {
@@ -150,13 +149,13 @@ export async function chargeChat(chat_id: number, friend_username: string) {
 	if (window.innerWidth < 768)
 		toggleMobileDisplay();
 
-	console.log("chat_id: ", chat_id);
 	const chatDiv = document.getElementById("message-history");
 	let contactName = document.getElementById("chat-friend-username");
 
 	if (contactName)
 		contactName.innerText = friend_username;
 
+	await getChatInfo(chat_id);
 	if (chatDiv) {
 		try {
 			if (chatDiv.children.length > 0)
@@ -165,7 +164,6 @@ export async function chargeChat(chat_id: number, friend_username: string) {
 			if (!chatHistoryTyped)
 				throw new Error("Error fetching the chat selected");
 
-			console.log("chatHistory: ", chatHistoryTyped);
 			chatHistoryTyped.forEach((message) => {
 				let div = document.createElement("div");
 				
@@ -179,7 +177,6 @@ export async function chargeChat(chat_id: number, friend_username: string) {
 							<p>${message.body}</p>
 							<p class="hour">${sent_at}</p>
 						</div>`;
-						friendID = message.sender_id;
 					}
 					else {
 						div.setAttribute("id", "message");
@@ -187,7 +184,6 @@ export async function chargeChat(chat_id: number, friend_username: string) {
 							<p>${message.body}<\p>
 							<p class="hour">${sent_at}</p>
 						</div>`;
-						friendID = message.receiver_id;
 					}
 				}
 				chatDiv.appendChild(div);
@@ -202,6 +198,18 @@ export async function chargeChat(chat_id: number, friend_username: string) {
 	}
 }
 
+export async function getChatInfo(chat_id: number) : Promise<ChatInfo | null>  {
+	try {
+		const chat_info = await sendRequest('GET', `/chats/identify/${chat_id}`);
+		if (!chat_info)
+			throw new Error("Error fetching chat information");
+		console.log("chat_info: ", chat_info);
+		return chat_info;
+	}
+	catch(error) {
+		console.error(error);
+		return null;
+	}
+}
 
-
-export {actual_chat_id, friendID}; // Forma sucia para recibir el chat_id, en proceso de buscar una forma nueva de arreglarlo
+export {actual_chat_id}; // Forma sucia para recibir el chat_id, en proceso de buscar una forma nueva de arreglarlo
