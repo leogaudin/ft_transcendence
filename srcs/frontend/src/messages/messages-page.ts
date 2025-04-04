@@ -1,12 +1,12 @@
 import { friendID, actual_chat_id, recentChats, loadInfo } from "./load-info.js"
 import { navigateTo } from "../index.js";
-import { Message } from "../types.js";
+import { Message, MessageObject } from "../types.js";
 
 let socket: WebSocket | null = null;
 
-export function initMessagesEvents() {
+export function initMessagesEvents(data: MessageObject) {
 	moveToHome();
-	loadInfo();
+	loadInfo(data);
   createSocketConnection();
   setupMessageForm();
 }

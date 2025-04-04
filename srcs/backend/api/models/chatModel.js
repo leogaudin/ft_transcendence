@@ -29,7 +29,7 @@ export function createChat(data) {
     // Ensuring unique chats between two people
     const first_id = Math.min(data.first_user_id, data.second_user_id);
     const second_id = Math.max(data.first_user_id, data.second_user_id);
-
+    console.log(data);
     const sql = `INSERT INTO chats (first_user_id, second_user_id) VALUES (?,?)`;
     const params = [first_id, second_id];
 
@@ -38,6 +38,7 @@ export function createChat(data) {
         console.error("Error inserting chat:", err.message);
         return reject(err);
       }
+      console.log("inside create chat", this.lastID);
       resolve({
         id: this.lastID,
         first_user_id: first_id,
@@ -257,7 +258,32 @@ export function getChatBetweenUsers(user_id, friend_id) {
         console.error("Error getting chats:", err.message);
         return reject(err);
       }
+      console.log("a");
       resolve(row.id);
+    });
+  });
+}
+
+export function isChat(first_user_id, second_user_id) {
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT EXISTS (
+        SELECT 1
+        FROM
+          chats
+        WHERE
+          first_user_id = ? AND second_user_id = ?
+        OR
+          first_user_id = ? AND second_user_id = ?)
+      AS is_chat;`;
+    const params = [first_user_id, second_user_id, second_user_id, first_user_id];
+    db.get(sql, params, function (err, row) {
+      if (err) {
+        console.error("Error accessing chats:", err.message);
+        return reject(err);
+      }
+      console.log("is_chat",row);
+      resolve(row.is_chat === 0);
     });
   });
 }

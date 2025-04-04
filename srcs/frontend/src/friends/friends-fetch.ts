@@ -1,6 +1,8 @@
 import { UserMatches, FriendList, InvitationList } from "../types.js"
 import { sendRequest } from "../login-page/login-fetch.js";
 import { displayBlockPopUp, closeModal } from "./friends-page.js"
+import { navigateTo } from "../index.js";
+import { chargeChat } from "../messages/load-info.js";
 
 export function initFriendFetches() {
 	const searchForm = document.getElementById("message-box") as HTMLFormElement;
@@ -145,6 +147,7 @@ async function showMatches(input: string) {
 				option.innerText = "User Not Found";
 			}
 			else {
+				// Cambiar por un div
 				option = document.createElement('option');
 				if (matchesTyped[i].is_friend === 0) {
 					option.innerHTML = `
@@ -157,16 +160,18 @@ async function showMatches(input: string) {
 				else if (matchesTyped[i].is_friend === 1) {
 					option.innerHTML = `
 					${matchesTyped[i].username}
-					<svg xmlns="http://www.w3.org/2000/svg" id="friend-chat" class="add-remove-icon message-icon" viewBox="0 -960 960 960">
+					<svg xmlns="http://www.w3.org/2000/svg" id="friend-chat-${matchesTyped[i].user_id}" class="add-remove-icon message-icon" viewBox="0 -960 960 960">
 						<path d="M880-80 720-240H320q-33 0-56.5-23.5T240-320v-40h440q33 0 56.5-23.5T760-440v-280h40q33 0 56.5 23.5T880-640v560ZM160-473l47-47h393v-280H160v327ZM80-280v-520q0-33 23.5-56.5T160-880h440q33 0 56.5 23.5T680-800v280q0 33-23.5 56.5T600-440H240L80-280Zm80-240v-280 280Z"/>
 					</svg>
 					`
+
+					
 				}
 				else {
 					option.innerHTML = `
 					${matchesTyped[i].username}
 					<svg xmlns="http://www.w3.org/2000/svg" class="pending" viewBox="0 -960 960 960">
-						<path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/>
+					<path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-400Zm0 320q133 0 226.5-93.5T800-480q0-133-93.5-226.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160Z"/>
 					</svg>
 					`
 				}
@@ -174,6 +179,10 @@ async function showMatches(input: string) {
 			}
 			option.setAttribute("class", "match-option");
 			datalist.appendChild(option);
+			const messageButton = document.getElementById(`friend-chat-${matchesTyped[i].user_id}`);
+			if (messageButton) {
+				messageButton.onclick = () => { goToFriendChat(matchesTyped[i].user_id, matchesTyped[i].username) };
+			}
 		}
 
 		const acceptInvitationButtons = document.getElementsByClassName("add");
@@ -183,10 +192,20 @@ async function showMatches(input: string) {
 				(element as HTMLButtonElement).onclick = () => { friendInvitations(friendId, input) };
 			}
 		}
-		// Here comes the navigation to the friend chat
-		// const messageButton = document.getElementById("friend-chat");
-		// if (messageButton)
-		// 	messageButton.addEventListener("click", () => { goFriendChat() });
+
+	}
+}
+
+async function goToFriendChat(friend_id: number, friend_username: string) {
+	try {
+		const chat_id = await sendRequest('POST', '/chats/identify', {friend_id});
+		if (!chat_id)
+			throw new Error("Error during fetch for navigating to friend chat");
+
+		navigateTo("/messages", {chat_id, friend_username});
+	}
+	catch (error) {
+		console.error(error);
 	}
 }
 
@@ -213,7 +232,7 @@ function debounce(callback: Function, wait: number) {
 	};
 }
 
-async function displayFriends() {
+export async function displayFriends() {
 	try {
 		const friendListPage = document.getElementById("friends-holder");
 		const friendListTyped = await sendRequest('GET', 'users/friends') as FriendList[];
@@ -342,7 +361,6 @@ async function confirmInvitation(friendId: string) {
 
 export async function blockFriend(friendId: string) {
 	try {
-		console.log("friendId: ", friendId);
 		const response = await sendRequest('POST', '/users/blocks', {blocked_id: friendId});
 		if (!response)
 			throw new Error("Error during block friend fetch");
