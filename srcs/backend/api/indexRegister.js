@@ -8,7 +8,6 @@ import fastifyCookie from "@fastify/cookie";
 export default async function pluginRegistration(fastify) {
   /** Plugin registration */
   await fastify.register(cors, {
-    // origin: "http://localhost:8000",
     origin: (origin, cb) => {
       const allowedOrigins = [
         /^https?:\/\/localhost(:\d+)?$/,

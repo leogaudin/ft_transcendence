@@ -102,8 +102,6 @@ export function pong(): void{
 		newSpeed: 0
 	}
 
-	setOnresize();
-
 	function start(): void {
 		init();
 		generalData.controlGame = setInterval(play, generalData.time);
@@ -208,23 +206,12 @@ export function pong(): void{
 	function handlePaddleCollision(player: Player, paddle: HTMLElement): void {
 		setPaddleCollision(player, paddle);
 
-        if (Math.abs(paddleCollisionData.newVelX) < 2){
-            if (paddleCollisionData.newVelX > 0)
-                paddleCollisionData.newVelX = 2;
-            else
-            	paddleCollisionData.newVelX = -2;
-        }
+        if (Math.abs(paddleCollisionData.newVelX) < 2)
+			paddleCollisionData.newVelX = paddleCollisionData.newVelX > 0 ? 2 : -2
 
-        if (ballData.velX > 0)
-            ballData.velX = paddleCollisionData.newVelX * -1;
-        else
-            ballData.velX = paddleCollisionData.newVelX * 1;
+		ballData.velX = ballData.velX > 0 ? paddleCollisionData.newVelX * -1 : paddleCollisionData.newVelX * 1;
         ballData.velY = height * generalData.speed * Math.sin(ballData.angle);
-        
-        if (paddle === player1.paddle)
-            ballData.ball.style.left = `${paddle.offsetLeft + paddle.clientWidth}px`;
-        else if (paddle === player2.paddle)
-            ballData.ball.style.left = `${paddle.offsetLeft - ballData.ball.clientWidth}px`;
+		ballData.ball.style.left = paddle === player1.paddle ? `${paddle.offsetLeft + paddle.clientWidth}px` : `${paddle.offsetLeft - ballData.ball.clientWidth}px`;
     }
 
 	function movePaddle(): void {
@@ -249,11 +236,7 @@ export function pong(): void{
 	function setAI(): void {
         AIData.timeToReach = (player2.paddle.offsetLeft - ballData.ball.offsetLeft) / ballData.velX;
         AIData.targetY = ballData.ball.offsetTop + ballData.velY * AIData.timeToReach;
-		/* AIData.errorRate = Math.random() * height */
-		if (player2.paddleCenter < AIData.targetY)  // Recien añadido, parece ir bien
-			AIData.errorRate = Math.random() * height - player2.paddleCenter
-		else if (player2.paddleCenter > AIData.targetY)  // Recien añadido, parece ir bien
-			AIData.errorRate = Math.random() * player2.paddleCenter - 0
+		AIData.errorRate = player2.paddleCenter < AIData.targetY ? Math.random() * height - player2.paddleCenter : Math.random() * player2.paddleCenter - 0;
         player2.paddleCenter = player2.paddle.offsetTop + player2.paddle.clientHeight / 2; 
     }
 
@@ -261,15 +244,10 @@ export function pong(): void{
 		let random = Math.random();
 		setAI();
 
-		if (random < 0.03)  // Según internet las IAs suelen tener un 3% de tasa de error. SI falla, pero a lo mejor hay que aumentar
-			AIData.targetY = AIData.errorRate
-		while (AIData.targetY < 0 || AIData.targetY > height) {
-			if (AIData.targetY < 0) {
-				AIData.targetY *= -1;
-			} else if (AIData.targetY > height) {
-				AIData.targetY = 2 * height - AIData.targetY;
-			}
-		}
+		AIData.targetY = random < 0.03 ? AIData.errorRate : AIData.targetY; // Tasa de error
+
+		while (AIData.targetY < 0 || AIData.targetY > height)
+			AIData.targetY = AIData.targetY < 0 ? AIData.targetY * -1 : 2 * height - AIData.targetY;
 
 		if (player2.paddleCenter < AIData.targetY) {
 			player2.keyCode = "down";
@@ -354,5 +332,6 @@ export function pong(): void{
 		}
 	}
 
+	setOnresize();
 	start();
 }

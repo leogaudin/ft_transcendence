@@ -5,7 +5,7 @@ import { initResetPasswordEvents } from "./reset-password-page/reset-password.js
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
 import { initFriendsEvents } from "./friends/friends-page.js"
 import { displayToast, createsocketToastConnection } from "./toast-alert/toast-alert.js";
-import { LoginObject } from "./types.js";
+import { LoginObject, MessageObject } from "./types.js";
 import { pong } from "./games/game.js"
 import { socket } from "./messages/messages-page.js"
 
@@ -46,8 +46,8 @@ const routes = [
 	{
 		path: "/messages",
 		url: "../src/messages/messages-page.html",
-		event: () => {
-			initMessagesEvents();
+		event: (data: object) => {
+			initMessagesEvents(data as MessageObject);
 		}
 	},
 	{
@@ -72,7 +72,6 @@ const routes = [
 ];
 
 export function navigateTo(path: string, data: object = {}) {
-	// console.log(`Navegando a: ${path}`);
 	history.pushState(null, "", path);
 	loadContent(path, data);
 }
