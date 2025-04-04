@@ -115,16 +115,32 @@ export default function createWebSocketsRoutes(fastify){
 					}
 					else{
 						const data = JSON.parse(notification);
-						console.log(socketsToast);
-						console.log("Soy toast")
-						if (data.body){
-							console.log(socketsToast)
-							/*if (socketsToast.has(id)){
-								const toastReceiver = socketsToast.get(id);
-								toastReceiver.send(JSON.stringify({
-									body: "You have a message",
-								}))
-							}*/
+						console.log(data);
+						if (data.type === "friendRequest"){
+							if (data.info === "request"){
+								const id = parseInt(data.receiver_id);
+								let username = await getUsername(data.sender_id);
+								if (socketsToast.has(id)){
+									const receiver = socketsToast.get(id);
+									receiver.send(JSON.stringify({
+										type: "friendRequest",
+										body: `You have a friend request from ${username}`,
+										info: "request"
+									}))
+								}
+							}
+							else if (data.info === "confirmation"){
+								const id = parseInt(data.receiver_id);
+								console.log(id);
+								if (socketsToast.has(id)){
+									console.log("Hola")
+									const receiver = socketsToast.get(id);
+									receiver.send(JSON.stringify({
+										type: "friendRequest",
+										info: "confirmation"
+									}))
+								}
+							}
 						}
 					}
 				})
