@@ -331,7 +331,6 @@ export function isFriend(user_id, friend_id) {
         console.error("Error accessing user_friends:", err.message);
         return reject(err);
       }
-      console.log(row.is_friend === 1);
       resolve(row.is_friend === 1);
     });
   });
