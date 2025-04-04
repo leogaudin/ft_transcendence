@@ -90,11 +90,8 @@ export default function createChatRoutes(fastify) {
         if (!validateInput(req, res, ["friend_id"])) return;
         const first_user_id = req.userId;
         const second_user_id = req.body.friend_id;
-        // No seas un hijodeputa y arregla esto
-        // if (!isChat(first_user_id, second_user_id))
-        // {  
-        await createChat({ first_user_id, second_user_id });
-        // }
+        if (!(await isChat(first_user_id, second_user_id)))
+          await createChat({ first_user_id, second_user_id });
         const result = await getChatBetweenUsers(
           req.userId,
           req.body.friend_id,
