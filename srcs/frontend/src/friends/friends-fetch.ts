@@ -1,6 +1,8 @@
 import { UserMatches, FriendList, InvitationList } from "../types.js"
 import { sendRequest } from "../login-page/login-fetch.js";
 import { displayBlockPopUp, closeModal } from "./friends-page.js"
+import { socketToast } from "../toast-alert/toast-alert.js";
+import { getClientID } from "../messages/messages-page.js";
 
 export function initFriendFetches() {
 	const searchForm = document.getElementById("message-box") as HTMLFormElement;
@@ -195,7 +197,14 @@ async function friendInvitations(friendId: string, input: string) {
 		const response = await sendRequest('POST', '/users/friends', {friend_id: friendId});
 		if (!response)
 			throw new Error("Error during friend invitation fetch");
-
+		if (socketToast){
+			socketToast.send(JSON.stringify({
+			type: "friendRequest",
+			sender_id: getClientID(),
+			receiver_id: friendId,
+			info: "request",
+			}))
+		}
 		showMatches(input);
 	}
 	catch (error) {
@@ -360,3 +369,5 @@ export async function blockFriend(friendId: string) {
 		console.error(error);
 	}
 }
+
+export {displayFriends};
