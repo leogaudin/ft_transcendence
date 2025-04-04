@@ -91,13 +91,22 @@ export default function createChatRoutes(fastify) {
         const second_user_id = req.body.friend_id;
         // if (!isChat(first_user_id, second_user_id))
         // {
-          console.log("There is no chat");
-          await createChat({first_user_id, second_user_id});
+        console.log("There is no chat");
+        await createChat({ first_user_id, second_user_id });
         // }
         const result = await getChatBetweenUsers(
           req.userId,
           req.body.friend_id,
         );
+        return res.code(200).send(result);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/chats/identify/:id",
+      handler: asyncHandler(async (req, res) => {
+        const result = await getInfoAboutChat(req.params.id);
         return res.code(200).send(result);
       }),
     },
