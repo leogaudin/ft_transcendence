@@ -127,8 +127,8 @@ db.serialize(() => {
     loser_id INTEGER NOT NULL,
     tournament_id INTEGER,
     played_at DATETIME DEFAULT (datetime('now', '+2 hours')),
-    FOREIGN KEY (left_player_id) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (right_player_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (first_player_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (second_player_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (winner_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (loser_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (tournament_id) REFERENCES tournaments(id) ON DELETE SET NULL
