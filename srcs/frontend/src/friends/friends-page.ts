@@ -19,6 +19,9 @@ function changeFriendPage() {
 		if (friendListPage.style.display !== 'none') {
 			friendListPage.style.display = 'none';
 			invitationListPage.style.display = 'flex';
+			const friendProfile = document.getElementById("friend-profile");
+			if (friendProfile)
+				friendProfile.style.display = 'none';
 			displayInvitations();
 		}
 	});

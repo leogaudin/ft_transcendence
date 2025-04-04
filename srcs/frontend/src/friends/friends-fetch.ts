@@ -2,7 +2,6 @@ import { UserMatches, FriendList, InvitationList } from "../types.js"
 import { sendRequest } from "../login-page/login-fetch.js";
 import { displayBlockPopUp, closeModal } from "./friends-page.js"
 import { navigateTo } from "../index.js";
-import { chargeChat } from "../messages/load-info.js";
 
 export function initFriendFetches() {
 	const searchForm = document.getElementById("message-box") as HTMLFormElement;
@@ -216,6 +215,9 @@ async function friendInvitations(friendId: string, input: string) {
 			throw new Error("Error during friend invitation fetch");
 
 		showMatches(input);
+		const invitationPage = document.getElementById("invitation-list");
+		if (invitationPage?.style.display !== 'none')
+			displayInvitations();
 	}
 	catch (error) {
 		console.error(error);
