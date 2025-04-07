@@ -247,6 +247,12 @@ export function getLastChatsOfUser(id) {
   });
 }
 
+/**
+ * Returns the ID of the chat between two users, if it exists
+ * @param {Number} user_id - ID of the user
+ * @param {Number} friend_id - ID of the other user
+ * @returns {Number} - ID of the found chat
+ */
 export function getChatBetweenUsers(user_id, friend_id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -267,6 +273,13 @@ export function getChatBetweenUsers(user_id, friend_id) {
   });
 }
 
+/**
+ * Checks if there is a chat between any two users
+ * @param {Number} first_user_id - ID of the first user
+ * @param {Number} second_user_id - ID of the second user
+ * @returns {Boolean} - true if there is a chat,
+ *                      false if there isn't
+ */
 export function isChat(first_user_id, second_user_id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -295,6 +308,13 @@ export function isChat(first_user_id, second_user_id) {
   });
 }
 
+/**
+ * Returns all avaliable information for the given chat,
+ * including the ID of the other user
+ * @param {Number} id - ID of the chat
+ * @param {Number} user_id - ID of the user
+ * @returns {Object} - The found chat
+ */
 export function getInfoAboutChat(id, user_id) {
   return new Promise((resolve, reject) => {
     const sql = `
