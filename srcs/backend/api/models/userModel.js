@@ -40,6 +40,11 @@ export async function createUser(data) {
   });
 }
 
+/**
+ * Creates a user in the Google Sign In process
+ * @param {Object} data - User to create
+ * @returns {Object} - The newly created Google user
+ */
 export function createGoogleUser(data) {
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO users (username, email, google_id) VALUES (?,?,?)`;
@@ -313,6 +318,13 @@ export function isBlocked(user_id, blocked_id) {
   });
 }
 
+/**
+ * Checks if a user is a friend of another
+ * @param {Number} user_id - ID of the user
+ * @param {Number} friend_id - ID of the possible friend
+ * @returns {Boolean} - true if the users are friends,
+ *                      false if they aren't
+ */
 export function isFriend(user_id, friend_id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -513,6 +525,11 @@ export function getUserFriends(id) {
   });
 }
 
+/**
+ * Returns the profile of a friend, with game stats
+ * @param {Number} friend_id - ID of the friend
+ * @returns {Object} - The profile of the friend
+ */
 export function getFriendOfUser(friend_id) {
   return new Promise((resolve, reject) => {
     const sql = `
@@ -549,6 +566,11 @@ export function getFriendOfUser(friend_id) {
   });
 }
 
+/**
+ * Returns all the invitations the user has received or sent
+ * @param {Number} id - ID of the user
+ * @returns {Object} - All found invitations
+ */
 export function getInvitationsOfUser(id) {
   return new Promise((resolve, reject) => {
     const sql = `
