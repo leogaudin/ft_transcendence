@@ -41,6 +41,7 @@ export function createMessage(data) {
         chat_id: data.chat_id,
         body: data.body,
         sent_at: data.sent_at,
+        is_read: data.is_read,
       });
     });
   });

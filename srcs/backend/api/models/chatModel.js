@@ -1,4 +1,5 @@
 import db from "../database.js";
+import { patchMessage } from "./messageModel.js";
 import { getUsername } from "./userModel.js";
 
 /**
@@ -72,10 +73,13 @@ export function getChatByID(id) {
         m.chat_id = ?
       ORDER BY
         m.sent_at ASC`;
-    db.all(sql, [id], (err, rows) => {
+    db.all(sql, [id], async (err, rows) => {
       if (err) {
         console.error("Error getting chat:", err.message);
         return reject(err);
+      }
+      for (let message of rows) {
+        await patchMessage(message.message_id, { is_read: 1 });
       }
       resolve(rows);
     });
