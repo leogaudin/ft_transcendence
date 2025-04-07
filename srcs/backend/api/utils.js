@@ -48,38 +48,46 @@ export const asyncWebSocketHandler = (fn) => {
  * @returns {Boolean} - True if successful, false if not
  */
 export function validateInput(req, res, requiredFields) {
-  if (!req.body)
-    return res.code(400).send({ error: "Body of request not found" });
-  if (Object.keys(req.body).length === 0)
-    return res.code(400).send({ error: "At least one field required" });
+  if (!req.body) {
+    res.code(400).send({ error: "Body of request not found" });
+    return false;
+  }
+  if (Object.keys(req.body).length === 0) {
+    res.code(400).send({ error: "At least one field required" });
+    return false;
+  }
   const missingFields = requiredFields.filter((field) => !(field in req.body));
   if (missingFields.length > 0) {
-    return res.code(400).send({
+    res.code(400).send({
       error: `Missing required fields: ${missingFields.join(", ")}`,
     });
+    return false;
   }
   if (requiredFields.includes("password")) {
     const password = req.body.password;
-    if (password.length < 9)
-      return res.code(400).send({ error: "Password is too short" });
-    else if (
+    if (password.length < 9) {
+      res.code(400).send({ error: "Password is too short" });
+      return false;
+    } else if (
       !/[A-Z]/.test(password) ||
       !/[a-z]/.test(password) ||
       !/[0-9]/.test(password) ||
       !/[*\.\-_]/.test(password)
-    )
-      return res.code(400).send({ error: "Password composition is incorrect" });
+    ) {
+      res.code(400).send({ error: "Password composition is incorrect" });
+      return false;
+    }
   }
   if (requiredFields.includes("username")) {
     const username = req.body.username;
-    if (username.length < 4)
-      return res
-        .code(400)
-        .send({ error: "Minimum username length is 4 characters" });
-    if (username.length > 16)
-      return res
-        .code(400)
-        .send({ error: "Maximum username length is 16 characters" });
+    if (username.length < 4) {
+      res.code(400).send({ error: "Minimum username length is 4 characters" });
+      return false;
+    }
+    if (username.length > 16) {
+      res.code(400).send({ error: "Maximum username length is 16 characters" });
+      return false;
+    }
   }
 
   return true;
