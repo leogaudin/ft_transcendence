@@ -92,8 +92,6 @@ async function displayFirstChat(data: MessageObject) {
 	}
 }
 
-
-// Refrescar cuando se recibe un mensaje en segundo plano no funciona bien
 export async function recentChats() {
 	let last_chat = 0;
 	const recentChatsDiv = document.getElementById("conversation-list");
@@ -144,7 +142,6 @@ export async function recentChats() {
 	}
 }
 
-//Marcar en leido aqui
 export async function chargeChat(chat_id: number, friend_username: string) {
 	if (window.innerWidth < 768)
 		toggleMobileDisplay();

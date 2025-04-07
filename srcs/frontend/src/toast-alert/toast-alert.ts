@@ -1,5 +1,5 @@
 import { getClientID } from "../messages/messages-page.js"
-import { displayFriends } from "../friends/friends-fetch.js";
+import { displayFriends, displayInvitations } from "../friends/friends-fetch.js";
 
 let toastTimeout: number;
 let socketToast: WebSocket | null;
@@ -10,9 +10,8 @@ const toastFeatures = [
 ];
 
 function createsocketToastConnection() {
-	if (socketToast && socketToast.readyState !== WebSocket.CLOSED){
+	if (socketToast && socketToast.readyState !== WebSocket.CLOSED)
 	  socketToast.close();
-	}
 	try{
 	  socketToast = new WebSocket(`wss://${window.location.hostname}:8443/ws/toast`)
 	  if (!socketToast)
@@ -20,9 +19,8 @@ function createsocketToastConnection() {
 	  socketToast.onopen = () => {
 		let id = getClientID();
 		console.log("WebsocketToast connection established, sending id:", id);
-		if (id === -1){
-		  console.error("Invalid ID, cannot connect to back")
-		}
+		if (id === -1)
+		  console.error("Invalid ID, cannot connect to back");
 		else{
 		  if (!socketToast)
 			return ;
@@ -33,20 +31,31 @@ function createsocketToastConnection() {
 		  console.log("ID succesfully sent");
 		}
 	  };
-	  socketToast.onmessage = (event) => {
+	  socketToast.onmessage = async (event) => {
 		try{
 			const data = JSON.parse(event.data);
 			if (data.type === "friendRequest"){
 				if (data.info === "request"){
-					if (data.body)
+					if (data.body){
+						const invitationListPage = document.getElementById("invitation-list");
+						if (!invitationListPage)
+							return ;
+						if (invitationListPage.style.display === 'flex')
+							displayInvitations();
 						showAlert(data.body, "toast-success");
-					socketToast?.send(JSON.stringify({
-						type: "friendRequest",
-						info: "confirmation"
-					}))
+					}
 				}
 				else if (data.info === "confirmation"){
-					displayFriends()
+					const friendListPage = document.getElementById("friend-list");
+					if (!friendListPage)
+						return ;
+					displayFriends();
+				}
+				else if (data.info === "delete"){
+					const friendListPage = document.getElementById("friend-list");
+					if (!friendListPage)
+						return ;
+					displayFriends();
 				}
 			}
 		}
