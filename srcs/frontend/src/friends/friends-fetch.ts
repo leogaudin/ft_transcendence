@@ -110,6 +110,7 @@ async function deleteFriend(friendId: string) {
 
 		const friendListPage = document.getElementById("friend-list");
 		const invitationListPage = document.getElementById("invitation-list");
+		
 		if (!friendListPage || !invitationListPage)
 			return ;
 
@@ -118,6 +119,13 @@ async function deleteFriend(friendId: string) {
 		}
 		else
 			displayFriends();
+		if (socketToast){
+			socketToast.send(JSON.stringify({
+				sender_id: parseInt(friendId),
+				type: "friendRequest",
+				info: "delete",
+			}))
+		}
 	}
 	catch (error) {
 		console.error(error);
@@ -365,6 +373,13 @@ async function confirmInvitation(friendId: string) {
 			throw new Error("Error while fetching confirm invitation");
 
 		displayInvitations();
+		if (socketToast){
+			socketToast.send(JSON.stringify({
+				sender_id: parseInt(friendId),
+				type: "friendRequest",
+				info: "confirmation",
+			}))
+		}
 	}	
 	catch (error) {
 		console.error(error);
@@ -390,5 +405,3 @@ export async function blockFriend(friendId: string) {
 		console.error(error);
 	}
 }
-
-export {displayFriends};

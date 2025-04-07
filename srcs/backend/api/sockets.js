@@ -54,7 +54,6 @@ export default function createWebSocketsRoutes(fastify){
 								sent_at: data.sent_at
 							})
 							if (socketsChat.has(id)){
-								console.log(message);
 								const message_id = message.id;
 								const receiver = socketsChat.get(id);
 								receiver.send(JSON.stringify({
@@ -117,7 +116,6 @@ export default function createWebSocketsRoutes(fastify){
 					}
 					else{
 						const data = JSON.parse(notification);
-						console.log(data);
 						if (data.type === "friendRequest"){
 							if (data.info === "request"){
 								const id = parseInt(data.receiver_id);
@@ -125,6 +123,8 @@ export default function createWebSocketsRoutes(fastify){
 								if (socketsToast.has(id)){
 									const receiver = socketsToast.get(id);
 									receiver.send(JSON.stringify({
+										sender_id: data.sender_id,
+										receiver_id: data.receiver_id,
 										type: "friendRequest",
 										body: `You have a friend request from ${username}`,
 										info: "request"
@@ -132,14 +132,22 @@ export default function createWebSocketsRoutes(fastify){
 								}
 							}
 							else if (data.info === "confirmation"){
-								const id = parseInt(data.receiver_id);
-								console.log(id);
+								const id = parseInt(data.sender_id);
 								if (socketsToast.has(id)){
-									console.log("Hola")
 									const receiver = socketsToast.get(id);
 									receiver.send(JSON.stringify({
 										type: "friendRequest",
 										info: "confirmation"
+									}))
+								}
+							}
+							else if (data.info === "delete"){
+								const id = parseInt(data.sender_id);
+								if (socketsToast.has(id)){
+									const receiver = socketsToast.get(id);
+									receiver.send(JSON.stringify({
+										type: "friendRequest",
+										info: "delete",
 									}))
 								}
 							}
