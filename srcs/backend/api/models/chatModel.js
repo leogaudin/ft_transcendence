@@ -209,6 +209,7 @@ export function getLastChatsOfUser(id) {
           sender.is_deleted AS sender_deleted,
           m.body,
           m.sent_at,
+          m.is_read,
           ROW_NUMBER() OVER (PARTITION BY c.id ORDER BY m.sent_at DESC) AS message_rank
         FROM chats c
         JOIN users first_user ON c.first_user_id = first_user.id
@@ -223,7 +224,8 @@ export function getLastChatsOfUser(id) {
         friend_username,
         sender_username, 
         body, 
-        sent_at
+        sent_at,
+        is_read
       FROM RankedMessages
       WHERE message_rank = 1
       ORDER BY sent_at DESC
