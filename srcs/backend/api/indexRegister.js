@@ -4,6 +4,8 @@ import multipart from "@fastify/multipart";
 import formbody from "@fastify/formbody";
 import websocket from "@fastify/websocket";
 import fastifyCookie from "@fastify/cookie";
+import fastifyStatic from "@fastify/static";
+import { UPLOAD_DIR } from "./utils.js";
 
 export default async function pluginRegistration(fastify) {
   /** Plugin registration */
@@ -35,6 +37,10 @@ export default async function pluginRegistration(fastify) {
   await fastify.register(fastifyCookie, {
     secret: process.env.COOKIE_SECRET,
     hook: "preValidation",
+  });
+  await fastify.register(fastifyStatic, {
+    root: UPLOAD_DIR,
+    prefix: "/avatars/",
   });
 
   /** Decorator for Cookie / JWT verification */

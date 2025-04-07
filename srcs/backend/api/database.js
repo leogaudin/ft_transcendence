@@ -18,7 +18,7 @@ db.serialize(() => {
     email VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255),
     google_id VARCHAR(255),
-    avatar TEXT DEFAULT "/usr/transcendence/api/avatars/default.jpg",
+    avatar TEXT DEFAULT "/api/avatars/default.jpg",
     created_at DATETIME DEFAULT (datetime('now', '+2 hours')),
     is_online BOOLEAN DEFAULT 0,
     status TEXT DEFAULT "Hello World!",

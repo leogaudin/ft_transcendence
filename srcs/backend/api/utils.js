@@ -7,6 +7,8 @@ import { getUser, patchUser } from "./models/userModel.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const UPLOAD_DIR = path.join(__dirname, "avatars");
+export { UPLOAD_DIR };
 
 /**
  * Wraps a function in a try catch with await
@@ -117,28 +119,27 @@ export function anonymize(user) {
  * @param {Object} data - Payload to add the image from
  * @returns {Object} - Object with the ID and metadata of the avatar
  */
-export async function saveAvatar(user_id, data) {
-  const uploadDir = path.join(__dirname, "avatars");
-  const filename = `${Date.now()}-${data.filename}`;
-  const filepath = path.join(uploadDir, filename);
+export async function saveAvatar(user_id, data, filename) {
+  const filepath = path.join(UPLOAD_DIR, filename);
   await pipeline(data.file, createWriteStream(filepath));
   const user = await getUser(user_id);
   const old_avatar = user.avatar;
-  const default_avatar = "/usr/transcendence/api/avatars/default.jpg";
-  await patchUser(user_id, { avatar: filepath });
-  if (old_avatar != default_avatar) {
-    unlink(old_avatar, (err) => {
-      if (err) return { error: err.message };
+  const default_avatar = "/api/avatars/default.jpg";
+  const avatar_url = `/api/avatars/${filename}`;
+  await patchUser(user_id, { avatar: avatar_url });
+  if (old_avatar && old_avatar !== default_avatar) {
+    const old_filename = old_avatar.split("/").pop();
+    const old_filepath = path.join(UPLOAD_DIR, old_filename);
+    await unlink(old_filepath, (err) => {
+      if (err) console.error(err);
     });
   }
   return {
     message: "File uploaded successfully",
-    id: user_id,
-    fileDetails: {
-      filename: filename,
-      originalName: data.filename,
-      mimetype: data.mimetype,
-      size: data.file.bytesRead,
-    },
+    user_id: user_id,
+    filename: filename,
+    originalName: data.filename,
+    mimetype: data.mimetype,
+    size: data.file.bytesRead,
   };
 }
