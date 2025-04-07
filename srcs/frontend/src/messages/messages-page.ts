@@ -1,6 +1,7 @@
 import { getChatInfo ,actual_chat_id, recentChats, loadInfo } from "./load-info.js"
 import { navigateTo } from "../index.js";
 import { Message, MessageObject, ChatInfo } from "../types.js";
+import { sendRequest } from "../login-page/login-fetch.js";
 
 let socket: WebSocket | null = null;
 
@@ -56,6 +57,7 @@ function createSocketConnection() {
     socket.onmessage = (event) => {
       try{
         const data = JSON.parse(event.data);
+        console.log(data);
         if (data.sender_id && data.body) {
           displayMessage(data);
         }
@@ -93,12 +95,14 @@ function displayMessage(data: Message){
         </div>`;
     }
     else if (data.receiver_id === getClientID() && actual_chat_id === data.chat_id){
+      console.log(data);
       el.setAttribute("id", "friend-message");
       el.innerHTML = `
       <div class="message friend-message">
         <p>${data.body}</p>
         <p class="hour">${sent_at}</p>
       </div>`;
+      sendRequest(`PATCH`, `/messages/${data.message_id}`, {is_read: 1});
     }
     messageContainer.appendChild(el);
     el.scrollIntoView({ behavior: 'smooth'});

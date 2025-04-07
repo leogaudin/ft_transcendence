@@ -212,4 +212,4 @@ export async function getChatInfo(chat_id: number) : Promise<ChatInfo | null>  {
 	}
 }
 
-export {actual_chat_id}; // Forma sucia para recibir el chat_id, en proceso de buscar una forma nueva de arreglarlo
+export {actual_chat_id};

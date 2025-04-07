@@ -1,9 +1,10 @@
 import { UserMatches, FriendList, InvitationList } from "../types.js"
 import { sendRequest } from "../login-page/login-fetch.js";
 import { displayBlockPopUp, closeModal } from "./friends-page.js"
+import { navigateTo } from "../index.js";
+import { chargeChat } from "../messages/load-info.js";
 import { socketToast } from "../toast-alert/toast-alert.js";
 import { getClientID } from "../messages/messages-page.js";
-import { navigateTo } from "../index.js";
 
 export function initFriendFetches() {
 	const searchForm = document.getElementById("message-box") as HTMLFormElement;

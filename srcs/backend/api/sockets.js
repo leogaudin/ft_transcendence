@@ -46,18 +46,20 @@ export default function createWebSocketsRoutes(fastify){
 						if (data.receiver_id && data.body && await isBlocked(data.sender_id, data.receiver_id) === false){
 							const id = parseInt(data.receiver_id);
 							const chat_id = await getChatBetweenUsers(data.sender_id, data.receiver_id);
-							createMessage({
+							const message = await createMessage({
 								body: data.body,
 								sender_id: data.sender_id,
 								receiver_id: data.receiver_id,
 								chat_id: chat_id,
-								sent_at: data.sent_at,
-								read: false
+								sent_at: data.sent_at
 							})
 							if (socketsChat.has(id)){
+								console.log(message);
+								const message_id = message.id;
 								const receiver = socketsChat.get(id);
 								receiver.send(JSON.stringify({
 									body: data.body,
+									message_id: message_id,
 									chat_id: chat_id,
 									receiver_id: id,
 									sender_id: userId,

@@ -4,8 +4,8 @@ import { initMessagesEvents  } from "./messages/messages-page.js";
 import { initResetPasswordEvents } from "./reset-password-page/reset-password.js";
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
 import { initFriendsEvents } from "./friends/friends-page.js"
-import { displayToast, createsocketToastConnection } from "./toast-alert/toast-alert.js";
 import { LoginObject, MessageObject } from "./types.js";
+import { displayToast, createsocketToastConnection } from "./toast-alert/toast-alert.js";
 import { pong } from "./games/game.js"
 import { socket } from "./messages/messages-page.js"
 
