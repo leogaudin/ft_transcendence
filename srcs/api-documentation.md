@@ -1,5 +1,20 @@
 # Documentación API Transcendence
 
+<!--toc:start-->
+- [Documentación API Transcendence](#documentación-api-transcendence)
+  - [Ejemplos](#ejemplos)
+  - [Endpoints](#endpoints)
+    - [Auntentificación](#auntentificación)
+      - [2FA](#2fa)
+    - [Usuarios](#usuarios)
+    - [Relaciones](#relaciones)
+    - [Avatares](#avatares)
+    - [Chats](#chats)
+    - [Mensajes](#mensajes)
+    - [Torneos](#torneos)
+    - [Partidas](#partidas)
+<!--toc:end-->
+
 ## Ejemplos
 
 ```js
@@ -7,7 +22,7 @@ let res = await fetch("http://localhost:9000/users", {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${JWT}`,
+    credentials: "include",
   },
 });
 if (!res.ok) handleError();
@@ -16,7 +31,7 @@ let res = await fetch("http://localhost:9000/messages", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${JWT}`,
+    credentials: "include",
   },
   body: JSON.stringify({
     sender_id: "1",
@@ -145,11 +160,6 @@ obtener un código de contraseña temporal (TOTP)
 }
 ```
 
-#### El resto de endpoints requiren un JWT además de lo que cada uno necesite
-
-Es obligatorio mandar un JWT tanto por seguridad como para acceder al ID del
-usuario en cuestión, ya que esta información se guarda encriptada en dicho JWT
-
 ### Usuarios
 
 `GET` `/users/list` Devuelve el id, username y email de todos los usuarios
@@ -209,7 +219,7 @@ usuario en cuestión, ya que esta información se guarda encriptada en dicho JWT
 ```
 
 `PATCH` `/users` `{?, ...}` Modifica uno o más campos de un usuario.
-Devuelve los campos modificados
+Devuelve los campos modificados.
 
 ```json
 {
@@ -223,13 +233,98 @@ Devuelve los campos modificados
 donde _str_ puede ser _chats_, _messages_, _matches_ o _tournaments_.
 cf. la tabla en cuestión para ver lo que devuelve
 
-`POST` `/users/friends` `{friend_id}` Añade un amigo al usuario
+`POST` `/users/search` `{username}` Busca usuarios que comiencen por el nombre dado
+
+```json
+{
+  "user_id": 1,
+  "username": "foo",
+  "avatar": "/ruta/al/avatar.jpg",
+  "is_friend": 1
+}
+```
+
+### Relaciones
+
+Estos endpoints tratan de las relaciones entre usuarios
+
+`POST` `/users/friends` `{friend_id}` Añade un amigo al usuario como pendiente
 
 ```json
 {
   "user_id": "1",
   "friend_id": "2"
 }
+```
+
+`POST` `/users/friends/confirm` `{friend_id}` Confirma la petición de amistad
+
+```json
+{
+  "success": true,
+  "user_id": 1,
+  "friend_id": 2,
+  "pending": false
+}
+```
+
+`GET` `/users/friends` Devuelve todos los amigos del usuario
+
+```json
+[
+  {
+    user_id:1,
+    username:bar,
+    status:"hello world",
+    avatar:"/ruta/al/avatar.jpg",
+    is_online: 1
+  },
+  {
+    user_id:2,
+    username:baz,
+    status:"hello world",
+    avatar:"/ruta/al/avatar.jpg",
+    is_online: 1
+  },
+]
+```
+
+`GET` `/users/friends/:id` Devuelve el perfil detallado de un amigo
+
+```json
+{
+  user_id:1,
+  username:foo,
+  alias:foo_alias,
+  status: "hello world",
+  avatar: "/ruta/al/avatar.jpg",
+  is_online: 1,
+  pong_games_played: 4,
+  pong_games_won: 2,
+  pong_games_lost: 2,
+  connect_four_games_played: 2,
+  connect_four_games_won: 1,
+  connect_four_games_lost: 1,
+}
+```
+
+`GET` `/users/invitations` Devuelve las invitaciones pendientes del usuario
+
+```json
+[
+  {
+    sender_id:1,
+    sender_username:foo,
+    sender_avatar: "/ruta/al/avatar.jpg",
+    sender_status: "hello world",
+    receiver_id:2,
+    receiver_username:bar,
+    receiver_avatar: "/ruta/al/avatar.jpg",
+    receiver_status: "hello world",
+    friend_id: 2,
+    invitation_type: "sent",
+  }
+]
 ```
 
 `PATCH` `/users/friends` `{friend_id}` Borra un amigo del usuario
@@ -341,6 +436,57 @@ Devuelve los campos modificados
 ```
 
 `DELETE` `/chats/:id` Borra un chat
+
+`GET` `/chats/last` Devuelve todos los chats del usuario con el
+último mensaje de cada uno
+
+```json
+[
+  {
+    "chat_id": 2,
+    "friend_username": "2alvegag",
+    "sender_username": "alvegag",
+    "body": "Test message from alvegag number 4",
+    "sent_at": "2025-04-04 19:15:47"
+  },
+  {
+    "chat_id": 3,
+    "friend_username": "albagar4",
+    "sender_username": "alvegag",
+    "body": "Test message from alvegag number 4",
+    "sent_at": "2025-04-04 19:15:47"
+  },
+  {
+    "chat_id": 4,
+    "friend_username": "ncruzg",
+    "sender_username": "alvegag",
+    "body": "Test message from alvegag number 4",
+    "sent_at": "2025-04-04 19:15:47"
+  }
+]
+```
+
+`POST` `/chats/identify` `{friend_id}` Devuelve el ID del chat entre dos usuarios,
+creándolo si no existe
+
+```json
+{
+  "id": 1
+}
+```
+
+`GET` `/chats/identify/:id` Devuelve toda la información acerca de un chat
+
+```json
+{
+  "id": 1,
+  "first_user_id": 1,
+  "second_user_id": 2,
+  "first_user_username": "albagar4",
+  "second_user_username": "2albagar4",
+  "friend_id": 1
+}
+```
 
 ### Mensajes
 
