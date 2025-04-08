@@ -1,0 +1,75 @@
+#games-page {
+    background-color: var(--dark-blue);
+	border-radius: 15px;
+	box-shadow: var(--violet) 0px 0px 20px;
+    padding: 1rem;
+    align-items: center;
+	justify-content: center;
+    position: relative;
+	min-height: 90vh;
+	width: 75vw;
+    display: flex;
+    flex-direction: column;
+}
+
+#game {
+	border-radius: 15px;
+	background-color: black;
+	overflow: hidden;
+	width: 70%;
+	aspect-ratio: 2/1;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	border: 20px solid white;
+	position: relative;
+}
+
+#ball {
+	width: 2%;
+	height: 4%;
+	left: 50%;
+	top: 50%;
+	display: block;
+	border: 2px solid white;
+	position: absolute;
+	background-color: white;
+}
+
+.paddle {
+	width: 2%;
+	height: 20%;
+	background-color: white;
+	position: absolute;
+	top: 50%;
+}
+
+#paddleLeft {
+	left: 2%;
+}
+
+#paddleRight {
+	right: 2%;
+}
+
+#line {
+	width: 50%;
+	height: 100%;
+	border-right: 10px dashed white;
+	position: absolute;
+}
+
+.counter {
+	color: white;
+	position: absolute;
+	top: 10%;
+	font-size: 5vw;
+	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+#counter1 {
+	left: 25%;
+}
+
+#counter2 {
+	left: 65%;
+}
