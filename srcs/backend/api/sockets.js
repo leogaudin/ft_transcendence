@@ -42,7 +42,7 @@ export default function createWebSocketsRoutes(fastify){
 					}
 					else{
 						const data = JSON.parse(messageString);
-						console.log(data);
+						let username = await getUsername(data.sender_id);
 						if (data.receiver_id && data.body && await isBlocked(data.sender_id, data.receiver_id) === false){
 							const id = parseInt(data.receiver_id);
 							const chat_id = await getChatBetweenUsers(data.sender_id, data.receiver_id);
@@ -62,14 +62,15 @@ export default function createWebSocketsRoutes(fastify){
 									chat_id: chat_id,
 									receiver_id: id,
 									sender_id: userId,
+									sender_username: username,
 									sent_at: data.sent_at,
 									read: false,
 								}))
 							}
 							else if (socketsToast.has(id)){
 								const toastReceiver = socketsToast.get(id);
-								let username = await getUsername(data.sender_id)
 								toastReceiver.send(JSON.stringify({
+									type: "chatToast",
 									body: `You have a message from ${username}`,
 								}))
 							}
@@ -161,5 +162,6 @@ export default function createWebSocketsRoutes(fastify){
 				})
 			})
 		}
+		
 	]
 }

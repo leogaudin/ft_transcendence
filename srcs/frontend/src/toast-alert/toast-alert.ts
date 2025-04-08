@@ -58,6 +58,8 @@ function createsocketToastConnection() {
 					displayFriends();
 				}
 			}
+			else if (data.type === "chatToast")
+				showAlert(data.body, "toast-success");
 		}
 		catch(err) {
 		  console.error("Error on message", err);
