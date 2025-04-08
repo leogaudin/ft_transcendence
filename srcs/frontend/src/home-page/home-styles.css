@@ -1,28 +1,14 @@
-#visual-div{
-	min-height: 100vh;
-	width: 100%;
-}
-
 #home-page {
 	background-color: var(--dark-blue);
-	border-radius: 15px;
 	box-shadow: var(--violet) 0px 0px 20px;
-	margin: 10vh 5vw;
-	max-width: 1350px;
-	padding: 25px;
-	width: 85%;
-	z-index: 1;
-}
-
-#header-section {
-	width: 100%;
-	padding: 10px;
-	margin: 10px;
+	border-radius: 15px;
+	max-width: 80vw;
+	min-height: 85vh;
+	padding: 2.5vh 2.5vw;
+	margin: 5vh 5vw;
 }
 
 #profile-button {
-	border-radius: 50%;
-	margin-left: 25px;
 	height: 100px;
 	width: 100px;
 	background-image: url("../resources/img/cat.jpg");
@@ -50,35 +36,15 @@
 	padding-left: 10px;
 }
 
-#body-section {
-	flex: 1;
-}
-
-#page-selector {
-	margin-right: 10px;
-	padding-right: 15px;
-	width: 65%;
-}
-
-#explanation {
-	background-color: var(--dark-pink);
-	border-radius: 15px;
-	box-shadow: #3b00345d 0px 5px 5px;
-	color: white;
-	padding: 10px;
-	text-align: center;
-	width: 35%;
-}
-
 .page-option {
-	align-items: center;
-	background-color: var(--violet);
-	border-radius: 15px;
-	box-shadow: #3b00345d 0px 5px 5px;
 	display: flex;
-	font-size: xx-large;
 	justify-content: center;
+	align-items: center;
 	margin: 5px;
+	font-size: xx-large;
+	border-radius: 15px;
+	background-color: var(--violet);
+	box-shadow: #3b00345d 0px 5px 5px;
 	transition: box-shadow 350ms ease-in-out;
 }
 
@@ -87,21 +53,11 @@
 	cursor: pointer;
 }
 
-
-@media only screen and (max-width: 767px) {
-	#body-section {
-		flex-direction: column;
-	}
-	#page-selector {
-		width: 100%;
-		height: auto;
-	}
-	#explanation {
-		width: 100%;
-		height: auto;
-	}
-	.page-option {
-		aspect-ratio: auto;
-	}
+#explanation {
+	color: white;
+	background-color: var(--dark-pink);
+	box-shadow: #3b00345d 0px 5px 5px;
+	border-radius: 15px;
+	text-align: center;
 }
 
