@@ -34,22 +34,26 @@ function createsocketToastConnection() {
 	  socketToast.onmessage = async (event) => {
 		try{
 			const data = JSON.parse(event.data);
+			console.log(data);
 			if (data.type === "friendRequest"){
 				if (data.info === "request"){
 					if (data.body){
+						showAlert(data.body, "toast-success");
 						const invitationListPage = document.getElementById("invitation-list");
 						if (!invitationListPage)
 							return ;
 						if (invitationListPage.style.display === 'flex')
 							displayInvitations();
-						showAlert(data.body, "toast-success");
 					}
 				}
 				else if (data.info === "confirmation"){
+					const invitationListPage = document.getElementById("invitation-list");
 					const friendListPage = document.getElementById("friend-list");
-					if (!friendListPage)
-						return ;
-					displayFriends();
+					if (invitationListPage)
+						if (invitationListPage.style.display === 'flex')
+							displayInvitations();
+					else if (friendListPage)
+						displayFriends();
 				}
 				else if (data.info === "delete"){
 					const friendListPage = document.getElementById("friend-list");
