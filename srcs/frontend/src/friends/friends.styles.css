@@ -208,20 +208,20 @@ option {
 	margin: 3px;
 }
 
-.block {
+.block-button {
 	background-color: var(--alert);
 	transition: 0.2s ease;
 }
 
-.block:hover {
+.block-button {
 	box-shadow: var(--accent-alert) 0px 0px 5px;
 }
 
-.cancel {
+.cancel-button {
 	background-color: var(--dark-purple);
 	transition: 0.2s ease;
 }
 
-.cancel:hover {
+.cancel-button:hover {
 	box-shadow: var(--violet) 0px 0px 5px;
 }

@@ -667,21 +667,18 @@ option {
   margin: 3px;
 }
 
-.block {
+.block-button {
   background-color: var(--alert);
   transition: 0.2s ease;
-}
-
-.block:hover {
   box-shadow: var(--accent-alert) 0px 0px 5px;
 }
 
-.cancel {
+.cancel-button {
   background-color: var(--dark-purple);
   transition: 0.2s ease;
 }
 
-.cancel:hover {
+.cancel-button:hover {
   box-shadow: var(--violet) 0px 0px 5px;
 }
 
@@ -1338,6 +1335,14 @@ video {
   height: 100%;
 }
 
+.h-auto {
+  height: auto;
+}
+
+.h-1\/2 {
+  height: 50%;
+}
+
 .w-10 {
   width: 2.5rem;
 }
@@ -1843,11 +1848,6 @@ h1 {
 
   .md\:flex-row {
     flex-direction: row;
-  }
-
-  .md\:gap-x-10 {
-    -moz-column-gap: 2.5rem;
-         column-gap: 2.5rem;
   }
 }
 
