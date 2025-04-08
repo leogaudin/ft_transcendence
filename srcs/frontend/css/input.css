@@ -83,6 +83,30 @@ h1 {
 	align-items: center;
 }
 
+.standard-purple-card {
+	flex-direction: column;
+	background-color: var(--dark-blue);
+	border-radius: 15px;
+	box-shadow: var(--violet) 0px 0px 20px;
+	margin: 10px;
+	padding: 25px;
+	gap: 10px;
+	min-width: 30vw;
+	max-width: 90vw;
+	z-index: 1;
+}
+
+.standard-pink-card {
+	background-color: var(--dark-pink);
+	box-shadow: var(--accent-pink) 0px 0px 20px;
+	border-radius: 15px;
+	color: white;
+	min-height: 20%;
+	min-width: 35%;
+	max-width: 80%;
+	padding: 10px;
+}
+
 /* --> ICONS <-- */
 
 .error-icon {
@@ -141,4 +165,18 @@ h1 {
 .toast-success {
 	background-color: var(--success) !important;
 	box-shadow: var(--accent-success) 0px 0px 10px !important;
+}
+
+/* --> DIVIDERS <-- */
+
+#divider {
+	border-bottom: 5px solid var(--violet);
+	border-radius: 3px;
+	margin: 20px;
+}
+
+#pink-divider {
+	border-bottom: 3px solid var(--accent-pink);
+	border-radius: 3px;
+	margin: 10px;
 }

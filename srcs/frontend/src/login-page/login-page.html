@@ -1,17 +1,16 @@
-<div id="visual-div" class="flex flex-col justify-center items-center">
-    
+<div class="screen-set flex-col"> 
     <!-- Login Page -->
-    <main id="login-page" class="flex flex-col">
-      <header class="flex justify-center items-center w-full m-2.5 p-2.5">
+    <main id="login-page" class="standard-purple-card flex">
+      <header class="flex justify-center items-center w-full m-2.5 p-2.5 gap-x-5">
         <h1>Welcome!</h1>
-        <img id="login-page-img" src="resources/img/sleeping-cat.png" alt="sleeping cat">
+        <img class="max-w-24" src="resources/img/sleeping-cat.png" alt="sleeping cat">
       </header>
       <div id="divider"></div>
       <section id="sign-in">
         <form id="login-form" class="flex flex-col items-center">
           <input type="text" id="login-username" placeholder="Username" class="data-user outline-none">
           <input type="password" id="password" placeholder="Password" class="data-user outline-none">
-          <button type="submit" class="data-user signin-user">Sign in</button>
+          <button type="submit" class="signin-user">Sign in</button>
         </form>
       </section>
       <p class="flex justify-center">or</p>
@@ -39,10 +38,10 @@
     </main>
 
     <!-- Sign up page -->
-    <main id="sign-up-page" class="flex flex-col">
-      <header class="flex justify-center items-center w-full m-2.5 p-2.5">
+    <main id="sign-up-page" class="standard-purple-card hidden">
+      <header class="flex justify-center items-center w-full m-2.5 p-2.5 gap-x-5">
         <h1>Create an account</h1>
-        <img id="login-page-img" src="resources/img/sleeping-cat.png" alt="sleeping cat">
+        <img class="max-w-24" src="resources/img/sleeping-cat.png" alt="sleeping cat">
       </header>
       <div id="divider"></div>
       <section id="sign-up">
@@ -55,8 +54,8 @@
           <input type="password" id="new-password" placeholder="Password" class="data-user outline-none">
           <p class="flex justify-start w-full mt-5">Repeat the password</p>
           <input type="password" id="confirm-password" placeholder="Password" class="data-user outline-none">
-          <div class="create-account">
-            <button type="submit" class="data-user signin-user">Create account</button>
+          <div class="flex flex-col justify-center items-center m-2.5 p-2.5">
+            <button type="submit" class="signin-user">Create account</button>
             <div class="flex flex-row">
               <p>or return to <div class="text-[var(--dark-pink)] cursor-pointer" id="sign-in-button">&nbsp;Sign in</div></p>
             </div>
@@ -67,10 +66,10 @@
     </main>
 
     <!-- Terms and Conditions -->
-    <main id="terms-and-conditions" class="flex flex-col">
-      <header class="flex justify-center items-center w-full m-2.5 p-2.5">
+    <main id="terms-and-conditions" class="standard-purple-card hidden md:w-4/5">
+      <header class="flex justify-center items-center w-full m-2.5 p-2.5 gap-x-5">
         <h1>Terms and Privacy Policy</h1>
-        <img id="login-page-img" src="resources/img/sleeping-cat.png" alt="sleeping cat">
+        <img class="max-w-24" src="resources/img/sleeping-cat.png" alt="sleeping cat">
       </header>
       <div id="divider"></div>
       <section id="privacy-policy" class="flex flex-col justify-center items-center"></section>
@@ -111,7 +110,7 @@
 </div>
 
 <!-- Reset Password modal -->
-<dialog id="recover-password">
+<dialog id="recover-password" class="standard-pink-card hidden">
     <div id="recover-password-modal" class="w-full h-full">
       <div class="flex justify-between items-center m-2.5">
         <h1 class="text-white text-3xl">Recover your password</h1>

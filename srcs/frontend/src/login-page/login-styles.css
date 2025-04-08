@@ -1,33 +1,4 @@
-#login-page, #sign-up-page, #terms-and-conditions, #twoFA-page, #chat-page, #settings-div, #settings-display, #card {
-	background-color: var(--dark-blue);
-	border-radius: 15px;
-	box-shadow: var(--violet) 0px 0px 20px;
-	margin: 10px;
-	padding: 25px;
-	min-width: 30%;
-	max-width: 90%;
-	z-index: 1;
-	gap: 10px;
-}
-
-#sign-up-page {
-	display: none;
-}
-
-#divider {
-	border-bottom: 5px solid var(--violet);
-	border-radius: 3px;
-	margin: 20px;
-}
-
-#login-page-img {
-	margin-left: 20px;
-	max-height: 100px;
-	max-width: 100px;
-}
-
 #login-footer {
-	z-index: 1;
 	min-width: 30%;
 	max-width: 90%;
 }
@@ -42,7 +13,10 @@
 
 .signin-user {
 	background-color: var(--dark-purple);
-	width:fit-content;
+	width: fit-content;
+	border-radius: 5px;
+	margin: 5px;
+	padding: 5px;
 	transition: 350ms ease-in-out;
 }
 
@@ -52,71 +26,29 @@
 	cursor: pointer;
 }
 
-.create-account {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	margin: 10px;
-	padding: 10px;
-}
-  
-#terms-conditions {
-	text-align: end;
-}
-
 #menu-button {
 	background-color: var(--dark-blue);
-	border-radius: 5px;
 	box-shadow: var(--violet) 0px 0px 20px;
+	border-radius: 5px;
 }
 
 .l-option {
-	background-color: var(--accent-pink);
+	width: 100px;
 	color: var(--dark-blue);
+	background-color: var(--accent-pink);
 	border-radius: 5px;
 	margin-bottom: 5px;
 	transition: 350ms ease-in-out;
-	width: 100px;
 }
 
 .l-option:hover {
-	background-color: var(--dark-blue);
 	color: var(--accent-pink);
+	background-color: var(--dark-blue);
 	padding-left: 10px;
 }
 
-#recover-password, #reset-password, #block-user {
-	display: none;
-	background-color: var(--dark-pink);
-	box-shadow: var(--accent-pink) 0px 0px 20px;
-	border-radius: 15px;
-	color: white;
-	min-height: 20%;
-	min-width: 35%;
-	max-width: 80%;
-	padding: 10px;
-}
-
-#pink-divider {
-	border-bottom: 3px solid var(--accent-pink);
-	border-radius: 3px;
-	margin: 10px;
-}
-
 #terms-and-conditions {
-	display: none;
-	max-height: 800px;
-	max-width: 80%;
+	max-height: 80vh;
 	overflow-y: scroll;
 	overflow-x: hidden;
 }
-
-
-@media only screen and (max-width: 767px) {
-	#terms-and-conditions {
-		max-width: 90%;
-	}
-}
-
-
