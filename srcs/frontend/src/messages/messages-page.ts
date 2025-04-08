@@ -2,6 +2,7 @@ import { getChatInfo ,actual_chat_id, recentChats, loadInfo } from "./load-info.
 import { navigateTo } from "../index.js";
 import { Message, MessageObject, ChatInfo } from "../types.js";
 import { sendRequest } from "../login-page/login-fetch.js";
+import { showAlert } from "../toast-alert/toast-alert.js";
 
 let socket: WebSocket | null = null;
 
@@ -80,7 +81,8 @@ function createSocketConnection() {
 }
 
 function displayMessage(data: Message){
-    console.log(actual_chat_id);
+    if (actual_chat_id !== data.chat_id)
+      showAlert(`You have a message from ${data.sender_username}`, "toast-success");
     let messageContainer = document.getElementById("message-history");
     if (!messageContainer)
       return ;
