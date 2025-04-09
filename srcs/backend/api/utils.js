@@ -1,12 +1,12 @@
 import { pipeline } from "node:stream/promises";
 import { createWriteStream, unlink } from "node:fs";
 import path from "node:path";
-import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { getUser, patchUser } from "./models/userModel.js";
+import assert from "node:assert/strict";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 const UPLOAD_DIR = path.join(__dirname, "avatars");
 export { UPLOAD_DIR };
 
@@ -18,6 +18,10 @@ export const asyncHandler = (fn) => async (req, res) => {
   try {
     await fn(req, res);
   } catch (err) {
+    if (err?.name === "AssertionError" || err?.code === "ERR_ASSERTION") {
+      console.error(err);
+      process.exit(1);
+    }
     res.code(500).send({ error: err.message });
   }
 };
@@ -50,6 +54,8 @@ export const asyncWebSocketHandler = (fn) => {
  * @returns {Boolean} - True if successful, false if not
  */
 export function validateInput(req, res, requiredFields) {
+  assert(req !== undefined, "req must exist");
+  assert(res !== undefined, "res must exist");
   if (!req.body) {
     res.code(400).send({ error: "Body of request not found" });
     return false;
@@ -102,6 +108,7 @@ export function validateInput(req, res, requiredFields) {
  * @returns {Object} - Modified user
  */
 export function anonymize(user) {
+  assert(user !== undefined, "user must exist");
   if (!user.is_deleted) {
     delete user.is_deleted;
   } else {
@@ -119,7 +126,10 @@ export function anonymize(user) {
  * @param {Object} data - Payload to add the image from
  * @returns {Object} - Object with the ID and metadata of the avatar
  */
-export async function saveAvatar(user_id, data, filename) {
+export async function saveAvatar(user_id, data) {
+  assert(user_id !== undefined, "user_id must exist");
+  assert(data !== undefined, "data must exist");
+  const filename = `${Date.now()}-${data.filename}`;
   const filepath = path.join(UPLOAD_DIR, filename);
   await pipeline(data.file, createWriteStream(filepath));
   const user = await getUser(user_id);

@@ -9,6 +9,7 @@ import fastify from "./index.js";
 import qrcode from "qrcode";
 import { authenticator } from "otplib";
 import { OAuth2Client } from "google-auth-library";
+import assert from "node:assert/strict";
 
 /**
  * Logs the user
@@ -19,6 +20,8 @@ import { OAuth2Client } from "google-auth-library";
  *                     or with an error if not
  */
 export async function loginUser(user, password, totp_token = null) {
+  assert(user !== undefined, "user must exist");
+  assert(password !== undefined, "password must exist");
   const isAuthorized = await bcrypt.compare(password, user.password);
   if (!isAuthorized) return { error: "Incorrect password" };
   if (totp_token) {
@@ -33,6 +36,7 @@ export async function loginUser(user, password, totp_token = null) {
 }
 
 function parseUsername(email) {
+  assert(email !== undefined, "email must exist");
   const name = email.split("@")[0].substring(0, 16);
   const parsed = name.replace(/[^0-9a-z-A-Z ]/g, "").replace(/ +/, " ");
   return parsed;
@@ -44,6 +48,7 @@ function parseUsername(email) {
  * @returns {Object} - The logged in user, with a JWT
  */
 export async function loginGoogleUser(credential) {
+  assert(credential !== undefined, "credential must exist");
   const client = new OAuth2Client(process.env.CLIENT_ID);
   const ticket = await client.verifyIdToken({
     idToken: credential,
@@ -78,6 +83,7 @@ export async function loginGoogleUser(credential) {
  * @returns {Object} - The QR code to scan
  */
 export async function enable2fa(user) {
+  assert(user !== undefined, "user must exist");
   const secret = authenticator.generateSecret();
   await patchUser(user.id, { pending_totp_secret: secret });
   const keyUri = authenticator.keyuri(user.username, "Transcendence", secret);
@@ -92,6 +98,8 @@ export async function enable2fa(user) {
  * @returns {Object} - Success or failure
  */
 export async function verify2fa(user, totpCode) {
+  assert(user !== undefined, "user must exist");
+  assert(totpCode !== undefined, "totpCode must exist");
   const totpVerified = authenticator.verify({
     token: totpCode,
     secret: user.pending_totp_secret,
@@ -114,6 +122,7 @@ export async function verify2fa(user, totpCode) {
  * @returns {Object} - An object with the full user information and a JWT
  */
 export async function registerUser(data) {
+  assert(data !== undefined, "data must exist");
   const user = await createUser(data);
   const result = Object.assign({}, user, { success: true });
   return result;
@@ -125,6 +134,8 @@ export async function registerUser(data) {
  * @param {Object} user - User in question
  */
 export function setJWT(res, user) {
+  assert(res !== undefined, "response must exist");
+  assert(user !== undefined, "user must exist");
   const token = fastify.jwt.sign({ user: user.id });
   res.cookie("token", token, {
     signed: true,

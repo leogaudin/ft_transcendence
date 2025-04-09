@@ -1,4 +1,5 @@
 import db from "../database.js";
+import assert from "node:assert/strict";
 
 /**
  * Finds all tournaments where a given player plays
@@ -6,6 +7,7 @@ import db from "../database.js";
  * @returns {Array} - All found tournaments
  */
 export function getPlayersInTournament(tournamentID) {
+  assert(tournamentID !== undefined, "tournamentID must exist");
   return new Promise((resolve, reject) => {
     const sql =
       "SELECT player_id FROM tournament_players WHERE tournament_id = ?";
@@ -60,6 +62,8 @@ export function getTournaments() {
  *                      error on failure
  */
 export function addPlayerToTournament(tournamentID, playerId) {
+  assert(tournamentID !== undefined, "tournamentID must exist");
+  assert(playerId !== undefined, "playerId must exist");
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO tournament_players (tournament_id, player_id) VALUES (?,?)`;
     const params = [tournamentID, playerId];
@@ -79,6 +83,7 @@ export function addPlayerToTournament(tournamentID, playerId) {
  * @returns {Object} - Newly created tournament
  */
 export function createTournament(data) {
+  assert(data !== undefined, "data must exist");
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO tournaments (name, player_amount) VALUES (?,?)`;
     const params = [data.name, data.player_amount];
@@ -112,6 +117,7 @@ export function createTournament(data) {
  * @returns {Object} - Found tournament
  */
 export function getTournamentByID(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT t.id, t.name, t.player_amount,
@@ -142,6 +148,8 @@ export function getTournamentByID(id) {
  * @returns {Object} - Modified tournament
  */
 export function putTournament(id, data) {
+  assert(id !== undefined, "id must exist");
+  assert(data !== undefined, "data must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       UPDATE tournaments
@@ -168,6 +176,7 @@ export function putTournament(id, data) {
  * @returns {Object} - Modified fields
  */
 export function patchTournament(updates) {
+  assert(updates !== undefined, "updates must exist");
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
       .map((key) => `${key} = ?`)
@@ -199,6 +208,7 @@ export function patchTournament(updates) {
  *                      error on failure
  */
 export function deleteTournament(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       DELETE FROM tournaments
@@ -223,6 +233,7 @@ export function deleteTournament(id) {
  * @returns {Array} - All found tournaments
  */
 export function getTournamentsOfUser(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT t.* FROM tournaments t 

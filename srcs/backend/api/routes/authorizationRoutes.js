@@ -48,8 +48,7 @@ export default function createAuthRoutes(fastify) {
       method: "POST",
       url: "/google/login",
       handler: asyncHandler(async (req, res) => {
-        if (!validateInput(req, res, ["credential"]))
-          return res.code(400).send({ error: "Credential not found" });
+        if (!validateInput(req, res, ["credential"])) return;
         const result = await loginGoogleUser(req.body.credential);
         setJWT(res, result);
         return res.code(200).send(result);
