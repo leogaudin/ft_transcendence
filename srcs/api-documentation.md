@@ -18,7 +18,7 @@
 ## Ejemplos
 
 ```js
-let res = await fetch("http://localhost:9000/users", {
+let res = await fetch("https://localhost:8443/api/users", {
   method: "GET",
   headers: {
     "Content-Type": "application/json",
@@ -27,7 +27,7 @@ let res = await fetch("http://localhost:9000/users", {
 });
 if (!res.ok) handleError();
 
-let res = await fetch("http://localhost:9000/messages", {
+let res = await fetch("https://localhost:8443/api/messages", {
   method: "POST",
   headers: {
     "Content-Type": "application/json",
@@ -46,7 +46,9 @@ Si quieres ver más, cf. `srcs/backend/api/dev/dummy.js`
 
 ## Endpoints
 
-Todos los endpoints están precedidos de <http://localhost:9000>
+Todos los endpoints están precedidos de <https://localhost:8443/api>
+Esta conexión está controlada por Nginx en el contenedor del frontend,
+que lo redirige al backend, actuando como proxy
 
 La estructura de la documentación es la siguiente:
 
