@@ -1,4 +1,5 @@
 import db from "../database.js";
+import assert from "node:assert/strict";
 
 /**
  * Finds all avaliable matches
@@ -30,6 +31,7 @@ export function getMatchs() {
  * @returns {Object} - Newly created match
  */
 export function createMatch(data) {
+  assert(data !== undefined, "data must exist");
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO matches (
     left_player_id, right_player_id, result, winner_id, loser_id)
@@ -68,6 +70,7 @@ export function createMatch(data) {
  * @returns {Object} - Found match
  */
 export function getMatchByID(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM matches WHERE id = ?";
 
@@ -91,6 +94,8 @@ export function getMatchByID(id) {
  * @returns {Object} - Modified match
  */
 export function putMatch(id, data) {
+  assert(id !== undefined, "id must exist");
+  assert(data !== undefined, "data must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       UPDATE matches
@@ -125,6 +130,8 @@ export function putMatch(id, data) {
  * @returns {Object} - Modified fields
  */
 export function patchMatch(id, updates) {
+  assert(id !== undefined, "id must exist");
+  assert(updates !== undefined, "updates must exist");
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
       .map((key) => `${key} = ?`)
@@ -155,6 +162,7 @@ export function patchMatch(id, updates) {
  *                      error on failure
  */
 export function deleteMatch(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       DELETE FROM matches
@@ -179,6 +187,7 @@ export function deleteMatch(id) {
  * @returns {Array} - All found matches
  */
 export function getMatchesOfUser(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = ` SELECT * FROM matches WHERE left_player_id = ? OR right_player_id = ?`;
     db.all(sql, [id, id], (err, rows) => {

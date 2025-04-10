@@ -4,12 +4,12 @@ import crypto from "crypto";
 import fs from "fs";
 import path from "path";
 import handlebars from "handlebars";
-import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { patchUser } from "./models/userModel.js";
+import assert from "node:assert/strict";
 
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const __dirname = path.dirname(__filename);
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST,
   port: 587,
@@ -25,6 +25,7 @@ const transporter = nodemailer.createTransport({
  * @returns {Object} - Object with success or failure
  */
 export async function resetUserPassword(user) {
+  assert(user !== undefined, "user must exist");
   const resetToken = crypto.randomBytes(32).toString("hex");
   const hash = await bcrypt.hash(resetToken, 10);
   await patchUser(user.id, { reset_token: hash });
@@ -49,6 +50,8 @@ export async function resetUserPassword(user) {
 }
 
 export async function checkNewPassword(user, new_password) {
+  assert(user !== undefined, "user must exist");
+  assert(new_password !== undefined, "new_password must exist");
   const result = await bcrypt.compare(new_password, user.password);
   return result;
 }
@@ -62,6 +65,9 @@ export async function checkNewPassword(user, new_password) {
  *                      false if token does not match
  */
 export async function verifyUserResetToken(user, token, new_password) {
+  assert(user !== undefined, "user must exist");
+  assert(token !== undefined, "token must exist");
+  assert(new_password !== undefined, "new_password must exist");
   const isAuthorized = await bcrypt.compare(token, user.reset_token);
   await patchUser(user.id, { reset_token: null });
   if (!isAuthorized) return false;

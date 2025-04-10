@@ -1,13 +1,12 @@
 import { initHomeEvents } from "./home-page/home-page.js";
 import { initLoginEvents } from "./login-page/login-page.js";
-import { initMessagesEvents  } from "./messages/messages-page.js";
+import { initMessagesEvents, socket } from "./messages/messages-page.js";
 import { initResetPasswordEvents } from "./reset-password-page/reset-password.js";
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
 import { initFriendsEvents } from "./friends/friends-page.js"
 import { LoginObject, MessageObject } from "./types.js";
-import { displayToast, createsocketToastConnection } from "./toast-alert/toast-alert.js";
+import { displayToast, createsocketToastConnection, socketToast } from "./toast-alert/toast-alert.js";
 import { pong } from "./games/game.js"
-import { socket } from "./messages/messages-page.js"
 
 const routes = [
 	{
@@ -73,6 +72,8 @@ const routes = [
 
 export function navigateTo(path: string, data: object = {}) {
 	history.pushState(null, "", path);
+	if (socketToast && path === "/login")
+		socketToast.close();
 	loadContent(path, data);
 }
 
@@ -118,6 +119,7 @@ window.onpopstate = () => {
 // Load page correctly when writing it directly on navbar
 document.addEventListener("DOMContentLoaded", () => {
 	initBaseEvents();
-	createsocketToastConnection();
+	if (window.location.pathname !== "/login")
+		createsocketToastConnection();
 	loadContent(window.location.pathname);
 });

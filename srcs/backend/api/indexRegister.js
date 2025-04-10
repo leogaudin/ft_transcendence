@@ -52,7 +52,7 @@ export default async function pluginRegistration(fastify) {
       const decoded = fastify.jwt.verify(value);
       req.userId = decoded.user;
     } catch (err) {
-      res.send(err);
+      return res.code(401).send({ error: "Signed cookie must be provided" });
     }
   });
 }

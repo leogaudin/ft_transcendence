@@ -1,5 +1,5 @@
 import db from "../database.js";
-import { getUser } from "./userModel.js";
+import assert from "node:assert/strict";
 
 /**
  * Finds all avaliable messages
@@ -25,6 +25,7 @@ export function getMessages() {
  * @returns {Object} - Newly created message
  */
 export function createMessage(data) {
+  assert(data !== undefined, "data must exist");
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO messages (sender_id, receiver_id, chat_id, body) VALUES (?,?,?,?)`;
     const params = [data.sender_id, data.receiver_id, data.chat_id, data.body];
@@ -53,6 +54,7 @@ export function createMessage(data) {
  * @returns {Object} - Found message
  */
 export function getMessageByID(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = "SELECT * FROM messages WHERE id = ?";
 
@@ -73,6 +75,8 @@ export function getMessageByID(id) {
  * @returns {Object} - Modified message
  */
 export function putMessage(id, data) {
+  assert(id !== undefined, "id must exist");
+  assert(data !== undefined, "data must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       UPDATE messages
@@ -100,6 +104,8 @@ export function putMessage(id, data) {
  * @returns {Object} - Modified fields
  */
 export function patchMessage(id, updates) {
+  assert(id !== undefined, "id must exist");
+  assert(updates !== undefined, "updates must exist");
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
       .map((key) => `${key} = ?`)
@@ -130,6 +136,7 @@ export function patchMessage(id, updates) {
  *                      error on failure
  */
 export function deleteMessage(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       DELETE FROM messages
@@ -155,6 +162,7 @@ export function deleteMessage(id) {
  * @returns {Array} - An array of chats, with an array messages inside
  */
 export function getMessagesOfUser(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT

@@ -1,4 +1,5 @@
 import db from "../database.js";
+import assert from "node:assert/strict";
 import { patchMessage } from "./messageModel.js";
 import { getUsername } from "./userModel.js";
 
@@ -27,6 +28,7 @@ export function getChats() {
  * @returns {Object} - Newly created chat
  */
 export function createChat(data) {
+  assert(data !== undefined, "data must exist");
   return new Promise((resolve, reject) => {
     const first_id = Math.min(data.first_user_id, data.second_user_id);
     const second_id = Math.max(data.first_user_id, data.second_user_id);
@@ -53,6 +55,7 @@ export function createChat(data) {
  * @returns {Object} - Found chat
  */
 export function getChatByID(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT
@@ -93,6 +96,8 @@ export function getChatByID(id) {
  * @returns {Object} - Modified chat
  */
 export function putChat(id, data) {
+  assert(id !== undefined, "id must exist");
+  assert(data !== undefined, "data must exist");
   return new Promise((resolve, reject) => {
     const first_id = Math.min(data.first_user_id, data.second_user_id);
     const second_id = Math.max(data.first_user_id, data.second_user_id);
@@ -122,6 +127,8 @@ export function putChat(id, data) {
  * @returns {Object} - Modified fields
  */
 export function patchChat(id, updates) {
+  assert(id !== undefined, "id must exist");
+  assert(updates !== undefined, "updates must exist");
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
       .map((key) => `${key} = ?`)
@@ -153,6 +160,7 @@ export function patchChat(id, updates) {
  *                      error on failure
  */
 export function deleteChat(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       DELETE FROM chats
@@ -177,6 +185,7 @@ export function deleteChat(id) {
  * @returns {Array} - All found chats
  */
 export function getChatsOfUser(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = ` SELECT * FROM chats WHERE first_user_id = ? OR second_user_id = ?`;
     db.all(sql, [id, id], (err, rows) => {
@@ -196,6 +205,7 @@ export function getChatsOfUser(id) {
  *                     sorted by date
  */
 export function getLastChatsOfUser(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       WITH RankedMessages AS (
@@ -254,6 +264,8 @@ export function getLastChatsOfUser(id) {
  * @returns {Number} - ID of the found chat
  */
 export function getChatBetweenUsers(user_id, friend_id) {
+  assert(user_id !== undefined, "user_id must exist");
+  assert(friend_id !== undefined, "friend_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
     SELECT id
@@ -281,6 +293,8 @@ export function getChatBetweenUsers(user_id, friend_id) {
  *                      false if there isn't
  */
 export function isChat(first_user_id, second_user_id) {
+  assert(first_user_id !== undefined, "first_user_id must exist");
+  assert(second_user_id !== undefined, "second_user_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT EXISTS (
@@ -316,6 +330,8 @@ export function isChat(first_user_id, second_user_id) {
  * @returns {Object} - The found chat
  */
 export function getInfoAboutChat(id, user_id) {
+  assert(id !== undefined, "id must exist");
+  assert(user_id !== undefined, "user_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT

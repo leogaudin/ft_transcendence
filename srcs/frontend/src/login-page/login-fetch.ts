@@ -139,9 +139,9 @@ async function initSession(response: object) {
 			localStorage.setItem(key, JSON.stringify(value));
 			// console.log("storing: ", key, ", ", JSON.stringify(value));
 	});
-	createsocketToastConnection();
 	console.log(messages);
 	navigateTo("/home");
+	createsocketToastConnection();
 } 
 
 /**

@@ -12,6 +12,12 @@ const toastFeatures = [
 function createsocketToastConnection() {
 	if (socketToast && socketToast.readyState !== WebSocket.CLOSED)
 	  socketToast.close();
+	const userId = localStorage.getItem("id");
+	console.log(userId);
+    if (!userId) {
+      console.error("No se puede crear conexión WebSocket: usuario no autenticado");
+      return;
+    }
 	try{
 	  socketToast = new WebSocket(`wss://${window.location.hostname}:8443/ws/toast`)
 	  if (!socketToast)
@@ -34,22 +40,26 @@ function createsocketToastConnection() {
 	  socketToast.onmessage = async (event) => {
 		try{
 			const data = JSON.parse(event.data);
+			console.log(data);
 			if (data.type === "friendRequest"){
 				if (data.info === "request"){
 					if (data.body){
+						showAlert(data.body, "toast-success");
 						const invitationListPage = document.getElementById("invitation-list");
 						if (!invitationListPage)
 							return ;
 						if (invitationListPage.style.display === 'flex')
 							displayInvitations();
-						showAlert(data.body, "toast-success");
 					}
 				}
 				else if (data.info === "confirmation"){
+					const invitationListPage = document.getElementById("invitation-list");
 					const friendListPage = document.getElementById("friend-list");
-					if (!friendListPage)
-						return ;
-					displayFriends();
+					if (invitationListPage)
+						if (invitationListPage.style.display === 'flex')
+							displayInvitations();
+					else if (friendListPage)
+						displayFriends();
 				}
 				else if (data.info === "delete"){
 					const friendListPage = document.getElementById("friend-list");
@@ -58,6 +68,8 @@ function createsocketToastConnection() {
 					displayFriends();
 				}
 			}
+			else if (data.type === "chatToast")
+				showAlert(data.body, "toast-success");
 		}
 		catch(err) {
 		  console.error("Error on message", err);
@@ -122,5 +134,4 @@ export function showAlert(msg: string, toastType: string) {
 	toastTimeout = setTimeout(() => { toastAlert.style.display = "none"; }, 5000);
 }
 
-export { createsocketToastConnection }
-export { socketToast }
+export { createsocketToastConnection, socketToast }

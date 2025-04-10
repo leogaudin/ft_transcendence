@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import db from "../database.js";
+import assert from "node:assert/strict";
 import { anonymize } from "../utils.js";
 
 /**
@@ -26,6 +27,7 @@ export function getUsers() {
  * @returns {Object} - The newly created user
  */
 export async function createUser(data) {
+  assert(data !== undefined, "data must exist");
   data.password = await bcrypt.hash(data.password, 10);
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO users (username, email, password) VALUES (?,?,?)`;
@@ -46,6 +48,7 @@ export async function createUser(data) {
  * @returns {Object} - The newly created Google user
  */
 export function createGoogleUser(data) {
+  assert(data !== undefined, "data must exist");
   return new Promise((resolve, reject) => {
     const sql = `INSERT INTO users (username, email, google_id) VALUES (?,?,?)`;
     const params = [data.username, data.email, data.googleId];
@@ -66,6 +69,8 @@ export function createGoogleUser(data) {
  * @returns {Object} - The modified user
  */
 export async function putUser(id, data) {
+  assert(id !== undefined, "id must exist");
+  assert(data !== undefined, "data must exist");
   data.password = await bcrypt.hash(data.password, 10);
   return new Promise((resolve, reject) => {
     const sql = `
@@ -94,6 +99,8 @@ export async function putUser(id, data) {
  * @returns {Object} - Modified fields
  */
 export async function patchUser(id, updates) {
+  assert(id !== undefined, "id must exist");
+  assert(updates !== undefined, "updates must exist");
   if (updates.hasOwnProperty("password")) {
     updates.password = await bcrypt.hash(updates.password, 10);
   }
@@ -128,6 +135,7 @@ export async function patchUser(id, updates) {
  *                      error on failure
  */
 export function deleteUser(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       UPDATE users
@@ -154,6 +162,8 @@ export function deleteUser(id) {
  * @returns {Object} - Object with the IDs of the users
  */
 export function acceptUserFriend(id, friend_id) {
+  assert(id !== undefined, "id must exist");
+  assert(friend_id !== undefined, "friend_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       UPDATE
@@ -191,6 +201,8 @@ export function acceptUserFriend(id, friend_id) {
  * @returns {Object} - Status of query
  */
 export function addUserFriendPending(id, friend_id) {
+  assert(id !== undefined, "id must exist");
+  assert(friend_id !== undefined, "friend_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       INSERT INTO user_friends (user_id, friend_id, starter_id)
@@ -222,6 +234,8 @@ export function addUserFriendPending(id, friend_id) {
  *                     error on failure
  */
 export function removeUserFriend(id, friend_id) {
+  assert(id !== undefined, "id must exist");
+  assert(friend_id !== undefined, "friend_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       DELETE FROM user_friends
@@ -248,6 +262,8 @@ export function removeUserFriend(id, friend_id) {
  * @returns {Object} - IDs of the relevant users
  */
 export function addUserBlock(id, blocked_id) {
+  assert(id !== undefined, "id must exist");
+  assert(blocked_id !== undefined, "blocked_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       INSERT INTO user_blocks (user_id, blocked_id)
@@ -274,6 +290,8 @@ export function addUserBlock(id, blocked_id) {
  *                      error on failure
  */
 export function removeUserBlock(id, blocked_id) {
+  assert(id !== undefined, "id must exist");
+  assert(blocked_id !== undefined, "blocked_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       DELETE FROM user_blocks
@@ -300,6 +318,8 @@ export function removeUserBlock(id, blocked_id) {
  *                      false if it isn't
  */
 export function isBlocked(user_id, blocked_id) {
+  assert(user_id !== undefined, "user_id must exist");
+  assert(blocked_id !== undefined, "blocked_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT EXISTS (
@@ -326,6 +346,8 @@ export function isBlocked(user_id, blocked_id) {
  *                      false if they aren't
  */
 export function isFriend(user_id, friend_id) {
+  assert(user_id !== undefined, "user_id must exist");
+  assert(friend_id !== undefined, "friend_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT EXISTS (
@@ -356,12 +378,11 @@ export function isFriend(user_id, friend_id) {
  * @returns {Object} - The found user, null if it doesn't exist
  */
 export function getUser(identifier, keepCredentials = null) {
+  assert(identifier !== undefined, "identifier must exist");
   return new Promise((resolve, reject) => {
     let whereClause;
 
-    if (identifier === undefined || identifier === null)
-      return reject(new Error("Identifier is required in getUser()"));
-    else if (
+    if (
       typeof identifier === "number" ||
       (typeof identifier === "string" && /^\d+$/.test(identifier))
     )
@@ -412,6 +433,8 @@ export function getUser(identifier, keepCredentials = null) {
  * @returns {Array} - Found users
  */
 export function findMatchingUsers(username, user_id) {
+  assert(username !== undefined, "username must exist");
+  assert(user_id !== undefined, "user_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT
@@ -471,6 +494,7 @@ export function findMatchingUsers(username, user_id) {
  * @returns {String} - Username of user
  */
 export function getUsername(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT
@@ -498,6 +522,7 @@ export function getUsername(id) {
  * @returns {Array} - All friends of user
  */
 export function getUserFriends(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT DISTINCT
@@ -531,6 +556,7 @@ export function getUserFriends(id) {
  * @returns {Object} - The profile of the friend
  */
 export function getFriendOfUser(friend_id) {
+  assert(friend_id !== undefined, "friend_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT
@@ -572,6 +598,7 @@ export function getFriendOfUser(friend_id) {
  * @returns {Object} - All found invitations
  */
 export function getInvitationsOfUser(id) {
+  assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT DISTINCT

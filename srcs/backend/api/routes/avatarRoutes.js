@@ -11,8 +11,7 @@ export default function createAvatarRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         const data = await req.file();
         if (!data) return res.code(400).send({ error: "No file uploaded" });
-        const filename = `${Date.now()}-${data.filename}`;
-        const result = await saveAvatar(req.userId, data, filename);
+        const result = await saveAvatar(req.userId, data);
         return res.code(200).send(result);
       }),
     },
