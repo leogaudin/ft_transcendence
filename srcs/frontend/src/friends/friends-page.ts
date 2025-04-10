@@ -37,8 +37,8 @@ function changeFriendPage() {
 export function displayBlockPopUp(friendId: string) {
 	const blockUser = document.getElementById("block-user") as HTMLDialogElement;
 	const closeButton = document.getElementsByClassName("close-icon")[0] as HTMLButtonElement;
-	const cancelButton = document.getElementsByClassName("cancel")[0] as HTMLButtonElement;
-	const blockButton = document.getElementsByClassName("block")[0] as HTMLButtonElement;
+	const cancelButton = document.getElementsByClassName("cancel-button")[0] as HTMLButtonElement;
+	const blockButton = document.getElementsByClassName("block-button")[0] as HTMLButtonElement;
 	if (!blockUser || !closeButton || !cancelButton || !blockButton)
 		return;
 	blockUser.style.display = "flex";

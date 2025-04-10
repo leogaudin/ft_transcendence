@@ -145,6 +145,70 @@ h1 {
 	fill: var(--dark-pink);
 }
 
+.standard-icon {
+	fill: var(--accent-pink);
+	width: 40px;
+	padding: 5px;
+	aspect-ratio: 1/1;
+	transition: 0.3s ease-in-out;
+}
+
+.standard-icon:hover {
+	cursor: pointer;
+	padding: 7px;
+}
+
+.close-icon {
+	width: 40px;
+	padding: 5px;
+	aspect-ratio: 1/1;
+	transition: 0.3s ease-in-out;
+}
+
+.close-icon:hover {
+	cursor: pointer;
+	fill: var(--accent-pink);
+}
+
+.add {
+	background-color: var(--success);
+}
+
+.add:hover {
+	fill: var(--success);
+	background-color: var(--accent-success);
+	box-shadow: var(--success) 0px 0px 2px;
+}
+
+.remove {
+	background-color: var(--alert);
+}
+
+.remove:hover {
+	fill: var(--alert);
+	background-color: var(--accent-alert);
+	box-shadow: var(--alert) 0px 0px 2px;
+}
+
+.pending {
+	fill: var(--dark-pink);
+	width: 40px;
+	padding: 5px;
+	aspect-ratio: 1/1;
+	background-color: var(--accent-pink);
+	transition: 0.3s ease-in-out;
+}
+
+.message-icon {
+	background-color: var(--dark-pink);
+}
+
+.message-icon:hover {
+	fill: var(--dark-pink);
+	background-color: var(--accent-pink);
+	box-shadow: var(--accent-pink) 0px 0px 2px;
+}
+
 @media only screen and (max-width: 767px) {
 	.home-icon {
 		width: 40px;
