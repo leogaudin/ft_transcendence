@@ -126,6 +126,8 @@ h1 {
 }
 
 .home-icon {
+	width: 40px;
+	aspect-ratio: 1/1;
 	transition: 0.3s ease-in-out;
 }
 
@@ -212,13 +214,6 @@ h1 {
 .flag {
 	height: 30px;
 	width: 40px;
-}
-
-@media only screen and (max-width: 767px) {
-	.home-icon {
-		width: 40px;
-		height: 40px;
-	}
 }
 
 /* --> TOAST <-- */
