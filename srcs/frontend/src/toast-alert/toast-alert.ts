@@ -12,6 +12,12 @@ const toastFeatures = [
 function createsocketToastConnection() {
 	if (socketToast && socketToast.readyState !== WebSocket.CLOSED)
 	  socketToast.close();
+	const userId = localStorage.getItem("id");
+	console.log(userId);
+    if (!userId) {
+      console.error("No se puede crear conexión WebSocket: usuario no autenticado");
+      return;
+    }
 	try{
 	  socketToast = new WebSocket(`wss://${window.location.hostname}:8443/ws/toast`)
 	  if (!socketToast)
@@ -128,5 +134,4 @@ export function showAlert(msg: string, toastType: string) {
 	toastTimeout = setTimeout(() => { toastAlert.style.display = "none"; }, 5000);
 }
 
-export { createsocketToastConnection }
-export { socketToast }
+export { createsocketToastConnection, socketToast }
