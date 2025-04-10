@@ -209,6 +209,11 @@ h1 {
 	box-shadow: var(--accent-pink) 0px 0px 2px;
 }
 
+.flag {
+	height: 30px;
+	width: 40px;
+}
+
 @media only screen and (max-width: 767px) {
 	.home-icon {
 		width: 40px;

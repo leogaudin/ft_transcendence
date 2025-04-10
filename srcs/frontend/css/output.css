@@ -234,15 +234,15 @@
 
 .settings-option {
   display: flex;
-  background-color: var(--dark-pink);
   justify-content: space-between;
+  width: 100%;
+  background-color: var(--dark-pink);
+  color: white;
   box-shadow: var(--accent-pink) 0px 0px 2px;
   border-radius: 15px;
   padding: 10px;
   text-align: start;
-  width: 100%;
   cursor: pointer;
-  color: white;
   transition: 250ms ease-in-out;
 }
 
@@ -1721,6 +1721,11 @@ h1 {
   fill: var(--dark-pink);
   background-color: var(--accent-pink);
   box-shadow: var(--accent-pink) 0px 0px 2px;
+}
+
+.flag {
+  height: 30px;
+  width: 40px;
 }
 
 @media only screen and (max-width: 767px) {
