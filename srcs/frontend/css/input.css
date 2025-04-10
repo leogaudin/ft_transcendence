@@ -140,6 +140,11 @@ h1 {
     transition: fill 0.3s ease-in-out;
 }
 
+.send-icon:hover {
+	cursor: pointer;
+	fill: var(--dark-pink);
+}
+
 @media only screen and (max-width: 767px) {
 	.home-icon {
 		width: 40px;

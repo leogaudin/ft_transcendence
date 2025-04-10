@@ -13,21 +13,21 @@
 		</div>
 		<div id="chat-box" class="flex justify-center md:justify-between items-center m-2.5 gap-2.5">
 			<div id="conversation-list" class="h-full p-2.5 rounded-[15px] bg-[var(--dark-pink)]">
-				<form id="search-friend-chat" class="flex justify-center items-center">
-					<input type="text" placeholder="Friend name" class="outline-none indent-2" maxlength="16">
+				<form id="search-friend-chat" class="flex justify-center items-center w-full h-14">
+					<input type="text" placeholder="Friend name" class="outline-none indent-2 w-full h-3/5 opacity-80 p-1.5 bg-[whitesmoke] text-[var(--dark-purple)] rounded-[15px]" maxlength="16">
 					<button type="submit"></button>
 				</form>
 			</div> <!-- Recent chats displayed here -->
 			<div id="conversation-history" class="hidden md:flex flex-col justify-between items-center w-full h-full p-2.5 rounded-[15px] bg-[var(--violet)]">
-				<div id="contact-info" class="flex justify-end items-center">
+				<div id="contact-info" class="flex justify-end items-center w-full rounded-[15px] m-1.5 p-1.5 gap-5">
 					<h2 id="chat-friend-username" class="text-lg">Manuel el Ventanas</h2>
-					<img id="contact-picture" src="resources/img/cat.jpg" alt="Profile picture">
+					<img id="contact-picture" class="rounded-full" src="resources/img/cat.jpg" alt="Profile picture">
 				</div>
-				<div id="message-divider"></div>
-				<div id="message-history" class="flex flex-col"></div> <!-- Messages displayed here -->
-				<form id="message-box" class="flex justify-center items-center">
-					<input type="text" placeholder="Chat with your friends" class="outline-none indent-2" maxlength="800">
-					<button type="submit" class="flex items-center">
+				<div id="pink-divider" class="w-full"></div>
+				<div id="message-history" class="flex flex-col w-full h-4/5 rounded-[15px]"></div> <!-- Messages displayed here -->
+				<form id="message-box" class="flex justify-center items-center w-full h-14">
+					<input type="text" placeholder="Chat with your friends" class="outline-none indent-2 w-full h-3/5 opacity-80 p-1.5 bg-[whitesmoke] text-[var(--dark-purple)] rounded-l-[15px]" maxlength="800">
+					<button type="submit" class="flex items-center h-3/5 opacity-80 p-1.5 bg-[whitesmoke] rounded-r-[15px]">
 						<svg class="send-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#54184D">
 							<path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/>
 						</svg>

@@ -8,45 +8,15 @@
 }
 
 @media (max-width: 768px) {
-    #conversation-list {
-        width: 95%;
-		min-width: 78vw;
-        max-height: 75vh;
-        margin-bottom: 10px;
-    }
-    #conversation-history {
+    #conversation-list, #conversation-history {
         width: 95%;
 		min-width: 78vw;
         max-height: 75vh;
     }
-}
-
-#contact-info {
-	width: 100%;
-	padding: 5px;
-	margin: 5px;
-	border-radius: 15px;
-	gap: 20px;
-}
-
-#contact-picture {
-	border-radius: 50%;
-	max-height: 50px;
-	max-width: 50px;
-}
-
-#message-divider {
-	border-bottom: 3px solid var(--accent-pink);
-	border-radius: 3px;
-	margin: 10px;
-	width: 100%;
 }
 
 #message-history {
-	width: 100%;
-	height: 79%;
 	background-image: url("../resources/img/output-onlinepngtools.png");
-	border-radius: 15px;
 	background-size: 40%;
 	background-position: center;
 	overflow-y: auto;
@@ -95,40 +65,6 @@
 	border-radius: 15px 15px 15px 1px;
 }
 
-#message-box, #search-friend-chat{
-	width: 100%;
-	height: 9%;
-}
-
-#message-box > input, #search-friend-chat > input{
-	width: 100%;
-	height: 60%;
-	opacity: 80%;
-	/* position: relative; */
-	border-radius: 15px 0px 0px 15px;
-	padding: 5px;
-	background-color: whitesmoke;
-	color: var(--dark-purple);
-}
-
-#search-friend-chat > input {
-	border-radius: 15px;
-}
-
-#message-box > button {
-	padding: 5px;
-	height: 60%;
-	opacity: 80%;
-	border-radius: 0px 15px 15px 0px;
-	background-color: whitesmoke;
-	transition: 250ms ease-in-out;
-}
-
-#message-box > button:hover .send-icon {
-	cursor: pointer;
-	fill: var(--dark-pink);
-}
-
 .recent-chat-card {
 	border-radius: 15px;
 	color: var(--dark-blue);
@@ -143,9 +79,8 @@
 	box-shadow: var(--accent-pink) 0px 0px 5px;
 }
 
-#chat-avatar {
-	height: 60px;
+#contact-picture, #chat-avatar {
 	width: 60px;
 	min-width: 60px;
-    min-height: 60px;
+    aspect-ratio: 1/1;
 }
