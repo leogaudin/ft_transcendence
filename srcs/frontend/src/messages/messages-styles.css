@@ -1,0 +1,86 @@
+#chat-box {
+	height: 75vh;
+	width: 70vw;
+}
+
+#conversation-list {
+	width: 275px;
+}
+
+#message-history {
+	background-image: url("../resources/img/output-onlinepngtools.png");
+	background-size: 40%;
+	background-position: center;
+	overflow-y: auto;
+}
+
+#contact-picture, #chat-avatar {
+	width: 60px;
+	min-width: 60px;
+    aspect-ratio: 1/1;
+}
+
+#message {
+	display: flex;
+	justify-content: flex-end;
+	padding-left: 30%;
+}
+
+#friend-message {
+	display: flex;
+	justify-content: flex-start;
+	padding-right: 30%;
+}
+
+.message {
+	white-space: wrap;
+	word-wrap: anywhere;
+	margin: 5px 10px;
+	padding: 15px 10px;
+	min-width: 50px;
+	width: fit-content;
+	display: inline-block;
+	position: relative;
+}
+
+.message > .hour {
+	position: absolute;
+	font-size: x-small;
+	opacity: 50%;
+	right: 7.5px;
+	bottom: 2.5px;
+}
+
+.self-message {
+	display: flex;
+	background-color: var(--dark-pink);
+	border-radius: 15px 15px 1px 15px;
+}
+
+.friend-message {
+	display: flex;
+	background-color: var(--dark-blue);
+	border-radius: 15px 15px 15px 1px;
+}
+
+.recent-chat-card {
+	border-radius: 15px;
+	color: var(--dark-blue);
+	background-color: #fee0efc4;
+	padding: 5px;
+	margin: 5px;
+	transition: 250ms ease-in-out;
+}
+
+.recent-chat-card:hover {
+	background-color: var(--accent-pink);
+	box-shadow: var(--accent-pink) 0px 0px 5px;
+}
+
+@media (max-width: 768px) {
+    #conversation-list, #conversation-history {
+        width: 95%;
+		min-width: 78vw;
+        max-height: 75vh;
+    }
+}

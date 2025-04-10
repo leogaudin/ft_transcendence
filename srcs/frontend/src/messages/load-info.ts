@@ -113,7 +113,7 @@ export async function recentChats() {
 				var subDiv = document.createElement('div');
 	
 				let truncated = "";
-				chat.body?.length > 15 ? truncated = chat.body.substring(0, 15) + "..." : truncated = chat.body;
+				chat.body?.length > 10 ? truncated = chat.body.substring(0, 10) + "..." : truncated = chat.body;
 	
 				subDiv.innerHTML = `
 				<div id="chat-${chat.chat_id} "class="flex items-center gap-2 recent-chat-card">

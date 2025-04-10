@@ -1,0 +1,63 @@
+#home-page {
+	background-color: var(--dark-blue);
+	box-shadow: var(--violet) 0px 0px 20px;
+	border-radius: 15px;
+	max-width: 80vw;
+	min-height: 85vh;
+	padding: 2.5vh 2.5vw;
+	margin: 5vh 5vw;
+}
+
+#profile-button {
+	height: 100px;
+	width: 100px;
+	background-image: url("../resources/img/cat.jpg");
+	background-size: cover;
+	transition: box-shadow 350ms ease-in-out;
+}
+
+#profile-options {
+	margin: 5px;
+	width: 175px;
+	border-radius: 5px;
+	background-color: var(--accent-pink);
+	box-shadow: 0 0 0 max(100vh, 100vw) rgba(0, 0, 0, .3);
+}
+
+.p-option {
+	display: flex;
+	color: var(--dark-blue);
+	transition: 350ms ease-in-out;
+}
+
+.p-option:hover {
+	background-color: var(--dark-blue);
+	color: var(--accent-pink);
+	padding-left: 10px;
+}
+
+.page-option {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 5px;
+	font-size: xx-large;
+	border-radius: 15px;
+	background-color: var(--violet);
+	box-shadow: #3b00345d 0px 5px 5px;
+	transition: box-shadow 350ms ease-in-out;
+}
+
+.page-option:hover, #profile-button:hover {
+	box-shadow: var(--accent-pink) 0px 0px 10px;
+	cursor: pointer;
+}
+
+#explanation {
+	color: white;
+	background-color: var(--dark-pink);
+	box-shadow: #3b00345d 0px 5px 5px;
+	border-radius: 15px;
+	text-align: center;
+}
+

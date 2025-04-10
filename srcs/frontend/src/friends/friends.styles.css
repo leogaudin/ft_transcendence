@@ -1,0 +1,89 @@
+#card {
+	min-width: 65vw;
+	height: 85vh;
+}
+
+.friend-selector {
+	transition: 250ms ease-in-out;
+}
+
+.friend-selector:hover {
+	color: var(--dark-pink);
+}
+
+[id^="friend-id"] {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+	cursor: pointer;
+}
+
+.friend-card {
+	width: 98%;
+	height: fit-content;
+	border-radius: 15px;
+	background-color: var(--dark-purple);
+	opacity: 80%;
+	box-shadow: var(--dark-pink) 0px 0px 10px;
+	padding: 10px;
+	margin: 5px;
+}
+
+.card-avatar {
+	width: 4rem;
+	aspect-ratio: 1/1;
+}
+
+#friend-profile-photo {
+	width: 200px;
+	aspect-ratio: 1/1;
+	box-shadow: var(--dark-pink) 0px 0px 10px;
+}
+
+#invitation-id {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 10px;
+}
+
+#search-friend > option {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background-color: var(--dark-purple);
+	font-size: 18px;
+	padding: 10px;
+	margin: 3px;
+	border-radius: 15px;
+	transition: background-color 0.2s ease;
+}
+
+.button {
+	background-color: var(--dark-pink);
+	min-width: 5vw;
+	transition: 250ms ease-in-out;
+}
+
+.button:hover {
+	box-shadow: var(--dark-pink) 0px 0px 5px;
+}
+
+.block-button {
+	background-color: var(--alert);
+	transition: 250ms ease-in-out;
+}
+
+.block-button:hover {
+	box-shadow: var(--accent-alert) 0px 0px 5px;
+}
+
+.cancel-button {
+	background-color: var(--dark-purple);
+	transition: 250ms ease-in-out;
+}
+
+.cancel-button:hover {
+	box-shadow: var(--violet) 0px 0px 5px;
+}
