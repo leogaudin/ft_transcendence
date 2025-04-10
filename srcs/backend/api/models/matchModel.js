@@ -33,30 +33,44 @@ export function getMatchs() {
 export function createMatch(data) {
   assert(data !== undefined, "data must exist");
   return new Promise((resolve, reject) => {
-    const sql = `INSERT INTO matches (
-    left_player_id, right_player_id, result, winner_id, loser_id)
-    VALUES (?,?,?,?,?)`;
+    const sql = `
+      INSERT INTO matches (
+        game_type,
+        custom_mode,
+        turns_played,
+        first_player_id,
+        second_player_id,
+        first_player_score,
+        second_player_score,
+        winner_id,
+        loser_id)
+      VALUES (?,?,?,?,?,?,?,?,?)
+    `;
     const params = [
-      data.left_player_id,
-      data.right_player_id,
-      data.result,
+      data.game_type,
+      data.custom_mode,
+      data.turns_played,
+      data.first_player_id,
+      data.second_player_id,
+      data.first_player_score,
+      data.second_player_score,
       data.winner_id,
       data.loser_id,
     ];
-
     db.run(sql, params, function (err) {
       if (err) {
         console.error("Error inserting match:", err.message);
         return reject(err);
       }
-      if (data.result) {
-        data.result = data.result.split(",").map((id) => parseInt(id));
-      }
       resolve({
         id: this.lastID,
-        left_player_id: data.first_id,
-        right_player_id: data.second_id,
-        result: data.result,
+        game_type: data.game_type,
+        custom_mode: data.custom_mode,
+        turns_played: data.turns_played,
+        first_player_id: data.first_player_id,
+        second_player_id: data.second_player_id,
+        first_player_score: data.first_player_score,
+        second_player_score: data.second_player_score,
         winner_id: data.winner_id,
         loser_id: data.loser_id,
       });

@@ -26,9 +26,13 @@ export default function createMatchRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         if (
           !validateInput(req, res, [
-            "right_player_id",
-            "left_player_id",
-            "result",
+            "game_type",
+            "custom_mode",
+            "turns_played",
+            "first_player_id",
+            "second_player_id",
+            "first_player_score",
+            "second_player_score",
             "winner_id",
             "loser_id",
           ])

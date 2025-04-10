@@ -59,6 +59,55 @@ import { patchUser } from "../models/userModel.js";
 import { addUserFriendPending, acceptUserFriend } from "../models/userModel.js";
 import { createChat } from "../models/chatModel.js";
 import { createMessage } from "../models/messageModel.js";
+import { createMatch } from "../models/matchModel.js";
+
+async function createMatches(foo, bar) {
+  console.log("Creating matches...");
+  createMatch({
+    game_type: 0,
+    custom_mode: 0,
+    turns_played: 15,
+    first_player_id: foo.id,
+    second_player_id: bar.id,
+    first_player_score: 10,
+    second_player_score: 5,
+    winner_id: foo.id,
+    loser_id: bar.id,
+  });
+  createMatch({
+    game_type: 1,
+    custom_mode: 0,
+    turns_played: 20,
+    first_player_id: foo.id,
+    second_player_id: bar.id,
+    first_player_score: 1,
+    second_player_score: 0,
+    winner_id: foo.id,
+    loser_id: bar.id,
+  });
+  createMatch({
+    game_type: 0,
+    custom_mode: 1,
+    turns_played: 12,
+    first_player_id: foo.id,
+    second_player_id: bar.id,
+    first_player_score: 10,
+    second_player_score: 2,
+    winner_id: foo.id,
+    loser_id: bar.id,
+  });
+  createMatch({
+    game_type: 1,
+    custom_mode: 1,
+    turns_played: 23,
+    first_player_id: foo.id,
+    second_player_id: bar.id,
+    first_player_score: 0,
+    second_player_score: 1,
+    winner_id: bar.id,
+    loser_id: foo.id,
+  });
+}
 
 export async function createDebug() {
   setTimeout(async () => {
@@ -85,7 +134,7 @@ export async function createDebug() {
     await addUserFriendPending(qux.id, foo.id);
     await acceptUserFriend(qux.id, foo.id);
     await addUserFriendPending(foo.id, foo2.id);
-  
+
     console.log(
       `Creating chat between ${foo.username} and ${foo2.username}...`,
     );
@@ -188,5 +237,6 @@ export async function createDebug() {
         body: `Test message from ${qux2.username} number ${i}`,
       });
     }
+    await createMatches(foo, bar);
   }, 2000);
 }
