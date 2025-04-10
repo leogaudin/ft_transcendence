@@ -7,19 +7,17 @@
 	width: 275px;
 }
 
-@media (max-width: 768px) {
-    #conversation-list, #conversation-history {
-        width: 95%;
-		min-width: 78vw;
-        max-height: 75vh;
-    }
-}
-
 #message-history {
 	background-image: url("../resources/img/output-onlinepngtools.png");
 	background-size: 40%;
 	background-position: center;
 	overflow-y: auto;
+}
+
+#contact-picture, #chat-avatar {
+	width: 60px;
+	min-width: 60px;
+    aspect-ratio: 1/1;
 }
 
 #message {
@@ -79,8 +77,10 @@
 	box-shadow: var(--accent-pink) 0px 0px 5px;
 }
 
-#contact-picture, #chat-avatar {
-	width: 60px;
-	min-width: 60px;
-    aspect-ratio: 1/1;
+@media (max-width: 768px) {
+    #conversation-list, #conversation-history {
+        width: 95%;
+		min-width: 78vw;
+        max-height: 75vh;
+    }
 }

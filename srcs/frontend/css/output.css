@@ -151,19 +151,17 @@
   width: 275px;
 }
 
-@media (max-width: 768px) {
-  #conversation-list, #conversation-history {
-    width: 95%;
-    min-width: 78vw;
-    max-height: 75vh;
-  }
-}
-
 #message-history {
   background-image: url("../resources/img/output-onlinepngtools.png");
   background-size: 40%;
   background-position: center;
   overflow-y: auto;
+}
+
+#contact-picture, #chat-avatar {
+  width: 60px;
+  min-width: 60px;
+  aspect-ratio: 1/1;
 }
 
 #message {
@@ -224,10 +222,12 @@
   box-shadow: var(--accent-pink) 0px 0px 5px;
 }
 
-#contact-picture, #chat-avatar {
-  width: 60px;
-  min-width: 60px;
-  aspect-ratio: 1/1;
+@media (max-width: 768px) {
+  #conversation-list, #conversation-history {
+    width: 95%;
+    min-width: 78vw;
+    max-height: 75vh;
+  }
 }
 
 /* --> Settings page <-- */
@@ -287,17 +287,8 @@
 /* --> Games page <-- */
 
 #games-page {
-  background-color: var(--dark-blue);
-  border-radius: 15px;
-  box-shadow: var(--violet) 0px 0px 20px;
-  padding: 1rem;
-  align-items: center;
-  justify-content: center;
-  position: relative;
   min-height: 90vh;
   width: 75vw;
-  display: flex;
-  flex-direction: column;
 }
 
 #game {
