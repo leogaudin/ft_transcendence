@@ -1,6 +1,6 @@
 import { getChatBetweenUsers } from "./models/chatModel.js";
 import { createMessage } from "./models/messageModel.js";
-import { getUsername, isBlocked } from "./models/userModel.js";
+import { getUsername, isBlocked, patchUser } from "./models/userModel.js";
 import { asyncWebSocketHandler } from "./utils.js";
 
 const socketsChat = new Map();
@@ -12,7 +12,7 @@ export default function createWebSocketsRoutes(fastify){
 			url: "/chat",
 			method: "GET",
 			websocket: true,
-			handler: asyncWebSocketHandler(async (socket, req) => {
+			handler: asyncWebSocketHandler(async (socket) => {
 				let userId = null;
 				socket.on("message", async message => {
 					const messageString = message.toString();
@@ -78,7 +78,7 @@ export default function createWebSocketsRoutes(fastify){
 					}
 				})
 				socket.on("close", () => {
-					console.log("Client disconnected");
+					console.log("Client disconnected from /chat");
 					socketsChat.delete(userId);
 				})
 			})
@@ -87,7 +87,7 @@ export default function createWebSocketsRoutes(fastify){
 			url: "/toast",
 			method: "GET",
 			websocket: true,
-			handler: asyncWebSocketHandler(async (socket, req) => {
+			handler: asyncWebSocketHandler(async (socket) => {
 				let userId = null;
 				socket.on("message", async notification => {
 					const toast = notification.toString();
@@ -100,6 +100,7 @@ export default function createWebSocketsRoutes(fastify){
 							}
 							if (userId){
 							  socketsToast.set(userId, socket);
+							  console.log(socketsToast);
 							  socket.send(JSON.stringify({
 								type: "connection",
 								status: "success",
@@ -155,13 +156,89 @@ export default function createWebSocketsRoutes(fastify){
 						}
 					}
 				})
-				socket.on("close", () => {
-					console.log("Client disconnected");
-					//poner usuario desconectado
+				socket.on("close", async () => {
+					console.log("Client disconnected from /toast");
+					await patchUser(userId, {is_online: 0});
 					socketsToast.delete(userId);
+					//Intentar refrescar la pestaña de amigos 
 				})
 			})
-		}
-		
+		},
+		/*{
+			url: "/pong",
+			method: "GET",
+			websocket: true,
+			handler: asyncWebSocketHandler(async (socket) => {
+				let userId = null;
+				socket.on("message", async notification => {
+					const toast = notification.toString();
+					if (userId === null){
+						try{
+							userId = parseInt(toast);
+							if (isNaN(userId)) {
+							  const data = JSON.parse(toast);
+							  userId = data.userId;
+							}
+							if (userId){
+							  socketsToast.set(userId, socket);
+							  socket.send(JSON.stringify({
+								type: "connection",
+								status: "success",
+								message: "Connected"
+							  }));
+							}
+						  }
+						  catch (err){
+							console.error("Error can't get ID:", err);
+							socket.send(JSON.stringify({
+							  type: "error",
+							  message: "Invalid Id"
+							}));
+						}
+					}
+				})
+				socket.on("close", () => {
+					console.log("Client disconnected from /pong")
+				})
+			})
+		},
+		{
+			url: "/fourInARow",
+			method: "GET",
+			websocket: true,
+			handler: asyncWebSocketHandler(async (socket) => {
+				let userId = null;
+				socket.on("message", async notification => {
+					const toast = notification.toString();
+					if (userId === null){
+						try{
+							userId = parseInt(toast);
+							if (isNaN(userId)) {
+							  const data = JSON.parse(toast);
+							  userId = data.userId;
+							}
+							if (userId){
+							  socketsToast.set(userId, socket);
+							  socket.send(JSON.stringify({
+								type: "connection",
+								status: "success",
+								message: "Connected"
+							  }));
+							}
+						  }
+						  catch (err){
+							console.error("Error can't get ID:", err);
+							socket.send(JSON.stringify({
+							  type: "error",
+							  message: "Invalid Id"
+							}));
+						}
+					}
+				})
+				socket.on("close", () => {
+					console.log("Client disconnected from /fourInARow");
+				})
+			})
+		}*/
 	]
 }
