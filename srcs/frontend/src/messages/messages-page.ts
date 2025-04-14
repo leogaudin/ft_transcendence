@@ -1,10 +1,10 @@
 import { getChatInfo ,actual_chat_id, recentChats, loadInfo } from "./load-info.js"
 import { navigateTo } from "../index.js";
-import { Message, MessageObject, ChatInfo } from "../types.js";
+import { Message, MessageObject } from "../types.js";
 import { sendRequest } from "../login-page/login-fetch.js";
 import { showAlert } from "../toast-alert/toast-alert.js";
 
-let socket: WebSocket | null = null;
+let socketChat: WebSocket | null = null;
 
 export function initMessagesEvents(data: MessageObject) {
 	moveToHome();
@@ -18,8 +18,8 @@ export function moveToHome() {
 	if (!homeButton)
 		return;
 	homeButton.addEventListener("click", () => {
-    if (socket)
-      socket.close()
+    if (socketChat)
+      socketChat.close()
 		navigateTo("/home");
 	});
 }
@@ -32,33 +32,31 @@ function getClientID(): number {
 }
 
 function createSocketConnection() {
-  if (socket && socket.readyState !== WebSocket.CLOSED){
-    socket.close();
-  }
+  if (socketChat && socketChat.readyState !== WebSocket.CLOSED)
+    socketChat.close();
   try{
-    socket = new WebSocket(`wss://${window.location.hostname}:8443/ws/chat`)
-    if (!socket)
+    socketChat = new WebSocket(`wss://${window.location.hostname}:8443/ws/chat`)
+    if (!socketChat)
       return ;
-    socket.onopen = () => {
+    socketChat.onopen = () => {
       let id = getClientID();
-      console.log("WebSocket connection established, sending id:", id);
+      console.log("WebSocketChat connection established, sending id:", id);
       if (id === -1){
         console.error("Invalid ID, cannot connect to back")
       }
       else{
-        if (!socket)
+        if (!socketChat)
           return ;
-        socket.send(JSON.stringify({
+        socketChat.send(JSON.stringify({
           userId: id,
           action: "identify"
         }));
         console.log("ID succesfully sent");
       }
     };
-    socket.onmessage = (event) => {
+    socketChat.onmessage = (event) => {
       try{
         const data = JSON.parse(event.data);
-        console.log(data);
         if (data.sender_id && data.body) {
           displayMessage(data);
         }
@@ -67,16 +65,16 @@ function createSocketConnection() {
         console.error("Error on message", err);
       }
     };
-    socket.onerror = (error) => {
+    socketChat.onerror = (error) => {
       console.error("WebSocket error:", error);
     };
-    socket.onclose = () => {
+    socketChat.onclose = () => {
       console.log("WebSocket connection closed");
-      socket = null;
+      socketChat = null;
     };
   }
   catch(err){
-    console.error("Error creating WebSocket:", err);
+    console.error("Error creating WebSocketChat:", err);
   }
 }
 
@@ -97,7 +95,6 @@ function displayMessage(data: Message){
         </div>`;
     }
     else if (data.receiver_id === getClientID() && actual_chat_id === data.chat_id){
-      console.log(data);
       el.setAttribute("id", "friend-message");
       el.innerHTML = `
       <div class="message friend-message">
@@ -125,7 +122,7 @@ async function setupMessageForm() {
     if (!chatInfo)
       return ;
     const friendID = chatInfo.friend_id;
-    if (message && socket){
+    if (message && socketChat){
       const date = new Date();
       date.setHours(date.getHours() + 2);
       let fullMessage: Message = {
@@ -136,12 +133,11 @@ async function setupMessageForm() {
         sent_at: date.toISOString(),
         read: false,
       }
-      socket.send(JSON.stringify(fullMessage));
+      socketChat.send(JSON.stringify(fullMessage));
       displayMessage(fullMessage);
     }
     input.value = "";
   });
 }
 
-export { getClientID };
-export { socket };
+export { getClientID, socketChat };
