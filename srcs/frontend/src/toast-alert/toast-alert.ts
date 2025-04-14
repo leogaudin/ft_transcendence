@@ -13,9 +13,8 @@ function createsocketToastConnection() {
 	if (socketToast && socketToast.readyState !== WebSocket.CLOSED)
 	  socketToast.close();
 	const userId = localStorage.getItem("id");
-	console.log(userId);
     if (!userId) {
-      console.error("No se puede crear conexión WebSocket: usuario no autenticado");
+      console.error("Can't connect to WebSocketToast");
       return;
     }
 	try{
@@ -40,7 +39,6 @@ function createsocketToastConnection() {
 	  socketToast.onmessage = async (event) => {
 		try{
 			const data = JSON.parse(event.data);
-			console.log(data);
 			if (data.type === "friendRequest"){
 				if (data.info === "request"){
 					if (data.body){

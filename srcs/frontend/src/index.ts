@@ -1,6 +1,6 @@
 import { initHomeEvents } from "./home-page/home-page.js";
 import { initLoginEvents } from "./login-page/login-page.js";
-import { initMessagesEvents, socket } from "./messages/messages-page.js";
+import { initMessagesEvents, socketChat } from "./messages/messages-page.js";
 import { initResetPasswordEvents } from "./reset-password-page/reset-password.js";
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
 import { initFriendsEvents } from "./friends/friends-page.js"
@@ -111,8 +111,8 @@ async function initBaseEvents() {
 
 // Managing back and forward button
 window.onpopstate = () => {
-	if (socket)
-		socket.close();
+	if (socketChat)
+		socketChat.close();
 	loadContent(window.location.pathname);
 };
 
