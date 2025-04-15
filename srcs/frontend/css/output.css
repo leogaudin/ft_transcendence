@@ -1292,6 +1292,10 @@ video {
   overflow-y: auto;
 }
 
+.overflow-x-clip {
+  overflow-x: clip;
+}
+
 .overflow-x-visible {
   overflow-x: visible;
 }

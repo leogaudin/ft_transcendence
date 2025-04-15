@@ -118,6 +118,7 @@ async function deleteFriend(friendId: string) {
 		}
 		else
 			displayFriends();
+		
 		if (socketToast){
 			socketToast.send(JSON.stringify({
 				sender_id: parseInt(friendId),

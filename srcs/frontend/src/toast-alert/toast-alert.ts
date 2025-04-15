@@ -63,6 +63,9 @@ function createsocketToastConnection() {
 					const friendListPage = document.getElementById("friend-list");
 					if (!friendListPage)
 						return ;
+					const friendProfile = document.getElementById("friend-profile");
+					if (friendProfile)
+						friendProfile.style.display = 'none';
 					displayFriends();
 				}
 			}
