@@ -247,9 +247,6 @@ export function removeUserFriend(id, friend_id) {
         console.error("Error updating user friends:", err.message);
         return reject(err);
       }
-      if (this.changes === 0) {
-        return reject(new Error("User not found"));
-      }
       resolve({ success: "friend removed" });
     });
   });
