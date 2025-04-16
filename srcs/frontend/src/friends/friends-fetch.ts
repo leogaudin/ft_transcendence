@@ -1,6 +1,6 @@
 import { UserMatches, FriendList, InvitationList } from "../types.js"
 import { sendRequest } from "../login-page/login-fetch.js";
-import { displayBlockPopUp, closeModal } from "./friends-page.js"
+import { displayBlockPopUp, closeModal, toggleMobileDisplay } from "./friends-page.js"
 import { navigateTo } from "../index.js";
 import { socketToast } from "../toast-alert/toast-alert.js";
 import { getClientID } from "../messages/messages-page.js";
@@ -36,6 +36,8 @@ export function initFriendFetches() {
 }
 
 async function clickFriendProfile(e: Event) {
+	if (window.innerWidth < 768)
+		toggleMobileDisplay();
     const target = e.target as HTMLElement;
     const friendElement = target.closest('[id^="friend-id-"]') as HTMLElement;
     
@@ -52,27 +54,27 @@ async function clickFriendProfile(e: Event) {
                 return;
             
             friendProfileDiv.innerHTML = ` 
-					<div id="friend-data" class="flex justify-between items-center gap-4 w-full p-2.5">
-						<div class="flex flex-col ml-4">
-							<p class="font-bold">Username: <span id="friend-name" class="font-thin">${friendProfileTyped.username}</span></p>
-							<p class="font-bold">Nick: <span id="friend-nick" class="font-thin">${friendProfileTyped.alias}</span></p>
-							<div id="friend-status" class="flex gap-2">
+					<div id="friend-data" class="flex flex-col-reverse lg:flex-row justify-between items-center gap-4 w-full p-2.5">
+						<div class="flex flex-col lg:ml-4">
+							<p class="font-bold text-center lg:text-start">Username: <span id="friend-name" class="font-thin">${friendProfileTyped.username}</span></p>
+							<p class="font-bold text-center lg:text-start">Nick: <span id="friend-nick" class="font-thin">${friendProfileTyped.alias}</span></p>
+							<div id="friend-status" class="flex gap-2 justify-center lg:justify-start">
 								${friendProfileTyped.is_online === 1 ?
 								'<p>Online</p><img src="../../resources/img/online.svg" alt="Online status">' :
 								'<p>Offline</p><img src="../../resources/img/offline.svg" alt="Offline status">'
 								}
 							</div>
-							<p class="font-bold">Description: <span id="friend-description" class="italic font-thin">${friendProfileTyped.status}</span></p>
+							<p class="font-bold text-center lg:text-start">Description: <span id="friend-description" class="italic font-thin">${friendProfileTyped.status}</span></p>
 							<div class="flex justify-center gap-10 my-4">
 								<button id="delete-friend" class="button p-2.5 rounded-[15px]">Delete</button>
 								<button id="block-friend" class="button p-2.5 rounded-[15px] bg-[var(--alert)]">Block</button>
 							</div>
 						</div>
-						<div class="flex flex-col items-center mr-4">
+						<div class="flex flex-col items-center lg:mr-4">
 							<img id="friend-profile-photo" class="rounded-full" src="../../resources/img/cat.jpg" alt="Profile photo">
 						</div>
 					</div>
-					<div id="friend-statistics" class="flex flex-col items-center p-4 gap-1 mt-4 rounded-[15px] w-9/12 bg-[#7d48778f]">
+					<div id="friend-statistics" class="flex flex-col items-center p-4 gap-1 mt-4 rounded-[15px] w-full lg:w-9/12 bg-[#7d48778f]">
 						<p class="font-bold text-center">Pong Games Played: <span class="font-thin">${friendProfileTyped.pong_games_played}</span></p>
 						<p class="font-bold text-center">Pong Wins Rate: <span class="font-thin">${friendProfileTyped.pong_games_won}</span></p>
 						<p class="font-bold text-center">Pong Loses Rate: <span class="font-thin">${friendProfileTyped.pong_games_lost}</span></p>
@@ -118,6 +120,7 @@ async function deleteFriend(friendId: string) {
 		}
 		else
 			displayFriends();
+		
 		if (socketToast){
 			socketToast.send(JSON.stringify({
 				sender_id: parseInt(friendId),
@@ -267,7 +270,7 @@ export async function displayFriends() {
 			section.setAttribute("class", "friend-class");
 			section.setAttribute("class", "friend-card");
 			section.innerHTML = `
-						<div class="flex items-center gap-4">
+						<div class="flex items-center gap-4]">
 							<img id="friend-avatar" class="card-avatar rounded-full m-1.5" src="../../resources/img/cat.jpg" alt="Avatar">
 							<div class="flex flex-col">
 								<h3>${friend.username}</h3>
@@ -333,7 +336,7 @@ export async function displayInvitations() {
 							<p class="opacity-50 text-sm">${invitation.sender_status}</p>
 						</div>
 					</div>
-					<div id="invitation-options" class="flex gap-2 px-4">
+					<div id="invitation-options" class="flex flex-col md:flex-row gap-2 px-4">
 						<svg id="accept-invitation-${invitation.sender_id}" class="standard-icon rounded-full add" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
 							<path d="M720-400v-120H600v-80h120v-120h80v120h120v80H800v120h-80Zm-360-80q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm80-80h480v-32q0-11-5.5-20T580-306q-54-27-109-40.5T360-360q-56 0-111 13.5T140-306q-9 5-14.5 14t-5.5 20v32Zm240-320q33 0 56.5-23.5T440-640q0-33-23.5-56.5T360-720q-33 0-56.5 23.5T280-640q0 33 23.5 56.5T360-560Zm0-80Zm0 400Z"/>
 						</svg>
