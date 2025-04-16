@@ -5,6 +5,57 @@ export function initFriendsEvents() {
 	moveToHome();
 	changeFriendPage();
 	initFriendFetches();
+
+	const returnButton = document.getElementById("go-back");
+	if (returnButton)
+		returnButton.addEventListener("click", () => {
+			toggleMobileDisplay();
+	});
+	window.addEventListener("resize", changedWindowSize);
+}
+
+function changedWindowSize() {
+	const friendsHolder = document.getElementById("friends-holder");
+	const friendProfile = document.getElementById("friend-profile");
+	const returnButton = document.getElementById("go-back");
+
+	if (friendsHolder && friendProfile && returnButton) {
+		if (window.innerWidth > 768) {
+			friendsHolder.style.display = 'flex';
+			returnButton.style.display = 'none';
+		}
+		else {
+			if (friendsHolder.style.display === 'flex') {
+				friendProfile.style.display = 'none';
+				returnButton.style.display = 'none';
+			}
+			else {
+				friendsHolder.style.display = 'none';
+				friendProfile.style.display = 'flex';
+				returnButton.style.display = 'flex';
+			}
+		  }
+	}
+}
+
+export function toggleMobileDisplay() {
+	const friendsHolder = document.getElementById("friends-holder");
+	const friendProfile = document.getElementById("friend-profile");
+	const returnButton = document.getElementById("go-back");
+	
+	if (friendsHolder && friendProfile && returnButton) {
+		if (friendsHolder.style.display !== 'none') {
+			friendsHolder.style.display = 'none';
+			friendProfile.style.display = 'flex';
+			returnButton.style.display = 'flex';
+		}
+		else {
+			returnButton.style.display = 'none';
+			friendProfile.style.display = 'none';
+			friendsHolder.style.display = 'flex';
+			displayFriends();
+		}
+	}
 }
 
 function changeFriendPage() {
@@ -20,8 +71,11 @@ function changeFriendPage() {
 			friendListPage.style.display = 'none';
 			invitationListPage.style.display = 'flex';
 			const friendProfile = document.getElementById("friend-profile");
-			if (friendProfile)
+			const returnButton = document.getElementById("go-back");
+			if (friendProfile && returnButton) {
 				friendProfile.style.display = 'none';
+				returnButton.style.display = 'none';
+			}
 			displayInvitations();
 		}
 	});
@@ -29,6 +83,9 @@ function changeFriendPage() {
 		if (friendListPage.style.display !== 'flex') {
 			friendListPage.style.display = 'flex';
 			invitationListPage.style.display = 'none';
+			const friendsHolder = document.getElementById("friends-holder");
+			if (window.innerWidth < 768 && friendsHolder && friendsHolder.style.display === 'none')
+				toggleMobileDisplay();
 			displayFriends();
 		}
 	});
