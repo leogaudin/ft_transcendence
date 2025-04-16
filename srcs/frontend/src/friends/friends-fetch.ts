@@ -241,7 +241,7 @@ async function friendInvitations(friendId: string, input: string) {
 	}
 }
 
-function debounce(callback: Function, wait: number) {
+export function debounce(callback: Function, wait: number) {
 	let timerId: number | NodeJS.Timeout;;
 	return (...args: Object[]) => {
 	  clearTimeout(timerId);
