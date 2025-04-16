@@ -118,8 +118,15 @@ async function deleteFriend(friendId: string) {
 		if (invitationListPage.style.display === 'flex') {
 			displayInvitations();
 		}
-		else
+		else {
+			const returnButton = document.getElementById("go-back");
+			const friendsHolder = document.getElementById("friends-holder");
+			if (returnButton && friendsHolder) {
+				returnButton.style.display = 'none';
+				friendsHolder.style.display = 'flex';
+			}
 			displayFriends();
+		}
 		
 		if (socketToast){
 			socketToast.send(JSON.stringify({
@@ -399,6 +406,12 @@ export async function blockFriend(friendId: string) {
 		if (modal && friendProfile) {
 			closeModal(modal);
 			friendProfile.style.display = 'none';
+			const returnButton = document.getElementById("go-back");
+			const friendsHolder = document.getElementById("friends-holder");
+			if (returnButton && friendsHolder) {
+				returnButton.style.display = 'none';
+				friendsHolder.style.display = 'flex';
+			}
 		}
 
 		displayFriends();
