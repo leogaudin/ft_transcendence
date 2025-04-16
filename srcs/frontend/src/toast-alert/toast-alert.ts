@@ -1,5 +1,5 @@
 import { getClientID } from "../messages/messages-page.js"
-import { displayFriends, displayInvitations } from "../friends/friends-fetch.js";
+import { displayFriends, displayInvitations, debounce } from "../friends/friends-fetch.js";
 
 let toastTimeout: number;
 let socketToast: WebSocket | null;
@@ -8,6 +8,13 @@ const toastFeatures = [
 	{type: "toast-error", icon: "error-icon"},
 	{type: "toast-success", icon: "check-icon"},
 ];
+
+const updateFriendsList = debounce(() => {
+	const friendListPage = document.getElementById("friend-list");
+	if (!friendListPage)
+		return ;
+	displayFriends();
+}, 500);
 
 function createsocketToastConnection() {
 	if (socketToast && socketToast.readyState !== WebSocket.CLOSED)
@@ -73,6 +80,8 @@ function createsocketToastConnection() {
 				showAlert(data.body, "toast-success");
 			else if (data.type === "tournament")
 				showAlert(data.body, "toast-error");
+			else if (data.type === "friendStatusUpdate")
+				updateFriendsList();
 		}
 		catch(err) {
 		  console.error("Error on message", err);

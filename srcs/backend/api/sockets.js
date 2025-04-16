@@ -129,6 +129,18 @@ export default function createWebSocketsRoutes(fastify){
 							}));
 						}
 						await patchUser(userId, {is_online: 1});
+						socketsToast.forEach((clientSocket, clientId) => {
+							try {
+							  clientSocket.send(JSON.stringify({
+								type: "friendStatusUpdate",
+								userId: userId,
+								status: "online",
+								timestamp: new Date().toISOString()
+							  }));
+							} catch (error) {
+							  console.error(`Error notificando al usuario ${clientId}:`, error);
+							}
+						});
 					}
 					else{
 						const data = JSON.parse(notification);
@@ -182,8 +194,19 @@ export default function createWebSocketsRoutes(fastify){
 				socket.on("close", async () => {
 					console.log("Client disconnected from /toast");
 					await patchUser(userId, {is_online: 0});
+					socketsToast.forEach((clientSocket, clientId) => {
+						try {
+						  clientSocket.send(JSON.stringify({
+							type: "friendStatusUpdate",
+							userId: userId,
+							status: "offline",
+							timestamp: new Date().toISOString()
+						  }));
+						} catch (error) {
+						  console.error(`Error notificando al usuario ${clientId}:`, error);
+						}
+					});
 					socketsToast.delete(userId);
-					//Intentar refrescar la pestaña de amigos 
 				})
 			})
 		},
@@ -263,5 +286,6 @@ export default function createWebSocketsRoutes(fastify){
 				})
 			})
 		}*/
+
 	]
 }
