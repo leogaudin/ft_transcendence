@@ -36,12 +36,12 @@ export function initFriendFetches() {
 }
 
 async function clickFriendProfile(e: Event) {
-	if (window.innerWidth < 768)
-		toggleMobileDisplay();
-    const target = e.target as HTMLElement;
+	const target = e.target as HTMLElement;
     const friendElement = target.closest('[id^="friend-id-"]') as HTMLElement;
     
     if (friendElement) {
+		if (window.innerWidth < 768)
+			toggleMobileDisplay();
         const friendId = friendElement.id.replace("friend-id-", "");
 		
         try {
