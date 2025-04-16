@@ -71,6 +71,8 @@ function createsocketToastConnection() {
 			}
 			else if (data.type === "chatToast")
 				showAlert(data.body, "toast-success");
+			else if (data.type === "tournament")
+				showAlert(data.body, "toast-error");
 		}
 		catch(err) {
 		  console.error("Error on message", err);

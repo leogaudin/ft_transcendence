@@ -200,7 +200,7 @@ export async function getChatInfo(chat_id: number) : Promise<ChatInfo | null>  {
 		const chat_info = await sendRequest('GET', `/chats/identify/${chat_id}`);
 		if (!chat_info)
 			throw new Error("Error fetching chat information");
-		console.log("chat_info: ", chat_info);
+		//console.log("chat_info: ", chat_info);
 		return chat_info;
 	}
 	catch(error) {

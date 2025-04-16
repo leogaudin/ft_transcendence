@@ -125,16 +125,30 @@ async function setupMessageForm() {
     if (message && socketChat){
       const date = new Date();
       date.setHours(date.getHours() + 2);
-      let fullMessage: Message = {
-        body: message,
-        chat_id: actual_chat_id,
-	      receiver_id: friendID,
-	      sender_id: getClientID(),
-        sent_at: date.toISOString(),
-        read: false,
+      if (message === "/tournament"){
+        let fullMessage: Message = {
+          body: message,
+          chat_id: actual_chat_id,
+	        receiver_id: friendID,
+	        sender_id: getClientID(),
+          sent_at: date.toISOString(),
+          read: false,
+          type: "tournament"
+        }
+        socketChat.send(JSON.stringify(fullMessage));
       }
-      socketChat.send(JSON.stringify(fullMessage));
-      displayMessage(fullMessage);
+      else{
+          let fullMessage: Message = {
+          body: message,
+          chat_id: actual_chat_id,
+          receiver_id: friendID,
+          sender_id: getClientID(),
+          sent_at: date.toISOString(),
+          read: false,
+        }
+        socketChat.send(JSON.stringify(fullMessage));
+        displayMessage(fullMessage);
+      }
     }
     input.value = "";
   });
