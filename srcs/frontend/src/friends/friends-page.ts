@@ -69,7 +69,8 @@ function changeFriendPage() {
 	invitationListButton.addEventListener("click", () => {
 		if (friendListPage.style.display !== 'none') {
 			friendListPage.style.display = 'none';
-			invitationListPage.style.display = 'flex';
+			invitationListPage.classList.add('flex');
+			invitationListPage.classList.remove('hidden');
 			const friendProfile = document.getElementById("friend-profile");
 			const returnButton = document.getElementById("go-back");
 			if (friendProfile && returnButton) {
@@ -82,7 +83,8 @@ function changeFriendPage() {
 	friendListButton.addEventListener("click", () => {
 		if (friendListPage.style.display !== 'flex') {
 			friendListPage.style.display = 'flex';
-			invitationListPage.style.display = 'none';
+			invitationListPage.classList.remove('flex');
+			invitationListPage.classList.add('hidden');
 			const friendsHolder = document.getElementById("friends-holder");
 			if (window.innerWidth < 768 && friendsHolder && friendsHolder.style.display === 'none')
 				toggleMobileDisplay();

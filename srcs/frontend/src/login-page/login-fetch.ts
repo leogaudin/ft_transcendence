@@ -260,7 +260,7 @@ async function recoverPassword(e: Event) {
 	}
 }
 
-async function fetchDisplayTerms() {
+export async function fetchDisplayTerms() {
 	try {
 		const response = await fetch(`../src/login-page/privacy-policy.html`);
 		const content = await response.text();

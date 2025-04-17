@@ -38,14 +38,3 @@
 .delete-option:hover .icon {
 	fill: var(--alert);
 }
-
-.language-option {
-	justify-content: start;
-	align-items: center;
-	width: 50%;
-}
-
-.flag {
-	height: 30px;
-	width: 40px;
-}
