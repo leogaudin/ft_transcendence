@@ -166,8 +166,7 @@ async function showMatches(input: string) {
 				option.innerText = "User Not Found";
 			}
 			else {
-				// Cambiar por un div
-				option = document.createElement('option');
+				option = document.createElement('div');
 				if (matchesTyped[i].is_friend === 0) {
 					option.innerHTML = `
 					${matchesTyped[i].username}
@@ -198,9 +197,11 @@ async function showMatches(input: string) {
 			}
 			option.setAttribute("class", "match-option");
 			datalist.appendChild(option);
-			const messageButton = document.getElementById(`friend-chat-${matchesTyped[i].user_id}`);
-			if (messageButton) {
-				messageButton.onclick = () => { goToFriendChat(matchesTyped[i].user_id, matchesTyped[i].username) };
+			if (matchesTyped[i]){
+				const messageButton = document.getElementById(`friend-chat-${matchesTyped[i].user_id}`);
+				if (messageButton) {
+					messageButton.onclick = () => { goToFriendChat(matchesTyped[i].user_id, matchesTyped[i].username) };
+				}
 			}
 		}
 
