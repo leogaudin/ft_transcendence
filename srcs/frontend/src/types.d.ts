@@ -41,7 +41,8 @@ export interface Message {
 	sender_username?: string;
 	sent_at: string;
 	read?: boolean;
-	type?: string
+	type?: string;
+	info?: string;
 }
 
 export interface MessageObject {

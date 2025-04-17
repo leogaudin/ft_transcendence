@@ -1,5 +1,5 @@
 import { getClientID } from "../messages/messages-page.js"
-import { displayFriends, displayInvitations, debounce } from "../friends/friends-fetch.js";
+import { displayFriends, displayInvitations, showMatches, debounce } from "../friends/friends-fetch.js";
 
 let toastTimeout: number;
 let socketToast: WebSocket | null;
@@ -14,6 +14,7 @@ const updateFriendsList = debounce(() => {
 	if (!friendListPage)
 		return ;
 	displayFriends();
+	
 }, 500);
 
 function createsocketToastConnection() {
@@ -65,6 +66,11 @@ function createsocketToastConnection() {
 							displayInvitations();
 					else if (friendListPage)
 						displayFriends();
+					const dataMatches = document.getElementById("search-friend");
+					if (!dataMatches)
+						return ;
+					const friendInput = document.getElementById("friend-input") as HTMLInputElement;
+					showMatches(friendInput.value);
 				}
 				else if (data.info === "delete"){
 					const friendListPage = document.getElementById("friend-list");
@@ -74,14 +80,26 @@ function createsocketToastConnection() {
 					if (friendProfile)
 						friendProfile.style.display = 'none';
 					displayFriends();
+					const dataMatches = document.getElementById("search-friend");
+					if (!dataMatches)
+						return ;
+					const friendInput = document.getElementById("friend-input") as HTMLInputElement;
+					showMatches(friendInput.value);
 				}
 			}
 			else if (data.type === "chatToast")
 				showAlert(data.body, "toast-success");
-			else if (data.type === "tournament")
-				showAlert(data.body, "toast-error");
 			else if (data.type === "friendStatusUpdate")
 				updateFriendsList();
+			//Implementacion basica de invitacion y torneo por comando
+			else if (data.type === "tournament"){
+				if (data.info === "request")
+					showAlert(data.body, "toast-success");
+				else if (data.info === "accept")
+					showAlert(data.body, "toast-success");
+				else if (data.info === "refuse")
+					showAlert(data.body, "toast-error");
+			}
 		}
 		catch(err) {
 		  console.error("Error on message", err);
