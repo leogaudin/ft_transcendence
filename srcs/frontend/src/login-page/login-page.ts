@@ -10,7 +10,7 @@ export function initLoginEvents() {
 	googleSignIn();
 }
 
-function dropDown(){
+export function dropDown(){
 	const dropdownButton = document.getElementById("menu-button");
 	const dropdownOptions = document.getElementById("language-options");
 	if (!dropdownButton || !dropdownOptions)

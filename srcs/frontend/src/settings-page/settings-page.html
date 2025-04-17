@@ -1,21 +1,10 @@
-<div class="flex screen-set">
-	<div id="settings-div" class="standard-purple-card flex">
+<div class="flex flex-col screen-set">
+	<div id="settings-div" class="standard-purple-card flex hidden">
 		<header class="flex justify-center items-center">
 			<h1>Settings</h1>
 		</header>
 		<div id="divider"></div>
 		<main class="flex flex-col justify-end items-center gap-4">
-			<div class="settings-option">
-				<div class="flex gap-2">
-					<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
-						<path d="m476-80 182-480h84L924-80h-84l-43-122H603L560-80h-84ZM160-200l-56-56 202-202q-35-35-63.5-80T190-640h84q20 39 40 68t48 58q33-33 68.5-92.5T484-720H40v-80h280v-80h80v80h280v80H564q-21 72-63 148t-83 116l96 98-30 82-122-125-202 201Zm468-72h144l-72-204-72 204Z"/>
-					</svg>
-					<button>Change selected language</button>
-				</div>
-				<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
-					<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
-				</svg>
-			</div>
 			<div class="settings-option">
 				<div class="flex gap-2">
 					<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
@@ -41,9 +30,9 @@
 			<div class="settings-option">
 				<div class="flex gap-2">
 					<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
-						<path d="M400-720q-33 0-56.5-23.5T320-800q0-33 23.5-56.5T400-880q33 0 56.5 23.5T480-800q0 33-23.5 56.5T400-720Zm260 480q42 0 71-29t29-71q0-42-29-71t-71-29q-42 0-71 29t-29 71q0 42 29 71t71 29ZM864-80 756-188q-22 14-46 21t-50 7q-75 0-127.5-52.5T480-340q0-75 52.5-127.5T660-520q75 0 127.5 52.5T840-340q0 26-7 50t-21 46l108 108-56 56Zm-424 0v-121q15 24 35.5 44t44.5 36v41h-80Zm-160 0v-520q-61-5-121-14.5T40-640l20-80q84 23 168.5 31.5T400-680q87 0 171.5-8.5T740-720l20 80q-59 16-119 25.5T520-600v41q-54 35-87 92.5T400-340v10q0 5 1 10h-41v240h-80Z"/>
+						<path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q54 0 104-17.5t92-50.5L228-676q-33 42-50.5 92T160-480q0 134 93 227t227 93Zm252-124q33-42 50.5-92T800-480q0-134-93-227t-227-93q-54 0-104 17.5T284-732l448 448Z"/>
 					</svg>
-					<button>Terms and Privacy Conditions</button>
+					<button>Blocked Accounts</button>
 				</div>
 				<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
 					<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
@@ -51,7 +40,7 @@
 			</div>
 		</main>
 		<div id="divider"></div>
-		<footer class="settings-option delete-option">
+		<div class="settings-option delete-option">
 			<div class="flex gap-2">
 				<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
 					<path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
@@ -61,38 +50,71 @@
 			<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
 				<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
 			</svg>
-		</footer>
+		</div>
 	</div>
 
-	<div id="settings-display" class="standard-purple-card flex">
+	<!-- Change Password -->
+	<div id="change-password" class="standard-purple-card flex">
 		<header class="flex flex-col justify-center items-center">
-			<h1 id="settings-display-title">Default name</h1>
-			<p id="settings-display-description">Short description</p>
+			<h1 id="settings-display-title">Change Password</h1>
 		</header>
 		<div id="divider"></div>
 		<main>
-			<section id="settings-language" class="flex flex-col justify-end items-center gap-4">
-				<!-- <p id="settings-display-description">Change the Display Language to Your Preference</p> -->
-				<div class="settings-option language-option flex gap-2">
-					<img class="flag" src="../../resources/img/es.svg" alt="Spain Flag">
-					<div language_key="es" role="menuitem"
-					tabindex="-1">Español</div>
+			<form class="flex flex-col justify-center gap-4">
+				<div>
+					<p>Current Password</p>
+					<input class="w-full" type="text" placeholder="Current Password">
 				</div>
-				<div class="settings-option language-option flex gap-2">
-					<img class="flag" src="../../resources/img/sh.svg" alt="Spain Flag">
-					<div language_key="en" role="menuitem"
-					tabindex="-1">English</div>
+				<div>
+					<p>New Password</p>
+					<input class="w-full" type="text" placeholder="New Password">
 				</div>
-				<div class="settings-option flex gap-2 language-option">
-					<img class="flag" src="../../resources/img/fr.svg" alt="Spain Flag">
-					<div language_key="fr" role="menuitem"
-					tabindex="-1">Français</div>
-				</div>
-			</section>
-			<!-- <section id="settings-password">Buenas</section> -->
-			<!-- <section id="settings-twofactor">Tardes</section> -->
-			<!-- <section id="settings-conditions">Mamawebo</section> -->
-			<!-- <section id="settings-delete-account">Un beso</section> -->
+				<button type="submit">Submit</button>
+			</form>
 		</main>
 	</div>
+
+	<!-- Terms and Conditions -->
+	<main id="terms-and-conditions" class="standard-purple-card hidden md:w-4/5">
+		<header class="flex justify-center items-center w-full m-2.5 p-2.5 gap-x-5">
+		  <h1>Terms and Privacy Policy</h1>
+		  <img class="max-w-24" src="resources/img/sleeping-cat.png" alt="sleeping cat">
+		</header>
+		<div id="divider"></div>
+		<section id="privacy-policy" class="flex flex-col justify-center items-center"></section>
+	</main>
+
+	<footer id="login-footer" class="flex justify-between gap-x-10">
+		<div class="relative inline-block text-left" id="language-menu">
+		  <div>
+			<button type="button"
+			  class="inline-flex w-full justify-center gap-x-1.5 rounded-md px-3 py-2 text-sm font-semibold ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50"
+			  id="menu-button" aria-expanded="true" aria-haspopup="true">
+			  Language
+			  <svg class="-mr-1 size-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
+				data-slot="icon">
+				<path fill-rule="evenodd"
+				  d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
+				  clip-rule="evenodd" />
+			  </svg>
+			</button>
+		  </div>
+  
+		  <div class="absolute right-0 z-10 mt-2origin-top-right focus:outline-hidden" role="menu"
+			aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+			<div class="hidden py-1" role="none" id="language-options">
+				<div language_key="es" class="l-option block px-4 py-2 text-sm text-[var(--dark-blue)]" role="menuitem"
+					tabindex="-1" id="menu-item-0">Español</div>
+			  	<div language_key="en" class="l-option block px-4 py-2 text-sm text-[var(--dark-blue)]" role="menuitem"
+					tabindex="-1" id="menu-item-1">English</div>
+			  	<div language_key="fr" class="l-option block px-4 py-2 text-sm text-[var(--dark-blue)]" role="menuitem"
+					tabindex="-1" id="menu-item-2">Français</div>
+			</div>
+		  </div>
+		</div>
+  
+		<div id="terms-conditions-button" class="cursor-pointer">Privacy and Terms Conditions</div>
+	</footer>
+
+	
 </div>

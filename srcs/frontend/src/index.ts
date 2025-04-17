@@ -4,6 +4,7 @@ import { initMessagesEvents, socketChat } from "./messages/messages-page.js";
 import { initResetPasswordEvents } from "./reset-password-page/reset-password.js";
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
 import { initFriendsEvents } from "./friends/friends-page.js"
+import { initSettingsEvents } from "./settings-page/settings-page.js"
 import { LoginObject, MessageObject } from "./types.js";
 import { displayToast, createsocketToastConnection, socketToast } from "./toast-alert/toast-alert.js";
 import { pong } from "./games/game.js"
@@ -66,7 +67,9 @@ const routes = [
 	{
 		path: "/settings",
 		url: "../src/settings-page/settings-page.html",
-		event: () => {}
+		event: () => {
+			initSettingsEvents();
+		}
 	}
 ];
 

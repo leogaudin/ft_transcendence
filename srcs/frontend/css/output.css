@@ -273,17 +273,6 @@
   fill: var(--alert);
 }
 
-.language-option {
-  justify-content: start;
-  align-items: center;
-  width: 50%;
-}
-
-.flag {
-  height: 30px;
-  width: 40px;
-}
-
 /* --> Games page <-- */
 
 #games-page {
@@ -1438,6 +1427,10 @@ video {
 
 .text-\[var\(--alert\)\] {
   color: var(--alert);
+}
+
+.text-\[var\(--dark-blue\)\] {
+  color: var(--dark-blue);
 }
 
 .text-\[var\(--dark-pink\)\] {
