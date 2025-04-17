@@ -133,7 +133,34 @@ async function setupMessageForm() {
 	        sender_id: getClientID(),
           sent_at: date.toISOString(),
           read: false,
-          type: "tournament"
+          type: "tournament",
+          info: "request",
+        }
+        socketChat.send(JSON.stringify(fullMessage));
+      }
+      else if (message === "/accept"){
+        let fullMessage: Message = {
+          body: message,
+          chat_id: actual_chat_id,
+	        receiver_id: friendID,
+	        sender_id: getClientID(),
+          sent_at: date.toISOString(),
+          read: false,
+          type: "tournament",
+          info: "accept",
+        }
+        socketChat.send(JSON.stringify(fullMessage));
+      }
+      else if (message === "/refuse"){
+        let fullMessage: Message = {
+          body: message,
+          chat_id: actual_chat_id,
+	        receiver_id: friendID,
+	        sender_id: getClientID(),
+          sent_at: date.toISOString(),
+          read: false,
+          type: "tournament",
+          info: "refuse",
         }
         socketChat.send(JSON.stringify(fullMessage));
       }
@@ -145,6 +172,7 @@ async function setupMessageForm() {
           sender_id: getClientID(),
           sent_at: date.toISOString(),
           read: false,
+          type: "message",
         }
         socketChat.send(JSON.stringify(fullMessage));
         displayMessage(fullMessage);

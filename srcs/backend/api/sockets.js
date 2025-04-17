@@ -5,6 +5,9 @@ import { asyncWebSocketHandler } from "./utils.js";
 
 const socketsChat = new Map();
 const socketsToast = new Map();
+const socketsPong = new Map();
+const socketsFourInARow = new Map();
+const socketsTournament = new Map();
 
 export default function createWebSocketsRoutes(fastify){
 	return [
@@ -46,17 +49,18 @@ export default function createWebSocketsRoutes(fastify){
 						if (data.receiver_id && data.body && await isBlocked(data.sender_id, data.receiver_id) === false){
 							const id = parseInt(data.receiver_id);
 							const chat_id = await getChatBetweenUsers(data.sender_id, data.receiver_id);
-							const message = await createMessage({
-								body: data.body,
-								sender_id: data.sender_id,
-								receiver_id: data.receiver_id,
-								chat_id: chat_id,
-								sent_at: data.sent_at
-							})
+							if (data.type !== "tournament"){
+								const message = await createMessage({
+									body: data.body,
+									sender_id: data.sender_id,
+									receiver_id: data.receiver_id,
+									chat_id: chat_id,
+									sent_at: data.sent_at
+								})
+							}
 							if (socketsChat.has(id) && data.type !== "tournament"){
 								const message_id = message.id;
 								const receiver = socketsChat.get(id);
-								
 								receiver.send(JSON.stringify({
 									body: data.body,
 									message_id: message_id,
@@ -70,14 +74,35 @@ export default function createWebSocketsRoutes(fastify){
 							}
 							else if (socketsToast.has(id)){
 								const toastReceiver = socketsToast.get(id);
-								//funcionamiento desde chat con comando /tournament
+								//funcionamiento desde chat con comando /tournament, /accept, /refuse
 								if (data.type === "tournament"){
-									toastReceiver.send(JSON.stringify({
-										type: "tournament",
-										body: `You have a tournament request from ${username}`,
-										sender_id: data.sender_id,
-										receiver_id: data.receiver_id
-									}))
+									if (data.info === "request"){
+										toastReceiver.send(JSON.stringify({
+											type: "tournament",
+											body: `You have a tournament request from ${username}`,
+											sender_id: data.sender_id,
+											receiver_id: data.receiver_id,
+											info: "request",
+										}))
+									}
+									else if (data.info === "accept"){
+										toastReceiver.send(JSON.stringify({
+											type: "tournament",
+											body: `Tournament request has been accepted from ${username}`,
+											sender_id: data.sender_id,
+											receiver_id: data.receiver_id,
+											info: "accept",
+										}))
+									}
+									else if (data.info === "refuse"){
+										toastReceiver.send(JSON.stringify({
+											type: "tournament",
+											body: `Tournament request has been refused from ${username}`,
+											sender_id: data.sender_id,
+											receiver_id: data.receiver_id,
+											info: "refuse",
+										}))
+									}
 								}
 								else{
 									toastReceiver.send(JSON.stringify({
@@ -138,7 +163,7 @@ export default function createWebSocketsRoutes(fastify){
 								timestamp: new Date().toISOString()
 							  }));
 							} catch (error) {
-							  console.error(`Error notificando al usuario ${clientId}:`, error);
+							  console.error(`Error while notification ${clientId}:`, error);
 							}
 						});
 					}
@@ -147,7 +172,6 @@ export default function createWebSocketsRoutes(fastify){
 						const sender_id = parseInt(data.sender_id);
 						const receiver_id = parseInt(data.receiver_id);
 						let username = await getUsername(data.sender_id);
-						console.log(data);
 						if (data.type === "friendRequest"){
 							if (data.info === "request"){
 								if (socketsToast.has(receiver_id)){
@@ -182,12 +206,37 @@ export default function createWebSocketsRoutes(fastify){
 						}
 						//Funcionamiento en boton para crear torneo
 						else if (data.type === "tournament"){
-							receiver.send(JSON.stringify({
-								type: "tournament",
-								sender_id: data.sender_id,
-								receiver_id: data.receiver_id,
-								body: `You have a tournament request from ${username}`,
-							}))
+							if (data.info === "request"){
+								receiver.send(JSON.stringify({
+									type: "tournament",
+									sender_id: data.sender_id,
+									receiver_id: data.receiver_id,
+									tournament_id: userId,
+									body: `You have a tournament request from ${username}`,
+								}))
+							}
+							else if (data.info === "accept"){
+								if (socketsTournament.has(data.tournamentId)){
+									//Toda la informacion y configuracion necesaria a la hora de aceptar el torneo
+									receiver.send(JSON.stringify({
+										type: "tournament",
+										sender_id: data.sender_id,
+										receiver_id: data.receiver_id,
+										tournament_id: data.tournament_id,
+										body: `Tournament request has been accepted from ${username}`,
+									}))
+								}
+							}
+							else if (data.info === "refuse"){
+								//Toda la informacion y configuracion necesaria a la hora de rechazar el torneo
+								receiver.send(JSON.stringify({
+									type: "tournament",
+									sender_id: data.sender_id,
+									receiver_id: data.receiver_id,
+									tournament_id: data.tournament_id,
+									body: `Tournament request has been refused from ${username}`,
+								}))
+							}
 						}
 					}
 				})
@@ -202,31 +251,32 @@ export default function createWebSocketsRoutes(fastify){
 							status: "offline",
 							timestamp: new Date().toISOString()
 						  }));
-						} catch (error) {
-						  console.error(`Error notificando al usuario ${clientId}:`, error);
+						}
+						catch (error){
+						  console.error(`Error while notification ${clientId}:`, error);
 						}
 					});
 					socketsToast.delete(userId);
 				})
 			})
 		},
-		/*{
+		{
 			url: "/pong",
 			method: "GET",
 			websocket: true,
 			handler: asyncWebSocketHandler(async (socket) => {
 				let userId = null;
-				socket.on("message", async notification => {
-					const toast = notification.toString();
+				socket.on("message", async pong => {
+					const game = pong.toString();
 					if (userId === null){
 						try{
-							userId = parseInt(toast);
+							userId = parseInt(game);
 							if (isNaN(userId)) {
-							  const data = JSON.parse(toast);
+							  const data = JSON.parse(game);
 							  userId = data.userId;
 							}
 							if (userId){
-							  socketsToast.set(userId, socket);
+							  socketsPong.set(userId, socket);
 							  socket.send(JSON.stringify({
 								type: "connection",
 								status: "success",
@@ -242,9 +292,13 @@ export default function createWebSocketsRoutes(fastify){
 							}));
 						}
 					}
+					else{
+
+					}
 				})
 				socket.on("close", () => {
-					console.log("Client disconnected from /pong")
+					console.log("Client disconnected from /pong");
+					socketsPong.delete(userId);
 				})
 			})
 		},
@@ -254,17 +308,17 @@ export default function createWebSocketsRoutes(fastify){
 			websocket: true,
 			handler: asyncWebSocketHandler(async (socket) => {
 				let userId = null;
-				socket.on("message", async notification => {
-					const toast = notification.toString();
+				socket.on("message", async InARow => {
+					const game = InARow.toString();
 					if (userId === null){
 						try{
-							userId = parseInt(toast);
+							userId = parseInt(game);
 							if (isNaN(userId)) {
-							  const data = JSON.parse(toast);
+							  const data = JSON.parse(game);
 							  userId = data.userId;
 							}
 							if (userId){
-							  socketsToast.set(userId, socket);
+							  socketsFourInARow.set(userId, socket);
 							  socket.send(JSON.stringify({
 								type: "connection",
 								status: "success",
@@ -280,12 +334,58 @@ export default function createWebSocketsRoutes(fastify){
 							}));
 						}
 					}
+					else{
+
+					}
 				})
 				socket.on("close", () => {
 					console.log("Client disconnected from /fourInARow");
+					socketsFourInARow.delete(userId);
 				})
 			})
-		}*/
+		},
+		{
+			// socketsTournament(tournamentId, socket)
+			url: "/tournament",
+			method: "GET",
+			websocket: true,
+			handler: asyncWebSocketHandler(async (socket) => {
+				let userId = null;
+				socket.on("message", async tournament => {
+					const tournamentString = tournament.toString();
+					if (userId === null){
+						try{
+							userId = parseInt(tournamentString);
+							if (isNaN(userId)) {
+							  const data = JSON.parse(tournamentString);
+							  userId = data.userId;
+							}
+							if (userId){
+							  socketsTournament.set(userId, socket);
+							  socket.send(JSON.stringify({
+								type: "connection",
+								status: "success",
+								message: "Connected"
+							  }));
+							}
+						  }
+						  catch (err){
+							console.error("Error can't get ID:", err);
+							socket.send(JSON.stringify({
+							  type: "error",
+							  message: "Invalid Id"
+							}));
+						}
+					}
+					else{
 
+					}
+				})
+				socket.on("close", () => {
+					console.log("Client disconnected from /tournament");
+					socketsTournament.delete(userId);
+				})
+			})
+		}
 	]
 }

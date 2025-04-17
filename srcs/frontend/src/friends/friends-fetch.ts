@@ -150,7 +150,7 @@ function emptyMatches(datalist: HTMLElement) {
 	}
 }
 
-async function showMatches(input: string) {
+export async function showMatches(input: string) {
 	const datalist = document.getElementById("search-friend");
 
 	if (datalist) {
