@@ -229,6 +229,16 @@ Devuelve los campos modificados.
 }
 ```
 
+`PATCH` `/users/password` `{current_password, new_password, new_password_confirm}`
+Modifica la contraseña del usuario. Se encarga de comprobar que la contraseña
+actual es la correcta, que la nueva es diferente y que sea hasheada en la DB
+
+```json
+{
+  "success": "Password successfully changed"
+}
+```
+
 `DELETE` `/users` Borra un usuario
 
 `GET` `/users/:str` Devuelve la tabla _str_ en relación al usuario,
