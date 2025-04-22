@@ -1254,6 +1254,14 @@ video {
        column-gap: 1.25rem;
 }
 
+.self-start {
+  align-self: flex-start;
+}
+
+.self-center {
+  align-self: center;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -1302,6 +1310,10 @@ video {
 
 .bg-\[\#7d48778f\] {
   background-color: #7d48778f;
+}
+
+.bg-\[\#d087ac50\] {
+  background-color: #d087ac50;
 }
 
 .bg-\[var\(--alert\)\] {
