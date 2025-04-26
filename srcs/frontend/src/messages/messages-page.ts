@@ -24,7 +24,7 @@ export function moveToHome() {
 	});
 }
 
-function getClientID(): number {
+export function getClientID(): number {
   let chats = localStorage.getItem("id");
   if (!chats)
     return -1;
@@ -69,7 +69,7 @@ function createSocketConnection() {
       console.error("WebSocket error:", error);
     };
     socketChat.onclose = () => {
-      console.log("WebSocket connection closed");
+      console.log("WebSocketChat connection closed");
       socketChat = null;
     };
   }
@@ -182,4 +182,4 @@ async function setupMessageForm() {
   });
 }
 
-export { getClientID, socketChat };
+export { socketChat };

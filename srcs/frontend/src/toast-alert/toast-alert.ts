@@ -1,5 +1,6 @@
 import { getClientID } from "../messages/messages-page.js"
 import { displayFriends, displayInvitations, showMatches, debounce } from "../friends/friends-fetch.js";
+import { createSocketTournamentConnection, socketTournament } from "../games/tournament.js";
 
 let toastTimeout: number;
 let socketToast: WebSocket | null;
@@ -93,12 +94,31 @@ function createsocketToastConnection() {
 				updateFriendsList();
 			//Implementacion basica de invitacion y torneo por comando
 			else if (data.type === "tournament"){
-				if (data.info === "request")
+				if (data.info === "request"){
+					createSocketTournamentConnection(data.tournament_id)
 					showAlert(data.body, "toast-success");
-				else if (data.info === "accept")
+				}
+				else if (data.info === "accept"){
+					if (socketTournament){
+						socketTournament.send(JSON.stringify({
+							senderId: getClientID(),
+							receiverId: data.sender_id,
+							info: "accept",
+						}))
+					}
 					showAlert(data.body, "toast-success");
-				else if (data.info === "refuse")
+				}
+				else if (data.info === "refuse"){
+					if (socketTournament){
+						socketTournament.send(JSON.stringify({
+							senderId: getClientID(),
+							receiverId: data.sender_id,
+							info: "accept",
+						}))
+					}
 					showAlert(data.body, "toast-error");
+				}
+					
 			}
 		}
 		catch(err) {
