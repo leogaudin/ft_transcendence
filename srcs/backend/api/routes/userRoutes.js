@@ -10,10 +10,10 @@ import {
 } from "../models/userModel.js";
 import { getMessagesOfUser } from "../models/messageModel.js";
 import { getChatsOfUser } from "../models/chatModel.js";
-import { getMatchesOfUser } from "../models/matchModel.js";
-import { getTournamentsOfUser } from "../models/tournamentModel.js";
 import { checkCurrentPassword } from "../passwordReset.js";
 import { checkNewPassword } from "../passwordReset.js";
+// import { getMatchesOfUser } from "../models/matchModel.js";
+// import { getTournamentsOfUser } from "../models/tournamentModel.js";
 
 export default function createUserRoutes(fastify) {
   return [

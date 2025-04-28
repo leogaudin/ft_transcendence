@@ -598,130 +598,190 @@ ids de los jugadores
 ]
 ```
 
-`POST` `/tournaments` `{name, player_amount, player_ids}` Crea un torneo
+`POST` `/tournaments` `{name, player_limit, game_type}`
+Crea un torneo. Automáticamente añade al creador como jugador
 
 ```json
 {
-  "id": 1,
-  "name": "Tournament",
-  "player_amount": 4,
-  "player_ids": [1, 2, 3, 4]
+  "tournament_id": 1,
+  "tournament_name": "Giga tournament",
+  "player_limit": 4,
+  "game_type": "pong" | "connect_four",
+  "creator_id": 3
 }
 ```
 
-`GET` `/tournaments/:id` Devuelve toda la información de un torneo
+`GET` `/tournaments/:id`
+Devuelve toda la información de un torneo
+Se actualiza según el torneo se juega
 
 ```json
 {
-  "id": 1,
-  "name": "Test tournament",
-  "player_amount": 4,
-  "player_ids": [1, 2, 3, 4]
+  "tournament_id": 1,
+  "name": "Dummy Tournament",
+  "player_limit": 4,
+  "status": "finished",
+  "game_type": "pong",
+  "creator_id": 1,
+  "created_at": "2025-04-28 11:49:21",
+  "started_at": "2025-04-28 11:49:21",
+  "finished_at": "2025-04-28 11:49:21",
+  "tournament_invitations": [
+    {
+      "user_id": 1,
+      "status": "confirmed"
+    },
+    {
+      "user_id": 3,
+      "status": "confirmed"
+    },
+    {
+      "user_id": 5,
+      "status": "confirmed"
+    },
+    {
+      "user_id": 7,
+      "status": "confirmed"
+    }
+  ],
+  "tournament_participants": [
+    {
+      "user_id": 1,
+      "final_rank": 1
+    },
+    {
+      "user_id": 3,
+      "final_rank": 3
+    },
+    {
+      "user_id": 5,
+      "final_rank": 4
+    },
+    {
+      "user_id": 7,
+      "final_rank": 2
+    }
+  ],
+  "tournament_matches": [
+    {
+      "match_id": 1,
+      "match_status": "finished",
+      "match_phase": "semis",
+      "first_player_id": 1,
+      "second_player_id": 3,
+      "first_player_score": 10,
+      "second_player_score": 5,
+      "winner_id": 1,
+      "loser_id": 3,
+      "played_at": "2025-04-28 11:49:21"
+    },
+    {
+      "match_id": 2,
+      "match_status": "finished",
+      "match_phase": "semis",
+      "first_player_id": 7,
+      "second_player_id": 5,
+      "first_player_score": 10,
+      "second_player_score": 3,
+      "winner_id": 7,
+      "loser_id": 5,
+      "played_at": "2025-04-28 11:49:21"
+    },
+    {
+      "match_id": 3,
+      "match_status": "finished",
+      "match_phase": "finals",
+      "first_player_id": 1,
+      "second_player_id": 7,
+      "first_player_score": 10,
+      "second_player_score": 5,
+      "winner_id": 1,
+      "loser_id": 7,
+      "played_at": "2025-04-28 11:49:21"
+    },
+    {
+      "match_id": 4,
+      "match_status": "finished",
+      "match_phase": "tiebreaker",
+      "first_player_id": 3,
+      "second_player_id": 5,
+      "first_player_score": 10,
+      "second_player_score": 3,
+      "winner_id": 3,
+      "loser_id": 5,
+      "played_at": "2025-04-28 11:49:21"
+    }
+  ]
 }
 ```
 
-`PUT` `/tournaments/:id` `{name, player_amount, player_ids}`
-Modifica completamente un torneo
+`POST` `/tournaments/invite` `{tournament_id, user_id}`
+Invita a un jugador al torneo
 
 ```json
 {
-  "id": 1,
-  "name": "Test tournament",
-  "player_amount": 4,
-  "player_ids": [1, 2, 3, 4]
+  "invitation_id": 1,
+  "user_id": 1,
+  "status": "pending",
+  "invited_at": "2025-04-28 11:13:21"
 }
 ```
 
-`PATCH` `/tournaments/:id` `{?, ...}` Modifica uno o más campos de un torneo.
-Devuelve los campos modificados
+`PATCH` `/tournaments/invite` `{tournament_id, status}`
+Modifica la invitación al torneo, donde "status" puede ser "confirmed" o "denied"
+También se encarga de preparar el torneo si es el último usuario, añadiendo al usuario
 
 ```json
 {
-  "name": "Modified tournament"
+  "success": "Invitation successfully modified"
 }
 ```
 
-`DELETE` `/tournaments/:id` Borra un torneo
-
-### Partidas
-
-`GET` `/matches` Devuelve el id, ids de los jugadores, resultado,
-id del ganador y perdedor y si pertenece a un torneo
+`POST` `/tournaments/start` `{tournament_id}`
+Empieza el torneo, generando los brackets y partidas.
+Solo puede ser lanzado por el creador
 
 ```json
 [
   {
-    "id": 1,
-    "left_player_id": 1,
-    "right_player_id": 2,
-    "result": [3, 2],
-    "winner_id": 1,
-    "loser_id": 2,
-    "tournament_id": null
+    "game_type":"pong" | "connect_four",
+    "first_player_id": 1,
+    "second_player_id": 3,
+    "tournament_id": 1,
+    "phase": "semis"
   },
   {
-    "id": 2,
-    "left_player_id": 1,
-    "right_player_id": 2,
-    "result": [2, 3],
-    "winner_id": 2,
-    "loser_id": 1,
-    "tournament_id": null
-  }
+    "game_type":"pong" | "connect_four",
+    "first_player_id": 2,
+    "second_player_id": 4,
+    "tournament_id": 1,
+    "phase": "semis"
+  },
 ]
 ```
 
-`POST` `/matches` `{right_player_id, left_player_id, result, winner_id, loser_id}`
-Crea una partida
+### Partidas
+
+`POST` `/matches` `{first_player_id, second_player_id, game_type}`
+Crea una partida SIN TERMINAR
 
 ```json
 {
   "id": 1,
-  "left_player_id": 2,
-  "right_player_id": 1,
-  "result": [3, 2],
-  "winner_id": 1,
-  "loser_id": 2
+  "game_type": "pong" | "connect_four",
+  "first_player_id": 2,
+  "second_player_id": 1
 }
 ```
 
-`GET` `/matches/:id` Devuelve toda la información de una partida
+`POST` `/matches/end` `{first_player_score, second_player_score, match_id}`
+Termina una partida. Si esta partida pertenece a un torneo, y es la
+última partida que queda, se generan nuevas partidas para el torneo, o
+si ya se han terminado todos los brackets, finaliza el torneo y actualiza
+los standings
 
 ```json
 {
-  "id": 1,
-  "left_player_id": 1,
-  "right_player_id": 2,
-  "result": [3, 2],
-  "winner_id": 1,
-  "loser_id": 2,
-  "tournament_id": null
+  "success": "Match successfully finished"
 }
 ```
-
-`PUT` `/matches/:id` `{right_player_id, left_player_id, result, winner_id, loser_id}`
-Modifica completamente una partida
-
-```json
-{
-  "id": 1,
-  "left_player_id": 2,
-  "right_player_id": 1,
-  "result": [3, 2],
-  "winner_id": 1,
-  "loser_id": 2
-}
-```
-
-`PATCH` `/matches/:id` `{?, ...}` Modifica uno o más campos de una partida.
-Devuelve los campos modificados
-
-```json
-{
-  "result": [2, 3],
-  "winner_id": 2,
-  "loser_id": 1
-}
-```
-
-`DELETE` `/matches/:id` Borra una partida

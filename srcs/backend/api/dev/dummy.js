@@ -109,6 +109,108 @@ async function createMatches(foo, bar) {
   });
 }
 
+import {
+  createTournament,
+  addInvitationToTournament,
+  modifyInvitationToTournament,
+  addParticipantToTournament,
+  determineFirstBracket,
+  determineSecondBracket,
+  getTournamentByID,
+  determineFinalStandings,
+  finishTournament,
+  setTournamentAsStarted,
+} from "../models/tournamentModel.js";
+import { finishMatch, getMatch } from "../models/matchModel.js";
+
+async function createTestTournament(name ,foo, bar, baz, qux) {
+  console.log("Creating tournament...");
+  let tournament = await createTournament(
+    { name: name, player_limit: 4, game_type: "pong" },
+    foo.id,
+  );
+  console.log("Adding tournament invitations...");
+  const t_id = tournament.tournament_id;
+  await addInvitationToTournament({
+    tournament_id: t_id,
+    user_id: foo.id,
+  });
+  await modifyInvitationToTournament(
+    {
+      status: "confirmed",
+      tournament_id: t_id,
+    },
+    foo.id,
+  );
+  await addParticipantToTournament(
+    {
+      tournament_id: t_id,
+    },
+    foo.id,
+  );
+  await addInvitationToTournament({
+    tournament_id: t_id,
+    user_id: bar.id,
+  });
+  await addInvitationToTournament({
+    tournament_id: t_id,
+    user_id: baz.id,
+  });
+  await addInvitationToTournament({
+    tournament_id: t_id,
+    user_id: qux.id,
+  });
+  console.log("Confirming tournament invitations...");
+  await modifyInvitationToTournament(
+    {
+      status: "confirmed",
+      tournament_id: t_id,
+    },
+    bar.id,
+  );
+  await modifyInvitationToTournament(
+    {
+      status: "confirmed",
+      tournament_id: t_id,
+    },
+    baz.id,
+  );
+  await modifyInvitationToTournament(
+    {
+      status: "confirmed",
+      tournament_id: t_id,
+    },
+    qux.id,
+  );
+  await addParticipantToTournament({ tournament_id: t_id }, bar.id);
+  await addParticipantToTournament({ tournament_id: t_id }, baz.id);
+  await addParticipantToTournament({ tournament_id: t_id }, qux.id);
+  console.log("Determining first bracket...");
+  tournament = await getTournamentByID(t_id);
+  await determineFirstBracket(tournament);
+  await setTournamentAsStarted(t_id);
+  console.log("Finishing first matches...");
+  tournament = await getTournamentByID(t_id);
+  let match = await getMatch(tournament.tournament_matches[0].match_id);
+  await finishMatch(match, 10, 5);
+  match = await getMatch(tournament.tournament_matches[1].match_id);
+  await finishMatch(match, 10, 3);
+  console.log("Determining second bracket...");
+  tournament = await getTournamentByID(t_id);
+  await determineSecondBracket(tournament);
+  tournament = await getTournamentByID(t_id);
+  console.log("Finishing second matches...");
+  match = await getMatch(tournament.tournament_matches[2].match_id);
+  await finishMatch(match, 10, 5);
+  match = await getMatch(tournament.tournament_matches[3].match_id);
+  await finishMatch(match, 10, 3);
+  tournament = await getTournamentByID(t_id);
+  console.log("Finishing tournament...");
+  const standings = await determineFinalStandings(tournament);
+  await finishTournament(tournament, standings);
+  console.log("All done!");
+}
+
 export async function createDebug() {
   setTimeout(async () => {
     let foo = await debugRegister("albagar4", "alba.sansebastian5b");
@@ -237,6 +339,8 @@ export async function createDebug() {
         body: `Test message from ${qux2.username} number ${i}`,
       });
     }
-    await createMatches(foo, bar);
+    await createTestTournament("Test Tournament 1", foo, bar, baz, qux);
+    // await createTestTournament("Test Tournament 2", bar, foo, qux, baz);
+    // await createTestTournament("Test Tournament 3", qux, bar, foo, baz);
   }, 2000);
 }

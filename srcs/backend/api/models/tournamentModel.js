@@ -1,181 +1,421 @@
 import db from "../database.js";
 import assert from "node:assert/strict";
-
-/**
- * Finds all tournaments where a given player plays
- * @param {Number} tournamentID - ID of the tournament
- * @returns {Array} - All found tournaments
- */
-export function getPlayersInTournament(tournamentID) {
-  assert(tournamentID !== undefined, "tournamentID must exist");
-  return new Promise((resolve, reject) => {
-    const sql =
-      "SELECT player_id FROM tournament_players WHERE tournament_id = ?";
-
-    db.all(sql, tournamentID, (err, rows) => {
-      if (err) {
-        console.error("Error getting tournament players:", err.message);
-        return reject(err);
-      }
-      resolve(rows.map((row) => row.player_id));
-    });
-  });
-}
-
-/**
- * Finds all avaliable tournaments
- * @returns {Array} - All avaliable tournaments
- */
-export function getTournaments() {
-  return new Promise((resolve, reject) => {
-    const sql = `
-      SELECT 
-        t.id,
-        t.name,
-        t.player_amount,
-        GROUP_CONCAT(tp.player_id) as player_ids
-      FROM tournaments t
-      LEFT JOIN tournament_players tp ON t.id = tp.tournament_id
-      GROUP BY t.id, t.name, t.player_amount
-    `;
-    db.all(sql, (err, rows) => {
-      if (err) {
-        console.error("Error getting tournaments:", err.message);
-        return reject(err);
-      }
-      const tournaments = rows.map((row) => ({
-        ...row,
-        player_ids: row.player_ids
-          ? row.player_ids.split(",").map((id) => parseInt(id))
-          : [],
-      }));
-      resolve(tournaments);
-    });
-  });
-}
-
-/**
- * Adds a player to a tournament
- * @param {Number} tournamentID - ID of the tournament
- * @param {Number} playerId - ID of the player
- * @returns {Promise} - Nothing on success,
- *                      error on failure
- */
-export function addPlayerToTournament(tournamentID, playerId) {
-  assert(tournamentID !== undefined, "tournamentID must exist");
-  assert(playerId !== undefined, "playerId must exist");
-  return new Promise((resolve, reject) => {
-    const sql = `INSERT INTO tournament_players (tournament_id, player_id) VALUES (?,?)`;
-    const params = [tournamentID, playerId];
-    db.run(sql, params, (err) => {
-      if (err) {
-        console.error("Error adding player to tournament:", err.message);
-        return reject(err);
-      }
-      resolve();
-    });
-  });
-}
+import { scheduleMatch } from "./matchModel.js";
 
 /**
  * Creates a tournament
  * @param {Object} data - Name, player amount and IDs of the players
+ * @param {Number} creatorId - ID of the creator
  * @returns {Object} - Newly created tournament
  */
-export function createTournament(data) {
+export function createTournament(data, creatorId) {
   assert(data !== undefined, "data must exist");
+  assert(creatorId !== undefined, "creatorId must exist");
   return new Promise((resolve, reject) => {
-    const sql = `INSERT INTO tournaments (name, player_amount) VALUES (?,?)`;
-    const params = [data.name, data.player_amount];
-
+    const sql = `
+      INSERT INTO
+        tournaments (
+          name,
+          player_limit,
+          game_type,
+          creator_id
+        )
+      VALUES (?, ?, ?, ?)
+    `;
+    const params = [data.name, data.player_limit, data.game_type, creatorId];
     db.run(sql, params, function (err) {
       if (err) {
         console.error("Error inserting tournament:", err.message);
         return reject(err);
       }
-      const tournamentID = this.lastID;
-      const insertPromises = data.player_ids.map((playerID) =>
-        addPlayerToTournament(tournamentID, playerID),
-      );
-      Promise.all(insertPromises)
-        .then(() =>
-          resolve({
-            id: tournamentID,
-            name: data.name,
-            player_amount: data.player_amount,
-            player_ids: data.player_ids,
-          }),
-        )
-        .catch(reject);
+      resolve({
+        tournament_id: this.lastID,
+        tournament_name: data.name,
+        player_limit: data.player_limit,
+        game_type: data.game_type,
+        creator_id: data.creator_id,
+      });
     });
   });
 }
 
 /**
- * Finds a tournament by a given ID
+ * Helper function to get all invitations of a tournament
+ * @param {Number} tournament_id - ID of the tournament
+ * @returns {Object} - Invitations of the tournament
+ */
+function getInvitationsOfTournament(tournament_id) {
+  assert(tournament_id !== undefined, "tournament_id must exist");
+  return new Promise((resolve, reject) => {
+    const invitationsSQL = `
+        SELECT
+          user_id,
+          status AS invitation_status,
+          invited_at
+        FROM
+          tournament_invitations
+        WHERE
+          tournament_id = ?
+       `;
+    db.all(invitationsSQL, [tournament_id], (err, invitations) => {
+      if (err) {
+        console.error("error getting invitations", err.message);
+        return reject(err);
+      }
+      const tournament_invitations = invitations.map((inv) => ({
+        user_id: inv.user_id,
+        status: inv.invitation_status,
+      }));
+      resolve(tournament_invitations);
+    });
+  });
+}
+
+/**
+ * Helper function to get all participants of a tournament
+ * @param {Number} tournament_id - ID of the tournament
+ * @returns {Object} - Participants of the tournament
+ */
+function getParticipantsOfTournament(tournament_id) {
+  assert(tournament_id !== undefined, "tournament_id must exist");
+  return new Promise((resolve, reject) => {
+    const participantsSQL = `
+          SELECT
+            user_id,
+            final_rank
+          FROM
+            tournament_participants
+          WHERE
+            tournament_id = ?
+        `;
+    db.all(participantsSQL, [tournament_id], (err, participants) => {
+      if (err) {
+        console.error("error getting participants", err.message);
+        return reject(err);
+      }
+      const tournament_participants = participants.map((part) => ({
+        user_id: part.user_id,
+        final_rank: part.final_rank,
+      }));
+      resolve(tournament_participants);
+    });
+  });
+}
+
+/**
+ * Helper function to get all matches of a tournament
+ * @param {Number} tournament_id - ID of the tournament
+ * @returns {Object} - Matches of the tournament
+ */
+function getMatchesOfTournament(tournament_id) {
+  assert(tournament_id !== undefined, "tournament_id must exist");
+  return new Promise((resolve, reject) => {
+    const matchesSQL = `
+          SELECT
+            id AS match_id,
+            status AS match_status,
+            phase,
+            first_player_id,
+            second_player_id,
+            first_player_score,
+            second_player_score,
+            winner_id,
+            loser_id,
+            played_at
+          FROM
+            matches
+          WHERE
+            tournament_id = ?
+        `;
+    db.all(matchesSQL, [tournament_id], (err, matches) => {
+      if (err) {
+        console.error("error getting matches", err.message);
+        return reject(err);
+      }
+      const tournament_matches = matches.map((m) => ({
+        match_id: m.match_id,
+        match_status: m.match_status,
+        match_phase: m.phase,
+        first_player_id: m.first_player_id,
+        second_player_id: m.second_player_id,
+        first_player_score: m.first_player_score,
+        second_player_score: m.second_player_score,
+        winner_id: m.winner_id,
+        loser_id: m.loser_id,
+        played_at: m.played_at,
+      }));
+      resolve(tournament_matches);
+    });
+  });
+}
+
+/**
+ * Returns all information about a tournament
  * @param {Number} id - ID of the tournament
- * @returns {Object} - Found tournament
+ * @returns {Object} - Tournament with invitations, participants and matches
  */
 export function getTournamentByID(id) {
   assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
-      SELECT t.id, t.name, t.player_amount,
-      GROUP_CONCAT(tp.player_id) as player_ids
-      FROM tournaments t
-      LEFT JOIN tournament_players tp ON t.id = tp.tournament_id
-      WHERE t.id = ?
-      GROUP BY t.id, t.name, t.player_amount
-      `;
-
+      SELECT
+        id AS tournament_id,
+        name AS tournament_name,
+        player_limit,
+        status AS tournament_status,
+        game_type,
+        creator_id,
+        created_at,
+        started_at,
+        finished_at
+      FROM
+        tournaments
+      WHERE id = ?
+    `;
     db.get(sql, [id], (err, row) => {
       if (err) {
-        console.error("Error getting tournament:", err.message);
+        console.error("error getting tournament", err.message);
         return reject(err);
       }
-      if (row && row.player_ids) {
-        row.player_ids = row.player_ids.split(",").map((id) => parseInt(id));
-      }
-      resolve(row);
+      if (!row) return resolve(null);
+      const result = {
+        tournament_id: row.tournament_id,
+        name: row.tournament_name,
+        player_limit: row.player_limit,
+        status: row.tournament_status,
+        game_type: row.game_type,
+        creator_id: row.creator_id,
+        created_at: row.created_at,
+        started_at: row.started_at,
+        finished_at: row.finished_at,
+        tournament_invitations: [],
+        tournament_participants: [],
+        tournament_matches: [],
+      };
+      Promise.all([
+        getInvitationsOfTournament(id),
+        getParticipantsOfTournament(id),
+        getMatchesOfTournament(id),
+      ]).then(([invitations, participants, matches]) => {
+        result.tournament_invitations = invitations;
+        result.tournament_participants = participants;
+        result.tournament_matches = matches;
+        resolve(result);
+      });
     });
   });
 }
 
 /**
- * Fully modifies a tournament
- * @param {Number} id - ID of the tournament
- * @param {Object} data - Name, player amount and IDs of the players
- * @returns {Object} - Modified tournament
+ * Invites a user to a tournament
+ * @param {Object} data - Tournament and user payload
+ * @returns {Object} - Newly created invitation
  */
-export function putTournament(id, data) {
-  assert(id !== undefined, "id must exist");
+export function addInvitationToTournament(data) {
   assert(data !== undefined, "data must exist");
   return new Promise((resolve, reject) => {
     const sql = `
-      UPDATE tournaments
-      SET name = ?, player_amount = ?, player_ids = ?
-      WHERE id = ?
+      INSERT INTO
+        tournament_invitations (
+          tournament_id,
+          user_id
+        )
+      VALUES (?, ?)
     `;
-    const params = [data.name, data.player_amount, data.player_ids, id];
-    db.run(sql, params, function (err) {
+    db.run(sql, [data.tournament_id, data.user_id], function (err) {
       if (err) {
-        console.error("Error updating tournament:", err.message);
+        console.error("Error inserting tournament invitation: ", err.message);
         return reject(err);
       }
-      if (this.changes === 0) {
-        return reject(new Error("Tournament not found"));
-      }
-      resolve(getTournamentByID(id));
+      resolve({
+        invitation_id: this.lastID,
+        user_id: data.user_id,
+        status: this.status,
+        invited_at: this.invited_at,
+      });
     });
   });
 }
 
 /**
- * Modifies one or more fields of a tournament
- * @param {Object} updates - Field(s) to modify
- * @returns {Object} - Modified fields
+ * Modifies an invitation of a tournament
+ * @param {Object} data - Payload of the tournament
+ * @param {Number} user_id - ID of the user
+ * @returns {Object} - Success message
  */
-export function patchTournament(updates) {
+export function modifyInvitationToTournament(data, user_id) {
+  assert(data !== undefined, "data must exist");
+  assert(user_id !== undefined, "user_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      UPDATE
+        tournament_invitations
+      SET
+        status = ?
+      WHERE
+        tournament_id = ?
+      AND
+        user_id = ?
+    `;
+    db.run(sql, [data.status, data.tournament_id, user_id], function (err) {
+      if (err) {
+        console.error("Error inserting tournament invitation: ", err.message);
+        return reject(err);
+      }
+      resolve({ success: "invitation modified successfully" });
+    });
+  });
+}
+
+/**
+ * Adds a participant to a tournament
+ * @param {Object} data - Payload of the tournament
+ * @param {Number} user_id - ID of the user
+ * @returns {Object} - Success message
+ */
+export function addParticipantToTournament(data, user_id) {
+  assert(data !== undefined, "data must exist");
+  assert(user_id !== undefined, "user_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      INSERT INTO
+        tournament_participants (
+          tournament_id,
+          user_id
+        )
+      VALUES (?, ?)
+    `;
+    db.run(sql, [data.tournament_id, user_id], function (err) {
+      if (err) {
+        console.error("Error inserting tournament participant: ", err.message);
+        return reject(err);
+      }
+      resolve({ success: "invitation confirmed" });
+    });
+  });
+}
+
+/**
+ * Checks if a given user is invited to a tournament
+ * @param {Number} tournament_id - ID of the tournament
+ * @param {Number} user_id - ID of the user
+ * @returns {Boolean} - User is invited
+ */
+export function isInvited(tournament_id, user_id) {
+  assert(tournament_id !== undefined, "tournament_id must exist");
+  assert(user_id !== undefined, "user_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT EXISTS (
+        SELECT 1
+        FROM
+          tournament_invitations
+        WHERE
+          user_id = ? AND tournament_id = ?)
+      AS is_invited;`;
+    const params = [user_id, tournament_id];
+    db.get(sql, params, function (err, row) {
+      if (err) {
+        console.error("Error accessing tournament_invitations:", err.message);
+        return reject(err);
+      }
+      resolve(row.is_invited === 1);
+    });
+  });
+}
+
+/**
+ * Checks if a given user is a participant to a tournament
+ * @param {Number} tournament_id - ID of the tournament
+ * @param {Number} user_id - ID of the user
+ * @returns {Boolean} - User is participant
+ */
+export function isParticipant(tournament_id, user_id) {
+  assert(tournament_id !== undefined, "tournament_id must exist");
+  assert(user_id !== undefined, "user_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT EXISTS (
+        SELECT 1
+        FROM
+          tournament_participants
+        WHERE
+          user_id = ? AND tournament_id = ?)
+      AS is_participant;`;
+    const params = [user_id, tournament_id];
+    db.get(sql, params, function (err, row) {
+      if (err) {
+        console.error("Error accessing tournament_participants:", err.message);
+        return reject(err);
+      }
+      resolve(row.is_participant === 1);
+    });
+  });
+}
+
+/**
+ * Checks the current status of an invitation
+ * @param {Number} tournament_id - ID of the tournament
+ * @param {Number} user_id - ID of the user
+ * @returns {Object} - Status of the invitation
+ */
+export function getInvitationStatus(tournament_id, user_id) {
+  assert(tournament_id !== undefined, "tournament_id must exist");
+  assert(user_id !== undefined, "user_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT
+        status
+      FROM
+        tournament_invitations
+      WHERE
+        user_id = ? AND tournament_id = ?
+      `;
+    const params = [user_id, tournament_id];
+    db.get(sql, params, function (err, row) {
+      if (err) {
+        console.error("Error accessing tournament_participants:", err.message);
+        return reject(err);
+      }
+      resolve(row.status);
+    });
+  });
+}
+
+/**
+ * Checks if the maximum amount of players has been reached
+ * @param {Number} tournament_id - ID of the tournament
+ * @returns {Boolean} - true if the number of participants is the maximum,
+ *                      false if it isn't
+ */
+export function isTournamentReady(tournament_id) {
+  assert(tournament_id !== undefined, "tournament_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT COUNT(user_id) AS count
+      FROM
+        tournament_participants
+      WHERE
+        tournament_id = ?
+    `;
+    db.get(sql, [tournament_id], function (err, row) {
+      if (err) {
+        console.error("Error accessing tournament_participants:", err.message);
+        return reject(err);
+      }
+      resolve(row.count === 4);
+    });
+  });
+}
+
+/**
+ * Patches a tournament
+ * @param {Number} id - ID of the tournament
+ * @param {Object} updates - Updatable fields
+ * @returns {Object} - Updated fields
+ */
+export function patchTournament(id, updates) {
+  assert(id !== undefined, "id must exist");
   assert(updates !== undefined, "updates must exist");
   return new Promise((resolve, reject) => {
     const fields = Object.keys(updates)
@@ -190,61 +430,254 @@ export function patchTournament(updates) {
     `;
     db.run(sql, params, function (err) {
       if (err) {
+        console.error("Error updating tournaments:", err.message);
+        return reject(err);
+      }
+      resolve({ success: true, id, ...updates });
+    });
+  });
+}
+
+/**
+ * Sets the tournament as 'in_progress', setting the datetime
+ * @param {Number} id - ID of the tournament
+ * @returns {Object} - Success message
+ */
+export function setTournamentAsStarted(id) {
+  assert(id !== undefined, "id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      UPDATE
+        tournaments
+      SET
+        status = 'in_progress',
+        started_at = datetime('now', '+2 hours')
+      WHERE
+        id = ?
+    `;
+    db.run(sql, [id], function (err) {
+      if (err) {
         console.error("Error updating tournament:", err.message);
         return reject(err);
       }
-      if (this.changes === 0) {
-        return reject(new Error("Tournament not found"));
-      }
-      resolve({ id, ...updates });
+      resolve({ success: "Tournament successfully started" });
     });
   });
 }
 
 /**
- * Deletes a tournament by a given ID
+ * Sets the tournament as 'finished', setting the datetime
  * @param {Number} id - ID of the tournament
- * @returns {Promise} - Nothing on success,
- *                      error on failure
+ * @returns {Object} - Success message
  */
-export function deleteTournament(id) {
+export function setTournamentAsFinished(id) {
   assert(id !== undefined, "id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
-      DELETE FROM tournaments
-      WHERE id = ?
+      UPDATE
+        tournaments
+      SET
+        status = 'finished',
+        finished_at = datetime('now', '+2 hours')
+      WHERE
+        id = ?
     `;
-    db.run(sql, id, function (err) {
+    db.run(sql, [id], function (err) {
       if (err) {
-        console.error("Error deleting tournament:", err.message);
+        console.error("Error updating tournament:", err.message);
         return reject(err);
       }
-      if (this.changes === 0) {
-        return reject(new Error("Tournament not found"));
-      }
-      resolve();
+      resolve({ success: "Tournament successfully finished" });
     });
   });
 }
 
 /**
- * Finds all tournaments where a given user plays
- * @param {Number} id - ID of the user
- * @returns {Array} - All found tournaments
+ * Schedules the first bracket of matches (semi-finals) through random matchmaking
+ * @param {Object} tournament - Tournament in question
+ * @returns {Object} - Newly scheduled matches
  */
-export function getTournamentsOfUser(id) {
-  assert(id !== undefined, "id must exist");
+export async function determineFirstBracket(tournament) {
+  assert(tournament !== undefined, "tournament must exist");
+  const participants = tournament.tournament_participants.map((p) => p.user_id);
+  for (let i = participants.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [participants[i], participants[j]] = [participants[j], participants[i]];
+  }
+  const matches = await Promise.all([
+    scheduleMatch({
+      game_type: tournament.game_type,
+      first_player_id: participants[0],
+      second_player_id: participants[1],
+      tournament_id: tournament.tournament_id,
+      phase: "semis",
+    }),
+    scheduleMatch({
+      game_type: tournament.game_type,
+      first_player_id: participants[2],
+      second_player_id: participants[3],
+      tournament_id: tournament.tournament_id,
+      phase: "semis",
+    }),
+  ]);
+  return matches;
+}
+
+/**
+ * Schedules the second bracket (tiebreaker and finals)
+ * @param {Object} tournament - Tournament in question
+ * @returns {Object} - Newly scheduled matches
+ */
+export async function determineSecondBracket(tournament) {
+  assert(tournament !== undefined, "tournament must exist");
+  const winners = [];
+  const losers = [];
+  for (let i = 0; i < 2; i++) {
+    winners.push(tournament.tournament_matches[i].winner_id);
+    losers.push(tournament.tournament_matches[i].loser_id);
+  }
+  const matches = await Promise.all([
+    scheduleMatch({
+      game_type: tournament.game_type,
+      first_player_id: winners[0],
+      second_player_id: winners[1],
+      tournament_id: tournament.tournament_id,
+      phase: "finals",
+    }),
+    scheduleMatch({
+      game_type: tournament.game_type,
+      first_player_id: losers[0],
+      second_player_id: losers[1],
+      tournament_id: tournament.tournament_id,
+      phase: "tiebreaker",
+    }),
+  ]);
+  return matches;
+}
+
+/**
+ * Returns the standings after the tournament is over
+ * @param {Object} tournament - Tournament in question
+ * @returns {Object} - Final standings
+ */
+export async function determineFinalStandings(tournament) {
+  const standings = [];
+  tournament.tournament_matches.forEach((match) => {
+    if (match.match_phase === "finals") {
+      standings.push({ position: 1, id: match.winner_id });
+      standings.push({ position: 2, id: match.loser_id });
+    }
+    if (match.match_phase === "tiebreaker") {
+      standings.push({ position: 3, id: match.winner_id });
+      standings.push({ position: 4, id: match.loser_id });
+    }
+  });
+  return standings;
+}
+
+/**
+ * Checks if all avaliable matches of a tournament are finished
+ * @param {Number} tournament_id - ID of the tournament
+ * @returns {Boolean} - true if no more matches are remaining,
+ *                      false otherwise
+ */
+export async function noMoreMatchesInTournament(tournament_id) {
+  assert(tournament_id !== undefined, "tournament_id must exist");
   return new Promise((resolve, reject) => {
     const sql = `
-      SELECT t.* FROM tournaments t 
-      JOIN tournament_players tp ON t.id = tp.tournament_id
-      WHERE tp.player_id = ?`;
-    db.all(sql, [id], (err, rows) => {
+      SELECT
+        COUNT(id) AS count
+      FROM
+        matches
+      WHERE
+        tournament_id = ?
+      AND
+        status != 'finished'
+    `;
+    db.get(sql, [tournament_id], function (err, row) {
       if (err) {
-        console.error("Error getting matches:", err.message);
+        console.error("Error accessing matches:", err.message);
         return reject(err);
       }
-      resolve(rows);
+      resolve(row.count === 0);
     });
   });
+}
+
+/**
+ * Returns the amount of finished matches of a tournament
+ * @param {Nubmer} tournament_id - ID of the tournament
+ * @returns {Number} - Amount of finished matches
+ */
+export async function finishedMatchesInTournament(tournament_id) {
+  assert(tournament_id !== undefined, "tournament_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT
+        COUNT(id) AS count
+      FROM
+        matches
+      WHERE
+        tournament_id = ?
+      AND
+        status = 'finished'
+    `;
+    db.get(sql, [tournament_id], function (err, row) {
+      if (err) {
+        console.error("Error accessing matches:", err.message);
+        return reject(err);
+      }
+      resolve(row.count);
+    });
+  });
+}
+
+/**
+ * Patches the participants table
+ * @param {Number} user_id - ID of the user
+ * @param {Number} tournament_id - ID of the tournament
+ * @param {Object} updates - Updatable fields
+ * @returns {Object} - Updated fields
+ */
+export async function patchParticipants(user_id, tournament_id, updates) {
+  assert(user_id !== undefined, "user_id must exist");
+  assert(tournament_id !== undefined, "tournament_id must exist");
+  assert(updates !== undefined, "updates must exist");
+  return new Promise((resolve, reject) => {
+    const fields = Object.keys(updates)
+      .map((key) => `${key} = ?`)
+      .join(", ");
+    const params = Object.values(updates);
+    params.push(user_id, tournament_id);
+    const sql = `
+      UPDATE tournament_participants
+      SET ${fields}
+      WHERE user_id = ? AND tournament_id = ?
+    `;
+    db.run(sql, params, function (err) {
+      if (err) {
+        console.error("Error updating tournament_participants:", err.message);
+        return reject(err);
+      }
+      resolve({ success: true, ...updates });
+    });
+  });
+}
+
+/**
+ * Sets the tournament as finished, modifying both the tournament and participants
+ * @param {Object} tournament - Tournament in question
+ * @param {Object} standings - Final standings
+ */
+export async function finishTournament(tournament, standings) {
+  assert(tournament !== undefined, "tournament must exist");
+  assert(standings !== undefined, "standings must exist");
+  await Promise.all([
+    standings.map(async (stand) => {
+      return await patchParticipants(stand.id, tournament.tournament_id, {
+        final_rank: stand.position,
+      });
+    }),
+  ]);
+  await setTournamentAsFinished(tournament.tournament_id);
 }

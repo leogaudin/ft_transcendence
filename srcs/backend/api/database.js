@@ -83,8 +83,15 @@ db.serialize(() => {
     `
     CREATE TABLE IF NOT EXISTS tournaments (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name VARCHAR(255),
-    player_amount INTEGER NOT NULL DEFAULT 4 CHECK (player_amount >= 4)
+    name VARCHAR(255) NOT NULL,
+    player_limit INTEGER NOT NULL,
+    game_type VARCHAR(255) NOT NULL,
+    status VARCHAR(255) NOT NULL DEFAULT 'creating',
+    creator_id INTEGER NOT NULL,
+    created_at DATETIME DEFAULT (datetime('now', '+2 hours')),
+    started_at DATETIME,
+    finished_at DATETIME,
+    FOREIGN KEY (creator_id) REFERENCES users(id)
     )`,
     (err) => {
       if (err) {
@@ -95,17 +102,37 @@ db.serialize(() => {
   );
   db.run(
     `
-    CREATE TABLE IF NOT EXISTS tournament_players (
-    tournament_id INTEGER,
-    player_id INTEGER,
-    PRIMARY KEY (tournament_id, player_id),
+    CREATE TABLE IF NOT EXISTS tournament_participants (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tournament_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    final_rank INTEGER,
     FOREIGN KEY (tournament_id) REFERENCES tournaments(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
     )`,
     (err) => {
       if (err) {
         return console.error("Error creating table:", err.message);
       }
-      console.log("Tournament table ready.");
+      console.log("Tournament players table ready.");
+    },
+  );
+  db.run(
+    `
+    CREATE TABLE IF NOT EXISTS tournament_invitations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    tournament_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    status VARCHAR(255) NOT NULL DEFAULT 'pending',
+    invited_at DATETIME DEFAULT (datetime('now', '+2 hours')),
+    FOREIGN KEY (tournament_id) REFERENCES tournaments(id)
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    )`,
+    (err) => {
+      if (err) {
+        return console.error("Error creating table:", err.message);
+      }
+      console.log("Tournament players table ready.");
     },
   );
 });
@@ -116,22 +143,25 @@ db.serialize(() => {
     `
     CREATE TABLE IF NOT EXISTS matches (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    game_type INTEGER,
-    custom_mode INTEGER,
+    game_type VARCHAR(255) NOT NULL,
+    custom_mode VARCHAR(255),
+    status VARCHAR(255) NOT NULL DEFAULT 'scheduled',
     first_player_id INTEGER NOT NULL,
     second_player_id INTEGER NOT NULL,
-    first_player_score INTEGER NOT NULL,
-    second_player_score INTEGER NOT NULL,
+    first_player_score INTEGER,
+    second_player_score INTEGER,
     turns_played INTEGER,
-    winner_id INTEGER NOT NULL,
-    loser_id INTEGER NOT NULL,
+    winner_id INTEGER,
+    loser_id INTEGER,
     tournament_id INTEGER,
-    played_at DATETIME DEFAULT (datetime('now', '+2 hours')),
-    FOREIGN KEY (first_player_id) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (second_player_id) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (winner_id) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (loser_id) REFERENCES users(id) ON DELETE SET NULL,
-    FOREIGN KEY (tournament_id) REFERENCES tournaments(id) ON DELETE SET NULL
+    phase VARCHAR(255),
+    created_at DATETIME DEFAULT(datetime('now', '+2 hours')),
+    played_at DATETIME,
+    FOREIGN KEY (first_player_id) REFERENCES users(id),
+    FOREIGN KEY (second_player_id) REFERENCES users(id),
+    FOREIGN KEY (winner_id) REFERENCES users(id),
+    FOREIGN KEY (loser_id) REFERENCES users(id),
+    FOREIGN KEY (tournament_id) REFERENCES tournaments(id)
     )`,
     (err) => {
       if (err) {
