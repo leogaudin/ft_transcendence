@@ -1,12 +1,15 @@
 <div class="flex flex-col screen-set">
-	<div class="flex">
+	<div class="flexy gap-x-10 justify-center">
 		<div id="settings-div" class="standard-purple-card flex settings-size">
-			<header class="flex justify-center items-center">
+			<header class="flex justify-between items-center mx-4">
 				<h1>Settings</h1>
+				<svg id="home-button" class="home-icon m-4 h-10 w-10" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
+					<path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
+				</svg>
 			</header>
 			<div id="divider"></div>
 			<main class="flex flex-col justify-end items-center gap-4">
-				<div class="settings-option">
+				<div id="change-password-button" class="settings-option">
 					<div class="flex gap-2">
 						<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
 							<path d="M80-200v-80h800v80H80Zm46-242-52-30 34-60H40v-60h68l-34-58 52-30 34 58 34-58 52 30-34 58h68v60h-68l34 60-52 30-34-60-34 60Zm320 0-52-30 34-60h-68v-60h68l-34-58 52-30 34 58 34-58 52 30-34 58h68v60h-68l34 60-52 30-34-60-34 60Zm320 0-52-30 34-60h-68v-60h68l-34-58 52-30 34 58 34-58 52 30-34 58h68v60h-68l34 60-52 30-34-60-34 60Z"/>
@@ -17,7 +20,7 @@
 						<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
 					</svg>
 				</div>
-				<div id="" class="settings-option">
+				<div id="two-factor-button" class="settings-option">
 					<div class="flex gap-2">
 						<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
 							<path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm100-200h46v-240h-36l-70 50 24 36 36-26v180Zm124 0h156v-40h-94l-2-2q21-20 34.5-34t21.5-22q18-18 27-36t9-38q0-29-22-48.5T458-600q-26 0-47 15t-29 39l40 16q5-13 14.5-20.5T458-558q15 0 24.5 8t9.5 20q0 11-4 20.5T470-486l-32 32-54 54v40Zm296 0q36 0 58-20t22-52q0-18-10-32t-28-22v-2q14-8 22-20.5t8-29.5q0-27-21-44.5T678-600q-25 0-46.5 14.5T604-550l40 16q4-12 13-19t21-7q13 0 21.5 7.5T708-534q0 14-10 22t-26 8h-18v40h20q20 0 31 8t11 22q0 13-11 22.5t-25 9.5q-17 0-26-7.5T638-436l-40 16q7 29 28.5 44.5T680-360ZM160-240h640v-480H160v480Zm0 0v-480 480Z"/>
@@ -28,7 +31,7 @@
 						<path d="M504-480 320-664l56-56 240 240-240 240-56-56 184-184Z"/>
 					</svg>
 				</div>
-				<div id="blocked-accounts" class="settings-option">
+				<div id="blocked-accounts-button" class="settings-option">
 					<div class="flex gap-2">
 						<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
 							<path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q54 0 104-17.5t92-50.5L228-676q-33 42-50.5 92T160-480q0 134 93 227t227 93Zm252-124q33-42 50.5-92T800-480q0-134-93-227t-227-93q-54 0-104 17.5T284-732l448 448Z"/>
@@ -41,7 +44,7 @@
 				</div>
 			</main>
 			<div id="divider"></div>
-			<div class="settings-option delete-option">
+			<div id="delete-account-button" class="settings-option delete-option">
 				<div class="flex gap-2">
 					<svg class="icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#fff">
 						<path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360ZM280-720v520-520Z"/>
@@ -55,7 +58,7 @@
 		</div>
 
 		<!-- Change Password -->
-		<div id="change-password" class="standard-purple-card flex hidden settings-size">
+		<div id="change-password" class="standard-purple-card flex hide settings-size">
 			<header class="flex flex-col justify-center items-center">
 				<h1 id="settings-display-title">Change Password</h1>
 			</header>
@@ -80,7 +83,7 @@
 		</div>
 
 		<!-- Two-factor Auth -->
-		<div id="two-factor" class="standard-purple-card flex settings-size hidden">
+		<div id="two-factor" class="standard-purple-card flex settings-size hide">
 			<header class="flex flex-col justify-center items-center">
 				<h1 id="settings-display-title">Two-Factor Auth</h1>
 				<p class="text-center">Introduce the 6-digits code associated to your account</p>
@@ -105,7 +108,7 @@
 		</div>
 
 		<!-- Blocked Accounts -->
-		 <div id="blocked-accounts" class="standard-purple-card flex settings-size hidden">
+		 <div id="blocked-accounts" class="standard-purple-card flex settings-size hide">
 			<header class="flex flex-col justify-center items-center">
 				<h1 id="settings-display-title">Blocked Accounts</h1>
 			</header>
@@ -125,19 +128,43 @@
 				</div>
 			</main>
 		 </div>
-	</div>
-
-	<!-- Terms and Conditions -->
-	<main id="terms-and-conditions" class="standard-purple-card hidden md:w-4/5">
-		<header class="flex justify-center items-center w-full m-2.5 p-2.5 gap-x-5">
-		  <h1>Terms and Privacy Policy</h1>
-		  <img class="max-w-24" src="resources/img/sleeping-cat.png" alt="sleeping cat">
-		</header>
-		<div id="divider"></div>
-		<section id="privacy-policy" class="flex flex-col justify-center items-center"></section>
-	</main>
-
-	<footer id="login-footer" class="flex justify-between gap-x-10">
+		</div>
+		
+		<!-- Terms and Conditions -->
+		<main id="terms-and-conditions" class="standard-purple-card hidden md:w-4/5">
+			<header class="flex justify-center items-center w-full m-2.5 p-2.5 gap-x-5">
+				<h1>Terms and Privacy Policy</h1>
+				<img class="max-w-24" src="resources/img/sleeping-cat.png" alt="sleeping cat">
+			</header>
+			<div id="divider"></div>
+			<section id="privacy-policy" class="flex flex-col justify-center items-center"></section>
+		</main>
+		
+		
+		<!-- Delete Account -->
+		<dialog id="delete-account" class="standard-pink-card hidden">
+			<div id="delete-account-modal" class="w-full h-full p-2">
+				<div class="flex justify-between items-center m-2.5">
+					<h1 class="text-white text-3xl">Delete your Account</h1>
+					<svg class="close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#3B0034">
+			  <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+			</svg>
+		  </div>
+		  <div id="pink-divider"></div>
+		  <form id="delete-account-form" class="flex flex-col justify-center items-center">
+			  <input type="email" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
+			  placeholder="Introduce your email">
+			  <input type="password" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
+			  placeholder="Introduce your password">
+			  <input type="text" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
+			  placeholder="Type 'Delete'">
+			  <button type="submit" class="signin-user p-1 m-2 rounded-md modal-button">Submit</button>
+			</form>
+			<p id="delete-account-message" class="m-2.5 flex justify-center">Fill the form to delete your account</p>
+		</div>
+	</dialog>
+	
+	<footer id="login-footer" class="flex justify-between items-center gap-x-10">
 		<div class="relative inline-block text-left" id="language-menu">
 		  <div>
 			<button type="button"
@@ -152,44 +179,20 @@
 			  </svg>
 			</button>
 		  </div>
-  
+	
 		  <div class="absolute right-0 z-10 mt-2origin-top-right focus:outline-hidden" role="menu"
 			aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
 			<div class="hidden py-1" role="none" id="language-options">
 				<div language_key="es" class="l-option block px-4 py-2 text-sm text-[var(--dark-blue)]" role="menuitem"
 					tabindex="-1" id="menu-item-0">Español</div>
-			  	<div language_key="en" class="l-option block px-4 py-2 text-sm text-[var(--dark-blue)]" role="menuitem"
+				  <div language_key="en" class="l-option block px-4 py-2 text-sm text-[var(--dark-blue)]" role="menuitem"
 					tabindex="-1" id="menu-item-1">English</div>
-			  	<div language_key="fr" class="l-option block px-4 py-2 text-sm text-[var(--dark-blue)]" role="menuitem"
+				  <div language_key="fr" class="l-option block px-4 py-2 text-sm text-[var(--dark-blue)]" role="menuitem"
 					tabindex="-1" id="menu-item-2">Français</div>
 			</div>
 		  </div>
 		</div>
-  
+	
 		<div id="terms-conditions-button" class="cursor-pointer">Privacy and Terms Conditions</div>
 	</footer>
-
-	<!-- Delete Account -->
-	<dialog id="delete-account" class="standard-pink-card hidden">
-		<div id="delete-account-modal" class="w-full h-full p-2">
-		  <div class="flex justify-between items-center m-2.5">
-			<h1 class="text-white text-3xl">Delete your Account</h1>
-			<svg class="close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#3B0034">
-			  <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
-			</svg>
-		  </div>
-		  <div id="pink-divider"></div>
-		  <form id="delete-account-form" class="flex flex-col justify-center items-center">
-			<input type="email" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
-			  placeholder="Introduce your email">
-			<input type="password" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
-			  placeholder="Introduce your password">
-			<input type="text" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
-			  placeholder="Type 'Delete'">
-			<button type="submit" class="signin-user p-1 m-2 rounded-md modal-button">Submit</button>
-		  </form>
-		  <p id="delete-account-message" class="m-2.5 flex justify-center">Fill the form to delete your account</p>
-		</div>
-	</dialog>
-	
 </div>
