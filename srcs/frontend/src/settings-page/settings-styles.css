@@ -1,3 +1,8 @@
+.settings-size {
+	min-height: 60vh;
+	max-height: 60vh;
+}
+
 .settings-option {
 	display: flex;
 	justify-content: space-between;

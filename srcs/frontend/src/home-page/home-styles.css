@@ -1,7 +1,4 @@
 #home-page {
-	background-color: var(--dark-blue);
-	box-shadow: var(--violet) 0px 0px 20px;
-	border-radius: 15px;
 	max-width: 80vw;
 	min-height: 85vh;
 	padding: 2.5vh 2.5vw;

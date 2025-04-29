@@ -278,7 +278,7 @@ export async function displayFriends() {
 			section.setAttribute("class", "friend-class");
 			section.setAttribute("class", "friend-card");
 			section.innerHTML = `
-						<div class="flex items-center gap-4]">
+						<div class="flex items-center gap-4">
 							<img id="friend-avatar" class="card-avatar rounded-full m-1.5" src="../../resources/img/cat.jpg" alt="Avatar">
 							<div class="flex flex-col">
 								<h3>${friend.username}</h3>

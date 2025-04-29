@@ -9,7 +9,7 @@ export function initTwoFactorEvents(data: LoginObject) {
 	moveBetweenInputs();
 }
 
-function moveBetweenInputs() {
+export function moveBetweenInputs() {
 	const inputs = Array.from(document.getElementsByClassName("twoFA-input"));
 
     for (let index = 0; index < inputs.length; index++) {

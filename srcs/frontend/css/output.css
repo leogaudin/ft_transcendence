@@ -1,9 +1,6 @@
 /* --> Home Page <-- */
 
 #home-page {
-  background-color: var(--dark-blue);
-  box-shadow: var(--violet) 0px 0px 20px;
-  border-radius: 15px;
   max-width: 80vw;
   min-height: 85vh;
   padding: 2.5vh 2.5vw;
@@ -72,14 +69,14 @@
 
 .data-user {
   width: 100%;
-  background-color: #54184d6f;
+  background-color: var(--violet);
   border-radius: 5px;
   margin: 5px;
   padding: 5px;
 }
 
 .signin-user {
-  background-color: var(--dark-purple);
+  background-color: var(--dark-pink);
   width: -moz-fit-content;
   width: fit-content;
   border-radius: 5px;
@@ -89,6 +86,16 @@
 }
 
 .signin-user:hover {
+  background-color: var(--accent-pink);
+  color: var(--dark-purple);
+  cursor: pointer;
+}
+
+.modal-button {
+  background-color: var(--dark-purple);
+}
+
+.modal-button:hover {
   background-color: var(--accent-pink);
   color: var(--dark-purple);
   cursor: pointer;
@@ -231,6 +238,11 @@
 }
 
 /* --> Settings page <-- */
+
+.settings-size {
+  min-height: 60vh;
+  max-height: 60vh;
+}
 
 .settings-option {
   display: flex;
@@ -1087,6 +1099,10 @@ video {
   display: none;
 }
 
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
 .size-5 {
   width: 1.25rem;
   height: 1.25rem;
@@ -1131,6 +1147,10 @@ video {
 
 .w-2\/3 {
   width: 66.666667%;
+}
+
+.w-\[150px\] {
+  width: 150px;
 }
 
 .w-fit {
@@ -1563,7 +1583,6 @@ body {
   font-family: "Perfect DOS VGA";
   color: var(--accent-pink);
   cursor: default;
-  background-color: var(--dark-purple);
 }
 
 h1 {
@@ -1576,10 +1595,13 @@ h1 {
   position: fixed;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, var(--back-purple) 0%, var(--dark-purple) 50%, var(--back-purple) 100%);
+  background: radial-gradient(circle at 20% 30%, var(--back-purple), transparent 40%),
+	            radial-gradient(circle at 80% 70%, var(--dark-purple), transparent 40%),
+	            linear-gradient(90deg, var(--back-purple) 0%, var(--dark-purple) 50%, var(--back-purple) 100%);
+  background-blend-mode: overlay;
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: 50% 50%;
+  background-position: center;
 }
 
 .screen-set {
@@ -1593,7 +1615,7 @@ h1 {
 
 .standard-purple-card {
   flex-direction: column;
-  background-color: var(--dark-blue);
+  background-color: #4d167d6d;
   border-radius: 15px;
   box-shadow: var(--violet) 0px 0px 20px;
   margin: 10px;
@@ -1602,6 +1624,9 @@ h1 {
   min-width: 30vw;
   max-width: 90vw;
   z-index: 1;
+  -webkit-backdrop-filter: blur(6px) saturate(80%);
+          backdrop-filter: blur(6px) saturate(80%);
+  border: 1px solid rgba(255, 255, 255, 0.125);
 }
 
 .standard-pink-card {
@@ -1702,7 +1727,7 @@ h1 {
 
 .pending {
   fill: var(--dark-pink);
-  width: 40px;
+  height: 40px;
   padding: 5px;
   aspect-ratio: 1/1;
   background-color: var(--accent-pink);
