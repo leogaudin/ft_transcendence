@@ -40,7 +40,7 @@ export interface Message {
 	sender_id: number;
 	sender_username?: string;
 	sent_at: string;
-	read?: boolean;
+	read: boolean;
 	type?: string;
 	info?: string;
 }
@@ -60,6 +60,7 @@ export interface UserMatches {
 	username: string;
 	avatar: string;
 	is_friend: number;
+	is_invited?: boolean;
 }
 
 export interface FriendList {
@@ -87,4 +88,11 @@ export interface InvitationList {
 	receiver_status: string;
 	receiver_avatar: string;
 	invitation_type: string;
+}
+
+export interface Tournament {
+	id: number,
+  name: string,
+  player_amount: number,
+  player_ids: number[],
 }
