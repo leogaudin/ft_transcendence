@@ -5,14 +5,14 @@
 
 .data-user {
 	width: 100%;
-	background-color: #54184d6f;
+	background-color: var(--violet);
 	border-radius: 5px;
 	margin: 5px;
 	padding: 5px;
 }
 
 .signin-user {
-	background-color: var(--dark-purple);
+	background-color: var(--dark-pink);
 	width: fit-content;
 	border-radius: 5px;
 	margin: 5px;
@@ -21,6 +21,16 @@
 }
 
 .signin-user:hover {
+	background-color: var(--accent-pink);
+	color: var(--dark-purple);
+	cursor: pointer;
+}
+
+.modal-button {
+	background-color: var(--dark-purple);
+}
+
+.modal-button:hover {
 	background-color: var(--accent-pink);
 	color: var(--dark-purple);
 	cursor: pointer;

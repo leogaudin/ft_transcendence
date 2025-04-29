@@ -1,3 +1,32 @@
+.settings-size {
+    min-height: 60vh;
+    max-height: 60vh;
+}
+
+/* Add a container for both divs */
+.flexy {
+    position: relative;
+    display: flex;
+	width: 100%;
+}
+
+#settings-div { transition: transform 1s ease; }
+
+#settings-div.slide-left { transform: translateX(-55%); }
+
+#change-password, #two-factor, #blocked-accounts {
+    transition: all 1s ease;
+    position: absolute;
+}
+
+#change-password.hide, #two-factor.hide, #blocked-accounts.hide {
+    transform: translateX(100%);
+    opacity: 0;
+    visibility: hidden;
+}
+
+#change-password:not(.hide), #two-factor:not(.hide), #blocked-accounts:not(.hide) { transform: translateX(55%); }
+
 .settings-option {
 	display: flex;
 	justify-content: space-between;
