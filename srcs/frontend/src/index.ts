@@ -8,6 +8,7 @@ import { initSettingsEvents } from "./settings-page/settings-page.js"
 import { LoginObject, MessageObject } from "./types.js";
 import { displayToast, createsocketToastConnection, socketToast } from "./toast-alert/toast-alert.js";
 import { pong } from "./games/game.js"
+import { initTournamentEvents } from "./tournament/tournament.js";
 
 const routes = [
 	{
@@ -70,7 +71,14 @@ const routes = [
 		event: () => {
 			initSettingsEvents();
 		}
-	}
+	},
+	{
+		path: "/tournament",
+		url: "../src/tournament/tournament.html",
+		event: () => {
+			initTournamentEvents();
+		}
+	},
 ];
 
 export function navigateTo(path: string, data: object = {}) {
