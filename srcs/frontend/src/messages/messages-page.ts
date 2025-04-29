@@ -101,7 +101,7 @@ function displayMessage(data: Message){
         <p>${data.body}</p>
         <p class="hour">${sent_at}</p>
       </div>`;
-      sendRequest(`PATCH`, `/messages/${data.message_id}`, {is_read: 1});
+      sendRequest(`PATCH`, `messages/${data.message_id}`, {is_read: 1});
     }
     messageContainer.appendChild(el);
     el.scrollIntoView({ behavior: 'smooth'});
