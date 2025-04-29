@@ -1,9 +1,10 @@
 import { getClientID } from "../messages/messages-page.js"
 import { displayFriends, displayInvitations, showMatches, debounce } from "../friends/friends-fetch.js";
-import { createSocketTournamentConnection, socketTournament } from "../games/tournament.js";
+import { createSocketTournamentConnection, socketTournament } from "../tournament/tournament.js";
 
-let toastTimeout: number;
+let toastTimeout: NodeJS.Timeout;
 let socketToast: WebSocket | null;
+let tournament_id: number | null;
 
 const toastFeatures = [
 	{type: "toast-error", icon: "error-icon"},
@@ -94,31 +95,37 @@ function createsocketToastConnection() {
 				updateFriendsList();
 			//Implementacion basica de invitacion y torneo por comando
 			else if (data.type === "tournament"){
+				const tournament = data.tournament
+				console.log(tournament)
 				if (data.info === "request"){
-					createSocketTournamentConnection(data.tournament_id)
+					tournament_id = tournament.id;
 					showAlert(data.body, "toast-success");
 				}
 				else if (data.info === "accept"){
-					if (socketTournament){
-						socketTournament.send(JSON.stringify({
-							senderId: getClientID(),
-							receiverId: data.sender_id,
-							info: "accept",
-						}))
+					if (data.tournament){
+						if (socketTournament){
+							socketTournament.send(JSON.stringify({
+								senderId: getClientID(),
+								receiverId: data.sender_id,
+								tournament_id: tournament_id,
+								info: "accept",
+							}))
+						}
+						showAlert(data.body, "toast-success");
 					}
-					showAlert(data.body, "toast-success");
+					
 				}
-				else if (data.info === "refuse"){
+				else if (data.info === "reject"){
 					if (socketTournament){
 						socketTournament.send(JSON.stringify({
 							senderId: getClientID(),
 							receiverId: data.sender_id,
-							info: "accept",
+							tournament_id: data.tournament_id,
+							info: "reject",
 						}))
 					}
 					showAlert(data.body, "toast-error");
 				}
-					
 			}
 		}
 		catch(err) {
