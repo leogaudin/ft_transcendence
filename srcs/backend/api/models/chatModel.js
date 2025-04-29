@@ -263,7 +263,7 @@ export function getLastChatsOfUser(id) {
  * @param {Number} friend_id - ID of the other user
  * @returns {Number} - ID of the found chat
  */
-export function getChatBetweenUsers(user_id, friend_id) {
+export async function getChatBetweenUsers(user_id, friend_id) {
   assert(user_id !== undefined, "user_id must exist");
   assert(friend_id !== undefined, "friend_id must exist");
   return new Promise((resolve, reject) => {

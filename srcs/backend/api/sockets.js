@@ -1,5 +1,6 @@
 import { getChatBetweenUsers } from "./models/chatModel.js";
 import { createMessage } from "./models/messageModel.js";
+import { addPlayerToTournament, createTournament } from "./models/tournamentModel.js";
 import { getUsername, isBlocked, patchUser } from "./models/userModel.js";
 import { asyncWebSocketHandler } from "./utils.js";
 
@@ -48,9 +49,10 @@ export default function createWebSocketsRoutes(fastify){
 						let username = await getUsername(data.sender_id);
 						if (data.receiver_id && data.body && await isBlocked(data.sender_id, data.receiver_id) === false){
 							const id = parseInt(data.receiver_id);
+							const sender_id = parseInt(data.sender_id);
 							const chat_id = await getChatBetweenUsers(data.sender_id, data.receiver_id);
 							if (data.type !== "tournament"){
-								const message = await createMessage({
+							 message = await createMessage({
 									body: data.body,
 									sender_id: data.sender_id,
 									receiver_id: data.receiver_id,
@@ -60,6 +62,7 @@ export default function createWebSocketsRoutes(fastify){
 							}
 							if (socketsChat.has(id) && data.type !== "tournament"){
 								const message_id = message.id;
+								console.log(message_id);
 								const receiver = socketsChat.get(id);
 								receiver.send(JSON.stringify({
 									body: data.body,
@@ -74,24 +77,48 @@ export default function createWebSocketsRoutes(fastify){
 							}
 							else if (socketsToast.has(id)){
 								const toastReceiver = socketsToast.get(id);
+								const toastSender = socketsToast.get(sender_id);
 								//funcionamiento desde chat con comando /tournament, /accept, /refuse
 								if (data.type === "tournament"){
 									if (data.info === "request"){
+										const tournament = await createTournament({
+											name: "tournament",
+											player_amount: 4,
+											player_ids: [data.sender_id],
+										});
+										toastSender.send(JSON.stringify({
+											type: "tournament",
+											sender_id: data.sender_id,
+											receiver_id: data.receiver_id,
+											info: "creator",
+											tournament_id: tournament.id,
+										}))
 										toastReceiver.send(JSON.stringify({
 											type: "tournament",
 											body: `You have a tournament request from ${username}`,
 											sender_id: data.sender_id,
 											receiver_id: data.receiver_id,
 											info: "request",
+											tournament_id: tournament.id,
 										}))
 									}
 									else if (data.info === "accept"){
+										const tournament_id = parseInt(data.tournament_id);
+										const player_id = parseInt(data.sender_id);
+										console.log(tournament_id);
+										if (!socketsTournament.has(tournament_id)){
+											console.error(`Tournament not found`);
+											return ;
+										}
+										const tournament = await addPlayerToTournament(tournament_id, player_id);
+										console.log(tournament)
 										toastReceiver.send(JSON.stringify({
 											type: "tournament",
 											body: `Tournament request has been accepted from ${username}`,
 											sender_id: data.sender_id,
 											receiver_id: data.receiver_id,
 											info: "accept",
+											tournament_id: data.tournament_id,
 										}))
 									}
 									else if (data.info === "refuse"){
@@ -101,6 +128,7 @@ export default function createWebSocketsRoutes(fastify){
 											sender_id: data.sender_id,
 											receiver_id: data.receiver_id,
 											info: "refuse",
+											//tournament_id: ,
 										}))
 									}
 								}
@@ -110,7 +138,6 @@ export default function createWebSocketsRoutes(fastify){
 										body: `You have a message from ${username}`,
 									}))
 								}
-								
 							}
 						}
 					}
@@ -138,7 +165,6 @@ export default function createWebSocketsRoutes(fastify){
 							}
 							if (userId){
 							  socketsToast.set(userId, socket);
-							  console.log(socketsToast);
 							  socket.send(JSON.stringify({
 								type: "connection",
 								status: "success",
@@ -181,7 +207,7 @@ export default function createWebSocketsRoutes(fastify){
 										receiver_id: data.receiver_id,
 										type: "friendRequest",
 										body: `You have a friend request from ${username}`,
-										info: "request"
+										info: "request",
 									}))
 								}
 							}
@@ -204,38 +230,65 @@ export default function createWebSocketsRoutes(fastify){
 								}
 							}
 						}
-						//Funcionamiento en boton para crear torneo
+						//Funcionamiento en toast para crear torneo
 						else if (data.type === "tournament"){
-							if (data.info === "request"){
-								receiver.send(JSON.stringify({
+							if (data.info === "request") {
+								/*const tournament = await createTournament({
+									name: "tournament",
+									player_amount: 4,
+									player_ids: [data.sender_id],
+								});*/
+								const receiver = socketsToast.get(receiver_id);
+								const sender = socketsToast.get(sender_id);
+								// Enviar notificación al creador
+								sender.send(JSON.stringify({
 									type: "tournament",
 									sender_id: data.sender_id,
 									receiver_id: data.receiver_id,
-									tournament_id: userId,
+									info: "creator",
+									tournament_id: data.tournament_id,
+								}));
+						
+								// Enviar invitación al receptor
+								console.log(data.tournament)
+								receiver.send(JSON.stringify({
+									type: "tournament",
 									body: `You have a tournament request from ${username}`,
-								}))
+									sender_id: data.sender_id,
+									receiver_id: data.receiver_id,
+									info: "request",
+									tournament: data.tournament,
+								}));
 							}
 							else if (data.info === "accept"){
-								if (socketsTournament.has(data.tournamentId)){
-									//Toda la informacion y configuracion necesaria a la hora de aceptar el torneo
+								const tournament_id = parseInt(data.tournament_id);
+								console.log(tournament_id);
+								const player_id = parseInt(data.sender_id);
+								if (socketsTournament.has(tournament_id)){
+									await addPlayerToTournament(tournament_id, player_id);
+									console.log("añadi al torneo un usuario")
 									receiver.send(JSON.stringify({
 										type: "tournament",
 										sender_id: data.sender_id,
 										receiver_id: data.receiver_id,
 										tournament_id: data.tournament_id,
 										body: `Tournament request has been accepted from ${username}`,
+										info: "accept",
 									}))
 								}
 							}
-							else if (data.info === "refuse"){
-								//Toda la informacion y configuracion necesaria a la hora de rechazar el torneo
-								receiver.send(JSON.stringify({
-									type: "tournament",
-									sender_id: data.sender_id,
-									receiver_id: data.receiver_id,
-									tournament_id: data.tournament_id,
-									body: `Tournament request has been refused from ${username}`,
-								}))
+							else if (data.info === "reject"){
+								if (socketsTournament.has(data.tournament_id)){
+									//Toda la informacion y configuracion necesaria a la hora de rechazar el torneo
+									receiver.send(JSON.stringify({
+										type: "tournament",
+										sender_id: data.sender_id,
+										receiver_id: data.receiver_id,
+										tournament_id: data.tournament_id,
+										body: `Tournament request has been refused from ${username}`,
+										info: "reject",
+									}))
+								}
 							}
 						}
 					}
@@ -350,22 +403,26 @@ export default function createWebSocketsRoutes(fastify){
 			method: "GET",
 			websocket: true,
 			handler: asyncWebSocketHandler(async (socket) => {
-				let userId = null;
+				let tournament_id = null;
 				socket.on("message", async tournament => {
 					const tournamentString = tournament.toString();
-					if (userId === null){
+					console.log(tournamentString)
+					if (tournament_id === null){
 						try{
-							userId = parseInt(tournamentString);
-							if (isNaN(userId)) {
-							  const data = JSON.parse(tournamentString);
-							  userId = data.userId;
-							}
-							if (userId){
-							  socketsTournament.set(userId, socket);
+							const data = JSON.parse(tournamentString);
+							const tournament = await createTournament({
+								name: data.name,
+								player_amount: 4,
+								player_ids: [data.player_ids],
+							});
+							tournament_id = tournament.id;
+							if (tournament_id){
+							  socketsTournament.set(tournament_id, socket);
 							  socket.send(JSON.stringify({
 								type: "connection",
 								status: "success",
-								message: "Connected"
+								message: "Connected",
+								tournament: tournament,
 							  }));
 							}
 						  }
@@ -378,12 +435,19 @@ export default function createWebSocketsRoutes(fastify){
 						}
 					}
 					else{
-
+						const data = JSON.parse(tournament);
+						//const sender_id = parseInt(data.sender_id);
+						//const receiver_id = parseInt(data.receiver_id);
+						//if (data.type === "refuse"){
+						//	if (socketsToast.has(sender_id)){
+						//		console.log("no quiero jugar")
+						//	}
+						//}
 					}
 				})
 				socket.on("close", () => {
 					console.log("Client disconnected from /tournament");
-					socketsTournament.delete(userId);
+					socketsTournament.delete(tournament_id);
 				})
 			})
 		}

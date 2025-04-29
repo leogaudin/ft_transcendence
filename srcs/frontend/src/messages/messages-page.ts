@@ -24,7 +24,7 @@ export function moveToHome() {
 	});
 }
 
-function getClientID(): number {
+export function getClientID(): number {
   let chats = localStorage.getItem("id");
   if (!chats)
     return -1;
@@ -69,7 +69,7 @@ function createSocketConnection() {
       console.error("WebSocket error:", error);
     };
     socketChat.onclose = () => {
-      console.log("WebSocket connection closed");
+      console.log("WebSocketChat connection closed");
       socketChat = null;
     };
   }
@@ -101,7 +101,7 @@ function displayMessage(data: Message){
         <p>${data.body}</p>
         <p class="hour">${sent_at}</p>
       </div>`;
-      sendRequest(`PATCH`, `/messages/${data.message_id}`, {is_read: 1});
+      sendRequest(`PATCH`, `messages/${data.message_id}`, {is_read: 1});
     }
     messageContainer.appendChild(el);
     el.scrollIntoView({ behavior: 'smooth'});
@@ -182,4 +182,4 @@ async function setupMessageForm() {
   });
 }
 
-export { getClientID, socketChat };
+export { socketChat };

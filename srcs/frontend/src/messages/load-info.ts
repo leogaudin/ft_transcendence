@@ -72,7 +72,6 @@ async function displayFirstChat(data: MessageObject) {
 	if (window.innerWidth < 768)
 		return ;
 
-	console.log("data", data);
 	// Opens the most recent chat when navigated to messages page
 	try {
 		const recentChats = await sendRequest('GET', 'chats/last');
