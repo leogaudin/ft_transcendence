@@ -64,18 +64,18 @@
 			</header>
 			<div id="divider"></div>
 			<main>
-				<form class="flex flex-col justify-center gap-4">
+				<form id="change-password-form" class="flex flex-col justify-center gap-4">
 					<div class="flex flex-col items-center">
 						<p class="self-start">Current Password</p>
-						<input class="data-user outline-none rounded-[15px] indent-2 bg-[#d087ac50]" type="password" placeholder="Current Password">
+						<input id="password" class="data-user outline-none rounded-[15px] indent-2 bg-[#d087ac50]" type="password" placeholder="Current Password">
 					</div>
 					<div class="flex flex-col items-center">
 						<p class="self-start">New Password</p>
-						<input class="data-user outline-none rounded-[15px] indent-2 bg-[#d087ac50]" type="password" placeholder="New Password">
+						<input id="new-password" class="data-user outline-none rounded-[15px] indent-2 bg-[#d087ac50]" type="password" placeholder="New Password">
 					</div>
 					<div class="flex flex-col items-center">
 						<p class="self-start">Confirm New Password</p>
-						<input class="data-user outline-none rounded-[15px] indent-2 bg-[#d087ac50]" type="password" placeholder="Confirm New Password">
+						<input id="confirm-password" class="data-user outline-none rounded-[15px] indent-2 bg-[#d087ac50]" type="password" placeholder="Confirm New Password">
 					</div>
 					<button type="submit" class="self-center signin-user rounded-[15px] p-2 bg-[var(--dark-pink)] text-white">Submit Changes</button>
 				</form>

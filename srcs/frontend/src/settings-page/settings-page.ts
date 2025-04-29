@@ -2,7 +2,8 @@ import { dropDown } from "../login-page/login-page.js"
 import { fetchDisplayTerms } from "../login-page/login-fetch.js"
 import { moveBetweenInputs } from "../two-factor-page/two-factor.js";
 import { closeModal } from "../friends/friends-page.js";
-import { moveToHome } from "../messages/messages-page.js"
+import { moveToHome } from "../messages/messages-page.js";
+import { initSettingsFetch } from "./settings-fetch.js";
 
 export function initSettingsEvents() {
 	dropDown();
@@ -10,6 +11,7 @@ export function initSettingsEvents() {
 	moveBetweenInputs();
 	initButtons();
 	moveToHome();
+	initSettingsFetch();
 }
 
 function initButtons() {
