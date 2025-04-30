@@ -11,6 +11,7 @@ import {
   resetUserPassword,
   checkNewPassword,
   verifyUserResetToken,
+  checkCurrentPassword,
 } from "../passwordReset.js";
 import { getUser, patchUser } from "../models/userModel.js";
 
@@ -32,8 +33,18 @@ export default function createAuthRoutes(fastify) {
           return res.code(200).send(user);
         }
         if (!validateInput(req, res, ["username", "password"])) return;
-        const user = await getUser(req.body.username, true);
+        let user = await getUser(req.body.username, true);
         if (!user) return res.code(404).send({ error: "User not found" });
+        if (user.username === "anonymous") {
+          const isAuthorized = await checkCurrentPassword(
+            user,
+            req.body.password,
+          );
+          if (!isAuthorized)
+            return res.code(400).send({ error: "Invalid password" });
+          await patchUser(user.id, { is_deleted: 0 });
+          user = await getUser(req.body.username, true);
+        }
         const result = await loginUser(user, req.body.password, req.body.totp);
         if (result["error"]) return res.code(401).send(result);
         if (!req.body.totp && user.is_2fa_enabled)

@@ -527,19 +527,20 @@ export function getUsername(id) {
   return new Promise((resolve, reject) => {
     const sql = `
       SELECT
-        username
+        username,
+        is_deleted
       FROM
         users
       WHERE
         id = ?
-      AND
-        is_deleted = 0
     `;
     db.get(sql, [id], (err, row) => {
       if (err) {
         console.error("error getting user:", err.message);
         return reject(err);
       }
+      if (!row) return resolve(null);
+      if (row.is_deleted) return resolve("anonymous");
       resolve(row.username);
     });
   });
@@ -635,6 +636,7 @@ export function getInvitationsOfUser(id) {
         u1.username AS sender_username,
         u1.avatar AS sender_avatar,
         u1.status AS sender_status,
+        u1.is_deleted AS sender_deleted,
       CASE 
         WHEN f.starter_id = f.user_id THEN f.friend_id
         ELSE f.user_id
@@ -643,6 +645,7 @@ export function getInvitationsOfUser(id) {
         u2.username AS receiver_username,
         u2.avatar AS receiver_avatar,
         u2.status AS receiver_status,
+        u2.is_deleted AS receiver_deleted,
       CASE 
         WHEN f.starter_id = ? THEN 'sent'
         ELSE 'received'
@@ -654,6 +657,7 @@ export function getInvitationsOfUser(id) {
       JOIN users u2 ON (CASE WHEN f.starter_id = f.user_id THEN f.friend_id ELSE f.user_id END) = u2.id
       WHERE (f.user_id = ? OR f.friend_id = ?)
       AND f.pending = 1
+      AND sender_deleted = 0 AND receiver_deleted = 0
       ORDER BY invitation_type, u1.username
     `;
     db.all(sql, [id, id, id], (err, rows) => {

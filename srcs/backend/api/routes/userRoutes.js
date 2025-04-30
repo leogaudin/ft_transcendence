@@ -119,6 +119,8 @@ export default function createUserRoutes(fastify) {
         const isAuthorized = await checkNewPassword(user, req.body.password);
         if (!isAuthorized)
           return res.code(403).send({ error: "Password does not match" });
+        if (user.id !== req.userId)
+          return res.code(400).send({ error: "Invalid user" });
         await deleteUser(req.userId);
         return res.code(200).send({ success: "User successfully deleted" });
       }),
