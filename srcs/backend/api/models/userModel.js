@@ -253,6 +253,38 @@ export function removeUserFriend(id, friend_id) {
 }
 
 /**
+ * Returns all blocked users
+ * @param {Number} user_id - ID of the user
+ * @returns {Object} - All blocked users of the main user
+ */
+export function getBlocks(user_id) {
+  assert(user_id !== undefined, "user_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT
+        u.id,
+        u.username,
+        u.avatar
+      FROM
+        users u
+      JOIN
+        user_blocks ub
+          ON
+            u.id = ub.blocked_id
+      WHERE
+        ub.user_id = ?
+    `;
+    db.all(sql, [user_id], function (err, rows) {
+      if (err) {
+        console.error("Error getting user blocks", err.message);
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}
+
+/**
  * Adds a user to the blocked list of another
  * @param {Number} id - ID of the user
  * @param {Number} blocked_id - ID of the blocked user

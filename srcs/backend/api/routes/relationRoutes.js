@@ -8,6 +8,7 @@ import {
   getUserFriends,
   getFriendOfUser,
   getInvitationsOfUser,
+  getBlocks,
   isFriend,
 } from "../models/userModel.js";
 
@@ -19,7 +20,7 @@ export default function createRelationRoutes(fastify) {
       url: "/users/friends",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["friend_id"])) return;
-      //TODO: Check what happens on mutiple invitation send
+        //TODO: Check what happens on mutiple invitation send
         const data = await addUserFriendPending(req.userId, req.body.friend_id);
         return res.code(200).send(data);
       }),
@@ -30,7 +31,7 @@ export default function createRelationRoutes(fastify) {
       url: "/users/friends/confirm",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["friend_id"])) return;
-      //TODO: Check what happens on mutiple invitation send
+        //TODO: Check what happens on mutiple invitation send
         const data = await acceptUserFriend(req.userId, req.body.friend_id);
         return res.code(200).send(data);
       }),
@@ -72,6 +73,15 @@ export default function createRelationRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         const data = await getInvitationsOfUser(req.userId);
         return res.code(200).send(data);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/users/blocks",
+      handler: asyncHandler(async (req, res) => {
+        const result = await getBlocks(req.userId);
+        return res.code(200).send(result);
       }),
     },
     {

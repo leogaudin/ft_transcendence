@@ -106,6 +106,32 @@ export function getMatch(match_id) {
 }
 
 /**
+ * Returns all matches of a given user
+ * @param {Number} user_id - ID of the user
+ * @returns {Object} - All found matches
+ */
+export function getMatches(user_id) {
+  assert(user_id !== undefined, "user_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT
+        *
+      FROM
+        matches
+      WHERE
+        first_player_id = ? OR second_player_id = ?
+    `;
+    db.all(sql, [user_id, user_id], function (err, rows) {
+      if (err) {
+        console.error("Error getting match:", err.message);
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}
+
+/**
  * Finishes a match
  * @param {Object} match - Given match
  * @param {Number} first_player_score - Score of the first player
