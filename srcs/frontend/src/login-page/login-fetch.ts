@@ -115,30 +115,18 @@ async function handleLogin(e: Event) {
  * @param response The user data returned by the backend
  * @returns If everything ok navigates you to the Home Page
  */
-async function initSession(response: object) {
+export async function initSession(response: object) {
 	Object.entries(response).forEach(([key, value])=> {
 		if (typeof value !== 'object' || value === null) {
 			localStorage.setItem(key, String(value));
-			// console.log("storing: ", key, ", ", String(value));
+			console.log("storing: ", key, ", ", String(value));
 		}
 		else {
 			localStorage.setItem(key, JSON.stringify(value));
-			// console.log("storing: ", key, ", ", JSON.stringify(value));
+			console.log("storing: ", key, ", ", JSON.stringify(value));
 		}
 	});
 
-	
-	// const token = localStorage.getItem("token");
-	// if (!token)
-	// 	return ;
-	// const authorization = {Authorization: `Bearer ${token}`};
-	// const messages = await sendRequest("GET", "users/messages", {}, authorization);
-
-	const messages = await sendRequest("GET", "users/messages");
-	Object.entries(messages).forEach(([key, value])=> {
-			localStorage.setItem(key, JSON.stringify(value));
-			// console.log("storing: ", key, ", ", JSON.stringify(value));
-	});
 	navigateTo("/home");
 	createsocketToastConnection();
 } 

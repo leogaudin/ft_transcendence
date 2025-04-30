@@ -3,7 +3,7 @@ import { fetchDisplayTerms } from "../login-page/login-fetch.js"
 import { moveBetweenInputs } from "../two-factor-page/two-factor.js";
 import { closeModal } from "../friends/friends-page.js";
 import { moveToHome } from "../messages/messages-page.js";
-import { initSettingsFetch } from "./settings-fetch.js";
+import { initSettingsFetch, displayQR } from "./settings-fetch.js";
 
 export function initSettingsEvents() {
 	dropDown();
@@ -23,14 +23,13 @@ function initButtons() {
 		return ;
 
 	changePasswordButton.onclick = () => { displayOption(0) };
-	twoFactorButton.onclick = () => { displayOption(1) };
+	twoFactorButton.onclick = () => { displayOption(1), displayQR() };
 	blockedAccountsButton.onclick = () => { displayOption(2) };
 	deleteAccountButton.onclick = () => { displayDeletePopUp() };
 }
 
 function displayOption(option: number) {
 	resetOptions();
-	console.log(option);
 	const changePassword = document.getElementById("change-password") as HTMLButtonElement;
 	const twoFactor = document.getElementById("two-factor") as HTMLButtonElement;
 	const blockedAccounts = document.getElementById("blocked-accounts") as HTMLButtonElement;

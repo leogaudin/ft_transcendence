@@ -1,5 +1,5 @@
 import { showAlert } from "../toast-alert/toast-alert.js";
-import { sendRequest } from "../login-page/login-fetch.js";
+import { sendRequest, initSession } from "../login-page/login-fetch.js";
 import { navigateTo } from "../index.js";
 import { LoginObject } from "../types.js";
 
@@ -56,7 +56,7 @@ export function twoFactorAuth(data: LoginObject) {
             if (!response["id"])
 				throw new Error("Invalid code");
             else
-				navigateTo("/home");
+				initSession(response);
         }
 		catch (error) {
             showAlert((error as Error).message, "toast-error");
