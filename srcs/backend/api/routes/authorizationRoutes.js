@@ -4,6 +4,7 @@ import {
   loginGoogleUser,
   registerUser,
   enable2fa,
+  check2fa,
   verify2fa,
   setJWT,
 } from "../authUtils.js";
@@ -166,6 +167,21 @@ export default function createAuthRoutes(fastify) {
         if (result === false)
           return res.code(400).send({ error: "Unable to verify TOTP code" });
         return res.code(200).send(result);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "POST",
+      url: "/2fa/disable",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["totp_code"])) return;
+        const user = await getUser(req.userId, true);
+        if (!user) return res.code(404).send({ error: "User not found" });
+        const isAuthorized = await check2fa(user, req.body.totp_code);
+        if (!isAuthorized)
+          return res.code(403).send({ error: "Invalid 2FA code" });
+        await patchUser(req.userId, { is_2fa_enabled: 0 });
+        return res.code(200).send({ success: "2FA successfully disabled" });
       }),
     },
   ];

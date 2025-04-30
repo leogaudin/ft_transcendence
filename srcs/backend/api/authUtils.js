@@ -35,6 +35,15 @@ export async function loginUser(user, password, totp_token = null) {
   return result;
 }
 
+export async function check2fa(user, totp_token) {
+  assert(user !== undefined, "user must exist");
+  assert(totp_token !== undefined, "totp_token must exist");
+
+  const totp_verified = authenticator.check(totp_token, user.totp_secret);
+  if (!totp_verified) return false;
+  return true;
+}
+
 export async function checkCurrentPassword(user, password) {
   assert(user !== undefined, "user must exist");
   assert(password !== undefined, "password must exist");
