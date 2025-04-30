@@ -1,6 +1,7 @@
 import { sendRequest } from "../login-page/login-fetch.js";
 import { showAlert } from "../toast-alert/toast-alert.js";
 import { navigateTo } from "../index.js";
+import { Blocked } from "../types.js";
 
 export function initSettingsFetch() {
 	const changePasswordForm  = document.getElementById("change-password-form") as HTMLFormElement;
@@ -169,7 +170,6 @@ async function twoFactorAuth(e: Event) {
 	}
 	catch (error) {
 		showAlert((error as Error).message, "toast-error");
-		return false;
 	}
 }
 
@@ -190,5 +190,60 @@ function toggle2FA() {
 		displayQR();
 		activateButton.classList.remove("hidden");
 		deactivateButton.classList.add("hidden");
+	}
+}
+
+export async function displayBlockedAccounts() {
+	const blockedCard = document.getElementById("blocked-card");
+	if (!blockedCard)
+		return ;
+
+	try {
+		const response = await sendRequest('GET', 'users/blocks') as Blocked[];
+		if (!response)
+			throw new Error("Error getting blocked users");
+		blockedCard.innerHTML = "";
+
+		response.forEach((blocked) => {
+			const card = document.createElement("div");
+			card.setAttribute("id", "invitation-id");
+			card.setAttribute("class", "friend-card");
+			card.innerHTML = `
+				<div class="flex items-center gap-4">
+					<img id="invitation-avatar" class="card-avatar rounded-full m-1.5" src="../../resources/img/cat.jpg" alt="Avatar">
+					<h3>${blocked.username}</h3>
+				</div>
+				<div id="blocked-id-${blocked.id}" class="blocked-user flex items-center m-1.5">
+					<svg xmlns="http://www.w3.org/2000/svg" class="standard-icon add rounded-full" viewBox="0 -960 960 960">
+						<path d="M240-640h360v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85h-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640Zm0 480h480v-400H240v400Zm240-120q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM240-160v-400 400Z"/>
+					</svg>
+				</div>
+			`
+			blockedCard.appendChild(card);
+		});
+
+		const unblockButtons = document.getElementsByClassName("blocked-user");
+		if (unblockButtons?.length > 0) {
+			for (const element of unblockButtons) {
+				const blockedId = element.id.replace("blocked-id-", "");
+				(element as HTMLButtonElement).onclick = () => { unblockUser(blockedId) };
+			}
+		}
+	}
+	catch(error) {
+		showAlert((error as Error).message, "toast-error");
+	}
+}
+
+async function unblockUser(blockedId: string) {
+	try {
+		const response = await sendRequest('PATCH', 'users/blocks', {blocked_id: blockedId});
+		if (!response["success"])
+			throw new Error(response["error"]);
+		displayBlockedAccounts();
+		showAlert("User unblocked successfully", "toast-success");
+	}
+	catch(error) {
+		showAlert((error as Error).message, "toast-error");
 	}
 }

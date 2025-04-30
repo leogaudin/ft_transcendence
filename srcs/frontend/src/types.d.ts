@@ -96,3 +96,9 @@ export interface Tournament {
   player_amount: number,
   player_ids: number[],
 }
+
+export interface Blocked {
+	username: string,
+	id: number,
+	avatar: string,
+}
