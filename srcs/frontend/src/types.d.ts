@@ -94,5 +94,4 @@ export interface Tournament {
 	id: number,
   name: string,
   player_amount: number,
-  player_ids: number[],
 }

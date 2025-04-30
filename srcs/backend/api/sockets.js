@@ -198,6 +198,7 @@ export default function createWebSocketsRoutes(fastify){
 						const sender_id = parseInt(data.sender_id);
 						const receiver_id = parseInt(data.receiver_id);
 						let username = await getUsername(data.sender_id);
+						let receiver_username = await getUsername(data.receiver_id);
 						if (data.type === "friendRequest"){
 							if (data.info === "request"){
 								if (socketsToast.has(receiver_id)){
@@ -233,24 +234,20 @@ export default function createWebSocketsRoutes(fastify){
 						//Funcionamiento en toast para crear torneo
 						else if (data.type === "tournament"){
 							if (data.info === "request") {
-								/*const tournament = await createTournament({
-									name: "tournament",
-									player_amount: 4,
-									player_ids: [data.sender_id],
-								});*/
-								const receiver = socketsToast.get(receiver_id);
-								const sender = socketsToast.get(sender_id);
 								// Enviar notificación al creador
-								sender.send(JSON.stringify({
-									type: "tournament",
-									sender_id: data.sender_id,
-									receiver_id: data.receiver_id,
-									info: "creator",
-									tournament_id: data.tournament_id,
-								}));
-						
+								const sender = socketsToast.get(sender_id);
+								const receiver = socketsToast.get(receiver_id);
+								if (sender){
+									sender.send(JSON.stringify({
+										body: `You invited ${ receiver_username }`,
+										type: "tournament",
+										sender_id: data.sender_id,
+										receiver_id: data.sender_id,
+										info: "creator",
+										tournament: data.tournament,
+									}));
+								}
 								// Enviar invitación al receptor
-								console.log(data.tournament)
 								receiver.send(JSON.stringify({
 									type: "tournament",
 									body: `You have a tournament request from ${username}`,
@@ -406,18 +403,17 @@ export default function createWebSocketsRoutes(fastify){
 				let tournament_id = null;
 				socket.on("message", async tournament => {
 					const tournamentString = tournament.toString();
-					console.log(tournamentString)
 					if (tournament_id === null){
 						try{
 							const data = JSON.parse(tournamentString);
 							const tournament = await createTournament({
 								name: data.name,
-								player_amount: 4,
-								player_ids: [data.player_ids],
-							});
-							tournament_id = tournament.id;
+								player_limit: 4,
+								game_type: "pong"
+							}, data.creator_id);
+							tournament_id = tournament.tournament_id;
 							if (tournament_id){
-							  socketsTournament.set(tournament_id, socket);
+							  socketsTournament.set(tournament.tournament_id, socket);
 							  socket.send(JSON.stringify({
 								type: "connection",
 								status: "success",

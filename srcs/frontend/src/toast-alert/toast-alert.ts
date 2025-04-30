@@ -95,12 +95,31 @@ function createsocketToastConnection() {
 				updateFriendsList();
 			//Implementacion basica de invitacion y torneo por comando
 			else if (data.type === "tournament"){
-				const tournament = data.tournament
-				console.log(tournament)
+				const tournament = data.tournament;
 				if (data.info === "request"){
 					tournament_id = tournament.id;
-					showAlert(data.body, "toast-success");
-				}
+					console.log("soy el alertador", tournament)
+						/*if (socketToast) {
+							socketToast.send(JSON.stringify({
+								type: "tournament",
+								info: "accept",
+								sender_id: getClientID(),
+								receiver_id: data.sender_id,
+								tournament_id: data.tournament_id
+							}));
+						}
+						if (socketToast) {
+							console.log("reject")
+							socketToast.send(JSON.stringify({
+								type: "tournament",
+								info: "reject",
+								sender_id: getClientID(),
+								receiver_id: data.receiver_id_id,
+								tournament_id: data.tournament_id
+							}));
+						}*/
+						showAlert(data.body, "toast-success");
+					}
 				else if (data.info === "accept"){
 					if (data.tournament){
 						if (socketTournament){
@@ -113,7 +132,6 @@ function createsocketToastConnection() {
 						}
 						showAlert(data.body, "toast-success");
 					}
-					
 				}
 				else if (data.info === "reject"){
 					if (socketTournament){
@@ -126,9 +144,11 @@ function createsocketToastConnection() {
 					}
 					showAlert(data.body, "toast-error");
 				}
+				else if (data.info === "creator")
+					showAlert(data.body, "toast-success")
 			}
 		}
-		catch(err) {
+		catch(err){
 		  console.error("Error on message", err);
 		}
 	  };
@@ -177,18 +197,49 @@ export function displayToast() {
 	});
 }
 
-export function showAlert(msg: string, toastType: string) {
-	const toastText = document.getElementById("toast-message");
-	const toastAlert = document.getElementById("toast-default");
-	if (!toastText || !toastAlert)
-		return;
+export function showAlert(
+  msg: string, 
+  toastType: string, 
+  acceptCallback?: () => void, 
+  rejectCallback?: () => void
+) {
+  const toastText = document.getElementById("toast-message");
+  const toastAlert = document.getElementById("toast-default");
+  const acceptButton = document.getElementById("accept-button");
+  const rejectButton = document.getElementById("reject-button");
+  
+  if (!toastText || !toastAlert) return;
 
-	defineToastFeatures(toastType);
-	toastText.innerText = msg;
-	toastAlert.style.display = "flex";
+  defineToastFeatures(toastType);
+  toastText.innerText = msg;
 
-	if (toastTimeout) { clearTimeout(toastTimeout); }
-	toastTimeout = setTimeout(() => { toastAlert.style.display = "none"; }, 5000);
+  // Show/hide action buttons based on callbacks
+  if (acceptButton && rejectButton) {
+    if (acceptCallback && rejectCallback) {
+      acceptButton.style.display = "block";
+      rejectButton.style.display = "block";
+      
+      // Add event listeners
+      acceptButton.onclick = function() {
+        acceptCallback();
+        toastAlert.style.display = "none";
+      };
+      
+      rejectButton.onclick = function() {
+        rejectCallback();
+        toastAlert.style.display = "none";
+      };
+    } else {
+      acceptButton.style.display = "none";
+      rejectButton.style.display = "none";
+    }
+  }
+
+  toastAlert.style.display = "flex";
+
+  if (toastTimeout)
+		clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => { toastAlert.style.display = "none"; }, 5000);
 }
 
 export { createsocketToastConnection, socketToast }

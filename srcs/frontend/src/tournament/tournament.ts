@@ -27,8 +27,8 @@ export function createSocketTournamentConnection(tournamentName: string){
           return ;
         socketTournament.send(JSON.stringify({
           name: tournamentName,
-          player_ids: getClientID(),
-          action: "identify"
+          action: "identify",
+          creator_id: getClientID()
         }));
         console.log("ID succesfully sent");
 		  }
@@ -37,7 +37,7 @@ export function createSocketTournamentConnection(tournamentName: string){
 			  try{
 				const data = JSON.parse(event.data);
 				tournament = data.tournament;
-				console.log(tournament);
+				console.log("soy tournament.ts", tournament);
 			  }
 			  catch(err) {
 				console.error("Error on message", err);
@@ -130,12 +130,9 @@ function displaySearchResults(players: UserMatches[], container: HTMLElement) {
     container.innerHTML = '<p>No players found</p>';
     return;
   }
-
   players.forEach(player => {
     const option = document.createElement('div');
     option.className = 'player-item';
-
-    // Check if player is already in tournament, is invited, or can be invited
     if (!player.is_invited) {
       option.innerHTML = `
         ${player.username}
@@ -178,6 +175,7 @@ function displaySearchResults(players: UserMatches[], container: HTMLElement) {
 function sendTournamentInvitation(receiverId: number, username: string): boolean {
   if (socketToast && socketToast.readyState === WebSocket.OPEN){
     if (tournament){
+      console.log("soy el invitador", tournament)
 			socketToast.send(JSON.stringify({
 				type: "tournament",
 				info: "request",
