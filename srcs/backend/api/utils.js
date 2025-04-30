@@ -75,7 +75,7 @@ export function validateInput(req, res, requiredFields) {
     requiredFields.includes("password") ||
     requiredFields.includes("new_password")
   ) {
-    const password = req.body.password || req.body.new_password;
+    const password = req.body.password || req.body.new_password || "";
     if (password.length < 9) {
       res.code(400).send({ error: "Password is too short" });
       return false;
@@ -98,6 +98,13 @@ export function validateInput(req, res, requiredFields) {
     if (username.length > 16) {
       res.code(400).send({ error: "Maximum username length is 16 characters" });
       return false;
+    }
+  }
+  if (requiredFields.includes("delete_input")) {
+    const delete_input = req.body.delete_input;
+    if (delete_input !== "Delete") {
+      res.code(400).send({ error: "Delete confirmation failed" });
+      return;
     }
   }
 

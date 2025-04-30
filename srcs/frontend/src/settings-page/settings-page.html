@@ -90,8 +90,8 @@
 			</header>
 			<div id="divider"></div>
 			<main class="flex flex-col justify-center items-center gap-4 h-full">
-				<section id="QR-2FA">
-					<img src="../../resources/img/Commons_QR_code.png" alt="QR" class="w-[150px] aspect-square rounded-[15px] bg-white p-2">
+				<section>
+					<img id="QR-2FA" src="../../resources/img/Commons_QR_code.png" alt="QR" class="w-[150px] aspect-square rounded-[15px] bg-white p-2 hidden">
 				</section>
 				<form id="twoFA-code" class="flex flex-col gap-4 items-center">
 					<div class="grid md:grid-cols-6 grid-cols-3 gap-2">
@@ -102,7 +102,8 @@
 						<input type="text" maxlength="1" class="twoFA-input outline-none" />
 						<input type="text" maxlength="1" class="twoFA-input outline-none" />
 					</div>
-					<button type="submit" class="self-center signin-user rounded-[15px] p-2 bg-[var(--dark-pink)] text-white">Activate</button>
+					<button id="activate-button" type="submit" class="self-center signin-user rounded-[15px] p-2 bg-[var(--dark-pink)] text-white">Activate</button>
+					<button id="deactivate-button" type="submit" class="self-center signin-user rounded-[15px] p-2 bg-[var(--dark-pink)] text-white hidden">Deactivate</button>
 				</form>
 			</main>
 		</div>
@@ -147,20 +148,23 @@
 				<div class="flex justify-between items-center m-2.5">
 					<h1 class="text-white text-3xl">Delete your Account</h1>
 					<svg class="close-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#3B0034">
-			  <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
-			</svg>
-		  </div>
-		  <div id="pink-divider"></div>
-		  <form id="delete-account-form" class="flex flex-col justify-center items-center">
-			  <input type="email" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
+			  			<path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/>
+					</svg>
+		  	</div>
+		  	<div id="pink-divider"></div>
+		  	<form id="delete-account-form" class="flex flex-col justify-center items-center">
+			  <input id="delete-email" type="email" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
 			  placeholder="Introduce your email">
-			  <input type="password" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
+			  <input id="delete-password" type="password" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
 			  placeholder="Introduce your password">
-			  <input type="text" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
+			  <input id="delete-confirm" type="text" class="text-[var(--dark-purple)] w-full p-1 m-2 rounded-md outline-none"
 			  placeholder="Type 'Delete'">
 			  <button type="submit" class="signin-user p-1 m-2 rounded-md modal-button">Submit</button>
 			</form>
-			<p id="delete-account-message" class="m-2.5 flex justify-center">Fill the form to delete your account</p>
+			<div class="flex flex-col justify-center items-center">
+				<p id="delete-account-message" class="m-2.5 flex justify-center w-full">Fill the form to delete your account</p>
+				<button id="log-out" class="signin-user p-1 m-2 rounded-md modal-button hidden">Log out</button>
+			</div>
 		</div>
 	</dialog>
 	

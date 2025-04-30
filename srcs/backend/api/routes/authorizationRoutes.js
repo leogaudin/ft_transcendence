@@ -4,6 +4,7 @@ import {
   loginGoogleUser,
   registerUser,
   enable2fa,
+  check2fa,
   verify2fa,
   setJWT,
 } from "../authUtils.js";
@@ -11,6 +12,7 @@ import {
   resetUserPassword,
   checkNewPassword,
   verifyUserResetToken,
+  checkCurrentPassword,
 } from "../passwordReset.js";
 import { getUser, patchUser } from "../models/userModel.js";
 
@@ -32,8 +34,18 @@ export default function createAuthRoutes(fastify) {
           return res.code(200).send(user);
         }
         if (!validateInput(req, res, ["username", "password"])) return;
-        const user = await getUser(req.body.username, true);
+        let user = await getUser(req.body.username, true);
         if (!user) return res.code(404).send({ error: "User not found" });
+        if (user.username === "anonymous") {
+          const isAuthorized = await checkCurrentPassword(
+            user,
+            req.body.password,
+          );
+          if (!isAuthorized)
+            return res.code(400).send({ error: "Invalid password" });
+          await patchUser(user.id, { is_deleted: 0 });
+          user = await getUser(req.body.username, true);
+        }
         const result = await loginUser(user, req.body.password, req.body.totp);
         if (result["error"]) return res.code(401).send(result);
         if (!req.body.totp && user.is_2fa_enabled)
@@ -155,6 +167,21 @@ export default function createAuthRoutes(fastify) {
         if (result === false)
           return res.code(400).send({ error: "Unable to verify TOTP code" });
         return res.code(200).send(result);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "POST",
+      url: "/2fa/disable",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["totp_code"])) return;
+        const user = await getUser(req.userId, true);
+        if (!user) return res.code(404).send({ error: "User not found" });
+        const isAuthorized = await check2fa(user, req.body.totp_code);
+        if (!isAuthorized)
+          return res.code(403).send({ error: "Invalid 2FA code" });
+        await patchUser(req.userId, { is_2fa_enabled: 0 });
+        return res.code(200).send({ success: "2FA successfully disabled" });
       }),
     },
   ];

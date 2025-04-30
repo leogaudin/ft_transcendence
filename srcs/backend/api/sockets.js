@@ -47,7 +47,8 @@ export default function createWebSocketsRoutes(fastify){
 					else{
 						const data = JSON.parse(messageString);
 						let username = await getUsername(data.sender_id);
-						if (data.receiver_id && data.body && await isBlocked(data.sender_id, data.receiver_id) === false){
+						let receiver_username = await getUsername(data.receiver_id);
+						if (data.receiver_id && data.body && await isBlocked(data.sender_id, data.receiver_id) === false && receiver_username !== "anonymous"){
 							const id = parseInt(data.receiver_id);
 							const sender_id = parseInt(data.sender_id);
 							const chat_id = await getChatBetweenUsers(data.sender_id, data.receiver_id);

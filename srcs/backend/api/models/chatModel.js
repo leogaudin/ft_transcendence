@@ -217,6 +217,7 @@ export function getLastChatsOfUser(id) {
           END AS friend_username,
           sender.username AS sender_username,
           sender.is_deleted AS sender_deleted,
+          receiver.is_deleted AS receiver_deleted,
           m.body,
           m.sent_at,
           m.is_read,
@@ -230,7 +231,9 @@ export function getLastChatsOfUser(id) {
         WHERE c.first_user_id = ? OR c.second_user_id = ?
       )
       SELECT 
-        chat_id, 
+        chat_id,
+        sender_deleted,
+        receiver_deleted,
         friend_username,
         sender_username, 
         body, 
@@ -249,8 +252,12 @@ export function getLastChatsOfUser(id) {
         row.sender_username = row.sender_deleted
           ? "anonymous"
           : row.sender_username;
+        row.friend_username = row.receiver_deleted
+          ? "anonymous"
+          : row.friend_username;
         delete row.message_rank;
         delete row.sender_deleted;
+        delete row.receiver_deleted;
       });
       resolve(rows);
     });

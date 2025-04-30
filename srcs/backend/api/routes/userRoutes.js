@@ -112,8 +112,17 @@ export default function createUserRoutes(fastify) {
       method: "DELETE",
       url: "/users",
       handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["email", "password", "delete_input"]))
+          return;
+        const user = await getUser(req.body.email, true);
+        if (!user) return res.code(400).send({ error: "User does not exist" });
+        const isAuthorized = await checkNewPassword(user, req.body.password);
+        if (!isAuthorized)
+          return res.code(403).send({ error: "Password does not match" });
+        if (user.id !== req.userId)
+          return res.code(400).send({ error: "Invalid user" });
         await deleteUser(req.userId);
-        return res.code(204);
+        return res.code(200).send({ success: "User successfully deleted" });
       }),
     },
     {
