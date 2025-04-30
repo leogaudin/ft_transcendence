@@ -1,5 +1,10 @@
 import { asyncHandler, validateInput } from "../utils.js";
-import { createMatch, getMatch, finishMatch } from "../models/matchModel.js";
+import {
+  createMatch,
+  getMatch,
+  finishMatch,
+  getMatches,
+} from "../models/matchModel.js";
 
 import {
   noMoreMatchesInTournament,
@@ -12,10 +17,18 @@ import {
 
 export default function createMatchRoutes(fastify) {
   return [
+    //TODO: Add more endpoints to the matches:
+    //      GET match/:id
     {
-      //TODO: Add more endpoints to the matches:
-      //      GET match/:id
-      //      GET match (all)
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/matches",
+      handler: asyncHandler(async (req, res) => {
+        const results = await getMatches(req.userId);
+        return res.code(201).send(results);
+      }),
+    },
+    {
       preHandler: [fastify.authenticate],
       method: "POST",
       url: "/matches",

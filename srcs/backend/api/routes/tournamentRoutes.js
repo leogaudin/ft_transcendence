@@ -2,6 +2,7 @@ import { asyncHandler, validateInput } from "../utils.js";
 import {
   createTournament,
   getTournamentByID,
+  getTournaments,
   addInvitationToTournament,
   modifyInvitationToTournament,
   addParticipantToTournament,
@@ -54,6 +55,15 @@ export default function createTournamentRoutes(fastify) {
         if (!tournament)
           return res.code(400).send({ error: "No tournament found" });
         return res.code(200).send(tournament);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/tournaments",
+      handler: asyncHandler(async (req, res) => {
+        const tournaments = await getTournaments(req.userId);
+        return res.code(200).send(tournaments);
       }),
     },
     {

@@ -207,6 +207,43 @@ export function getTournamentByID(id) {
 }
 
 /**
+ * Returns all tournaments where the user plays
+ * @param {Number} user_id - ID of the user
+ * @returns {Object} - Tournaments where the user participates
+ */
+export function getTournaments(user_id) {
+  assert(user_id !== undefined, "user_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT
+        t.id,
+        t.name,
+        t.status,
+        t.game_type,
+        t.created_at,
+        t.started_at,
+        t.finished_at,
+        tp.final_rank
+      FROM
+        tournaments t
+      JOIN
+        tournament_participants tp
+          ON
+            t.id = tp.tournament_id
+      WHERE
+        tp.user_id = ?
+    `;
+    db.all(sql, [user_id], function (err, rows) {
+      if (err) {
+        console.error("Error getting tournaments: ", err.message);
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}
+
+/**
  * Invites a user to a tournament
  * @param {Object} data - Tournament and user payload
  * @returns {Object} - Newly created invitation
@@ -510,14 +547,14 @@ export async function determineFirstBracket(tournament) {
       first_player_id: participants[0],
       second_player_id: participants[1],
       tournament_id: tournament.tournament_id,
-      phase: "semis",
+      phase: "semifinals",
     }),
     scheduleMatch({
       game_type: tournament.game_type,
       first_player_id: participants[2],
       second_player_id: participants[3],
       tournament_id: tournament.tournament_id,
-      phase: "semis",
+      phase: "semifinals",
     }),
   ]);
   return matches;
