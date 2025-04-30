@@ -5,6 +5,10 @@ export function initSettingsFetch() {
 	const changePasswordForm  = document.getElementById("change-password-form") as HTMLFormElement;
 	if (changePasswordForm)
 		changePasswordForm.addEventListener('submit', changePassword );
+
+	const deleteAccountForm = document.getElementById("delete-account-form") as HTMLFormElement;
+	if (deleteAccountForm)
+		deleteAccountForm.addEventListener('submit', deleteAccount);
 }
 
 function parsePasswords(currentPassword: string, newPassword: string, confirmNewPassword: string): boolean {
@@ -54,4 +58,49 @@ async function changePassword(e: Event) {
 		showAlert((error as Error).message, "toast-error");
 		return ;
 	}
+}
+
+async function deleteAccount(e: Event) {
+	e.preventDefault();
+	const emailInput = document.getElementById("delete-email") as HTMLInputElement;
+	const passwordInput = document.getElementById("delete-password") as HTMLInputElement;
+	const deleteInput = document.getElementById("delete-confirm") as HTMLInputElement;
+
+	if  (!emailInput || !passwordInput || !deleteInput)
+		return ;
+
+	const emailValue = emailInput.value;
+	const passwordValue = passwordInput.value;
+	const deleteValue = deleteInput.value;
+	try {
+		if (!emailValue || !passwordValue || !deleteValue)
+			throw new Error("Fill in all the fields");
+		else if (deleteValue !== "Delete")
+			throw new Error("Incorrect confirm message");
+		const response = await sendRequest('DELETE', 'users', { emailValue, passwordValue, deleteValue})
+		if (!response["success"])
+			throw new Error(response["error"]);
+		else {
+			showAlert("Account deleted successfully", "toast-success");
+			displayDeletedAccount();
+		}
+		const form = document.getElementById("delete-account-form") as HTMLFormElement;
+		if (form)
+			form.reset();
+		return ;
+	}
+	catch (error) {
+		showAlert((error as Error).message, "toast-error");
+		return ;
+	}
+}
+
+function displayDeletedAccount() {
+	const deleteForm = document.getElementById("delete-account-form") as HTMLFormElement;
+	const deleteMessage = document.getElementById("delete-account-message") as HTMLElement;
+	const closeIcon = document.getElementsByClassName("close-icon")[0] as HTMLElement;
+	if (!deleteForm || !deleteMessage || !closeIcon )
+		return ;	
+	deleteForm.style.display = "none";
+	closeIcon.style.display = "none";
 }
