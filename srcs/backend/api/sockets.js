@@ -1,6 +1,6 @@
 import { getChatBetweenUsers } from "./models/chatModel.js";
 import { createMessage } from "./models/messageModel.js";
-import { addPlayerToTournament, createTournament } from "./models/tournamentModel.js";
+import { addParticipantToTournament, createTournament } from "./models/tournamentModel.js";
 import { getUsername, isBlocked, patchUser } from "./models/userModel.js";
 import { asyncWebSocketHandler } from "./utils.js";
 
@@ -265,7 +265,7 @@ export default function createWebSocketsRoutes(fastify){
 								console.log(tournament_id);
 								const player_id = parseInt(data.sender_id);
 								if (socketsTournament.has(tournament_id)){
-									await addPlayerToTournament(tournament_id, player_id);
+									await addParticipantToTournament(tournament_id, player_id);
 									console.log("añadi al torneo un usuario")
 									receiver.send(JSON.stringify({
 										type: "tournament",
