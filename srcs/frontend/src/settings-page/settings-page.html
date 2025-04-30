@@ -160,8 +160,10 @@
 			  placeholder="Type 'Delete'">
 			  <button type="submit" class="signin-user p-1 m-2 rounded-md modal-button">Submit</button>
 			</form>
-			<button id="log-out" class="signin-user p-1 m-2 rounded-md modal-button">Log out</button>
-			<p id="delete-account-message" class="m-2.5 flex justify-center">Fill the form to delete your account</p>
+			<div class="flex flex-col justify-center items-center">
+				<p id="delete-account-message" class="m-2.5 flex justify-center w-full">Fill the form to delete your account</p>
+				<button id="log-out" class="signin-user p-1 m-2 rounded-md modal-button hidden">Log out</button>
+			</div>
 		</div>
 	</dialog>
 	
