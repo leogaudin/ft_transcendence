@@ -155,20 +155,40 @@ async function twoFactorAuth(e: Event) {
 			const response = await sendRequest('POST', '2fa/disable', {totp_code: valueCode});
 			if (!response["success"])
 				throw new Error(response["error"]);
-			else
-				showAlert("2FA disabled successfully", "toast-success");
-			
+			localStorage.setItem("is_2fa_enabled", "0");
+			showAlert("2FA disabled successfully", "toast-success");
 		}
 		else {
 			const response = await sendRequest('POST', '2fa/verify', {totp_code: valueCode});
 			if (!response["success"])
 				throw new Error(response["error"]);
-			else
-				showAlert("2FA enabled successfully", "toast-success");
+			localStorage.setItem("is_2fa_enabled", "1");
+			showAlert("2FA enabled successfully", "toast-success");
 		}
+		toggle2FA();
 	}
 	catch (error) {
 		showAlert((error as Error).message, "toast-error");
 		return false;
+	}
+}
+
+function toggle2FA() {
+	const activateButton = document.getElementById("activate-button") as HTMLButtonElement;
+	const deactivateButton = document.getElementById("deactivate-button") as HTMLButtonElement;
+	const qrImg = document.getElementById("QR-2FA") as HTMLImageElement;
+	if (!activateButton || !deactivateButton || !qrImg)
+		return ;
+
+	if (localStorage.getItem("is_2fa_enabled") === "1") {
+		qrImg.classList.add("hidden");
+		activateButton.classList.add("hidden");
+		deactivateButton.classList.remove("hidden");
+	}
+	else {
+		qrImg.classList.remove("hidden");
+		displayQR();
+		activateButton.classList.remove("hidden");
+		deactivateButton.classList.add("hidden");
 	}
 }

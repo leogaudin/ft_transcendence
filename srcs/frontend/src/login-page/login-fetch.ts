@@ -119,11 +119,11 @@ export async function initSession(response: object) {
 	Object.entries(response).forEach(([key, value])=> {
 		if (typeof value !== 'object' || value === null) {
 			localStorage.setItem(key, String(value));
-			console.log("storing: ", key, ", ", String(value));
+			// console.log("storing: ", key, ", ", String(value));
 		}
 		else {
 			localStorage.setItem(key, JSON.stringify(value));
-			console.log("storing: ", key, ", ", JSON.stringify(value));
+			// console.log("storing: ", key, ", ", JSON.stringify(value));
 		}
 	});
 
