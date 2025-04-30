@@ -83,7 +83,7 @@
 		</div>
 
 		<!-- Two-factor Auth -->
-		<div id="two-factor" class="standard-purple-card flex settings-size hide">
+		<div id="two-factor" class="standard-purple-card flex settings-size hide h-full">
 			<header class="flex flex-col justify-center items-center">
 				<h1 id="settings-display-title">Two-Factor Auth</h1>
 				<p class="text-center">Introduce the 6-digits code associated to your account</p>
@@ -114,19 +114,11 @@
 				<h1 id="settings-display-title">Blocked Accounts</h1>
 			</header>
 			<div id="divider"></div>
-			<main class="flex flex-col items-center gap-4 w-full overflow-x-clip overflow-y-auto">
+			<main id="blocked-card" class="flex flex-col items-center gap-4 w-full overflow-x-clip overflow-y-auto">
 				<!-- <p class="opacity-80">It seems you haven't blocked any friend c:</p> -->
-				<div class="flex justify-between gap-4 friend-card">
-					<div class="flex items-center gap-4">
-						<img id="invitation-avatar" class="card-avatar rounded-full m-1.5" src="../../resources/img/cat.jpg" alt="Avatar">
-						<h3>Manuel el Ventanas</h3>
-					</div>
-					<div class="flex items-center m-1.5">
-						<svg xmlns="http://www.w3.org/2000/svg" class="standard-icon add rounded-full" viewBox="0 -960 960 960">
-							<path d="M240-640h360v-80q0-50-35-85t-85-35q-50 0-85 35t-35 85h-80q0-83 58.5-141.5T480-920q83 0 141.5 58.5T680-720v80h40q33 0 56.5 23.5T800-560v400q0 33-23.5 56.5T720-80H240q-33 0-56.5-23.5T160-160v-400q0-33 23.5-56.5T240-640Zm0 480h480v-400H240v400Zm240-120q33 0 56.5-23.5T560-360q0-33-23.5-56.5T480-440q-33 0-56.5 23.5T400-360q0 33 23.5 56.5T480-280ZM240-160v-400 400Z"/>
-						</svg>
-					</div>
-				</div>
+				<!-- <div class="flex justify-between gap-4 friend-card">
+					
+				</div> -->
 			</main>
 		 </div>
 		</div>
