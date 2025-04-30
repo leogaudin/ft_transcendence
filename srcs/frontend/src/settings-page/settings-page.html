@@ -90,8 +90,8 @@
 			</header>
 			<div id="divider"></div>
 			<main class="flex flex-col justify-center items-center gap-4 h-full">
-				<section id="QR-2FA">
-					<img src="../../resources/img/Commons_QR_code.png" alt="QR" class="w-[150px] aspect-square rounded-[15px] bg-white p-2">
+				<section>
+					<img id="QR-2FA" src="../../resources/img/Commons_QR_code.png" alt="QR" class="w-[150px] aspect-square rounded-[15px] bg-white p-2 hidden">
 				</section>
 				<form id="twoFA-code" class="flex flex-col gap-4 items-center">
 					<div class="grid md:grid-cols-6 grid-cols-3 gap-2">
@@ -102,7 +102,8 @@
 						<input type="text" maxlength="1" class="twoFA-input outline-none" />
 						<input type="text" maxlength="1" class="twoFA-input outline-none" />
 					</div>
-					<button type="submit" class="self-center signin-user rounded-[15px] p-2 bg-[var(--dark-pink)] text-white">Activate</button>
+					<button id="activate-button" type="submit" class="self-center signin-user rounded-[15px] p-2 bg-[var(--dark-pink)] text-white">Activate</button>
+					<button id="deactivate-button" type="submit" class="self-center signin-user rounded-[15px] p-2 bg-[var(--dark-pink)] text-white hidden">Deactivate</button>
 				</form>
 			</main>
 		</div>
