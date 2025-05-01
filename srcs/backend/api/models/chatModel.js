@@ -65,7 +65,9 @@ export function getChatByID(id) {
         m.body,
         m.sent_at,
         s.username AS sender_username,
-        r.username AS receiver_username
+        s.is_deleted AS sender_deleted,
+        r.username AS receiver_username,
+        r.is_deleted AS receiver_deleted
       FROM
         messages m
       JOIN
@@ -84,6 +86,11 @@ export function getChatByID(id) {
       for (let message of rows) {
         await patchMessage(message.message_id, { is_read: 1 });
       }
+      rows.forEach((row) => {
+        row.sender_username = row.sender_deleted ? "anonymous" : row.sender_username;
+        row.receiver_username = row.receiver_deleted ? "anonymous" : row.receiver_username;
+      })
+      console.log(rows);
       resolve(rows);
     });
   });
@@ -249,10 +256,7 @@ export function getLastChatsOfUser(id) {
         return reject(err);
       }
       rows.forEach((row) => {
-        row.sender_username = row.sender_deleted
-          ? "anonymous"
-          : row.sender_username;
-        row.friend_username = row.receiver_deleted
+        row.friend_username = row.receiver_deleted || row.sender_deleted
           ? "anonymous"
           : row.friend_username;
         delete row.message_rank;
