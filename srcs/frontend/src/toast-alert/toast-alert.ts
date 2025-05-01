@@ -97,7 +97,7 @@ function createsocketToastConnection() {
 			else if (data.type === "tournament"){
 				const tournament = data.tournament;
 				if (data.info === "request"){
-					tournament_id = tournament.id;
+					tournament_id = tournament.tournament_id;
 					console.log("soy el alertador", tournament)
 						/*if (socketToast) {
 							socketToast.send(JSON.stringify({
@@ -118,7 +118,7 @@ function createsocketToastConnection() {
 								tournament_id: data.tournament_id
 							}));
 						}*/
-						function handleAccept() {
+						function handleAccept(tournament_id: number | null) {
 							console.log("yo acepto")
 							if (socketToast) {
 								socketToast.send(JSON.stringify({
@@ -131,7 +131,7 @@ function createsocketToastConnection() {
 							}
 						}
 				
-						function handleReject() {
+						function handleReject(tournament_id: number | null) {
 							if (socketToast) {
 								console.log("yo niego")
 								socketToast.send(JSON.stringify({
@@ -143,7 +143,8 @@ function createsocketToastConnection() {
 								}));
 							}
 						}
-						showAlert(data.body, "toast-success", handleAccept, handleReject);
+						if (tournament_id)
+							showAlert(data.body, "toast-success", () => handleAccept(tournament_id), () => handleReject(tournament_id));
 				}
 				/*else if (data.info === "accept"){
 					if (data.tournament){

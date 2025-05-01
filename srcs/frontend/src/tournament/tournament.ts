@@ -9,6 +9,148 @@ export let tournament: Tournament | null = null;
 export function initTournamentEvents(){
 	createTournament();
 	initSearchPlayers();
+  initTournamentSearch();
+}
+
+function initTournamentSearch() {
+  const searchInput = document.getElementById('tournament-searcher') as HTMLInputElement;
+  const searchButton = document.getElementById('tournament-search-button') as HTMLInputElement;
+
+  if (searchInput && searchButton) {
+    // Handle search on button click
+    searchButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      handleTournamentSearch(searchInput.value);
+    });
+
+    // Handle search on Enter key
+    searchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleTournamentSearch(searchInput.value);
+      }
+    });
+  }
+}
+
+async function handleTournamentSearch(tournamentId: string) {
+  if (!tournamentId.trim()) {
+    // If no ID provided, get all tournaments
+    try {
+      const tournaments = await sendRequest('GET', '/tournaments') as Tournament[];
+      displayTournamentResults(tournaments);
+    } catch (error) {
+      console.error('Error fetching tournaments:', error);
+    }
+    return;
+  }
+
+  try {
+    // Get specific tournament by ID
+    const tournament = await sendRequest('GET', `/tournaments/${tournamentId}`) as Tournament;
+    displayTournamentResults([tournament]);
+    console.log(tournament)
+  } catch (error) {
+    console.error('Error fetching tournament:', error);
+  }
+}
+
+interface Tournament {
+  tournament_id: number;
+  name: string;
+  player_limit: number;
+  status: string;
+  game_type: string;
+  creator_id: number;
+  created_at: string;
+  started_at: string | null;
+  finished_at: string | null;
+  tournament_invitations: {
+    user_id: number;
+    status: string;
+  }[];
+  tournament_participants: {
+    user_id: number;
+    final_rank: number | null;
+  }[];
+  tournament_matches: any[]; // Add specific type if needed
+}
+
+function displayTournamentResults(tournaments: Tournament[]) {
+  const container = document.querySelector('.btns');
+  const resultsDiv = document.createElement('div');
+  resultsDiv.className = 'tournament-results';
+
+  if (!tournaments || tournaments.length === 0) {
+    resultsDiv.innerHTML = '<p>No tournaments found</p>';
+    return;
+  }
+
+  tournaments.forEach(tournament => {
+    const tournamentElement = document.createElement('div');
+    tournamentElement.className = 'tournament-item';
+
+    // Check if user is already a participant or has been invited
+    const isParticipant = tournament.tournament_participants.some(
+      p => p.user_id === getClientID()
+    );
+    const isInvited = tournament.tournament_invitations.some(
+      i => i.user_id === getClientID()
+    );
+
+    tournamentElement.innerHTML = `
+      <div class="tournament-info">
+        <h3>${tournament.name}</h3>
+        <p>Status: ${tournament.status}</p>
+        <p>Players: ${tournament.tournament_participants.length}/${tournament.player_limit}</p>
+        <p>Game: ${tournament.game_type}</p>
+        <p>Created: ${new Date(tournament.created_at).toLocaleString()}</p>
+        ${tournament.started_at ? 
+          `<p>Started: ${new Date(tournament.started_at).toLocaleString()}</p>` : 
+          ''
+        }
+      </div>
+      ${isParticipant ? 
+        '<span class="already-joined">Already Joined</span>' :
+        isInvited ?
+        '<span class="pending">Invitation Pending</span>' :
+        `<button class="join-button" data-tournament-id="${tournament.tournament_id}">
+           Join Tournament
+         </button>`
+      }
+    `;
+
+    resultsDiv.appendChild(tournamentElement);
+  });
+
+  // Remove any existing results
+  const existingResults = container?.querySelector('.tournament-results');
+  if (existingResults) {
+    existingResults.remove();
+  }
+
+  container?.appendChild(resultsDiv);
+
+  // Add event listeners to join buttons
+  const joinButtons = resultsDiv.querySelectorAll('.join-button');
+  joinButtons.forEach(button => {
+    button.addEventListener('click', async (e) => {
+      const tournamentId = (e.target as HTMLButtonElement).dataset.tournamentId;
+      if (tournamentId) {
+        try {
+          await sendRequest('POST', '/tournaments/invite', {
+            tournament_id: parseInt(tournamentId),
+            user_id: getClientID()
+          });
+          // Update the button to show pending status
+          (e.target as HTMLButtonElement).disabled = true;
+          (e.target as HTMLButtonElement).textContent = 'Request Sent';
+        } catch (error) {
+          console.error('Error joining tournament:', error);
+        }
+      }
+    });
+  });
 }
 
 export function createSocketTournamentConnection(tournamentName: string){

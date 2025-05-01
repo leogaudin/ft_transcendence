@@ -1,6 +1,6 @@
 import { getChatBetweenUsers } from "./models/chatModel.js";
 import { createMessage } from "./models/messageModel.js";
-import { addParticipantToTournament, createTournament } from "./models/tournamentModel.js";
+import { addParticipantToTournament, addInvitationToTournament, modifyInvitationToTournament, createTournament } from "./models/tournamentModel.js";
 import { getUsername, isBlocked, patchUser } from "./models/userModel.js";
 import { asyncWebSocketHandler } from "./utils.js";
 
@@ -261,10 +261,10 @@ export default function createWebSocketsRoutes(fastify){
 							else if (data.info === "accept"){
 								const tournament_id = parseInt(data.tournament_id);
 								console.log(data);
-								console.log("soy el tournament id", tournament_id);
 								const player_id = parseInt(data.sender_id);
+								const receiver = socketsToast.get(receiver_id);
 								if (socketsTournament.has(tournament_id)){
-									await addParticipantToTournament(tournament_id, player_id);
+									await addParticipantToTournament({tournament_id}, player_id);
 									console.log("añadi al torneo un usuario")
 									receiver.send(JSON.stringify({
 										type: "tournament",
@@ -414,6 +414,23 @@ export default function createWebSocketsRoutes(fastify){
 								game_type: "pong"
 							}, data.creator_id);
 							tournament_id = tournament.tournament_id;
+							await addInvitationToTournament({
+									tournament_id: tournament_id,
+									user_id: data.creator_id,
+							});
+							await modifyInvitationToTournament(
+								{
+									status: "confirmed",
+									tournament_id: tournament_id,
+								},
+									data.creator_id,
+							);
+							await addParticipantToTournament(
+								{
+									tournament_id: tournament_id,
+								},
+								data.creator_id,
+							);
 							if (tournament_id){
 							  socketsTournament.set(tournament.tournament_id, socket);
 							  socket.send(JSON.stringify({
