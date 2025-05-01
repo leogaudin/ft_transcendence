@@ -95,3 +95,9 @@ export interface Tournament {
   name: string,
   player_amount: number,
 }
+
+export interface Blocked {
+	username: string,
+	id: number,
+	avatar: string,
+}

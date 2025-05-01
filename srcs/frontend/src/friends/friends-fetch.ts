@@ -230,7 +230,6 @@ async function goToFriendChat(friend_id: number, friend_username: string) {
 }
 
 async function friendInvitations(friendId: string, input: string) {
-  console.log('friendId:', friendId)
 	try {
 		const response = await sendRequest('POST', '/users/friends', {friend_id: friendId});
 		if (!response)
@@ -361,7 +360,6 @@ export async function displayInvitations() {
 		const acceptInvitationButtons = document.getElementsByClassName("accept");
 		const declineInvitationButton = document.getElementsByClassName("remove");
 		if (acceptInvitationButtons?.length > 0 && declineInvitationButton?.length > 0) {
-			console.log("Entrando en botones mamelones");
 			for (const element of acceptInvitationButtons) {
 				const friendId = element.id.replace("accept-invitation-", "");
 				(element as HTMLButtonElement).onclick = () => { confirmInvitation(friendId) };
