@@ -150,6 +150,35 @@ function getMatchesOfTournament(tournament_id) {
 }
 
 /**
+ * Finds all matching tournaments that start with a given name
+ * @param {String} name - Name of the tournament
+ * @returns {Array} - All matching tournaments
+ */
+export function findMatchingTournaments(name) {
+  assert(name !== undefined, "name must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT
+        id,
+        name,
+        game_type,
+        status
+      FROM
+        tournaments
+      WHERE
+        name LIKE ?
+`;
+    db.all(sql, [name + "%"], function (err, rows) {
+      if (err) {
+        console.error("error getting tournaments", err.message);
+        return reject(err);
+      }
+      resolve(rows);
+    });
+  });
+}
+
+/**
  * Returns all information about a tournament
  * @param {Number} id - ID of the tournament
  * @returns {Object} - Tournament with invitations, participants and matches

@@ -273,6 +273,8 @@ export function getBlocks(user_id) {
             u.id = ub.blocked_id
       WHERE
         ub.user_id = ?
+      AND
+        u.is_deleted = 0
     `;
     db.all(sql, [user_id], function (err, rows) {
       if (err) {
