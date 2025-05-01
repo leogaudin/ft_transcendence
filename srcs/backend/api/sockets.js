@@ -260,7 +260,8 @@ export default function createWebSocketsRoutes(fastify){
 							}
 							else if (data.info === "accept"){
 								const tournament_id = parseInt(data.tournament_id);
-								console.log(tournament_id);
+								console.log(data);
+								console.log("soy el tournament id", tournament_id);
 								const player_id = parseInt(data.sender_id);
 								if (socketsTournament.has(tournament_id)){
 									await addParticipantToTournament(tournament_id, player_id);

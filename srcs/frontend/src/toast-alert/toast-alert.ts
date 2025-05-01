@@ -118,9 +118,34 @@ function createsocketToastConnection() {
 								tournament_id: data.tournament_id
 							}));
 						}*/
-						showAlert(data.body, "toast-success");
-					}
-				else if (data.info === "accept"){
+						function handleAccept() {
+							console.log("yo acepto")
+							if (socketToast) {
+								socketToast.send(JSON.stringify({
+									type: "tournament",
+									info: "accept",
+									sender_id: getClientID(),
+									receiver_id: data.sender_id,
+									tournament_id: tournament_id
+								}));
+							}
+						}
+				
+						function handleReject() {
+							if (socketToast) {
+								console.log("yo niego")
+								socketToast.send(JSON.stringify({
+									type: "tournament",
+									info: "refuse",
+									sender_id: getClientID(),
+									receiver_id: data.sender_id,
+									tournament_id: tournament_id
+								}));
+							}
+						}
+						showAlert(data.body, "toast-success", handleAccept, handleReject);
+				}
+				/*else if (data.info === "accept"){
 					if (data.tournament){
 						if (socketTournament){
 							socketTournament.send(JSON.stringify({
@@ -143,7 +168,7 @@ function createsocketToastConnection() {
 						}))
 					}
 					showAlert(data.body, "toast-error");
-				}
+				}*/
 				else if (data.info === "creator")
 					showAlert(data.body, "toast-success")
 			}
@@ -216,25 +241,25 @@ export function showAlert(
   // Show/hide action buttons based on callbacks
   if (acceptButton && rejectButton) {
     if (acceptCallback && rejectCallback) {
-      acceptButton.style.display = "block";
-      rejectButton.style.display = "block";
+      acceptButton.classList.remove("hidden");
+      rejectButton.classList.remove("hidden");
       
       // Add event listeners
       acceptButton.onclick = function() {
         acceptCallback();
-        toastAlert.style.display = "none";
+        toastAlert.classList.add('hidden');
       };
       
       rejectButton.onclick = function() {
         rejectCallback();
-        toastAlert.style.display = "none";
+        toastAlert.classList.add('hidden');
       };
     } else {
-      acceptButton.style.display = "none";
-      rejectButton.style.display = "none";
+      acceptButton.classList.add('hidden');
+      rejectButton.classList.add('hidden');
     }
   }
-
+	toastAlert.classList.remove('hidden');
   toastAlert.style.display = "flex";
 
   if (toastTimeout)
