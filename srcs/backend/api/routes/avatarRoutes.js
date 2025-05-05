@@ -1,6 +1,5 @@
-import { asyncHandler, saveAvatar, UPLOAD_DIR } from "../utils.js";
-import fs from "fs";
-import path from "node:path";
+import { asyncHandler, saveAvatar } from "../utils.js";
+import { getUser } from "../models/userModel.js";
 
 export default function createAvatarRoutes(fastify) {
   return [
@@ -11,6 +10,17 @@ export default function createAvatarRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         const data = await req.file();
         if (!data) return res.code(400).send({ error: "No file uploaded" });
+        const allowedMimeTypes = [
+          "image/jpeg",
+          "image/png",
+          "image/gif",
+          "image/webp",
+        ];
+        if (!allowedMimeTypes.includes(data.mimetype))
+          return res.code(400).send({ error: "Invalid file type" });
+        const maxSize = 1024 * 1024;
+        if (data.file.bytesRead > maxSize)
+          return res.code(400).send({ error: "File too large (max 1MB)" });
         const result = await saveAvatar(req.userId, data);
         return res.code(200).send(result);
       }),
@@ -18,22 +28,12 @@ export default function createAvatarRoutes(fastify) {
     {
       preHandler: [fastify.authenticate],
       method: "GET",
-      url: "/avatars/:filename",
+      url: "/avatars",
       handler: asyncHandler(async (req, res) => {
-        const filename = req.params.filename;
-        const filepath = path.join(UPLOAD_DIR, filename);
-        if (!fs.existsSync(filepath))
-          return res.code(404).send({ error: "Avatar not found" });
-        const ext = path.extname(filename);
-        const mimeTypes = {
-          ".jpg": "image/jpeg",
-          ".jpeg": "image/jpeg",
-          ".png": "image/png",
-          ".gif": "image/gif",
-          ".webp": "image/webp",
-        };
-        res.type(mimeTypes[ext] || "application/octet-stream");
-        return res.sendFile(filename);
+        const userId = req.userId;
+        const user = await getUser(userId);
+        if (!user) return res.code(404).send({ error: "User not found" });
+        return res.code(200).send({ avatar: user.avatar });
       }),
     },
   ];
