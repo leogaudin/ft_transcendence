@@ -1,11 +1,12 @@
 import { getChatInfo ,actual_chat_id, recentChats, loadInfo } from "./load-info.js"
 import { navigateTo } from "../index.js";
-import { Message, MessageObject } from "../types.js";
+import { Message, MessageObject, Tournament } from "../types.js";
 import { sendRequest } from "../login-page/login-fetch.js";
 import { showAlert } from "../toast-alert/toast-alert.js";
+import { createSocketTournamentConnection } from "../tournament/tournament.js";
 
 let socketChat: WebSocket | null = null;
-
+let activeTournament: Tournament | null = null;
 export function initMessagesEvents(data: MessageObject) {
 	moveToHome();
 	loadInfo(data);
@@ -125,43 +126,38 @@ async function setupMessageForm() {
     if (message && socketChat){
       const date = new Date();
       date.setHours(date.getHours() + 2);
-      if (message === "/tournament"){
+      if (message.startsWith('/tournament')){
+        const args = message.slice('/tournament'.length).trim().split('-game');
+        const tournament_name = args[0].trim();
+        const game_type = args[1]?.trim().toLowerCase();
+        if (activeTournament){
+          showAlert("You're already in a tournament. Finish or cancel it first.", "toast-error");
+          input.value = "";
+          return ;
+        }
+        if (!tournament_name){
+          showAlert("Please provide a tournament name: /tournament {name} -game {type}", "toast-error");
+          input.value = "";
+          return;
+        }
+        if (!game_type || (game_type !== "pong" && game_type !== "4inrow")){
+          showAlert("Please specify a valid game type (pong or 4inrow): /tournament {name} -game {type}", "toast-error");
+          input.value = "";
+          return;
+        }
+        const tournament = await createSocketTournamentConnection(tournament_name, game_type);
+        activeTournament = tournament
         let fullMessage: Message = {
           body: message,
           chat_id: actual_chat_id,
-	        receiver_id: friendID,
-	        sender_id: getClientID(),
+          receiver_id: friendID,
+          sender_id: getClientID(),
           sent_at: date.toISOString(),
           read: false,
           type: "tournament",
           info: "request",
-        }
-        socketChat.send(JSON.stringify(fullMessage));
-      }
-      else if (message === "/accept"){
-        let fullMessage: Message = {
-          body: message,
-          chat_id: actual_chat_id,
-	        receiver_id: friendID,
-	        sender_id: getClientID(),
-          sent_at: date.toISOString(),
-          read: false,
-          type: "tournament",
-          info: "accept",
-        }
-        socketChat.send(JSON.stringify(fullMessage));
-      }
-      else if (message === "/refuse"){
-        let fullMessage: Message = {
-          body: message,
-          chat_id: actual_chat_id,
-	        receiver_id: friendID,
-	        sender_id: getClientID(),
-          sent_at: date.toISOString(),
-          read: false,
-          type: "tournament",
-          info: "refuse",
-        }
+          tournament: tournament,
+        };
         socketChat.send(JSON.stringify(fullMessage));
       }
       else{

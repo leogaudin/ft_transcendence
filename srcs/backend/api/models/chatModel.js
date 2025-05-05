@@ -90,7 +90,6 @@ export function getChatByID(id) {
         row.sender_username = row.sender_deleted ? "anonymous" : row.sender_username;
         row.receiver_username = row.receiver_deleted ? "anonymous" : row.receiver_username;
       })
-      console.log(rows);
       resolve(rows);
     });
   });

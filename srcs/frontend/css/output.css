@@ -1395,6 +1395,10 @@ video {
   border-bottom-right-radius: 15px;
 }
 
+.border {
+  border-width: 1px;
+}
+
 .bg-\[\#3b0034c6\] {
   background-color: #3b0034c6;
 }
