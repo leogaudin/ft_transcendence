@@ -204,7 +204,7 @@ db.serialize(() => {
     chat_id INTEGER NOT NULL,
     body TEXT NOT NULL,
     is_read BOOLEAN DEFAULT 0,
-    sent_at DATETIME DEFAULT (datetime('now', '+2 hours')),
+    sent_at DATETIME DEFAULT (datetime('now', '+2 hours', 'subsec')),
     FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (receiver_id) REFERENCES users(id) ON DELETE SET NULL,
     FOREIGN KEY (chat_id) REFERENCES chats(id) ON DELETE CASCADE
