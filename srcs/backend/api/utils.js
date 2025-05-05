@@ -1,5 +1,3 @@
-import { pipeline } from "node:stream/promises";
-import { createWriteStream, unlink } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "url";
 import { getUser, patchUser } from "./models/userModel.js";
@@ -139,27 +137,19 @@ export function anonymize(user) {
 export async function saveAvatar(user_id, data) {
   assert(user_id !== undefined, "user_id must exist");
   assert(data !== undefined, "data must exist");
-  const filename = `${Date.now()}-${data.filename}`;
-  const filepath = path.join(UPLOAD_DIR, filename);
-  await pipeline(data.file, createWriteStream(filepath));
-  const user = await getUser(user_id);
-  const old_avatar = user.avatar;
-  const default_avatar = "/api/avatars/default.jpg";
-  const avatar_url = `/api/avatars/${filename}`;
-  await patchUser(user_id, { avatar: avatar_url });
-  if (old_avatar && old_avatar !== default_avatar) {
-    const old_filename = old_avatar.split("/").pop();
-    const old_filepath = path.join(UPLOAD_DIR, old_filename);
-    await unlink(old_filepath, (err) => {
-      if (err) console.error(err);
-    });
+  const chunks = [];
+  for await (const chunk of data.file) {
+    chunks.push(chunk);
   }
+  const imageBuffer = Buffer.concat(chunks);
+  const base64Image = imageBuffer.toString("base64");
+  const dataUrl = `data:${data.mimetype};base64,${base64Image}`;
+  await patchUser(user_id, { avatar: dataUrl });
   return {
-    message: "File uploaded successfully",
+    message: "Avatar uploaded successfully",
     user_id: user_id,
-    filename: filename,
     originalName: data.filename,
     mimetype: data.mimetype,
-    size: data.file.bytesRead,
+    size: imageBuffer.length,
   };
 }
