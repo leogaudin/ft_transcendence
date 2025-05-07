@@ -43,6 +43,7 @@ export interface Message {
 	read: boolean;
 	type?: string;
 	info?: string;
+	tournament?: Tournament | null;
 }
 
 export interface MessageObject {
@@ -94,11 +95,31 @@ export interface Tournament {
 	id: number,
   name: string,
   player_amount: number,
-  player_ids: number[],
+}
+
+interface Tournament {
+	tournament_id: number;
+	name: string;
+	player_amount: number;
+	player_limit: number;
+	status: string;
+	game_type: string;
+	creator_id: number;
+	created_at: string;
+	started_at: string | null;
+	finished_at: string | null;
+	tournament_invitations: { user_id: number; status: string; }[];
+	tournament_participants: { user_id: number; final_rank: number | null; }[];
+	tournament_matches: any[]; // Add specific type if needed
 }
 
 export interface Blocked {
 	username: string,
 	id: number,
 	avatar: string,
+}
+
+export interface Games {
+	isCustom: string,
+	gameMode: string,
 }

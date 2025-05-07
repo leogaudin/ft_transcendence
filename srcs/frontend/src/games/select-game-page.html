@@ -1,0 +1,317 @@
+<div class="screen-set">
+  <div class="game-selection-container">
+    <header class="flex justify-between items-center md:items-end mx-4 h-fit md:h-1/6">
+      <h1 class="text-3xl font-bold text-center">Select Game Mode</h1>
+      <svg id="home-button" class="home-icon m-4 h-10 w-10 cursor-pointer" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
+        <path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
+      </svg>
+    </header>
+
+    <div id="pink-divider" class="flex justify-center"></div>
+    
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Pong Card -->
+      <div class="game-card">
+        <div class="game-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-16 h-16">
+            <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
+          </svg>
+        </div>
+        <h2 class="game-title">Pong</h2>
+        <p class="game-description">Classic table tennis game. Challenge your friends in real-time!</p>
+        <button class="game-button" data-route ='/pong'>
+          Play Pong
+        </button>
+      </div>
+
+      <!-- 4 in Row Card -->
+      <div class="game-card">
+        <div class="game-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-16 h-16">
+            <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4 6h-4v4h4v4h-4v-4H7v-4h4V5h4v4z"/>
+          </svg>
+        </div>
+        <h2 class="game-title">4 in Row</h2>
+        <p class="game-description">Connect four pieces in a row to win. Strategic and fun!</p>
+        <button class="game-button" data-route ='/4inrow'>
+          Play 4 in Row
+        </button>
+      </div>
+      <!-- Tournament Card -->
+      <div class="game-card">
+        <div class="game-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="w-16 h-16">
+            <path d="M19 5h-2V3H7v2H5c-1.1 0-2 .9-2 2v1c0 2.55 1.92 4.63 4.39 4.94.63 1.5 1.98 2.63 3.61 2.96V19H7v2h10v-2h-4v-3.1c1.63-.33 2.98-1.46 3.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2z"/>
+          </svg>
+        </div>
+        <h2 class="game-title">Tournament</h2>
+        <p class="game-description">Create tournaments for both games!</p>
+        <button class="game-button" data-route ='/tournament'>
+          Create Tournament
+        </button>
+      </div>
+    </div>
+
+    <div id="game-options-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2 class="modal-title">Select Game Mode</h2>
+        
+        <!-- Game Mode Selection Buttons -->
+        <div class="mode-selector">
+          <button class="mode-button active" data-mode-type="normal">Normal Mode</button>
+          <button class="mode-button" data-mode-type="custom">Custom Mode</button>
+        </div>
+    
+        <!-- Normal Mode Options -->
+        <div class="game-options game-modes normal-modes">
+          <button class="option-button" data-mode="remote">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM6.5 9L10 5.5 13.5 9H11v4H9V9H6.5zm11 6L14 18.5 10.5 15H13v-4h2v4h2.5z"/>
+            </svg>
+            <span>Remote Player</span>
+          </button>
+          <button class="option-button" data-mode="local">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24">
+              <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            <span>Local Game</span>
+          </button>
+          <button class="option-button" data-mode="ai">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24">
+              <path d="M22 11h-4.17l3.24-3.24-1.41-1.42L15 11h-2V9l4.66-4.66-1.42-1.41L13 6.17V2h-2v4.17L7.76 2.93 6.34 4.34 11 9v2H9L4.34 6.34 2.93 7.76 6.17 11H2v2h4.17l-3.24 3.24 1.41 1.42L9 13h2v2l-4.66 4.66 1.42 1.41L11 17.83V22h2v-4.17l3.24 3.24 1.42-1.41L13 15v-2h2l4.66 4.66 1.41-1.42L17.83 13H22z"/>
+            </svg>
+            <span>Play vs AI</span>
+          </button>
+        </div>
+    
+        <!-- Custom Mode Options (initially hidden) -->
+        <div class="game-options game-modes custom-modes hidden">
+          <button class="option-button" data-mode="remote-custom">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM6.5 9L10 5.5 13.5 9H11v4H9V9H6.5zm11 6L14 18.5 10.5 15H13v-4h2v4h2.5z"/>
+            </svg>
+            <span>Custom Remote</span>
+          </button>
+          <button class="option-button" data-mode="local-custom">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24">
+              <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+            </svg>
+            <span>Custom Local</span>
+          </button>
+          <button class="option-button" data-mode="ai-custom">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24">
+              <path d="M22 11h-4.17l3.24-3.24-1.41-1.42L15 11h-2V9l4.66-4.66-1.42-1.41L13 6.17V2h-2v4.17L7.76 2.93 6.34 4.34 11 9v2H9L4.34 6.34 2.93 7.76 6.17 11H2v2h4.17l-3.24 3.24 1.41 1.42L9 13h2v2l-4.66 4.66 1.42 1.41L11 17.83V22h2v-4.17l3.24 3.24 1.42-1.41L13 15v-2h2l4.66 4.66 1.41-1.42L17.83 13H22z"/>
+            </svg>
+            <span>Custom AI</span>
+          </button>
+        </div>
+    <!-- Tournament options -->
+    <div class="game-options tournament-modes hidden">
+      <button class="option-button" data-mode="create">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24">
+          <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </svg>
+        <span>Create Tournament</span>
+      </button>
+      <button class="option-button" data-mode="join">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon" viewBox="0 0 24 24">
+          <path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
+        </svg>
+        <span>Join Tournament</span>
+      </button>
+    </div>
+    <button class="close-modal">×</button>
+  </div>
+</div>
+  </div>
+	 
+
+  <style>
+    /*Esto es solo para que no quiera arrancarme los ojos con la pestaña de games*/
+    .game-selection-container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 2rem;
+    }
+
+    .game-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .game-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .game-icon {
+      margin: 0 auto 1.5rem;
+      width: 64px;
+      height: 64px;
+      fill: #6366f1;
+    }
+
+    .game-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #1f2937;
+    }
+    .game-card {
+      background: white;
+      border-radius: 1rem;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .game-description {
+      color: #6b7280;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+      min-height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1; /* Añade esto para que ocupe el espacio disponible */
+    }
+
+    .game-button {
+      margin-top: auto; /* Añade esto para empujar el botón hacia abajo */
+      background-color: #6366f1;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      transition: background-color 0.2s;
+      align-self: center; /* Añade esto para centrar el botón horizontalmente */
+    }
+
+    .game-button:hover {
+      background-color: #4f46e5;
+    }
+		.modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      position: relative;
+      width: 90%;
+      max-width: 500px;
+    }
+
+    .modal-title {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      color: #1f2937;
+    }
+
+    .game-options {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .option-button {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      background: #f3f4f6;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+    }
+
+    .option-button:hover {
+      background: #6366f1;
+      border-color: #6366f1;
+      color: white;
+    }
+
+    .option-button .icon {
+      width: 24px;
+      height: 24px;
+      margin-right: 1rem;
+    }
+
+    .option-button:hover .icon {
+      fill: white;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 1.5rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #6b7280;
+    }
+
+    .hidden {
+      display: none;
+    }
+		.home-icon {
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+
+    .home-icon:hover {
+      transform: scale(1.1);
+    }
+
+    #pink-divider {
+      height: 2px;
+      background-color: #FEE0EF;
+      margin: 1rem 0;
+    }
+    .mode-selector {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .mode-button {
+    padding: 0.5rem 1.5rem;
+    border: 2px solid #6366f1;
+    border-radius: 0.5rem;
+    background: transparent;
+    color: #6366f1;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .mode-button:hover {
+    background: #6366f1;
+    color: white;
+  }
+
+  .mode-button.active {
+    background: #6366f1;
+    color: white;
+  }
+  </style>
+</div>

@@ -115,9 +115,8 @@ async function deleteFriend(friendId: string) {
 		if (!friendListPage || !invitationListPage)
 			return ;
 
-		if (invitationListPage.style.display === 'flex') {
+		if (!invitationListPage.classList.contains('hidden'))
 			displayInvitations();
-		}
 		else {
 			const returnButton = document.getElementById("go-back");
 			const friendsHolder = document.getElementById("friends-holder");
@@ -253,7 +252,7 @@ async function friendInvitations(friendId: string, input: string) {
 }
 
 export function debounce(callback: Function, wait: number) {
-	let timerId: number | NodeJS.Timeout;;
+	let timerId: NodeJS.Timeout;
 	return (...args: Object[]) => {
 	  clearTimeout(timerId);
 	  timerId = setTimeout(() => {

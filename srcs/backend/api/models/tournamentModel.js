@@ -33,7 +33,7 @@ export function createTournament(data, creatorId) {
         tournament_name: data.name,
         player_limit: data.player_limit,
         game_type: data.game_type,
-        creator_id: data.creator_id,
+        creator_id: creatorId,
       });
     });
   });

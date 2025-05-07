@@ -1,6 +1,6 @@
 import { sendRequest } from "../login-page/login-fetch.js";
 import { LastMessage, Message, MessageObject, ChatInfo } from "../types.js"
-let actual_chat_id: number;
+export let actual_chat_id: number;
 
 export function loadInfo(data: MessageObject) {
 	displayFirstChat(data);
@@ -103,7 +103,6 @@ export async function recentChats() {
 			  if (entry !== searchForm)
 				entry.remove();
 			});
-	
 			const recentChatsTyped = await sendRequest('GET', 'chats/last') as LastMessage[];
 			if (!recentChatsTyped)
 				throw new Error("Error fetching recent chats");
@@ -113,7 +112,6 @@ export async function recentChats() {
 	
 				let truncated = "";
 				chat.body?.length > 10 ? truncated = chat.body.substring(0, 10) + "..." : truncated = chat.body;
-	
 				subDiv.innerHTML = `
 				<div id="chat-${chat.chat_id} "class="flex items-center gap-2 recent-chat-card">
 					<div id="chat-avatar">
@@ -125,7 +123,6 @@ export async function recentChats() {
 					</div>
 				</div>
 				`;
-	
 				recentChatsDiv.appendChild(subDiv);
 				subDiv.addEventListener("click", () => {
 					if (last_chat !== chat.chat_id) {
@@ -151,7 +148,7 @@ export async function chargeChat(chat_id: number, friend_username: string) {
 	if (contactName)
 		contactName.innerText = friend_username;
 
-	await getChatInfo(chat_id);
+	//await getChatInfo(chat_id);
 	if (chatDiv) {
 		try {
 			if (chatDiv.children.length > 0)
@@ -190,7 +187,6 @@ export async function chargeChat(chat_id: number, friend_username: string) {
 			console.error(error);
 		}
 		actual_chat_id = chat_id;
-
 	}
 }
 
@@ -206,5 +202,3 @@ export async function getChatInfo(chat_id: number) : Promise<ChatInfo | null>  {
 		return null;
 	}
 }
-
-export {actual_chat_id};

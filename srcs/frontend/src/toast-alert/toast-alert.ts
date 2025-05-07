@@ -1,9 +1,8 @@
 import { getClientID } from "../messages/messages-page.js"
 import { displayFriends, displayInvitations, showMatches, debounce } from "../friends/friends-fetch.js";
-import { createSocketTournamentConnection, socketTournament } from "../tournament/tournament.js";
 
+export let socketToast: WebSocket | null;
 let toastTimeout: NodeJS.Timeout;
-let socketToast: WebSocket | null;
 let tournament_id: number | null;
 
 const toastFeatures = [
@@ -19,7 +18,7 @@ const updateFriendsList = debounce(() => {
 	
 }, 500);
 
-function createsocketToastConnection() {
+export function createsocketToastConnection() {
 	if (socketToast && socketToast.readyState !== WebSocket.CLOSED)
 	  socketToast.close();
 	const userId = localStorage.getItem("id");
@@ -52,19 +51,19 @@ function createsocketToastConnection() {
 			if (data.type === "friendRequest"){
 				if (data.info === "request"){
 					if (data.body){
-						showAlert(data.body, "toast-success");
 						const invitationListPage = document.getElementById("invitation-list");
 						if (!invitationListPage)
 							return ;
-						if (invitationListPage.style.display === 'flex')
+						if (!invitationListPage.classList.contains('hidden'))
 							displayInvitations();
+						showAlert(data.body, "toast-success");
 					}
 				}
 				else if (data.info === "confirmation"){
 					const invitationListPage = document.getElementById("invitation-list");
 					const friendListPage = document.getElementById("friend-list");
 					if (invitationListPage)
-						if (invitationListPage.style.display === 'flex')
+						if (!invitationListPage.classList.contains('hidden'))
 							displayInvitations();
 					else if (friendListPage)
 						displayFriends();
@@ -93,42 +92,45 @@ function createsocketToastConnection() {
 				showAlert(data.body, "toast-success");
 			else if (data.type === "friendStatusUpdate")
 				updateFriendsList();
-			//Implementacion basica de invitacion y torneo por comando
 			else if (data.type === "tournament"){
-				const tournament = data.tournament
-				console.log(tournament)
+				const tournament = data.tournament;
 				if (data.info === "request"){
-					tournament_id = tournament.id;
-					showAlert(data.body, "toast-success");
-				}
-				else if (data.info === "accept"){
-					if (data.tournament){
-						if (socketTournament){
-							socketTournament.send(JSON.stringify({
-								senderId: getClientID(),
-								receiverId: data.sender_id,
-								tournament_id: tournament_id,
-								info: "accept",
-							}))
+					tournament_id = tournament.tournament_id;
+					console.log("soy el alertador", tournament)
+						function handleAccept(tournament_id: number | null){
+							if (socketToast){
+								socketToast.send(JSON.stringify({
+									type: "tournament",
+									info: "accept",
+									sender_id: getClientID(),
+									receiver_id: data.sender_id,
+									tournament_id: tournament_id
+								}));
+							}
 						}
-						showAlert(data.body, "toast-success");
-					}
-					
+						function handleReject(tournament_id: number | null){
+							if (socketToast){
+								socketToast.send(JSON.stringify({
+									type: "tournament",
+									info: "reject",
+									sender_id: getClientID(),
+									receiver_id: data.sender_id,
+									tournament_id: tournament_id
+								}));
+							}
+						}
+						if (tournament_id)
+							showAlert(data.body, "toast-success", () => handleAccept(tournament_id), () => handleReject(tournament_id));
 				}
-				else if (data.info === "reject"){
-					if (socketTournament){
-						socketTournament.send(JSON.stringify({
-							senderId: getClientID(),
-							receiverId: data.sender_id,
-							tournament_id: data.tournament_id,
-							info: "reject",
-						}))
-					}
+				else if (data.info === "creator")
+					showAlert(data.body, "toast-success");
+				else if (data.info === "accept")
+					showAlert(data.body, "toast-success");
+				else if (data.info === "reject")
 					showAlert(data.body, "toast-error");
-				}
 			}
 		}
-		catch(err) {
+		catch(err){
 		  console.error("Error on message", err);
 		}
 	  };
@@ -177,18 +179,44 @@ export function displayToast() {
 	});
 }
 
-export function showAlert(msg: string, toastType: string) {
-	const toastText = document.getElementById("toast-message");
-	const toastAlert = document.getElementById("toast-default");
-	if (!toastText || !toastAlert)
+export function showAlert(msg: string, toastType: string, acceptCallback?: () => void, rejectCallback?: () => void){
+  const toastText = document.getElementById("toast-message");
+  const toastAlert = document.getElementById("toast-default");
+  const acceptButton = document.getElementById("accept-button");
+  const rejectButton = document.getElementById("reject-button");
+  
+  if (!toastText || !toastAlert)
 		return;
-
-	defineToastFeatures(toastType);
-	toastText.innerText = msg;
-	toastAlert.style.display = "flex";
-
-	if (toastTimeout) { clearTimeout(toastTimeout); }
-	toastTimeout = setTimeout(() => { toastAlert.style.display = "none"; }, 5000);
+  defineToastFeatures(toastType);
+  toastText.innerText = msg;
+  // Show/hide action buttons based on callbacks
+  if (acceptButton && rejectButton) {
+    if (acceptCallback && rejectCallback) {
+      acceptButton.classList.remove("hidden");
+      rejectButton.classList.remove("hidden");
+      
+      // Add event listeners
+      acceptButton.onclick = function() {
+        acceptCallback();
+        toastAlert.classList.add('hidden');
+				toastAlert.style.display = "none";
+      };
+      
+      rejectButton.onclick = function() {
+        rejectCallback();
+        toastAlert.classList.add('hidden');
+				toastAlert.style.display = "none";
+      };
+    } else {
+      acceptButton.classList.add('hidden');
+      rejectButton.classList.add('hidden');
+    }
+  }
+	toastAlert.classList.remove('hidden');
+  toastAlert.style.display = "flex";
+  if (toastTimeout)
+		clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() =>{
+		toastAlert.style.display = "none";
+	}, 5000);
 }
-
-export { createsocketToastConnection, socketToast }
