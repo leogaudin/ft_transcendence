@@ -5,10 +5,11 @@ import { initResetPasswordEvents } from "./reset-password-page/reset-password.js
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
 import { initFriendsEvents } from "./friends/friends-page.js"
 import { initSettingsEvents } from "./settings-page/settings-page.js"
-import { LoginObject, MessageObject } from "./types.js";
+import { LoginObject, MessageObject, Games } from "./types.js";
 import { displayToast, createsocketToastConnection, socketToast } from "./toast-alert/toast-alert.js";
 import { pong } from "./games/game.js"
 import { initTournamentEvents } from "./tournament/tournament.js";
+import { initSelectPageEvent } from "./games/select-game-page.js";
 
 const routes = [
 	{
@@ -52,10 +53,11 @@ const routes = [
 		}
 	},
 	{
+		//cambios para implementar la opcion de menu al seleccionar los juegos
 		path: "/games",
-		url: "../src/games/games-page.html",
+		url: "../src/games/select-game-page.html",
 		event: () => {
-			pong();
+			initSelectPageEvent();
 		}
 	},
 	{
@@ -79,6 +81,13 @@ const routes = [
 			initTournamentEvents();
 		}
 	},
+	{
+    path: "/pong",
+    url: "../src/games/games-page.html",
+    event: (data: object) => {
+      pong(data as Games);
+    }
+  },
 ];
 
 export function navigateTo(path: string, data: object = {}) {

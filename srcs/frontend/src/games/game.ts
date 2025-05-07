@@ -1,7 +1,10 @@
-export function pong(): void{
-	const gameElement = document.getElementById('game');
-	if (!gameElement) throw new Error("HTML 'game' element not found.");
+import { Games } from "../types.js";
 
+export function pong(data: Games): void{
+	const gameElement = document.getElementById('game');
+	if (!gameElement){
+		throw new Error("HTML 'game' element not found.");
+	}
 	let width = gameElement.clientWidth;
 	let height = gameElement.clientHeight;
 
@@ -90,7 +93,7 @@ export function pong(): void{
 		targetY: 0,
 		timeToReach: 0,
 		errorRate: 0,
-		activate: true,
+		activate: data.gameMode === "ai" ? true : false,
 		controlAI: null
 	}
 
@@ -103,7 +106,11 @@ export function pong(): void{
 	}
 
 	function start(): void {
-		init();
+		const savedState = localStorage.getItem("gameState");
+		if (savedState)
+			loadGameState();
+		else
+			init();
 		generalData.controlGame = setInterval(play, generalData.time);
 		if (AIData.activate) 
 			AIData.controlAI = setInterval(moveAI, AIData.timeToRefresh);
@@ -117,9 +124,11 @@ export function pong(): void{
 		moveBall();
 		movePaddle();
 		checkLost();
+		saveGameState();
 	}
 
 	function stop(): void {
+		saveGameState();
 		if (generalData.controlGame) 
 			clearInterval(generalData.controlGame);
 		if (AIData.activate && AIData.controlAI) 
@@ -331,7 +340,102 @@ export function pong(): void{
 			ballData.velY = -Math.abs(ballData.velY);
 		}
 	}
+	function saveGameState() {
+		const gameState = {
+				player1: {
+						counter: player1.counter,
+						paddleTop: player1.paddle.offsetTop
+				},
+				player2: {
+						counter: player2.counter,
+						paddleTop: player2.paddle.offsetTop
+				},
+				ball: {
+						posX: ballData.ball.offsetLeft,
+						posY: ballData.ball.offsetTop,
+						velX: ballData.velX,
+						velY: ballData.velY,
+						angle: ballData.angle
+				},
+				generalData: {
+						time: generalData.time,
+						speed: generalData.speed,
+						paddleSpeed: generalData.paddleSpeed
+				},
+				AIData: {
+						activate: AIData.activate,
+						targetY: AIData.targetY
+				}
+		};
+		localStorage.setItem('gameState', JSON.stringify(gameState));
+}
+
+function loadGameState() {
+		const savedState = localStorage.getItem('gameState');
+
+		if (savedState) {
+				const gameState = JSON.parse(savedState);
+
+				player1.counter = gameState.player1.counter;
+				player2.counter = gameState.player2.counter;
+
+				player1.paddle.style.top = `${gameState.player1.paddleTop}px`;
+				player2.paddle.style.top = `${gameState.player2.paddleTop}px`;
+
+				ballData.ball.style.left = `${gameState.ball.posX}px`;
+				ballData.ball.style.top = `${gameState.ball.posY}px`;
+				ballData.velX = gameState.ball.velX;
+				ballData.velY = gameState.ball.velY;
+				ballData.angle = gameState.ball.angle;
+
+
+				generalData.time = gameState.generalData.time;
+				generalData.speed = gameState.generalData.speed;
+				generalData.paddleSpeed = gameState.generalData.paddleSpeed;
+
+				AIData.activate = gameState.AIData.activate;
+				AIData.targetY = gameState.AIData.targetY;
+
+				document.getElementById('counter1')!.innerText = player1.counter.toString();
+				document.getElementById('counter2')!.innerText = player2.counter.toString();
+		}
+}
+
+const initialize = () => {
+	if (document.readyState === 'complete') {
+			setOnresize();
+			start();
+	} else {
+			window.addEventListener('load', () => {
+					setOnresize();
+					start();
+			});
+	}
+};
+
+function clearGameState(){
+	localStorage.removeItem('gameState');
+	player1.counter = 0;
+	player2.counter = 0;
+	document.getElementById('counter1')!.innerText = '0';
+	document.getElementById('counter2')!.innerText = '0';
+}
+
+window.addEventListener('beforeunload', () => {
+	saveGameState();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+		start();
+		loadGameState();
+		setOnresize();
+});
+
+window.addEventListener("popstate", () => {
+	stop();
+	clearGameState();
+});
 
 	setOnresize();
-	start();
+	initialize();
 }

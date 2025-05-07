@@ -125,6 +125,7 @@ export async function patchUser(id, updates) {
       }
       resolve({ success: true, id, ...updates });
     });
+    
   });
 }
 

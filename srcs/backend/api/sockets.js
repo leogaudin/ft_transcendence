@@ -124,6 +124,7 @@ async function tournamentCreation(data, sender_id, receiver_id){
 			}));
 		}
 		// Enviar invitación al receptor
+		// Crear invitacion
 		if (receiver){
 			receiver.send(JSON.stringify({
 				type: "tournament",

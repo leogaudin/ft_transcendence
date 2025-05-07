@@ -118,3 +118,8 @@ export interface Blocked {
 	id: number,
 	avatar: string,
 }
+
+export interface Games {
+	isCustom: string,
+	gameMode: string,
+}

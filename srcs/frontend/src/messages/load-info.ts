@@ -148,7 +148,7 @@ export async function chargeChat(chat_id: number, friend_username: string) {
 	if (contactName)
 		contactName.innerText = friend_username;
 
-	await getChatInfo(chat_id);
+	//await getChatInfo(chat_id);
 	if (chatDiv) {
 		try {
 			if (chatDiv.children.length > 0)
