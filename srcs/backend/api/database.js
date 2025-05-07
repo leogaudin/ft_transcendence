@@ -9,6 +9,7 @@ const db = new sqlite3.Database("transcendence.db", (err) => {
 
 // Users
 db.serialize(() => {
+  //TODO: look up hidden fields
   db.run(
     `
     CREATE TABLE IF NOT EXISTS users (
