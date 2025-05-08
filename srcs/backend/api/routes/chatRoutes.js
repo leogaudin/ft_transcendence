@@ -35,11 +35,29 @@ export default function createChatRoutes(fastify) {
       }),
     },
     {
+      //TODO: Finish the pagination (make it so it gives the messages in descending order?)
       preHandler: [fastify.authenticate],
       method: "GET",
       url: "/chats/:id",
+      schema: {
+        querystring: {
+          type: "object",
+          properties: {
+            page: { type: "integer", default: 1 },
+            limit: { type: "integer", default: 20 },
+            markAsRead: { type: "boolean", default: true },
+          },
+        },
+      },
       handler: asyncHandler(async (req, res) => {
-        const chat = await getChatByID(req.params.id);
+        const { page = 1, limit = 20, markAsRead = true } = req.query;
+        const offset = (page - 1) * limit;
+        const chat = await getChatByID(
+          req.params.id,
+          limit,
+          offset,
+          markAsRead,
+        );
         return res.code(200).send(chat);
       }),
     },

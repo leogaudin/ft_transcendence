@@ -123,7 +123,7 @@ import {
 } from "../models/tournamentModel.js";
 import { finishMatch, getMatch } from "../models/matchModel.js";
 
-async function createTestTournament(name ,foo, bar, baz, qux) {
+async function createTestTournament(name, foo, bar, baz, qux) {
   console.log("Creating tournament...");
   let tournament = await createTournament(
     { name: name, player_limit: 4, game_type: "pong" },
@@ -277,70 +277,70 @@ export async function createDebug() {
     });
 
     console.log(`Creating messages...`);
-    for (let i = 1; i < 5; i++) {
+    for (let i = 1; i < 50; i++) {
       await createMessage({
         sender_id: foo.id,
         receiver_id: foo2.id,
         chat_id: foo_foo2_chat.id,
-        body: `Test message from ${foo.username} number ${i}`,
+        body: `Test message from ${foo.username} to ${foo2.username} number ${i}`,
       });
       await createMessage({
         sender_id: foo2.id,
         receiver_id: foo.id,
         chat_id: foo_foo2_chat.id,
-        body: `Test message from ${foo2.username} number ${i}`,
+        body: `Test message from ${foo2.username} to ${foo.username} number ${i}`,
       });
       await createMessage({
         sender_id: bar.id,
         receiver_id: bar2.id,
         chat_id: bar_bar2_chat.id,
-        body: `Test message from ${bar.username} number ${i}`,
+        body: `Test message from ${bar.username} to ${bar2.username} number ${i}`,
       });
       await createMessage({
         sender_id: bar.id,
         receiver_id: foo.id,
         chat_id: bar_foo_chat.id,
-        body: `Test message from ${bar.username} number ${i}`,
+        body: `Test message from ${bar.username} to ${foo.username} number ${i}`,
       });
       await createMessage({
         sender_id: bar.id,
         receiver_id: baz.id,
         chat_id: bar_baz_chat.id,
-        body: `Test message from ${bar.username} number ${i}`,
+        body: `Test message from ${bar.username} to ${baz.username} number ${i}`,
       });
       await createMessage({
         sender_id: bar2.id,
         receiver_id: bar.id,
         chat_id: bar_bar2_chat.id,
-        body: `Test message from ${bar2.username} number ${i}`,
+        body: `Test message from ${bar2.username} to ${bar.username} number ${i}`,
       });
       await createMessage({
         sender_id: baz.id,
         receiver_id: baz2.id,
         chat_id: baz_baz2_chat.id,
-        body: `Test message from ${baz.username} number ${i}`,
+        body: `Test message from ${baz.username} to ${baz2.username} number ${i}`,
       });
       await createMessage({
         sender_id: baz2.id,
         receiver_id: baz.id,
         chat_id: baz_baz2_chat.id,
-        body: `Test message from ${baz2.username} number ${i}`,
+        body: `Test message from ${baz2.username} to ${baz.username} number ${i}`,
       });
       await createMessage({
         sender_id: qux.id,
         receiver_id: qux2.id,
         chat_id: qux_qux2_chat.id,
-        body: `Test message from ${qux.username} number ${i}`,
+        body: `Test message from ${qux.username} to ${qux2.username} number ${i}`,
       });
       await createMessage({
         sender_id: qux2.id,
         receiver_id: qux.id,
         chat_id: qux_qux2_chat.id,
-        body: `Test message from ${qux2.username} number ${i}`,
+        body: `Test message from ${qux2.username} to ${qux.username} number ${i}`,
       });
     }
     await createTestTournament("Test Tournament 1", foo, bar, baz, qux);
     // await createTestTournament("Test Tournament 2", bar, foo, qux, baz);
     // await createTestTournament("Test Tournament 3", qux, bar, foo, baz);
-  }, 2000);
+  }, 4000);
 }

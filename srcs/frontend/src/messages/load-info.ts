@@ -138,56 +138,119 @@ export async function recentChats() {
 	}
 }
 
-export async function chargeChat(chat_id: number, friend_username: string) {
-	if (window.innerWidth < 768)
-		toggleMobileDisplay();
+// FIX: sometimes it still mixes messages up
+export async function chargeChat(chat_id: number, friend_username: string, page: number = 1) {
+  if (window.innerWidth < 768 && page === 1) toggleMobileDisplay();
+  // Check if the chat changed from previous one
+  if (actual_chat_id !== chat_id && chat_id !== 0) {
+    // console.log(`Switching chats from ${actual_chat_id} to ${chat_id}. Resetting pagination.`);
+    currentPage = 1;
+    hasMoreMessages = true;
+    page = 1;
+  }
 
-	const chatDiv = document.getElementById("message-history");
-	let contactName = document.getElementById("chat-friend-username");
+  const chatDiv = document.getElementById("message-history");
+  let contactName = document.getElementById("chat-friend-username");
 
-	if (contactName)
-		contactName.innerText = friend_username;
+  if (contactName) contactName.innerText = friend_username;
 
-	//await getChatInfo(chat_id);
-	if (chatDiv) {
-		try {
-			if (chatDiv.children.length > 0)
-				chatDiv.innerHTML = '';
-			const chatHistoryTyped = await sendRequest('GET', `chats/${chat_id}`) as Message[];
-			if (!chatHistoryTyped)
-				throw new Error("Error fetching the chat selected");
+  await getChatInfo(chat_id);
+  if (chatDiv) {
+    try {
+      // Delete if it's a new page
+      const chatHistoryTyped = (await sendRequest(
+        "GET",
+        `chats/${chat_id}?page=${page}`,
+      )) as Message[];
+      if (page === 1 && chatDiv.children.length > 0) chatDiv.innerHTML = "";
+      // console.log('chat_id:', chat_id, "page:", page)
+      if (!chatHistoryTyped) {
+        if (page === 1) throw new Error("Error fetching the chat selected");
+        else return false;
+      }
+      const prevScrollHeight = chatDiv.scrollHeight;
+      const fragment = document.createDocumentFragment();
 
-			chatHistoryTyped.forEach((message) => {
-				let div = document.createElement("div");
-				
-				const username = localStorage.getItem("username");
-				if (username) {
-					const sent_at = message.sent_at.substring(11, 16);
-					if (message.sender_username !== username) {
-						div.setAttribute("id", "friend-message");
-						div.innerHTML = `
+      chatHistoryTyped.forEach((message) => {
+        let div = document.createElement("div");
+
+        const username = localStorage.getItem("username");
+        if (username) {
+          const sent_at = message.sent_at.substring(11, 16);
+          if (message.sender_username !== username) {
+            div.setAttribute("id", "friend-message");
+            div.innerHTML = `
 						<div class="message friend-message">
 							<p>${message.body}</p>
 							<p class="hour">${sent_at}</p>
 						</div>`;
-					}
-					else {
-						div.setAttribute("id", "message");
-						div.innerHTML = `<div class="message self-message">
+          } else {
+            div.setAttribute("id", "message");
+            div.innerHTML = `<div class="message self-message">
 							<p>${message.body}<\p>
 							<p class="hour">${sent_at}</p>
 						</div>`;
-					}
-				}
-				chatDiv.appendChild(div);
-				div.scrollIntoView({ behavior: 'smooth' });
-			});
-		}
-		catch (error) {
-			console.error(error);
-		}
-		actual_chat_id = chat_id;
-	}
+          }
+        }
+        fragment.appendChild(div);
+      });
+      if (page > 1) {
+        // Put the messages on top
+        chatDiv.prepend(fragment);
+        chatDiv.scrollTop = chatDiv.scrollHeight - prevScrollHeight;
+      } else {
+        // Put the messages below
+        chatDiv.appendChild(fragment);
+        chatDiv.scrollTop = chatDiv.scrollHeight;
+      }
+      actual_chat_id = chat_id;
+      setupInfiniteScroll();
+      return chatHistoryTyped.length === 20;
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+  return false;
+}
+
+let currentPage = 1;
+let hasMoreMessages = true;
+
+// Set up the scroll event listener
+export function setupInfiniteScroll() {
+  const chatDiv = document.getElementById("message-history");
+  if (!chatDiv) return;
+  if (hasMoreMessages) {
+    chatDiv.addEventListener("scroll", handleScroll);
+    // console.log("Infinite scroll enabled");
+    // Check if the div has scrolled almost all the way to load the next batch
+    if (
+      chatDiv.scrollTop < 100 &&
+      chatDiv.scrollHeight > chatDiv.clientHeight
+    ) {
+      setTimeout(() => {
+        handleScroll();
+      }, 500);
+    }
+  }
+}
+
+// Function to handle scroll events
+async function handleScroll() {
+  const chatDiv = document.getElementById("message-history");
+  if (!chatDiv || !hasMoreMessages) return;
+  // Check if user has scrolled to the top (with a small threshold)
+  if (chatDiv.scrollTop < 50) {
+    // Advance to the next page
+    currentPage++;
+    // Fetch the batch
+    hasMoreMessages = await chargeChat(
+      actual_chat_id,
+      document.getElementById("chat-friend-username")?.innerText || "",
+      currentPage,
+    );
+  }
 }
 
 export async function getChatInfo(chat_id: number) : Promise<ChatInfo | null>  {
