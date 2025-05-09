@@ -1,0 +1,10 @@
+#modify-dimensions {
+	min-width: 35vw;
+	/* max-width: 35vw; */
+}
+
+#modify-profile-photo {
+	width: 250px;
+	aspect-ratio: 1/1;
+	box-shadow: var(--dark-pink) 0px 0px 10px;
+}
