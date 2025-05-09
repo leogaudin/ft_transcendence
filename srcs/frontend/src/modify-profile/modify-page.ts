@@ -18,11 +18,58 @@ export function initModifyPageEvents() {
         }
 	}
 
+	const avatarOptions = document.getElementsByClassName("avatar-option") as HTMLCollectionOf<HTMLImageElement>
+	if (!avatarOptions) { return ; }
+	for (let option of avatarOptions) {
+		option.addEventListener('click', () => {
+			setOption(option.getAttribute('src'));
+		});
+	}
 	
 	const modifyIcons = document.getElementsByClassName("edit-icon") as HTMLCollectionOf<HTMLButtonElement>;
 	if (!modifyIcons) { return ; }
 	modifyIcons[0].onclick = () => { toggleNickForm(); };
 	modifyIcons[1].onclick = () => { toggleDescriptionForm(); };	
+
+	initCanvas();
+}
+
+let canvas: HTMLCanvasElement | null = null;
+let context: CanvasRenderingContext2D | null = null;
+
+function initCanvas() {
+    canvas = document.getElementById("myCanvas") as HTMLCanvasElement;
+    if (!canvas) {
+        console.error("Canvas element not found");
+        return;
+    }
+    context = canvas.getContext('2d');
+    make_base();
+}
+
+function setOption(src: string | null) {
+    console.log(src);
+    if (!src) { return };
+    
+    let image = new Image();
+    image.src = src;
+    image.onload = function() {
+        if (context && canvas) {
+            context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        }
+    }
+}
+
+function make_base(){
+    if (!context) return;
+    
+    let base_image = new Image();
+    base_image.src = 'img/base.png';
+    base_image.onload = function() {
+        if (context && canvas) {
+            context.drawImage(base_image, 0, 0);
+        }
+    }
 }
 
 function toggleNickForm() {

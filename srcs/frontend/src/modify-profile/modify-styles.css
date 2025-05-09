@@ -8,3 +8,12 @@
 	aspect-ratio: 1/1;
 	box-shadow: var(--dark-pink) 0px 0px 10px;
 }
+
+.avatar-option { 
+	width: 70px;
+	aspect-ratio: 1/1 ;
+	margin: 5px;
+	border-radius: 15px;
+	box-shadow: var(--dark-pink) 0px 0px 5px;
+	background-color: #d087ac50;
+}
