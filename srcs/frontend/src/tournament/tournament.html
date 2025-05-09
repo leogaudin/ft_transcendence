@@ -40,44 +40,113 @@
 				<input type="text" id="player-search" placeholder="Search players...">
 				<div id="search-results" class="search-results"></div>
 			</div>
-			<div class="still-tournament">
-				<h2>All tournaments</h2>
-
-				<div>
-					<div class="tournament-card">
-						<h3>Title</h3>
-					</div>
-				</div>
 			</div>
 			<style>
 				.screen-set {
 					padding: 2rem;
+					min-height: 100vh;
 				}
+			
 				.tournament {
 					max-width: 1200px;
 					margin: 0 auto;
+					background-color: white;
+					border-radius: 1rem;
+					padding: 2rem;
+					box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 				}
+			
 				.tournament h1 {
 					text-align: center;
 					margin-bottom: 2rem;
+					color: #1f2937;
+					font-size: 2.25rem;
 				}
+			
+				.tournament h2 {
+					color: #374151;
+					margin-bottom: 1rem;
+					font-size: 1.5rem;
+				}
+			
 				.btns {
 					display: grid;
 					gap: 2rem;
 				}
+			
+				.btn {
+					background-color: white;
+					border-radius: 0.5rem;
+					padding: 1.5rem;
+					box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+				}
+			
+				input[type="text"] {
+					width: 100%;
+					padding: 0.75rem;
+					border: 1px solid #e5e7eb;
+					border-radius: 0.375rem;
+					margin-bottom: 1rem;
+				}
+			
+				input[type="submit"] {
+					background-color: #6366f1;
+					color: white;
+					padding: 0.75rem 1.5rem;
+					border: none;
+					border-radius: 0.375rem;
+					cursor: pointer;
+					transition: background-color 0.2s;
+				}
+			
+				input[type="submit"]:hover {
+					background-color: #4f46e5;
+				}
+			
+				label {
+					display: block;
+					margin-bottom: 0.5rem;
+					color: #4b5563;
+				}
+			
+				.search-players {
+					margin-top: 1rem;
+				}
+			
+				.search-results {
+					margin-top: 0.5rem;
+					border: 1px solid #e5e7eb;
+					border-radius: 0.375rem;
+					max-height: 200px;
+					overflow-y: auto;
+				}
+			
+				.tournament-card {
+					background-color: white;
+					border: 1px solid #e5e7eb;
+					border-radius: 0.5rem;
+					padding: 1rem;
+					margin-bottom: 1rem;
+				}
+			
+				.tournament-card h3 {
+					color: #1f2937;
+					margin: 0;
+				}
+			
 				.game-type-selector {
 					margin-top: 1rem;
 				}
-	
+			
 				.game-type-selector select {
 					width: 100%;
-					padding: 0.5rem;
+					padding: 0.75rem;
 					border: 1px solid #e5e7eb;
 					border-radius: 0.375rem;
 					background-color: white;
 					color: #374151;
 				}
-	
+			
 				.game-type-selector select:focus {
 					outline: 2px solid #6366f1;
 					outline-offset: 2px;

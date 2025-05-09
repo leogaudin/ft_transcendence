@@ -281,6 +281,7 @@ function displaySearchResults(players: UserMatches[], container: HTMLElement) {
     const option = document.createElement('div');
     option.className = 'player-item';
     const is_invited = await sendRequest("POST", "/tournaments/isinvited", { tournament_id: tournament.tournament_id, user_id: player.user_id});
+    const is_participant = await sendRequest("POST", "/tournaments/isparticipant", { tournament_id: tournament.tournament_id, user_id: player.user_id})
     if (!is_invited) {
       option.innerHTML = `
         ${player.username}
@@ -301,14 +302,14 @@ function displaySearchResults(players: UserMatches[], container: HTMLElement) {
           `;
         });
       }
-    } else if (is_invited) {
+    } else if (is_invited && !is_participant) {
       option.innerHTML = `
         ${player.username}
         <svg xmlns="http://www.w3.org/2000/svg" class="pending rounded-full" viewBox="0 -960 960 960">
           <path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
         </svg>
       `;
-    } else if (is_invited) {
+    } else if (is_invited && is_participant) {
       option.innerHTML = `
         ${player.username}
         <svg xmlns="http://www.w3.org/2000/svg" class="joined rounded-full" viewBox="0 -960 960 960">
@@ -332,6 +333,12 @@ function sendTournamentInvitation(receiverId: number, username: string): boolean
 				tournament: tournament,
 				sent_at: new Date().toISOString(),
 			}));
+      const searchInput = document.getElementById('player-search') as HTMLInputElement;
+      const searchResults = document.getElementById('search-results');
+      if (searchInput && searchResults){
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+      }
 			return (true);
 		}
   }
@@ -345,5 +352,6 @@ export function handleTournamentCreation(input: string, gameType: string){
   if (tournamentName){
     console.log(`Creating tournament with name: ${tournamentName}`);
 		createSocketTournamentConnection(tournamentName, gameType);
+    showAlert("Tournament has been created", "toast-success")
   }
 }
