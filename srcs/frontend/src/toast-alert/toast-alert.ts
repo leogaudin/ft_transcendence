@@ -1,5 +1,6 @@
 import { getClientID } from "../messages/messages-page.js"
 import { displayFriends, displayInvitations, showMatches, debounce } from "../friends/friends-fetch.js";
+import { Tournament } from "../types.js";
 
 export let socketToast: WebSocket | null;
 let toastTimeout: NodeJS.Timeout;
@@ -37,7 +38,7 @@ export function createsocketToastConnection() {
 		  console.error("Invalid ID, cannot connect to back");
 		else{
 		  if (!socketToast)
-			return ;
+				return ;
 		  socketToast.send(JSON.stringify({
 			userId: id,
 			action: "identify"
@@ -96,31 +97,30 @@ export function createsocketToastConnection() {
 				const tournament = data.tournament;
 				if (data.info === "request"){
 					tournament_id = tournament.tournament_id;
-					console.log("soy el alertador", tournament)
-						function handleAccept(tournament_id: number | null){
-							if (socketToast){
-								socketToast.send(JSON.stringify({
-									type: "tournament",
-									info: "accept",
-									sender_id: getClientID(),
-									receiver_id: data.sender_id,
-									tournament_id: tournament_id
-								}));
-							}
+					function handleAccept(tournament: Tournament | null){
+						if (socketToast){
+							socketToast.send(JSON.stringify({
+								type: "tournament",
+								info: "accept",
+								sender_id: getClientID(),
+								receiver_id: data.sender_id,
+								tournament: tournament
+							}));
 						}
-						function handleReject(tournament_id: number | null){
-							if (socketToast){
-								socketToast.send(JSON.stringify({
-									type: "tournament",
-									info: "reject",
-									sender_id: getClientID(),
-									receiver_id: data.sender_id,
-									tournament_id: tournament_id
-								}));
-							}
+					}
+					function handleReject(tournament: Tournament | null){
+						if (socketToast){
+							socketToast.send(JSON.stringify({
+								type: "tournament",
+								info: "reject",
+								sender_id: getClientID(),
+								receiver_id: data.sender_id,
+								tournament: tournament,
+							}));
 						}
-						if (tournament_id)
-							showAlert(data.body, "toast-success", () => handleAccept(tournament_id), () => handleReject(tournament_id));
+					}
+					if (tournament_id)
+						showAlert(data.body, "toast-success", () => handleAccept(tournament), () => handleReject(tournament));
 				}
 				else if (data.info === "creator")
 					showAlert(data.body, "toast-success");

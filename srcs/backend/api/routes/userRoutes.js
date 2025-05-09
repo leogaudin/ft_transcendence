@@ -146,6 +146,7 @@ export default function createUserRoutes(fastify) {
       url: "/users/search",
       handler: asyncHandler(async (req, res) => {
         const data = await findMatchingUsers(req.body.username, req.userId);
+        console.log("data:", data);
         return res.code(200).send(data);
       }),
     },

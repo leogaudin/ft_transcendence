@@ -92,12 +92,6 @@ export interface InvitationList {
 }
 
 export interface Tournament {
-	id: number,
-  name: string,
-  player_amount: number,
-}
-
-interface Tournament {
 	tournament_id: number;
 	name: string;
 	player_amount: number;

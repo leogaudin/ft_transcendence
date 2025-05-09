@@ -1,6 +1,6 @@
 import { navigateTo } from "../index.js";
 
-export function initSelectPageEvent() {
+export function initSelectPageEvent(){
   initGameSelection();
   initHomeButton();
 }
@@ -58,7 +58,7 @@ function initGameSelection(){
       target.classList.add('active');
 
       // Show/hide appropriate options
-      if (modeType === 'normal') {
+      if (modeType === 'normal'){
         normalModes?.classList.remove('hidden');
         customModes?.classList.add('hidden');
       }
@@ -99,5 +99,11 @@ function initGameSelection(){
       modal.classList.add('hidden');
     if (customModes)
       customModes.classList.add("hidden");
+    const modeButtons = document.querySelectorAll('.mode-button');
+    modeButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-mode-type') === 'normal')
+            btn.classList.add('active');
+    });
   }
 }
