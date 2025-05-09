@@ -3,6 +3,7 @@ import { UserMatches, Tournament } from "../types.js";
 import { sendRequest } from "../login-page/login-fetch.js";
 import { socketToast, showAlert } from "../toast-alert/toast-alert.js";
 import { debounce } from "../friends/friends-fetch.js";
+import { navigateTo } from "../index.js";
 
 export let socketTournament: WebSocket | null = null;
 export let tournament: Tournament;
@@ -11,18 +12,20 @@ export function initTournamentEvents(){
 	createTournament();
 	initSearchPlayers();
   initTournamentSearch();
+  initBackButton()
 }
 
-/*export function moveToSelectGamePage() {
-  const homeButton = document.getElementById("home-button");
-  if (!homeButton)
-    return;
-  homeButton.addEventListener("click", () => {
-    if (socketChat)
-      socketChat.close()
-    navigateTo("/home");
-  });
-}*/
+function initBackButton() {
+  const backButton = document.getElementById('back-button');
+  if (backButton) {
+    backButton.addEventListener('click', () => {
+      if (socketTournament && socketTournament.readyState === WebSocket.OPEN) {
+        socketTournament.close();
+      }
+      navigateTo('/games');
+    });
+  }
+}
 
 function initTournamentSearch(){
   const searchInput = document.getElementById('tournament-searcher') as HTMLInputElement;
