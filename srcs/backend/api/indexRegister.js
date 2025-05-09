@@ -14,6 +14,7 @@ export default async function pluginRegistration(fastify) {
       const allowedOrigins = [
         /^https?:\/\/localhost(:\d+)?$/,
         /^https?:\/\/([\w\d]+)\.42malaga\.com(:\d+)?$/,
+        /^https?:\/\/10\.13\.\d{1,3}\.\d{1,3}(:\d+)?$/,
       ];
       if (!origin || allowedOrigins.some((regex) => regex.test(origin))) {
         cb(null, true);

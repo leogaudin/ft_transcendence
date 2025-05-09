@@ -54,42 +54,52 @@ export function createChat(data) {
  * @param {Number} id - ID of the chat
  * @returns {Object} - Found chat
  */
-export function getChatByID(id) {
+export function getChatByID(id, limit, offset, markAsRead) {
   assert(id !== undefined, "id must exist");
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const sql = `
-      SELECT
-        m.id AS message_id,
-        m.sender_id,
-        m.receiver_id,
-        m.body,
-        m.sent_at,
-        s.username AS sender_username,
-        s.is_deleted AS sender_deleted,
-        r.username AS receiver_username,
-        r.is_deleted AS receiver_deleted
-      FROM
-        messages m
-      JOIN
-        users s ON m.sender_id = s.id
-      JOIN
-        users r ON m.receiver_id = r.id
-      WHERE
-        m.chat_id = ?
-      ORDER BY
-        m.sent_at ASC`;
-    db.all(sql, [id], async (err, rows) => {
+SELECT q.* FROM (
+        SELECT
+          m.id AS message_id,
+          m.sender_id,
+          m.receiver_id,
+          m.body,
+          m.sent_at,
+          m.is_read,
+          s.username AS sender_username,
+          s.is_deleted AS sender_deleted,
+          r.username AS receiver_username,
+          r.is_deleted AS receiver_deleted
+        FROM
+          messages m
+        JOIN
+          users s ON m.sender_id = s.id
+        JOIN
+          users r ON m.receiver_id = r.id
+        WHERE
+          m.chat_id = ?
+        ORDER BY
+          m.sent_at DESC
+        LIMIT ? OFFSET ?) q
+ORDER BY q.sent_at ASC
+`;
+    db.all(sql, [id, limit, offset], async (err, rows) => {
       if (err) {
         console.error("Error getting chat:", err.message);
         return reject(err);
       }
       for (let message of rows) {
-        await patchMessage(message.message_id, { is_read: 1 });
+        if (!message.is_read)
+          await patchMessage(message.message_id, { is_read: 1 });
       }
       rows.forEach((row) => {
-        row.sender_username = row.sender_deleted ? "anonymous" : row.sender_username;
-        row.receiver_username = row.receiver_deleted ? "anonymous" : row.receiver_username;
-      })
+        row.sender_username = row.sender_deleted
+          ? "anonymous"
+          : row.sender_username;
+        row.receiver_username = row.receiver_deleted
+          ? "anonymous"
+          : row.receiver_username;
+      });
       resolve(rows);
     });
   });
@@ -255,9 +265,10 @@ export function getLastChatsOfUser(id) {
         return reject(err);
       }
       rows.forEach((row) => {
-        row.friend_username = row.receiver_deleted || row.sender_deleted
-          ? "anonymous"
-          : row.friend_username;
+        row.friend_username =
+          row.receiver_deleted || row.sender_deleted
+            ? "anonymous"
+            : row.friend_username;
         delete row.message_rank;
         delete row.sender_deleted;
         delete row.receiver_deleted;

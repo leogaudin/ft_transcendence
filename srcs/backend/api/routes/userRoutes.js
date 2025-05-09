@@ -7,6 +7,7 @@ import {
   patchUser,
   deleteUser,
   findMatchingUsers,
+  getProfileOfUser,
 } from "../models/userModel.js";
 import { getMessagesOfUser } from "../models/messageModel.js";
 import { getChatsOfUser } from "../models/chatModel.js";
@@ -24,6 +25,15 @@ export default function createUserRoutes(fastify) {
       handler: asyncHandler(async (req, res) => {
         const users = await getUsers();
         return res.code(200).send(users);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/users/profile",
+      handler: asyncHandler(async (req, res) => {
+        const user = await getProfileOfUser(req.userId);
+        return res.code(200).send(user);
       }),
     },
     {

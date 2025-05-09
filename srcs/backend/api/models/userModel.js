@@ -671,3 +671,36 @@ export function getInvitationsOfUser(id) {
     });
   });
 }
+
+/**
+ * Returns the profile of the user
+ * @param {Number} id - ID of the user
+ * @returns {Object} - Profile information of user
+ */
+export function getProfileOfUser(id) {
+  assert(id !== undefined, "id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+      SELECT
+        id,
+        username,
+        avatar,
+        alias AS nick,
+        status AS description,
+        created_at,
+        wins,
+        losses
+      FROM
+        users
+      WHERE
+        id = ?
+    `;
+    db.get(sql, [id], function (err, row) {
+      if (err) {
+        console.error("Error getting user:", err.message);
+        return reject(err);
+      }
+      resolve(row);
+    });
+  });
+}
