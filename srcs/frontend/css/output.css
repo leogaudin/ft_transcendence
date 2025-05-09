@@ -323,7 +323,7 @@
   /* max-width: 35vw; */
 }
 
-#modify-profile-photo {
+#modify-profile-photo, canvas {
   width: 250px;
   aspect-ratio: 1/1;
   box-shadow: var(--dark-pink) 0px 0px 10px;
@@ -336,6 +336,13 @@
   border-radius: 15px;
   box-shadow: var(--dark-pink) 0px 0px 5px;
   background-color: #d087ac50;
+  transition: 250ms ease-in-out;
+}
+
+.avatar-option:hover {
+  cursor: pointer;
+  padding: 5px;
+  box-shadow: var(--accent-pink) 0px 0px 5px;
 }
 
 /* --> Games page <-- */
@@ -1512,6 +1519,10 @@ video {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+}
+
+.bg-\[\#ffffff5e\] {
+  background-color: #ffffff5e;
 }
 
 .p-1 {

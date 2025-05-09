@@ -20,7 +20,7 @@ export function initModifyPageEvents() {
 
 	const avatarOptions = document.getElementsByClassName("avatar-option") as HTMLCollectionOf<HTMLImageElement>
 	if (!avatarOptions) { return ; }
-	for (let option of avatarOptions) {
+	for (const option of avatarOptions) {
 		option.addEventListener('click', () => {
 			setOption(option.getAttribute('src'));
 		});
@@ -32,10 +32,41 @@ export function initModifyPageEvents() {
 	modifyIcons[1].onclick = () => { toggleDescriptionForm(); };	
 
 	initCanvas();
+	const createAvatarButton = document.getElementById("create-avatar");
+	if (!createAvatarButton) { return ; }
+	createAvatarButton.onclick = () => { toggleAvatarEditor(); };
+}
+
+function toggleAvatarEditor() {
+	const avatarEditorPage = document.getElementById("avatar");
+	const saveChanges = document.getElementById("save-avatar");
+	if (!avatarEditorPage || !saveChanges) { return ; }
+
+	if (avatarEditorPage.classList.contains('hidden'))
+		avatarEditorPage.classList.remove('hidden');
+	saveChanges.onclick = () => { console.log("Estoy guardando mi canvas súper chulo"); };
 }
 
 let canvas: HTMLCanvasElement | null = null;
 let context: CanvasRenderingContext2D | null = null;
+const layers = [
+	{
+		name: "background",
+		src: ""
+	},
+	{
+		name: "body",
+		src: ""
+	},
+	{
+		name: "eyes",
+		src: ""
+	},
+	{
+		name: "accessory",
+		src: ""
+	}
+];
 
 function initCanvas() {
     canvas = document.getElementById("myCanvas") as HTMLCanvasElement;
@@ -44,32 +75,26 @@ function initCanvas() {
         return;
     }
     context = canvas.getContext('2d');
-    make_base();
+	let base_image = new Image();
+    base_image.onload = function() {
+        if (context && canvas) { context.drawImage(base_image, 0, 0); }
+    }
 }
 
 function setOption(src: string | null) {
-    console.log(src);
     if (!src) { return };
     
-    let image = new Image();
-    image.src = src;
-    image.onload = function() {
-        if (context && canvas) {
-            context.drawImage(image, 0, 0, canvas.width, canvas.height);
-        }
-    }
-}
-
-function make_base(){
-    if (!context) return;
-    
-    let base_image = new Image();
-    base_image.src = 'img/base.png';
-    base_image.onload = function() {
-        if (context && canvas) {
-            context.drawImage(base_image, 0, 0);
-        }
-    }
+	for (let layer of layers) {
+		if (src.includes(layer.name))
+			layer.src = src;
+		let image = new Image();
+    	image.src = layer.src;
+    	image.onload = function() {
+        	if (context && canvas) {
+        	    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+        	}
+    	}
+	}
 }
 
 function toggleNickForm() {
@@ -78,7 +103,6 @@ function toggleNickForm() {
 	const nickSpan = document.getElementById("your-nick");
 	if (!nickForm || !nickInput || !nickSpan) { return ; }
 
-	console.log("Buenas tardes");
 	if (nickForm.classList.contains('hidden')) {
 		nickForm.classList.remove('hidden');
 		nickSpan.classList.add('hidden');
