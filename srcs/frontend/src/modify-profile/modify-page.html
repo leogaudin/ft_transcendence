@@ -1,8 +1,11 @@
 <div class="flex screen-set">
 	<div class="flexy w-full items-stretch justify-center">
-		<div id="avatar" class="standard-purple-card flex lg:max-w-[35vw] hidden">
-			<header class="flex justify-between items-center md:items-end mx-4">
-				<h1 class="hidden md:block">Create an avatar</h1>
+		<div id="avatar" class="standard-purple-card flex hidden max-h-[90vh]">
+			<header class="w-full flex justify-between items-center mx-4">
+				<h1 class="hidden md:block">Avatar Creator</h1>
+				<svg id="go-back" class="home-icon m-4 xl:hidden" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
+					<path d="M640-80 240-480l400-400 71 71-329 329 329 329-71 71Z"/>
+				</svg>
 			</header>
 			<div id="pink-divider"></div>
 			<div class="flex flex-col items-center justify-center h-full">
@@ -40,7 +43,7 @@
 				</div>
 			</div>
 		</div>
-		<div id="modify-dimensions" class="standard-purple-card flex lg:max-w-[35vw]">
+		<div id="modify-dimensions" class="standard-purple-card flex max-h-[90vh]">
 			<header class="flex justify-between items-center md:items-end mx-4 h-fit">
 				<h1 class="hidden md:block">Modify Profile</h1>
 				<svg id="home-button" class="home-icon m-4 h-10 w-10" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
@@ -59,7 +62,7 @@
 						<button id="create-avatar" class="button p-2.5 rounded-[15px]">Create an avatar</button>
 					</div>
 			</div>
-			<div id="friend-statistics" class="flex flex-col p-4 gap-1 mt-4 rounded-[15px] w-full bg-[#7d48778f]">
+			<div id="friend-statistics" class="flex flex-col p-4 gap-1 mt-4 rounded-[15px] w-full bg-[#7d48778f] lg:max-w-[55vw]">
 				<div class="flex justify-between w-full">
 					<p class="font-bold text-white">Username: </p>
 					<span id="your-name" class="font-thin w-full mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">Default Username</span>
@@ -68,7 +71,7 @@
 					<p class="font-bold text-white">Nick: </p>
 					<span id="your-nick" class="font-thin w-full mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">Default Nick</span>
 					<form id="nick-form" class="hidden w-full mx-1.5">
-						<input id="modify-nick" type="text" class="w-full outline-none indent-2 opacity-60 bg-[whitesmoke] text-[var(--dark-purple)] rounded-[15px]" maxlength="24">
+						<input id="modify-nick" type="text" class="w-full outline-none indent-2 opacity-60 bg-[whitesmoke] text-[var(--dark-purple)] rounded-[15px] maxlength="16"" maxlength="24">
 						<button type="submit" hidden></button>
 					</form>
 					<svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" height="24px" width="24px">
