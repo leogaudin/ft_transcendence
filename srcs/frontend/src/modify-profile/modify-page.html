@@ -1,39 +1,43 @@
 <div class="flex screen-set">
-	<div class="flexy w-full items-stretchs justify-center">
+	<div class="flexy w-full items-stretch justify-center">
 		<div id="avatar" class="standard-purple-card flex lg:max-w-[35vw] hidden">
-			<header class="flex justify-between items-center md:items-end mx-4 h-fit md:h-1/6">
+			<header class="flex justify-between items-center md:items-end mx-4">
 				<h1 class="hidden md:block">Create an avatar</h1>
 			</header>
 			<div id="pink-divider"></div>
-			<div class="flex flex-col items-center gap-4 w-full p-2.5">
-				<canvas id="myCanvas" width="250" height="250" class="rounded-full bg-[#ffffff5e]"></canvas>
-				<div class="grid grid-rows-4">
-					<div class="grid grid-cols-4">
-						<img src="../../resources/img/avatars/flowers_background.png" alt="Flowers background" class="avatar-option">
-						<img src="../../resources/img/avatars/sunflowers_background.png" alt="Sunflowers background" class="avatar-option">
-						<img src="../../resources/img/avatars/tree_background.png" alt="Tree background" class="avatar-option">
-						<img src="../../resources/img/avatars/sunset_background.png" alt="Sunset background" class="avatar-option">
-					</div>
-					<div class="grid grid-cols-4">
-						<img src="../../resources/img/avatars/body_rox.png" alt="Rox body" class="avatar-option">
-						<img src="../../resources/img/avatars/body_coco.png" alt="Coco body" class="avatar-option">
-						<img src="../../resources/img/avatars/body_salem.png" alt="Salem body" class="avatar-option">
-						<img src="../../resources/img/avatars/body_naruto.png" alt="Naruto body" class="avatar-option">
-					</div>
-					<div class="grid grid-cols-4">
-						<img src="../../resources/img/avatars/rox_eyes.png" alt="Rox eyes" class="avatar-option">
-						<img src="../../resources/img/avatars/coco_eyes.png" alt="Coco eyes" class="avatar-option">
-						<img src="../../resources/img/avatars/salem_eyes.png" alt="Salem eyes" class="avatar-option">
-						<img src="../../resources/img/avatars/naruto_eyes.png" alt="Naruto eyes" class="avatar-option">
-					</div>
-					<div class="grid grid-cols-4">
-						<img src="../../resources/img/avatars/accessory_fish.png" alt="Fish accesory" class="avatar-option">
-						<img src="../../resources/img/avatars/accessory_flower.png" alt="Flowers accesory" class="avatar-option">
-						<img src="../../resources/img/avatars/accessory_frog_hat.png" alt="Frog accesory" class="avatar-option">
-						<img src="../../resources/img/avatars/accessory_trucker_hat.png" alt="Trucker hat accesory" class="avatar-option">
+			<div class="flex flex-col items-center justify-center h-full">
+				<div class="flex flex-col min-[1810px]:flex-row p-2.5 gap-4 w-full items-center justify-center">
+					<canvas id="myCanvas" width="250" height="250" class="rounded-full bg-[#ffffff5e]"></canvas>
+					<div class="grid grid-rows-4">
+						<div class="grid grid-cols-4">
+							<img src="../../resources/img/avatars/flowers_background.png" alt="Flowers background" class="avatar-option">
+							<img src="../../resources/img/avatars/sunflowers_background.png" alt="Sunflowers background" class="avatar-option">
+							<img src="../../resources/img/avatars/tree_background.png" alt="Tree background" class="avatar-option">
+							<img src="../../resources/img/avatars/sunset_background.png" alt="Sunset background" class="avatar-option">
+						</div>
+						<div class="grid grid-cols-4">
+							<img src="../../resources/img/avatars/body_rox.png" alt="Rox body" class="avatar-option">
+							<img src="../../resources/img/avatars/body_coco.png" alt="Coco body" class="avatar-option">
+							<img src="../../resources/img/avatars/body_salem.png" alt="Salem body" class="avatar-option">
+							<img src="../../resources/img/avatars/body_naruto.png" alt="Naruto body" class="avatar-option">
+						</div>
+						<div class="grid grid-cols-4">
+							<img src="../../resources/img/avatars/rox_eyes.png" alt="Rox eyes" class="avatar-option">
+							<img src="../../resources/img/avatars/coco_eyes.png" alt="Coco eyes" class="avatar-option">
+							<img src="../../resources/img/avatars/salem_eyes.png" alt="Salem eyes" class="avatar-option">
+							<img src="../../resources/img/avatars/naruto_eyes.png" alt="Naruto eyes" class="avatar-option">
+						</div>
+						<div class="grid grid-cols-4">
+							<img src="../../resources/img/avatars/accessory_fish.png" alt="Fish accesory" class="avatar-option">
+							<img src="../../resources/img/avatars/accessory_flower.png" alt="Flowers accesory" class="avatar-option">
+							<img src="../../resources/img/avatars/accessory_frog_hat.png" alt="Frog accesory" class="avatar-option">
+							<img src="../../resources/img/avatars/accessory_trucker_hat.png" alt="Trucker hat accesory" class="avatar-option">
+						</div>
 					</div>
 				</div>
-				<button id="save-avatar" class="button p-2.5 rounded-[15px]">Save Changes</button>
+				<div class="w-full flex justify-center">
+					<button id="save-avatar" class="button p-2.5 rounded-[15px]">Save Changes</button>
+				</div>
 			</div>
 		</div>
 		<div id="modify-dimensions" class="standard-purple-card flex lg:max-w-[35vw]">
