@@ -1,26 +1,30 @@
 #modify-dimensions {
-	min-width: 35vw;
-	/* max-width: 35vw; */
+    min-width: 51vw;
+    position: absolute;
+}
+
+#avatar {
+    position: absolute;
 }
 
 #modify-profile-photo, canvas {
-	width: 250px;
-	aspect-ratio: 1/1;
-	box-shadow: var(--dark-pink) 0px 0px 10px;
+    width: 250px;
+    aspect-ratio: 1/1;
+    box-shadow: var(--dark-pink) 0px 0px 10px;
 }
 
 .avatar-option { 
-	width: 70px;
-	aspect-ratio: 1/1 ;
-	margin: 5px;
-	border-radius: 15px;
-	box-shadow: var(--dark-pink) 0px 0px 5px;
-	background-color: #d087ac50;
-	transition: 250ms ease-in-out;
+    width: 70px;
+    aspect-ratio: 1/1 ;
+    margin: 5px;
+    border-radius: 15px;
+    box-shadow: var(--dark-pink) 0px 0px 5px;
+    background-color: #d087ac50;
+    transition: 250ms ease-in-out;
 }
 
 .avatar-option:hover {
-	cursor: pointer;
-	padding: 5px;
-	box-shadow: var(--accent-pink) 0px 0px 5px;
+    cursor: pointer;
+    padding: 5px;
+    box-shadow: var(--accent-pink) 0px 0px 5px;
 }

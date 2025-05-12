@@ -319,8 +319,12 @@
 /* --> Modify profile <-- */
 
 #modify-dimensions {
-  min-width: 35vw;
-  /* max-width: 35vw; */
+  min-width: 51vw;
+  position: absolute;
+}
+
+#avatar {
+  position: absolute;
 }
 
 #modify-profile-photo, canvas {
@@ -1435,6 +1439,10 @@ video {
   overflow-y: auto;
 }
 
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
 .overflow-x-clip {
   overflow-x: clip;
 }
@@ -1489,6 +1497,10 @@ video {
   background-color: #d087ac50;
 }
 
+.bg-\[\#ffffff5e\] {
+  background-color: #ffffff5e;
+}
+
 .bg-\[var\(--alert\)\] {
   background-color: var(--alert);
 }
@@ -1519,10 +1531,6 @@ video {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
-}
-
-.bg-\[\#ffffff5e\] {
-  background-color: #ffffff5e;
 }
 
 .p-1 {
@@ -2072,10 +2080,6 @@ h1 {
 
   .lg\:w-9\/12 {
     width: 75%;
-  }
-
-  .lg\:max-w-\[35vw\] {
-    max-width: 35vw;
   }
 
   .lg\:flex-row {

@@ -1,102 +1,140 @@
 <div class="flex screen-set">
-	<div class="flexy w-full items-stretchs justify-center">
-		<div id="avatar" class="standard-purple-card flex lg:max-w-[35vw] hidden">
-			<header class="flex justify-between items-center md:items-end mx-4 h-fit md:h-1/6">
-				<h1 class="hidden md:block">Create an avatar</h1>
-			</header>
-			<div id="pink-divider"></div>
-			<div class="flex flex-col items-center gap-4 w-full p-2.5">
-				<canvas id="myCanvas" width="250" height="250" class="rounded-full bg-[#ffffff5e]"></canvas>
-				<div class="grid grid-rows-4">
-					<div class="grid grid-cols-4">
-						<img src="../../resources/img/avatars/flowers_background.png" alt="Flowers background" class="avatar-option">
-						<img src="../../resources/img/avatars/sunflowers_background.png" alt="Sunflowers background" class="avatar-option">
-						<img src="../../resources/img/avatars/tree_background.png" alt="Tree background" class="avatar-option">
-						<img src="../../resources/img/avatars/sunset_background.png" alt="Sunset background" class="avatar-option">
-					</div>
-					<div class="grid grid-cols-4">
-						<img src="../../resources/img/avatars/body_rox.png" alt="Rox body" class="avatar-option">
-						<img src="../../resources/img/avatars/body_coco.png" alt="Coco body" class="avatar-option">
-						<img src="../../resources/img/avatars/body_salem.png" alt="Salem body" class="avatar-option">
-						<img src="../../resources/img/avatars/body_naruto.png" alt="Naruto body" class="avatar-option">
-					</div>
-					<div class="grid grid-cols-4">
-						<img src="../../resources/img/avatars/rox_eyes.png" alt="Rox eyes" class="avatar-option">
-						<img src="../../resources/img/avatars/coco_eyes.png" alt="Coco eyes" class="avatar-option">
-						<img src="../../resources/img/avatars/salem_eyes.png" alt="Salem eyes" class="avatar-option">
-						<img src="../../resources/img/avatars/naruto_eyes.png" alt="Naruto eyes" class="avatar-option">
-					</div>
-					<div class="grid grid-cols-4">
-						<img src="../../resources/img/avatars/accessory_fish.png" alt="Fish accesory" class="avatar-option">
-						<img src="../../resources/img/avatars/accessory_flower.png" alt="Flowers accesory" class="avatar-option">
-						<img src="../../resources/img/avatars/accessory_frog_hat.png" alt="Frog accesory" class="avatar-option">
-						<img src="../../resources/img/avatars/accessory_trucker_hat.png" alt="Trucker hat accesory" class="avatar-option">
-					</div>
-				</div>
-				<button id="save-avatar" class="button p-2.5 rounded-[15px]">Save Changes</button>
-			</div>
-		</div>
-		<div id="modify-dimensions" class="standard-purple-card flex lg:max-w-[35vw]">
-			<header class="flex justify-between items-center md:items-end mx-4 h-fit">
-				<h1 class="hidden md:block">Modify Profile</h1>
-				<svg id="home-button" class="home-icon m-4 h-10 w-10" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
-					<path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
-				</svg>
-			</header>
-			<div id="pink-divider"></div>
-			<div id="friend-data" class="flex flex-col items-center gap-4 w-full p-2.5">
-					<img id="modify-profile-photo" class="rounded-full" src="../../resources/img/cat.jpg" alt="Profile photo">
-					<div class="flex justify-between gap-4 p-2.5">
-						<form id='formid'>
-							<input id='fileid' type='file' hidden/>
-							<input id='buttonid' type='button' value='Upload a photo' class="button p-2.5 rounded-[15px] cursor-pointer"/>
-							<input type='submit' value='Submit' hidden/> 				
-						</form>
-						<button id="create-avatar" class="button p-2.5 rounded-[15px]">Create an avatar</button>
-					</div>
-			</div>
-			<div id="friend-statistics" class="flex flex-col p-4 gap-1 mt-4 rounded-[15px] w-full bg-[#7d48778f]">
-				<div class="flex justify-between w-full">
-					<p class="font-bold text-white">Username: </p>
-					<span id="your-name" class="font-thin w-full mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">Default Username</span>
-				</div>
-				<div class="flex justify-between items-center w-full">
-					<p class="font-bold text-white">Nick: </p>
-					<span id="your-nick" class="font-thin w-full mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">Default Nick</span>
-					<form id="nick-form" class="hidden w-full mx-1.5">
-						<input id="modify-nick" type="text" class="w-full outline-none indent-2 opacity-60 bg-[whitesmoke] text-[var(--dark-purple)] rounded-[15px]" maxlength="24">
-						<button type="submit" hidden></button>
-					</form>
-					<svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" height="24px" width="24px">
-						<path d="m499-287 335-335-52-52-335 335 52 52Zm-261 87q-100-5-149-42T40-349q0-65 53.5-105.5T242-503q39-3 58.5-12.5T320-542q0-26-29.5-39T193-600l7-80q103 8 151.5 41.5T400-542q0 53-38.5 83T248-423q-64 5-96 23.5T120-349q0 35 28 50.5t94 18.5l-4 80Zm280 7L353-358l382-382q20-20 47.5-20t47.5 20l70 70q20 20 20 47.5T900-575L518-193Zm-159 33q-17 4-30-9t-9-30l33-159 165 165-159 33Z"/>
-					</svg>
-				</div>
-				<div class="flex justify-between w-full">
-					<p class="font-bold text-white">Description: </p>
-					<span id="your-description" class="italic font-thin mx-1.5 px-1.5 w-full rounded-[15px] bg-[#d087ac50]">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla convallis nullam.</span>
-					<form id="description-form" class="hidden w-full mx-1.5">
-						<input id="modify-description" type="text" class="w-full outline-none indent-2 opacity-60 bg-[whitesmoke] text-[var(--dark-purple)] rounded-[15px]" maxlength="80">
-						<button type="submit" hidden></button>
-					</form>
-					<svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px">
-						<path d="m499-287 335-335-52-52-335 335 52 52Zm-261 87q-100-5-149-42T40-349q0-65 53.5-105.5T242-503q39-3 58.5-12.5T320-542q0-26-29.5-39T193-600l7-80q103 8 151.5 41.5T400-542q0 53-38.5 83T248-423q-64 5-96 23.5T120-349q0 35 28 50.5t94 18.5l-4 80Zm280 7L353-358l382-382q20-20 47.5-20t47.5 20l70 70q20 20 20 47.5T900-575L518-193Zm-159 33q-17 4-30-9t-9-30l33-159 165 165-159 33Z"/>
-					</svg>
-				</div>
-				<div class="flex justify-between w-full">
-					<p class="font-bold text-white whitespace-nowrap">Account creation date: </p>
-					<span class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50] w-full">00-00-0000</span>
-				</div>
-				<div class="grid grid-cols-2 flex justify-center">
-					<div class="flex flex-col w-full justify-center items-center">
-						<p class="font-bold text-white">Total Wins Rate</p>
-						<span class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">0</span>
-					</div>
-					<div class="flex flex-col w-full items-center justify-center">
-						<p class="font-bold text-white">Total Loses Rate</p>
-						<span class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">0</span>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
+    <div class="flex w-full items-center justify-center">
+        <div id="modify-dimensions" class="standard-purple-card flex animate__animated animate__fadeInLeft">
+            <header class="flex justify-between items-center md:items-end mx-4 h-fit">
+                <h1 class="hidden md:block">Modify Profile</h1>
+                <svg id="home-button" class="home-icon m-4 h-10 w-10s" xmlns="http://www.w3.org/2000/svg" height="24px"
+                    viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
+                    <path
+                        d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z" />
+                </svg>
+            </header>
+            <div id="pink-divider"></div>
+            <div id="friend-data" class="flex flex-col items-center gap-4 w-full p-2.5">
+                <img id="modify-profile-photo" class="rounded-full" src="../../resources/img/cat.jpg"
+                    alt="Profile photo">
+                <div class="flex justify-between gap-4 p-2.5">
+                    <form id='formid'>
+                        <input id='fileid' type='file' hidden />
+                        <input id='buttonid' type='button' value='Upload a photo'
+                            class="button p-2.5 rounded-[15px] cursor-pointer" />
+                        <input type='submit' value='Submit' hidden />
+                    </form>
+                    <button id="create-avatar" class="button p-2.5 rounded-[15px]">Create an avatar</button>
+                </div>
+            </div>
+            <div id="friend-statistics"
+                class="flex flex-col p-4 gap-1 mt-4 rounded-[15px] w-full bg-[#7d48778f]">
+                <div class="flex justify-between w-full">
+                    <p class="font-bold text-white">Username: </p>
+                    <span id="your-name" class="font-thin w-full mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">Default
+                        Username</span>
+                </div>
+                <div class="flex justify-between items-center w-full">
+                    <p class="font-bold text-white">Nick: </p>
+                    <span id="your-nick" class="font-thin w-full mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">Default
+                        Nick</span>
+                    <form id="nick-form" class="hidden w-full mx-1.5">
+                        <input id="modify-nick" type="text"
+                            class="w-full outline-none indent-2 opacity-60 bg-[whitesmoke] text-[var(--dark-purple)] rounded-[15px] maxlength="
+                            16"" maxlength="24">
+                        <button type="submit" hidden></button>
+                    </form>
+                    <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" height="24px"
+                        width="24px">
+                        <path
+                            d="m499-287 335-335-52-52-335 335 52 52Zm-261 87q-100-5-149-42T40-349q0-65 53.5-105.5T242-503q39-3 58.5-12.5T320-542q0-26-29.5-39T193-600l7-80q103 8 151.5 41.5T400-542q0 53-38.5 83T248-423q-64 5-96 23.5T120-349q0 35 28 50.5t94 18.5l-4 80Zm280 7L353-358l382-382q20-20 47.5-20t47.5 20l70 70q20 20 20 47.5T900-575L518-193Zm-159 33q-17 4-30-9t-9-30l33-159 165 165-159 33Z" />
+                    </svg>
+                </div>
+                <div class="flex justify-between w-full">
+                    <p class="font-bold text-white">Description: </p>
+                    <span id="your-description"
+                        class="italic font-thin mx-1.5 px-1.5 w-full rounded-[15px] bg-[#d087ac50]">Lorem ipsum dolor
+                        sit amet, consectetur adipiscing elit. Nulla convallis nullam.</span>
+                    <form id="description-form" class="hidden w-full mx-1.5">
+                        <input id="modify-description" type="text"
+                            class="w-full outline-none indent-2 opacity-60 bg-[whitesmoke] text-[var(--dark-purple)] rounded-[15px]"
+                            maxlength="80">
+                        <button type="submit" hidden></button>
+                    </form>
+                    <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+                        width="24px">
+                        <path
+                            d="m499-287 335-335-52-52-335 335 52 52Zm-261 87q-100-5-149-42T40-349q0-65 53.5-105.5T242-503q39-3 58.5-12.5T320-542q0-26-29.5-39T193-600l7-80q103 8 151.5 41.5T400-542q0 53-38.5 83T248-423q-64 5-96 23.5T120-349q0 35 28 50.5t94 18.5l-4 80Zm280 7L353-358l382-382q20-20 47.5-20t47.5 20l70 70q20 20 20 47.5T900-575L518-193Zm-159 33q-17 4-30-9t-9-30l33-159 165 165-159 33Z" />
+                    </svg>
+                </div>
+                <div class="flex justify-between w-full">
+                    <p class="font-bold text-white whitespace-nowrap">Account creation date: </p>
+                    <span class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50] w-full">00-00-0000</span>
+                </div>
+                <div class="grid grid-cols-2 flex justify-center">
+                    <div class="flex flex-col w-full justify-center items-center">
+                        <p class="font-bold text-white">Total Wins Rate</p>
+                        <span class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">0</span>
+                    </div>
+                    <div class="flex flex-col w-full items-center justify-center">
+                        <p class="font-bold text-white">Total Loses Rate</p>
+                        <span class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="avatar" class="standard-purple-card flex hidden animate__animated animate__fadeInRight">
+            <header class="w-full flex justify-between items-center mx-4">
+                <h1 class="hidden md:block">Avatar Creator</h1>
+                <svg id="go-back" class="home-icon m-4" xmlns="http://www.w3.org/2000/svg" height="24px"
+                    viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
+                    <path d="M640-80 240-480l400-400 71 71-329 329 329 329-71 71Z" />
+                </svg>
+            </header>
+            <div id="pink-divider"></div>
+            <div class="flex flex-col items-center justify-center h-full">
+                <div class="flex flex-col p-2.5 gap-4 w-full items-center justify-center">
+                    <canvas id="myCanvas" width="250" height="250" class="rounded-full bg-[#ffffff5e]"></canvas>
+                    <div class="grid grid-rows-4">
+                        <div class="grid grid-cols-4">
+                            <img src="../../resources/img/avatars/flowers_background.png" alt="Flowers background"
+                                class="avatar-option">
+                            <img src="../../resources/img/avatars/sunflowers_background.png" alt="Sunflowers background"
+                                class="avatar-option">
+                            <img src="../../resources/img/avatars/tree_background.png" alt="Tree background"
+                                class="avatar-option">
+                            <img src="../../resources/img/avatars/sunset_background.png" alt="Sunset background"
+                                class="avatar-option">
+                        </div>
+                        <div class="grid grid-cols-4">
+                            <img src="../../resources/img/avatars/body_rox.png" alt="Rox body" class="avatar-option">
+                            <img src="../../resources/img/avatars/body_coco.png" alt="Coco body" class="avatar-option">
+                            <img src="../../resources/img/avatars/body_salem.png" alt="Salem body"
+                                class="avatar-option">
+                            <img src="../../resources/img/avatars/body_naruto.png" alt="Naruto body"
+                                class="avatar-option">
+                        </div>
+                        <div class="grid grid-cols-4">
+                            <img src="../../resources/img/avatars/rox_eyes.png" alt="Rox eyes" class="avatar-option">
+                            <img src="../../resources/img/avatars/coco_eyes.png" alt="Coco eyes" class="avatar-option">
+                            <img src="../../resources/img/avatars/salem_eyes.png" alt="Salem eyes"
+                                class="avatar-option">
+                            <img src="../../resources/img/avatars/naruto_eyes.png" alt="Naruto eyes"
+                                class="avatar-option">
+                        </div>
+                        <div class="grid grid-cols-4">
+                            <img src="../../resources/img/avatars/accessory_fish.png" alt="Fish accesory"
+                                class="avatar-option">
+                            <img src="../../resources/img/avatars/accessory_flower.png" alt="Flowers accesory"
+                                class="avatar-option">
+                            <img src="../../resources/img/avatars/accessory_frog_hat.png" alt="Frog accesory"
+                                class="avatar-option">
+                            <img src="../../resources/img/avatars/accessory_trucker_hat.png" alt="Trucker hat accesory"
+                                class="avatar-option">
+                        </div>
+                    </div>
+                </div>
+                <div class="w-full flex justify-center">
+                    <button id="save-avatar" class="button p-2.5 rounded-[15px]">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
