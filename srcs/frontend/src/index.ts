@@ -10,6 +10,7 @@ import { displayToast, createsocketToastConnection, socketToast } from "./toast-
 import { pong } from "./games/game.js"
 import { initTournamentEvents } from "./tournament/tournament.js";
 import { initSelectPageEvent } from "./games/select-game-page.js";
+import { initModifyPageEvents } from "./modify-profile/modify-page.js";
 
 const routes = [
 	{
@@ -72,6 +73,13 @@ const routes = [
 		url: "../src/settings-page/settings-page.html",
 		event: () => {
 			initSettingsEvents();
+		}
+	},
+	{
+		path: "/modify-profile",
+		url: "../src/modify-profile/modify-page.html",
+		event: () => {
+			initModifyPageEvents();
 		}
 	},
 	{

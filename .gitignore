@@ -51,7 +51,6 @@ out
 
 #Database
 *.db
-avatars/
 !avatars/default.jpg
 
 #py_cache
