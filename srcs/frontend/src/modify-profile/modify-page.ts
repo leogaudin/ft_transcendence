@@ -38,7 +38,6 @@ export function initModifyPageEvents() {
 	const returnButton = document.getElementById("go-back");
 	if (!returnButton) { return ; }
 	returnButton.addEventListener('click', () => { toggleMobileDisplay(); })
-	window.addEventListener("resize", changedWindowSize);
 }
 
 function returnHome() {
@@ -130,16 +129,29 @@ function initCanvas() {
 }
 
 function toggleAvatarEditor() {
-	const avatarEditorPage = document.getElementById("avatar");
-	const modifyProfilePage = document.getElementById("modify-dimensions");
-	const saveChanges = document.getElementById("save-avatar");
-	if (!avatarEditorPage || !saveChanges || !modifyProfilePage) { return ; }
-
-	if (avatarEditorPage.classList.contains('hidden'))
-		avatarEditorPage.classList.remove('hidden');
-	if (window.innerWidth <= 1280)
-			modifyProfilePage.classList.add('hidden');
-	saveChanges.onclick = () => { console.log("Saving the canvas here"); };
+    const avatarEditorPage = document.getElementById("avatar");
+    const modifyProfilePage = document.getElementById("modify-dimensions");
+    const saveChanges = document.getElementById("save-avatar");
+    if (!avatarEditorPage || !saveChanges || !modifyProfilePage) { return; }
+	
+	modifyProfilePage.classList.add('animate__fadeOutLeft');
+	avatarEditorPage.classList.remove('hidden');
+	modifyProfilePage.onanimationend = () => {
+		modifyProfilePage.classList.add('hidden');
+		modifyProfilePage.classList.remove('animate__fadeOutLeft');
+		avatarEditorPage.onanimationend = () => {};
+	};
+    
+    saveChanges.onclick = () => {
+		avatarEditorPage.classList.add('animate__fadeOutRight');
+		modifyProfilePage.classList.remove('hidden');
+		modifyProfilePage.onanimationend = () => {};
+		avatarEditorPage.onanimationend = () => {
+			avatarEditorPage.classList.add('hidden');
+			avatarEditorPage.classList.remove('animate__fadeOutRight');
+		};
+		console.log("Saving the canvas here"); 
+	};
 }
 
 function setOption(src: string | null) {
@@ -184,36 +196,27 @@ function redrawCanvas() {
 }
 
 function toggleMobileDisplay() {
-	const avatarPage = document.getElementById("avatar");
-	const modifyProfilePage = document.getElementById("modify-dimensions");
+	const avatarEditorPage = document.getElementById("avatar");
+    const modifyProfilePage = document.getElementById("modify-dimensions");
 	
-	if (avatarPage && modifyProfilePage) {
+	if (avatarEditorPage && modifyProfilePage) {
 		if (!modifyProfilePage.classList.contains('hidden')) {
-			avatarPage.classList.remove('hidden');
-			modifyProfilePage.classList.add('hidden');
-		}
-		else {
-			avatarPage.classList.add('hidden');
-			modifyProfilePage.classList.remove('hidden');
-		}
-	}
-}
-
-function changedWindowSize() {
-	const avatarPage = document.getElementById("avatar");
-	const modifyProfilePage = document.getElementById("modify-dimensions");
-
-	if (avatarPage && modifyProfilePage) {
-		if (window.innerWidth > 1280) {
-			modifyProfilePage.classList.remove('hidden');
-		}
-		else {
-			if (!modifyProfilePage.classList.contains('hidden'))
-				avatarPage.classList.add('hidden');
-			else {
+			modifyProfilePage.classList.add('animate__fadeOutLeft');
+			avatarEditorPage.classList.remove('hidden');
+			modifyProfilePage.onanimationend = () => {
 				modifyProfilePage.classList.add('hidden');
-				avatarPage.classList.remove('hidden');
-			}
-		  }
+				modifyProfilePage.classList.remove('animate__fadeOutLeft');
+				avatarEditorPage.onanimationend = () => {};
+			};
+		}
+		else {
+			avatarEditorPage.classList.add('animate__fadeOutRight');
+			modifyProfilePage.classList.remove('hidden');
+			modifyProfilePage.onanimationend = () => {};
+			avatarEditorPage.onanimationend = () => {
+				avatarEditorPage.classList.add('hidden');
+				avatarEditorPage.classList.remove('animate__fadeOutRight');
+			};
+		}
 	}
 }

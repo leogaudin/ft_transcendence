@@ -319,8 +319,12 @@
 /* --> Modify profile <-- */
 
 #modify-dimensions {
-  min-width: 35vw;
-  /* max-width: 35vw; */
+  min-width: 51vw;
+  position: absolute;
+}
+
+#avatar {
+  position: absolute;
 }
 
 #modify-profile-photo, canvas {
@@ -1252,10 +1256,6 @@ video {
   height: 100%;
 }
 
-.max-h-\[90vh\] {
-  max-height: 90vh;
-}
-
 .w-10 {
   width: 2.5rem;
 }
@@ -1283,10 +1283,6 @@ video {
 
 .max-w-24 {
   max-width: 6rem;
-}
-
-.max-w-\[35vw\] {
-  max-width: 35vw;
 }
 
 .flex-1 {
@@ -1345,16 +1341,8 @@ video {
   flex-direction: column-reverse;
 }
 
-.items-start {
-  align-items: flex-start;
-}
-
 .items-center {
   align-items: center;
-}
-
-.items-stretch {
-  align-items: stretch;
 }
 
 .justify-start {
@@ -1449,6 +1437,10 @@ video {
 
 .overflow-y-auto {
   overflow-y: auto;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
 }
 
 .overflow-x-clip {
@@ -2032,10 +2024,6 @@ h1 {
     display: flex;
   }
 
-  .md\:hidden {
-    display: none;
-  }
-
   .md\:h-1\/6 {
     height: 16.666667%;
   }
@@ -2090,24 +2078,8 @@ h1 {
     margin-right: 1rem;
   }
 
-  .lg\:hidden {
-    display: none;
-  }
-
-  .lg\:max-h-\[75vh\] {
-    max-height: 75vh;
-  }
-
   .lg\:w-9\/12 {
     width: 75%;
-  }
-
-  .lg\:max-w-\[35vw\] {
-    max-width: 35vw;
-  }
-
-  .lg\:max-w-\[55vw\] {
-    max-width: 55vw;
   }
 
   .lg\:flex-row {
@@ -2124,40 +2096,6 @@ h1 {
 
   .lg\:text-start {
     text-align: start;
-  }
-}
-
-@media (min-width: 1280px) {
-  .xl\:block {
-    display: block;
-  }
-
-  .xl\:hidden {
-    display: none;
-  }
-
-  .xl\:max-w-\[35vw\] {
-    max-width: 35vw;
-  }
-
-  .xl\:flex-row {
-    flex-direction: row;
-  }
-}
-
-@media (min-width: 1536px) {
-  .\32xl\:max-w-\[35vw\] {
-    max-width: 35vw;
-  }
-
-  .\32xl\:flex-row {
-    flex-direction: row;
-  }
-}
-
-@media (min-width: 1810px) {
-  .min-\[1810px\]\:flex-row {
-    flex-direction: row;
   }
 }
 
