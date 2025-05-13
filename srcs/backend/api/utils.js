@@ -147,6 +147,7 @@ export async function saveAvatar(user_id, data) {
   await patchUser(user_id, { avatar: dataUrl });
   return {
     message: "Avatar uploaded successfully",
+    data_url: dataUrl,
     user_id: user_id,
     originalName: data.filename,
     mimetype: data.mimetype,
