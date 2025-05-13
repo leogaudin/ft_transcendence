@@ -227,6 +227,7 @@ function checkDirection(col: number, row: number, player: number, directions: { 
 			for (let s = 1; s < 4; s++) {
 				const newCol = col + x * s * step;
 				const newRow = row + y * s * step;
+                if (columnList[newCol].id === undefined) break ;
                 const column = boardMap.get(columnList[newCol].id);
                 if (!column) break ;
 

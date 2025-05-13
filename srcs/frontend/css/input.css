@@ -17,7 +17,8 @@
 @import url("../src/modify-profile/modify-styles.css");
 
 /* --> Games page <-- */
-@import url("../src/games/games-styles.css");
+@import url("../src/games/pong/pong-styles.css");
+@import url("../src/games/connectFour/connectFour-styles.css");
 
 /* --> Friends Page <-- */
 @import url("../src/friends/friends.styles.css");

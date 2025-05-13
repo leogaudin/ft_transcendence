@@ -18,7 +18,9 @@ import {
 	delay as delayEngine,
 } from './gameEngine.js';
 
-export function classicMode(activateAI: boolean): void {
+import { Games } from "../../types.js";
+
+export function classicMode(data: Games): void {
 	class PlayerClass implements Player {
 		color: string;
 		turn: boolean = false;
@@ -34,7 +36,7 @@ export function classicMode(activateAI: boolean): void {
 	}
 
 	const player1 = new PlayerClass(false, 1, "red");
-	const player2 = new PlayerClass(activateAI, 2, "yellow");
+	const player2 = new PlayerClass(data.gameMode === "ai" ? true : false, 2, "yellow");
 
 	function init(): void {
 		initEngine(player1, boardMap, columnMap, columnList);

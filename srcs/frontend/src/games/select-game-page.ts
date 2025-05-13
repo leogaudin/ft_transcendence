@@ -80,7 +80,7 @@ function initGameSelection(){
         if (currentGame === "pong")
           navigateTo("/pong", { gameMode: mode, isCustom: mode.includes('custom') });
         else if (currentGame === "4inrow")
-          console.log("Aqui iria el cuatro en raya");
+          navigateTo("/connectFour", { gameMode: mode, isCustom: mode.includes('custom') });
         hideGameOptions();
       }
     });

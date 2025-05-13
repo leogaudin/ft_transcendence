@@ -7,7 +7,9 @@ import { initFriendsEvents } from "./friends/friends-page.js"
 import { initSettingsEvents } from "./settings-page/settings-page.js"
 import { LoginObject, MessageObject, Games } from "./types.js";
 import { displayToast, createsocketToastConnection, socketToast } from "./toast-alert/toast-alert.js";
-import { pong } from "./games/game.js"
+import { pong } from "./games/pong/pong.js"
+import { classicMode } from "./games/connectFour/classicMode.js";
+import { crazyTokens } from "./games/connectFour/gameEngine.js";
 import { initTournamentEvents } from "./tournament/tournament.js";
 import { initSelectPageEvent } from "./games/select-game-page.js";
 import { initModifyPageEvents } from "./modify-profile/modify-page.js";
@@ -90,12 +92,19 @@ const routes = [
 		}
 	},
 	{
-    path: "/pong",
-    url: "../src/games/games-page.html",
-    event: (data: object) => {
-      pong(data as Games);
-    }
-  },
+    	path: "/pong",
+    	url: "../src/games/pong/pong.html",
+    	event: (data: object) => {
+      		pong(data as Games);
+    	}
+	},
+ 	{
+		path: "/connectFour",
+    	url: "../src/games/connectFour/connectFour.html",
+    	event: (data: object) => {
+      		classicMode(data as Games);
+    	}
+	},
 ];
 
 export function navigateTo(path: string, data: object = {}) {
