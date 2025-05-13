@@ -94,7 +94,6 @@ export interface InvitationList {
 export interface Tournament {
 	tournament_id: number;
 	name: string;
-	player_amount: number;
 	player_limit: number;
 	status: string;
 	game_type: string;

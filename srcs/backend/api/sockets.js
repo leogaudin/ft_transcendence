@@ -13,7 +13,6 @@ const socketsTournament = new Map();
 async function messageInChat(data, userId){
 	let username = await getUsername(data.sender_id);
 	let receiver_username = await getUsername(data.receiver_id);
-	//usuario bloqueado sigue hablando
 	if (await isBlocked(data.sender_id, data.receiver_id) === false && await isBlocked(data.receiver_id, data.sender_id) === false  && receiver_username !== "anonymous"){
 		if (data.receiver_id && data.body){
 			const receiver_id = parseInt(data.receiver_id);
@@ -47,9 +46,11 @@ async function messageInChat(data, userId){
 				else if (!socketsChat.has(receiver_id) && socketsToast.has(receiver_id))
 					toastReceiver.send(JSON.stringify({ type: "chatToast", body: `You have a message from ${username}` }))
 			}
-			else if (socketsToast.has(receiver_id)){
-				//funcionamiento desde chat con comando /tournament
-				if (data.type === "tournament"){
+			else if (data.type === "tournament"){
+				const tournament_id = data.tournament.tournament_id;
+				await addInvitationToTournament({tournament_id: tournament_id, user_id: receiver_id});
+				await modifyInvitationToTournament({status: "pending", tournament_id: tournament_id}, receiver_id);
+				if (socketsToast.has(receiver_id) && !socketsChat.has(receiver_id)){
 					if (data.info === "request"){
 						const tournament = data.tournament
 						toastSender.send(JSON.stringify({
@@ -68,6 +69,41 @@ async function messageInChat(data, userId){
 							info: "request",
 							tournament: tournament,
 						}))
+					}
+				}
+				else if (socketsToast.has(receiver_id) && socketsChat.has(receiver_id)){
+					const tournament = data.tournament;
+					if (data.info === "request"){
+						const message = await createMessage({
+							body: `${username} send a request to play a tournament of ${ tournament.game_type }`,
+							sender_id: data.sender_id,
+							receiver_id: data.receiver_id,
+							chat_id: chat_id,
+							sent_at: data.sent_at,
+							is_read: 0 
+						})
+						const message_id = message.id;
+						const receiver = socketsChat.get(receiver_id);
+						receiver.send(JSON.stringify({
+							body: data.body,
+							message_id: message_id,
+							chat_id: chat_id,
+							receiver_id: receiver_id,
+							sender_id: userId,
+							sender_username: username,
+							sent_at: data.sent_at,
+							read: false,
+							type: data.type,
+							info: data.info,
+							tournament: tournament
+						}))
+					}
+					else if (data.info ===  "accept"){
+						await modifyInvitationToTournament({status: "confirmed", tournament_id: tournament_id}, sender_id);
+						await addParticipantToTournament({tournament_id: tournament_id}, sender_id);
+					}
+					else if (data.info === "reject"){
+						await modifyInvitationToTournament({ status: "denied", tournament_id: tournament_id }, sender_id);
 					}
 				}
 			}
@@ -128,7 +164,7 @@ async function tournamentCreation(data, sender_id, receiver_id){
 		// Enviar invitación al receptor
 		if (receiver){
 			await addInvitationToTournament({tournament_id: tournament_id, user_id: receiver_id});
-			await modifyInvitationToTournament({status: "is_invited", tournament_id: tournament_id}, receiver_id);
+			await modifyInvitationToTournament({status: "pending", tournament_id: tournament_id}, receiver_id);
 			receiver.send(JSON.stringify({
 				type: "tournament",
 				body: `You have a tournament request from ${username}`,
@@ -143,7 +179,7 @@ async function tournamentCreation(data, sender_id, receiver_id){
 		const player_id = parseInt(data.sender_id);
 		if (data.info === "accept"){
 			await modifyInvitationToTournament({ status: "confirmed", tournament_id: tournament_id },	player_id);
-			await addParticipantToTournament({tournament_id: tournament_id}, player_id)
+			await addParticipantToTournament({tournament_id: tournament_id}, player_id);
 			receiver.send(JSON.stringify({
 				type: "tournament",
 				body: `Tournament request has been accepted from ${username}`,
@@ -154,7 +190,7 @@ async function tournamentCreation(data, sender_id, receiver_id){
 			}))
 		}
 		else if (data.info === "reject"){
-			//Toda la informacion y configuracion necesaria a la hora de rechazar el torneo
+
 			await modifyInvitationToTournament({ status: "denied", tournament_id: tournament_id }, player_id);
 			receiver.send(JSON.stringify({
 				type: "tournament",
@@ -199,8 +235,10 @@ export default function createWebSocketsRoutes(fastify){
 							}));
 						 }
 					}
-					else
+					else{
+						console.log("antes de la funcion de mensajes", data)
 						messageInChat(data, userId);
+					}
 				})
 				socket.on("close", () => {
 					console.log("Client disconnected from /chat");

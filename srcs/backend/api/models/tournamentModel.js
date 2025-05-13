@@ -443,7 +443,9 @@ export function getInvitationStatus(tournament_id, user_id) {
         console.error("Error accessing tournament_participants:", err.message);
         return reject(err);
       }
-      resolve(row.status);
+      if (!row)
+        return resolve(null);
+      resolve(row);
     });
   });
 }
