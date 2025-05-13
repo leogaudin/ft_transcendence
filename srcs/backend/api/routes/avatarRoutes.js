@@ -8,6 +8,7 @@ export default function createAvatarRoutes(fastify) {
       method: "POST",
       url: "/avatars",
       handler: asyncHandler(async (req, res) => {
+        console.log("req:", req);
         const data = await req.file();
         if (!data) return res.code(400).send({ error: "No file uploaded" });
         const allowedMimeTypes = [

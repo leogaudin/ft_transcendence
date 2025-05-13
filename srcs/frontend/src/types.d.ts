@@ -123,3 +123,14 @@ export interface Games {
 	isCustom: string,
 	gameMode: string,
 }
+
+export interface Profile {
+	id: number,
+	username: string,
+	avatar: string,
+	nick: string,
+	description: string,
+	created_at: string,
+	wins: string,
+	losses: string,
+}

@@ -1,4 +1,6 @@
 import { navigateTo } from "../index.js"
+import { showAlert } from "../toast-alert/toast-alert.js";
+import { uploadCanvas, updatePhoto, updateNick, updateDescription ,initModifyFetchEvents } from "./modify-fetch.js";
 
 export function initModifyPageEvents() {
 	// Return Home
@@ -38,6 +40,9 @@ export function initModifyPageEvents() {
 	const returnButton = document.getElementById("go-back");
 	if (!returnButton) { return ; }
 	returnButton.addEventListener('click', () => { toggleMobileDisplay(); })
+
+	// Fetches
+	initModifyFetchEvents();
 }
 
 function returnHome() {
@@ -61,7 +66,7 @@ function toggleNickForm() {
 		nickForm.classList.add('hidden');
 		nickSpan.innerText = nickInput.value;
 		nickSpan.classList.remove('hidden');
-		// Call the function to save the nick changes
+		updateNick(nickInput.value);
 	}
 }
 
@@ -80,7 +85,7 @@ function toggleDescriptionForm() {
 		descriptionForm.classList.add('hidden');
 		descriptionSpan.innerText = descriptionInput.value;
 		descriptionSpan.classList.remove('hidden');
-		// Call the function to save description changes
+		updateDescription(descriptionInput.value);
 	}
 }
 
@@ -92,9 +97,11 @@ function openFileSelector() {
 
 function submitImage() {
 	const formId = document.getElementById('formid') as HTMLFormElement;
-	if (!formId) { return; }
-	console.log("I'm selecting an image");
-	// formId.submit();
+	const fileId = document.getElementById('fileid') as HTMLInputElement;
+	if (!formId || !fileId) { return; }
+
+	if (fileId.files)
+		updatePhoto(fileId.files[0]);
 }
 
 let canvas: HTMLCanvasElement | null = null;
@@ -143,6 +150,15 @@ function toggleAvatarEditor() {
 	};
     
     saveChanges.onclick = () => {
+		if (canvas) {
+			for (let layer of layers) {
+				if (!layer || layer.src === "") {
+					showAlert("Select 4 options" , "toast-error");
+					return ;
+				}
+			}
+			uploadCanvas(canvas);
+		}
 		avatarEditorPage.classList.add('animate__fadeOutRight');
 		modifyProfilePage.classList.remove('hidden');
 		modifyProfilePage.onanimationend = () => {};
@@ -150,7 +166,6 @@ function toggleAvatarEditor() {
 			avatarEditorPage.classList.add('hidden');
 			avatarEditorPage.classList.remove('animate__fadeOutRight');
 		};
-		console.log("Saving the canvas here"); 
 	};
 }
 
@@ -220,3 +235,4 @@ function toggleMobileDisplay() {
 		}
 	}
 }
+
