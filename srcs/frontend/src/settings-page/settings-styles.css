@@ -14,6 +14,7 @@
 
 #settings-div.slide-left { transform: translateX(-55%); }
 
+
 #change-password, #two-factor, #blocked-accounts {
     transition: all 1s ease;
     position: absolute;

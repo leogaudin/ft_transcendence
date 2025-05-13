@@ -319,8 +319,12 @@
 /* --> Modify profile <-- */
 
 #modify-dimensions {
-  min-width: 35vw;
-  /* max-width: 35vw; */
+  min-width: 51vw;
+  position: absolute;
+}
+
+#avatar {
+  position: absolute;
 }
 
 #modify-profile-photo, canvas {
@@ -1443,6 +1447,10 @@ video {
   overflow-y: auto;
 }
 
+.overflow-x-hidden {
+  overflow-x: hidden;
+}
+
 .overflow-x-clip {
   overflow-x: clip;
 }
@@ -2080,10 +2088,6 @@ h1 {
 
   .lg\:w-9\/12 {
     width: 75%;
-  }
-
-  .lg\:max-w-\[35vw\] {
-    max-width: 35vw;
   }
 
   .lg\:flex-row {
