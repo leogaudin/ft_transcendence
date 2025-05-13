@@ -240,8 +240,8 @@
 /* --> Settings page <-- */
 
 .settings-size {
-  min-height: 60vh;
-  max-height: 60vh;
+  min-height: 65vh;
+  max-height: 65vh;
 }
 
 /* Add a container for both divs */
@@ -273,6 +273,12 @@
 
 #change-password:not(.hide), #two-factor:not(.hide), #blocked-accounts:not(.hide) {
   transform: translateX(55%);
+}
+
+@media (max-width: 	1280px) {
+  #change-password:not(.hide), #two-factor:not(.hide), #blocked-accounts:not(.hide) {
+    transform: translateX(0);
+  }
 }
 
 .settings-option {
@@ -1099,6 +1105,10 @@ video {
   }
 }
 
+.static {
+  position: static;
+}
+
 .fixed {
   position: fixed;
 }
@@ -1437,6 +1447,10 @@ video {
 
 .overflow-y-auto {
   overflow-y: auto;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden;
 }
 
 .overflow-x-clip {
@@ -2092,6 +2106,12 @@ h1 {
 
   .lg\:text-start {
     text-align: start;
+  }
+}
+
+@media (min-width: 1280px) {
+  .xl\:hidden {
+    display: none;
   }
 }
 
