@@ -57,6 +57,32 @@ export default function createAuthRoutes(fastify) {
       }),
     },
     {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/logout",
+      handler: asyncHandler(async (req, res) => {
+        console.log("Logging out user", req.userId);
+        res.clearCookie("token", { path: "/" });
+        return res.code(200).send({ success: "User successfully logged out" });
+      }),
+    },
+    {
+      method: "GET",
+      url: "/islogged",
+      handler: asyncHandler(async (req, res) => {
+        try {
+          const { valid, value } = req.unsignCookie(req.cookies.token);
+          if (!valid)
+            return res.code(401).send({ error: "Invalid cookie signature" });
+          const decoded = fastify.jwt.verify(value);
+          req.userId = decoded.user;
+        } catch (err) {
+          return res.code(200).send({ logged: false });
+        }
+        return res.code(200).send({ logged: true });
+      }),
+    },
+    {
       method: "POST",
       url: "/google/login",
       handler: asyncHandler(async (req, res) => {
