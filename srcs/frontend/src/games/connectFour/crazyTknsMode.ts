@@ -20,7 +20,9 @@ import {
     delay as delayEngine,
 } from './gameEngine.js';
 
-export function crazyTokensMode(activateAI: boolean): void {
+import { Games } from "../../types.js";
+
+export function crazyTokensMode(data: Games): void {
     class PlayerClass {
         color: string;
 		turn: boolean = false;
@@ -40,14 +42,14 @@ export function crazyTokensMode(activateAI: boolean): void {
         }
     }
 	const player1 = new PlayerClass(false, 1, "red");
-	const player2 = new PlayerClass(activateAI, 2, "yellow");
+	const player2 = new PlayerClass(data.gameMode === "ai" ? true : false, 2, "yellow");
 
     /* Initialization Functionality */
 
     function init(): void {
         const dice = document.getElementById("dice-container");
         if (!dice) return ;
-        dice.style.display = 'block';
+        dice.style.display = 'flex';
 
         initEngine(player1, boardMap, columnMap, columnList);
     }
@@ -290,7 +292,7 @@ export function crazyTokensMode(activateAI: boolean): void {
 
 		if (shouldUseSpecial && player2.specialToken) {
 			await rollDice();
-			delay(500);
+			await delay(500);
 			const specialColumn = chooseBestColumnForToken(player2.specialToken, threatColumns);
 			if (specialColumn) 
 				columnToUse = Promise.resolve(Math.random () < 0.2 ? 
@@ -327,6 +329,7 @@ export function crazyTokensMode(activateAI: boolean): void {
         await delay(1000);
         const randomIndex = Math.floor(Math.random() * crazyTokens.length);
         const newToken = crazyTokens[randomIndex];
+        /* const newToken = "👻"; */
         
         diceIcon.innerText = newToken;
         currentPlayer.specialToken = newToken;
@@ -376,8 +379,7 @@ export function crazyTokensMode(activateAI: boolean): void {
                 columnData[row] = 0;
     
             token.parentElement.className = `cell ${player1.turn ?
-                `bg-gradient-to-r hover:from-pink-400 hover:to-red-500` :
-                `bg-gradient-to-r hover:from-orange-400 hover:to-yellow-500`}`;
+                `red-hover` : `yellow-hover`}`;
             token.remove();
             await delay(300);
             await updateBoard(columnId);
@@ -420,7 +422,8 @@ export function crazyTokensMode(activateAI: boolean): void {
         for (let row = 0; row < columnData.length; row++) {
             if (columnData[row] !== 0) {
                 const emptyCell = columnData.findIndex(cell => cell === 0);
-                if (emptyCell === -1 || emptyCell <= row) continue;
+                if (emptyCell === -1) break ;
+                if (emptyCell >= row) continue ;
 
                 columnData[emptyCell] = columnData[row] === 1 ? 1 : 2;
                 columnData[row] = 0;
@@ -428,16 +431,19 @@ export function crazyTokensMode(activateAI: boolean): void {
                 if (cells[row]?.hasChildNodes()) {
                     const token = cells[row].firstChild as HTMLElement | null;
                     if (token) {
-                        token.style.animationName = 'none';
-                        token.offsetHeight;
-                        token.style.animationName = 'moveToken 0.15 ease-in-out forwards';
-                        await delay(150);
-                        cells[row].removeChild(token);
-                        cells[row].className = `cell ${player1.turn ?
-                            `bg-gradient-to-r hover:from-pink-400 hover:to-red-500` :
-                            `bg-gradient-to-r hover:from-orange-400 hover:to-yellow-500`}`;
-                        cells[emptyCell].appendChild(token);
+                        const currentPlayer = player1.turn ? player1 : player2;
+                        
                         cells[emptyCell].className = "filled";
+                        token.style.position = 'absolute';
+                        token.style.animation = 'moveToken 0.2 ease-in-out forwards';
+
+                        cells[row].removeChild(token);
+                        cells[emptyCell].appendChild(token);
+
+                        if (currentPlayer.color === "red")
+                            cells[row].className = "cell red-hover";
+                        else if (currentPlayer.color === "yellow")
+                            cells[row].className = "cell yellow-hover";
                     }
                 }
             }
@@ -511,11 +517,10 @@ export function crazyTokensMode(activateAI: boolean): void {
                     cell.innerHTML = "";
                     cell.style.backgroundColor = "";
 
-                    if (currentPlayer.color === "red") {
+                    if (currentPlayer.color === "red")
                         cell.classList.add("red-hover");
-                    } else if (currentPlayer.color === "yellow") {
+                    else if (currentPlayer.color === "yellow")
                         cell.classList.add("yellow-hover");
-                    }
                     await updateBoard(col.id);
                 }
             }
@@ -592,6 +597,7 @@ export function crazyTokensMode(activateAI: boolean): void {
             token.classList.add("blindToken")
         
         token.innerText = `${player.specialToken}`;
+        token.style.animation = "token 0.5s ease-in forwards";
         cell.className = "filled";
         cell.appendChild(token);
         await delay(1000);

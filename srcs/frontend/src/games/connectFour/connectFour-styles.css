@@ -8,8 +8,8 @@
     border: 10px solid rgb(0, 77, 112);
 	background-color: rgb(24, 127, 245);
     aspect-ratio: 2.7 / 1.7;
-	overflow: hidden;
 	width: 80%;
+    overflow: hidden;
 	margin-top: 1rem;
 	margin-bottom: 1rem;
 	position: relative;
@@ -23,11 +23,15 @@
     width: 50%;
     aspect-ratio: 1/1;
     background-color: white;
-    border: 2px solid  rgb(0, 77, 112);
+    border: 2px solid rgb(0, 77, 112);
     border-radius: 50%;
 	margin: 10%;
     position: relative;
     opacity: 80%;
+}
+.cell:hover {
+    opacity: 80%;
+    background-color: rgba(255, 0, 0, 0.5);
 }
 
 .cell.red-hover:hover {
@@ -49,17 +53,18 @@
     position: relative;
     opacity: 80%;
     border: 2px solid rgb(0, 77, 112);
+    overflow: visible;
 }
 
 .token {
     width: 100%;
-    height: max-content;
+    height: 100%;
     aspect-ratio: 1/1;
     border-radius: 50%;
-    animation-duration:1s;
-    animation-name: token;
-    position: relative;
+    position: absolute;
     text-align: center;
+    display: flex;
+    align-items: center;
     align-content: center;
     justify-content: center;
     font-size: 2vw;
@@ -76,7 +81,7 @@
 #winner {
     position: absolute;
     display: none;
-    border:2px solid rgb(7, 39, 76);
+    border:2px solid rgb(0, 77, 112);
     background-color: rgb(24, 127, 245);
     opacity: 80%;
     border-radius: 1%;
@@ -123,11 +128,11 @@
 }
 
 @keyframes token {
-    from {
-        top: -1000;
+    0% {
+        transform: translateY(-1000%);
     }
-    to {
-        top: 0%;
+    100% {
+        transform: translateY(0);
     }
 }
 
@@ -140,16 +145,19 @@
     border: 2px solid rgb(7, 39, 76);
     border-radius: 1%;
     width: 7%;
-    height: 9.5%;
-    top: -6.5%;
+    height: 10.5%;
+    top: -7.5%;
     right: -4%;
     place-self: end;
     padding: 1%;
+    justify-content: center;
+    align-items: center;
     text-align: center;
     align-content: center;
     color:white;
     margin-top: 1%;
-    font-size: 2vw;
+    font-size: 1.5vw;
+    z-index: 5;
 }
 
 .rolling {
@@ -191,21 +199,9 @@
 
 @keyframes moveToken {
     0% {
-        transform: translateY(-100%);
-        opacity: 1;
-        }
-    25% {
-        transform: translateY(-75%);
-        opacity: 0.8;}
-    50% {
-        transform: translateY(-50%);
-        opacity: 0.5;
-    }
-    75% {
-        transform: translateY(-25%);
-        opacity: 0.8;}
-    100% {
         transform: translateY(0);
-        opacity: 1;
+    }
+    100% {
+        transform: translateY(calc(100% + 20px));
     }
 }

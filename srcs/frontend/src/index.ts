@@ -13,6 +13,7 @@ import { crazyTokens } from "./games/connectFour/gameEngine.js";
 import { initTournamentEvents } from "./tournament/tournament.js";
 import { initSelectPageEvent } from "./games/select-game-page.js";
 import { initModifyPageEvents } from "./modify-profile/modify-page.js";
+import { crazyTokensMode } from "./games/connectFour/crazyTknsMode.js";
 
 const routes = [
 	{
@@ -102,7 +103,11 @@ const routes = [
 		path: "/connectFour",
     	url: "../src/games/connectFour/connectFour.html",
     	event: (data: object) => {
-      		classicMode(data as Games);
+			const mode = data as Games;
+			if (!mode.isCustom)
+      			classicMode(mode);
+			else
+				crazyTokensMode(mode)
     	}
 	},
 ];

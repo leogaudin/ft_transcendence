@@ -43,7 +43,8 @@ export function init(player1: Player, boardMap: Map<string, number[]>, columnMap
 
 export function enableClicks(columnList: HTMLElement[]): void {
 	columnList.forEach((column) => {
-		column.style.pointerEvents = "auto";
+        if (!column.classList.contains("opacity-50"))
+		    column.style.pointerEvents = "auto";
 	});
 }
 
@@ -146,6 +147,7 @@ async function updateCell(cell: HTMLElement, player: Player): Promise<void> {
         const token = document.createElement("div");
 
         token.className = `token ${player.color}`;
+        token.style.animation = "token 0.5s ease-in forwards";
         cell.className = "filled";
         cell.appendChild(token);
 }
