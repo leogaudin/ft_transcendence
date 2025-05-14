@@ -96,11 +96,8 @@ function resetPassword() {
 	const resetPasswordDialog = document.getElementById("recover-password") as HTMLDialogElement;
 	if (!resetPassButton || !resetPasswordDialog)
 		return;
-	const visualDiv = document.getElementById("visual-div");
 	resetPassButton.addEventListener("click", () => {
 		popUp();
-		if (visualDiv)
-			visualDiv.style.opacity = "0.5";
 		const form = document.getElementById("login-form") as HTMLFormElement;
 		if (form)
 			form.reset();
@@ -108,8 +105,6 @@ function resetPassword() {
 	resetPasswordDialog.addEventListener("click", (e) => {
 		const target = e.target as HTMLElement;
 		if (target.classList.contains("close-icon")) {
-			if (visualDiv)
-				visualDiv.style.opacity = "1";
 			resetPasswordDialog.style.display = "none";
 			resetPasswordDialog.close();
 		}

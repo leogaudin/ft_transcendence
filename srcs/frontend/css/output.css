@@ -432,6 +432,129 @@
   left: 65%;
 }
 
+/* --> Select game page <-- */
+
+.game-card {
+  display: flex;
+  background-color: var(--accent-pink);
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: var(--accent-pink) 0px 0px 5px;
+  transition: transform 0.2s;
+}
+
+.game-card:hover {
+  transform: translateY(-5px);
+}
+
+.game-icon {
+  width: 64px;
+  height: 64px;
+  fill: var(--dark-pink);
+}
+
+.game-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--dark-blue);
+}
+
+.game-description {
+  color: var(--dark-blue);
+}
+
+.game-button {
+  margin-top: auto;
+  background-color: var(--dark-pink);
+  border-radius: 15px;
+  transition: all 250ms ease-in-out;
+}
+
+.game-button:hover {
+  background-color: #b06289;
+}
+
+/* Refactor this when I have the time */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  box-shadow: 0 0 0 max(100vh, 100vw) rgba(0, 0, 0, .3);
+  background: #b7618cb7;
+  -webkit-backdrop-filter: blur(6px) saturate(80%);
+          backdrop-filter: blur(6px) saturate(80%);
+  border: 1px solid rgba(255, 255, 255, 0.125);
+  padding: 2rem;
+  border-radius: 15px;
+  position: relative;
+}
+
+.game-options {
+  display: grid;
+  gap: 1rem;
+}
+
+.icon {
+  transition: all 250ms ease-in;
+  fill: var(--accent-pink);
+}
+
+.option-button .icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 1rem;
+}
+
+.option-button:hover .icon {
+  fill: var(--dark-purple);
+}
+
+.option-button {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  background: var(--dark-purple);
+  border-radius: 15px;
+  transition: all 250ms ease-in;
+}
+
+.option-button:hover {
+  background: var(--accent-pink);
+  border-color: var(--dark-purple);
+  color: var(--dark-purple);
+}
+
+.mode-button {
+  padding: 0.5rem 1.5rem;
+  border: 2px solid var(--accent-pink);
+  border-radius: 15px;
+  background: transparent;
+  color: var(--accent-pink);
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.mode-button:hover {
+  background: var(--accent-pink);
+  color: var(--dark-purple);
+}
+
+.mode-button.active {
+  background: var(--accent-pink);
+  color: var(--dark-purple);
+}
+
 /* --> Friends Page <-- */
 
 #card {
@@ -1117,10 +1240,6 @@ video {
   position: static;
 }
 
-.fixed {
-  position: fixed;
-}
-
 .absolute {
   position: absolute;
 }
@@ -1282,6 +1401,10 @@ video {
   min-height: 60px;
 }
 
+.min-h-\[80vh\] {
+  min-height: 80vh;
+}
+
 .w-10 {
   width: 2.5rem;
 }
@@ -1317,20 +1440,6 @@ video {
 
 .origin-top-right {
   transform-origin: top right;
-}
-
-.transform {
-  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
-}
-
-@keyframes pulse {
-  50% {
-    opacity: .5;
-  }
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 @keyframes spin {
@@ -1437,10 +1546,6 @@ video {
 
 .gap-5 {
   gap: 1.25rem;
-}
-
-.gap-6 {
-  gap: 1.5rem;
 }
 
 .gap-x-1\.5 {
@@ -1575,11 +1680,6 @@ video {
   background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 
-.bg-gray-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1));
-}
-
 .p-1 {
   padding: 0.25rem;
 }
@@ -1598,6 +1698,10 @@ video {
 
 .p-4 {
   padding: 1rem;
+}
+
+.p-8 {
+  padding: 2rem;
 }
 
 .px-1\.5 {
@@ -1782,14 +1886,6 @@ video {
 .blur {
   --tw-blur: blur(8px);
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-}
-
-.transition {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
 }
 
 @font-face {
@@ -2102,6 +2198,10 @@ h1 {
 }
 
 @media (min-width: 768px) {
+  .md\:mt-16 {
+    margin-top: 4rem;
+  }
+
   .md\:block {
     display: block;
   }
@@ -2128,6 +2228,10 @@ h1 {
 
   .md\:w-auto {
     width: auto;
+  }
+
+  .md\:max-w-\[20vw\] {
+    max-width: 20vw;
   }
 
   .md\:grid-cols-2 {
