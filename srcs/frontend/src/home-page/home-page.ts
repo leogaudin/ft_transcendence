@@ -74,14 +74,14 @@ async function navigateProfileOptions(option: string) {
 
 	const profileOption = profileOptions.find((elem) => elem.key == option);
 	if (profileOption) {
-    if (profileOption.label === '/login') {
-      localStorage.clear();
-      sendRequest("GET", "/logout");
-      // Handle error, if it matters
-      // const response = await sendRequest("GET", "/logout");
-      // if (response["error"])
-      //
-    }
+		if (profileOption.label === '/login') {
+		localStorage.clear();
+		sendRequest("GET", "/logout");
+		// Handle error, if it matters
+		// const response = await sendRequest("GET", "/logout");
+		// if (response["error"])
+		//
+		}
 		navigateTo(profileOption.label);
-  }
+	}
 }

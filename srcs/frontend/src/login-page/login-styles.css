@@ -3,6 +3,14 @@
 	max-width: 90%;
 }
 
+.googleButton {
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 250ms;
+}
+
 .data-user {
 	width: 100%;
 	background-color: var(--violet);

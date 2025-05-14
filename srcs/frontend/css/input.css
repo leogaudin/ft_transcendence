@@ -88,6 +88,12 @@ h1 {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+
+	opacity: 1;
+	animation-name: fadeInOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-in;
+	animation-duration: 100ms;
 }
 
 .standard-purple-card {
@@ -271,4 +277,32 @@ h1 {
 	border-bottom: 3px solid var(--accent-pink);
 	border-radius: 3px;
 	margin: 10px;
+}
+
+/* --> Animations <-- */
+
+@keyframes fadeInOpacity {
+	0% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+.fade-out {
+	opacity: 0;
+	animation-name: fadeOutOpacity;
+	animation-iteration-count: 1;
+	animation-timing-function: ease-out;
+	animation-duration: 100ms;
+}
+
+@keyframes fadeOutOpacity {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
 }
