@@ -41,6 +41,7 @@ async function messageInChat(data, userId){
 						sender_username: username,
 						sent_at: data.sent_at,
 						read: false,
+						type: "message",
 					}))
 				}
 				else if (!socketsChat.has(receiver_id) && socketsToast.has(receiver_id))
@@ -150,7 +151,6 @@ async function tournamentCreation(data, sender_id, receiver_id){
 	const username = await getUsername(data.sender_id);
 	const receiver_username = await getUsername(data.receiver_id);
 	if (data.info === "request") {
-		// Enviar notificación al creador
 		if (sender){
 			sender.send(JSON.stringify({
 				body: `You invited ${ receiver_username }`,
@@ -161,7 +161,6 @@ async function tournamentCreation(data, sender_id, receiver_id){
 				tournament: data.tournament,
 			}));
 		}
-		// Enviar invitación al receptor
 		if (receiver){
 			await addInvitationToTournament({tournament_id: tournament_id, user_id: receiver_id});
 			await modifyInvitationToTournament({status: "pending", tournament_id: tournament_id}, receiver_id);
@@ -236,7 +235,6 @@ export default function createWebSocketsRoutes(fastify){
 						 }
 					}
 					else{
-						console.log("antes de la funcion de mensajes", data)
 						messageInChat(data, userId);
 					}
 				})
@@ -278,10 +276,10 @@ export default function createWebSocketsRoutes(fastify){
 						socketsToast.forEach((clientSocket, clientId) => {
 							try{
 							  clientSocket.send(JSON.stringify({
-								type: "friendStatusUpdate",
-								userId: userId,
-								status: "online",
-								timestamp: new Date().toISOString()
+									type: "friendStatusUpdate",
+									userId: userId,
+									status: "online",
+									timestamp: new Date().toISOString()
 							  }));
 							}
 							catch (error){
@@ -334,9 +332,9 @@ export default function createWebSocketsRoutes(fastify){
 							if (userId){
 							  socketsPong.set(userId, socket);
 							  socket.send(JSON.stringify({
-								type: "connection",
-								status: "success",
-								message: "Connected"
+									type: "connection",
+									status: "success",
+									message: "Connected"
 							  }));
 							}
 						  }
@@ -373,9 +371,9 @@ export default function createWebSocketsRoutes(fastify){
 							if (userId){
 							  socketsFourInARow.set(userId, socket);
 							  socket.send(JSON.stringify({
-								type: "connection",
-								status: "success",
-								message: "Connected"
+									type: "connection",
+									status: "success",
+									message: "Connected"
 							  }));
 							}
 						  }
@@ -398,7 +396,6 @@ export default function createWebSocketsRoutes(fastify){
 			})
 		},
 		{
-			// socketsTournament(tournamentId, socket)
 			url: "/tournament",
 			method: "GET",
 			websocket: true,
