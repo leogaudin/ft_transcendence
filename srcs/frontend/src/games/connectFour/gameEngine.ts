@@ -81,6 +81,7 @@ export function insertDivWinner(player1: Player, player2: Player, columnList: HT
 			winner.style.display = "block";
 			winner.innerHTML = `¡El <span>${player}</span> ha ganado!`;
 		}
+        console.log("EL jugador: ", player, " ha ganado.");
 		disableClicks(columnList);
 }
 
@@ -126,9 +127,12 @@ export async function updateTurnIndicator(player1: Player, player2: Player, colu
 
             cells.forEach((cell: HTMLElement) => {
                 if (cell.classList.contains("cell") && !player2.AI) {
-                    cell.className = `cell ${currentPlayer.color === "red" ?
-                        `bg-gradient-to-r hover:from-pink-400 hover:to-red-500` :
-                        `bg-gradient-to-r hover:from-orange-400 hover:to-yellow-500`}`;
+                    cell.classList.remove("red-hover", "yellow-hover");
+                if (currentPlayer.color === "red") {
+                    cell.classList.add("red-hover");
+                } else if (currentPlayer.color === "yellow") {
+                    cell.classList.add("yellow-hover");
+                }
                 }
             });
         });
@@ -175,7 +179,6 @@ export async function placeToken(column: HTMLElement, player1: Player, player2: 
 
     await updateCell(cells[row], currentPlayer);
     await updateTurnIndicator(player1, player2, columnList, columnMap, mode);
-    await delay(1000);
     enableClicks(columnList);
 }
 
@@ -227,7 +230,8 @@ function checkDirection(col: number, row: number, player: number, directions: { 
 			for (let s = 1; s < 4; s++) {
 				const newCol = col + x * s * step;
 				const newRow = row + y * s * step;
-                if (columnList[newCol].id === undefined) break ;
+                if (newCol < 0 || newCol >= columnList.length || newRow < 0 || newRow >= 6 )
+                    break;
                 const column = boardMap.get(columnList[newCol].id);
                 if (!column) break ;
 

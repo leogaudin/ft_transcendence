@@ -45,13 +45,16 @@ export function crazyTokensMode(activateAI: boolean): void {
     /* Initialization Functionality */
 
     function init(): void {
+        const dice = document.getElementById("dice-container");
+        if (!dice) return ;
+        dice.style.display = 'block';
+
         initEngine(player1, boardMap, columnMap, columnList);
     }
 
     async function start(): Promise<void> {
         clearGame();
         init();
-        insertDice();
         enableClicks();
         await document.getElementById("dice-container")!.addEventListener("click", () => rollDice());
         columnList.forEach((column: HTMLElement) => {
@@ -99,7 +102,7 @@ export function crazyTokensMode(activateAI: boolean): void {
         }
         else
             await placeToken(column);
-       if (checkWin(false)) {
+        if (checkWin(false)) {
 			insertDivWinner();
 			disableClicks();
 		} else if (checkDraw()) {
@@ -116,17 +119,7 @@ export function crazyTokensMode(activateAI: boolean): void {
 		}
     }
 
-    /* Insert Div Win / Draw / Dice */
-
-    function insertDice(): void {
-        const diceContainer = document.createElement("div");
-
-        diceContainer.id = "dice-container";
-        diceContainer.className = "flex items-center justify-center w-20 h-20 rounded-lg bg-gray-100 shadow-lg transition-all ease-in-out";
-        diceContainer.innerHTML = `<span id="dice-icon">⚪</span>`;
-        diceContainer.style.backgroundColor = `rgba(255, 2, 2, 0.811)`;
-        document.getElementById("board")!.appendChild(diceContainer);
-    }
+    /* Insert Div Win / Draw */
 
     function insertDivWinner(): void {
         document.getElementById("dice-container")!.style.pointerEvents = 'none';
@@ -509,15 +502,20 @@ export function crazyTokensMode(activateAI: boolean): void {
 
                 if (columnCells && columnData) {
                     const cell = columnCells[newRow];
+                    const currentPlayer = player1.turn ? player1 : player2;
+
                     cell.style.transition = 'background-color 0.3s';
                     cell.style.backgroundColor = '#ff000088';
                     await delay(200);
                     columnData[newRow] = 0;
                     cell.innerHTML = "";
                     cell.style.backgroundColor = "";
-                    cell.className = `cell ${player1.turn ?
-                    `bg-gradient-to-r hover:from-pink-400 hover:to-red-500` :
-                    `bg-gradient-to-r hover:from-orange-400 hover:to-yellow-500`}`;
+
+                    if (currentPlayer.color === "red") {
+                        cell.classList.add("red-hover");
+                    } else if (currentPlayer.color === "yellow") {
+                        cell.classList.add("yellow-hover");
+                    }
                     await updateBoard(col.id);
                 }
             }
