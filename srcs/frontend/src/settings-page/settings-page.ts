@@ -59,7 +59,6 @@ function changedWindowSize() {
 		twoFactor.classList.remove("hide");
 		blockedAccounts.classList.remove("hide");
 
-		settingsDiv.classList.add("animate__fadeInRight");
 		changePassword.classList.add("animate__fadeInLeft");
 		twoFactor.classList.add("animate__fadeInLeft");
 		blockedAccounts.classList.add("animate__fadeInLeft");
@@ -80,6 +79,7 @@ function toggleMobileDisplay(option: number) {
 	if (arrayOptions) { 
 		arrayOptions[option].classList.add('animate__fadeOutLeft');
 		settingsDiv.style.position = 'absolute';
+		settingsDiv.classList.add("animate__fadeInRight");
 		settingsDiv.classList.remove('hidden');
 		settingsDiv.onanimationend = () => {};
 		arrayOptions[option].onanimationend = () => {

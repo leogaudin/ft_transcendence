@@ -227,6 +227,7 @@ function toggleMobileDisplay() {
 		else {
 			avatarEditorPage.classList.add('animate__fadeOutRight');
 			modifyProfilePage.classList.remove('hidden');
+			modifyProfilePage.classList.add('animate__fadeInLeft');
 			modifyProfilePage.onanimationend = () => {};
 			avatarEditorPage.onanimationend = () => {
 				avatarEditorPage.classList.add('hidden');
