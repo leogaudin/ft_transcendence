@@ -8,6 +8,7 @@ export interface LastMessage {
 	chat_id: number;
 	sender_username: string;
 	friend_username: string;
+	friend_avatar: string;
 	sent_at: string;	
 }
 
@@ -49,6 +50,7 @@ export interface Message {
 export interface MessageObject {
 	chat_id: number;
 	friend_username: string;
+  friend_avatar: string;
 }
 
 export interface User {
@@ -115,4 +117,15 @@ export interface Blocked {
 export interface Games {
 	isCustom: string,
 	gameMode: string,
+}
+
+export interface Profile {
+	id: number,
+	username: string,
+	avatar: string,
+	nick: string,
+	description: string,
+	created_at: string,
+	wins: string,
+	losses: string,
 }

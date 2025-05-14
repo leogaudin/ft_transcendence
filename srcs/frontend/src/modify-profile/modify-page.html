@@ -15,7 +15,7 @@
                     alt="Profile photo">
                 <div class="flex justify-between gap-4 p-2.5">
                     <form id='formid'>
-                        <input id='fileid' type='file' hidden />
+                        <input id='fileid' type='file' accept="image/png, image/gif, image/jpeg, image/webp" hidden />
                         <input id='buttonid' type='button' value='Upload a photo'
                             class="button p-2.5 rounded-[15px] cursor-pointer" />
                         <input type='submit' value='Submit' hidden />
@@ -36,8 +36,7 @@
                         Nick</span>
                     <form id="nick-form" class="hidden w-full mx-1.5">
                         <input id="modify-nick" type="text"
-                            class="w-full outline-none indent-2 opacity-60 bg-[whitesmoke] text-[var(--dark-purple)] rounded-[15px] maxlength="
-                            16"" maxlength="24">
+                            class="w-full outline-none indent-2 opacity-60 bg-[whitesmoke] text-[var(--dark-purple)] rounded-[15px]" maxlength="16">
                         <button type="submit" hidden></button>
                     </form>
                     <svg class="edit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" height="24px"
@@ -65,16 +64,16 @@
                 </div>
                 <div class="flex justify-between w-full">
                     <p class="font-bold text-white whitespace-nowrap">Account creation date: </p>
-                    <span class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50] w-full">00-00-0000</span>
+                    <span id="your-creation-date" class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50] w-full">00-00-0000</span>
                 </div>
                 <div class="grid grid-cols-2 flex justify-center">
                     <div class="flex flex-col w-full justify-center items-center">
                         <p class="font-bold text-white">Total Wins Rate</p>
-                        <span class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">0</span>
+                        <span id="your-wins" class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">0</span>
                     </div>
                     <div class="flex flex-col w-full items-center justify-center">
-                        <p class="font-bold text-white">Total Loses Rate</p>
-                        <span class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">0</span>
+                        <p class="font-bold text-white">Total Losses Rate</p>
+                        <span id="your-losses" class="font-thin mx-1.5 px-1.5 rounded-[15px] bg-[#d087ac50]">0</span>
                     </div>
                 </div>
             </div>
