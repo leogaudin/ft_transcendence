@@ -9,12 +9,20 @@ export async function initLoginEvents() {
 	resetPassword();
 	initLoginFetches();
 	googleSignIn();
-  const res = await sendRequest("GET", "/islogged");
-  if (res["logged"]) {
-    console.log("JWT found, user is already logged");
-  } else {
-    console.log("JWT not found, user is not logged");
-  }
+//   const res = await sendRequest("GET", "/islogged");
+//   if (res["logged"]) {
+//     console.log("JWT found, user is already logged");
+//   } else {
+//     console.log("JWT not found, user is not logged");
+//   }
+	setTimeout(() => {
+		const googleButton = document.getElementsByClassName("g_id_signin")[0];
+		const loadingIcon = document.getElementsByClassName("animate-spin")[0];
+		if (!googleButton || !loadingIcon) { return; }
+		googleButton.classList.remove("opacity-0");
+		loadingIcon.classList.add("hidden");
+		googleButton.classList.add("googleButton");
+	}, 500);
 }
 
 export function dropDown(){
@@ -88,11 +96,8 @@ function resetPassword() {
 	const resetPasswordDialog = document.getElementById("recover-password") as HTMLDialogElement;
 	if (!resetPassButton || !resetPasswordDialog)
 		return;
-	const visualDiv = document.getElementById("visual-div");
 	resetPassButton.addEventListener("click", () => {
 		popUp();
-		if (visualDiv)
-			visualDiv.style.opacity = "0.5";
 		const form = document.getElementById("login-form") as HTMLFormElement;
 		if (form)
 			form.reset();
@@ -100,8 +105,6 @@ function resetPassword() {
 	resetPasswordDialog.addEventListener("click", (e) => {
 		const target = e.target as HTMLElement;
 		if (target.classList.contains("close-icon")) {
-			if (visualDiv)
-				visualDiv.style.opacity = "1";
 			resetPasswordDialog.style.display = "none";
 			resetPasswordDialog.close();
 		}

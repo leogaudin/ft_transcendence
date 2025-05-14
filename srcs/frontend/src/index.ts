@@ -99,10 +99,24 @@ const routes = [
 ];
 
 export function navigateTo(path: string, data: object = {}) {
-	history.pushState(null, "", path);
-	if (socketToast && path === "/login")
-		socketToast.close();
-	loadContent(path, data);
+  const screen = document.getElementsByClassName("screen-set")[0];
+  if (screen) {
+    screen.classList.add("fade-out");
+    // Wait for the animation to complete before navigating
+    setTimeout(() => {
+      history.pushState(null, "", path);
+      if (socketToast && path === "/login")
+        socketToast.close();
+      loadContent(path, data);
+    }, 150); 
+  } 
+  else {
+    // If no screen element, navigate immediately
+    history.pushState(null, "", path);
+    if (socketToast && path === "/login")
+      socketToast.close();
+    loadContent(path, data);
+  }
 }
 
 async function loadContent(path: string, data: object = {}) {
