@@ -330,8 +330,7 @@ export function crazyTokensMode(data: Games): void {
         diceContainer.classList.add("rolling");
         await delay(1000);
         const randomIndex = Math.floor(Math.random() * crazyTokens.length);
-        /* const newToken = crazyTokens[randomIndex]; */
-        const newToken = "👻";
+        const newToken = crazyTokens[randomIndex];
         
         diceIcon.innerText = newToken;
         currentPlayer.specialToken = newToken;
