@@ -87,8 +87,12 @@ export function crazyTokensMode(data: Games): void {
 		}
 
         const currentPlayer = player1.turn ? player1 : player2;
-        if (currentPlayer.affected && currentPlayer.affected != "🎲" && currentPlayer.turnAffected > 0)
-            await disableEffects(currentPlayer);
+        if (currentPlayer.affected && currentPlayer.affected != "🎲" && currentPlayer.turnAffected > 0){
+            if (currentPlayer.turnAffected > 1)
+                currentPlayer.turnAffected--;
+            else
+                await disableEffects(currentPlayer);
+        }
 
         if (currentPlayer.useSpecial && currentPlayer.affected === "🎲"){
             const randomColumn = columnList[Math.floor(Math.random() * columnList.length)];
@@ -330,7 +334,7 @@ export function crazyTokensMode(data: Games): void {
         diceContainer.classList.add("rolling");
         await delay(1000);
         const randomIndex = Math.floor(Math.random() * crazyTokens.length);
-        const newToken = crazyTokens[randomIndex];
+        const newToken = "👻";
         
         diceIcon.innerText = newToken;
         currentPlayer.specialToken = newToken;
@@ -550,7 +554,7 @@ export function crazyTokensMode(data: Games): void {
         player1.turn = !player1.turn;
         player2.turn = !player2.turn;
         opponent.affected = currentPlayer === player1 ? player1.specialToken : player2.specialToken;
-        opponent.turnAffected = 1;
+        opponent.turnAffected = 2;
     } 
 
 	async function handleDice(): Promise<void> {
