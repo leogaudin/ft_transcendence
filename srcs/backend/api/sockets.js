@@ -203,6 +203,64 @@ async function tournamentCreation(data, sender_id, receiver_id){
 	}
 }
 
+async function handleAvatarChange(data){
+	let username = await getUsername(data.sender_id)
+	socketsToast.forEach((clientSocket, clientId)=> {
+		try{
+			if (clientId !== data.sender_id){
+				clientSocket.send(JSON.stringify({
+					type: "change_avatar",
+					sender_id: data.sender_id,
+					receiver_id: clientId,
+					avatar_url: data.avatar,
+					username: username,
+				}))
+			}
+		}
+		catch(error){
+			console.error("Error while changing avatar:", error);
+		}
+	})
+}
+
+async function handleGameInvitation(data, sender_id, receiver_id){
+	if (data.info === "request"){
+		let username = await getUsername(data.sender_id);
+		if (socketsToast.has(receiver_id)){
+			const receiver = socketsToast.get(receiver_id);
+			receiver.send(JSON.stringify({
+				type: "game_invitation",
+				info: "request",
+				body: `${username} has invited you to play ${data.game_type}`,
+				sender_id: data.sender_id,
+				receiver_id: data.receiver_id,
+			}))
+		}
+	}
+	else if (data.info === "accept"){
+		if (socketsToast.has(receiver_id)){
+			const receiver = socketsToast.get(receiver_id)
+			receiver.send(JSON.stringify({
+				type: "game_accepted",
+				info: "accept",
+				sender_id: data.sender_id,
+				receiver_id: data.receiver_id,
+			}))
+		}
+	}
+	else if (data.info === "reject"){
+		if (socketsToast.has(receiver_id)){
+			const receiver = socketsToast.get(receiver_id)
+			receiver.send(JSON.stringify({
+				type: "game_rejected",
+				info: "reject",
+				sender_id: data.sender_id,
+				receiver_id: data.receiver_id,
+			}))
+		}
+	}
+}
+
 export default function createWebSocketsRoutes(fastify){
 	return [
 		{
@@ -234,9 +292,8 @@ export default function createWebSocketsRoutes(fastify){
 							}));
 						 }
 					}
-					else{
+					else
 						messageInChat(data, userId);
-					}
 				})
 				socket.on("close", () => {
 					console.log("Client disconnected from /chat");
@@ -295,25 +352,10 @@ export default function createWebSocketsRoutes(fastify){
 							friendRequest(data, sender_id, receiver_id);
 						else if (data.type === "tournament")
 							tournamentCreation(data, sender_id, receiver_id);
-						else if (data.type === "change_avatar"){
-							let username = await getUsername(data.sender_id)
-							socketsToast.forEach((clientSocket, clientId)=> {
-								try{
-									if (clientId !== data.sender_id){
-										clientSocket.send(JSON.stringify({
-											type: "change_avatar",
-											sender_id: data.sender_id,
-											receiver_id: clientId,
-											avatar_url: data.avatar,
-											username: username,
-										}))
-									}
-								}
-								catch(error){
-									console.error("Error while changing avatar:", error);
-								}
-							})
-						}
+						else if (data.type === "change_avatar")
+							handleAvatarChange(data)
+						else if (data.type === "game_invitation")
+							handleGameInvitation(data, sender_id, receiver_id);
 					}
 				})
 				socket.on("close", async () => {
@@ -366,7 +408,7 @@ export default function createWebSocketsRoutes(fastify){
 						}
 					}
 					else{
-
+						
 					}
 				})
 				socket.on("close", () => {

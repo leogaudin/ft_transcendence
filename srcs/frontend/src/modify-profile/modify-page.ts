@@ -160,7 +160,6 @@ function toggleAvatarEditor() {
 				}
 			}
 			const avatar = await uploadCanvas(canvas);
-			console.log(avatar)
 			if (socketToast){
 				socketToast.send(JSON.stringify({
 					type: "change_avatar",

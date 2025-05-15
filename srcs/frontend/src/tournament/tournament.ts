@@ -167,7 +167,6 @@ export function createSocketTournamentConnection(tournamentName: string, game_ty
         try{
         	const data = JSON.parse(event.data);
         	tournament = data.tournament;
-        	console.log("soy tournament.ts", tournament);
         	resolve (tournament);
          }
          catch(err){
@@ -280,7 +279,6 @@ function displaySearchResults(players: UserMatches[], container: HTMLElement) {
     return;
   }
   players.forEach( async (player) => {
-    debugger;
     const option = document.createElement('div');
     option.className = 'player-item';
     const is_invited = await sendRequest("POST", "/tournaments/isinvited", { tournament_id: tournament.tournament_id, user_id: player.user_id });

@@ -322,7 +322,7 @@ export async function displayInvitations() {
 			if (invitation.invitation_type === "sent") {
 				card.innerHTML = `
 					<div class="flex items-center gap-4">
-						<img id="invitation-avatar" class="card-avatar rounded-full m-1.5" src="${invitation.receiver_avatar}" alt="Avatar">
+						<img id="invitation-avatar-${invitation.receiver_id}" class="card-avatar rounded-full m-1.5" src="${invitation.receiver_avatar}" alt="Avatar">
 						<div class="flex flex-col">
 							<h3>${invitation.receiver_username}</h3>
 							<p class="opacity-50 text-sm">${invitation.receiver_status}</p>
@@ -339,7 +339,7 @@ export async function displayInvitations() {
 			else {
 				card.innerHTML = `
 					<div class="flex items-center gap-4">
-						<img id="invitation-avatar" class="card-avatar rounded-full m-1.5" src="${invitation.sender_avatar}" alt="Avatar">
+						<img id="invitation-avatar-${invitation.sender_id}" class="card-avatar rounded-full m-1.5" src="${invitation.sender_avatar}" alt="Avatar">
 						<div class="flex flex-col">
 							<h3>${invitation.sender_username}</h3>
 							<p class="opacity-50 text-sm">${invitation.sender_status}</p>
