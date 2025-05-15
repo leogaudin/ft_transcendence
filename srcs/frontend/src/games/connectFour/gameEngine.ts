@@ -150,28 +150,34 @@ async function updateCell(cell: HTMLElement, player: Player): Promise<void> {
         token.style.animation = "token 0.5s ease-in forwards";
         cell.className = "filled";
         cell.appendChild(token);
+        await delay(500)
+        token.style.animation = "";
 }
 
 export async function placeToken(column: HTMLElement, player1: Player, player2: Player, columnMap: Map<string, HTMLElement[]>, boardMap: Map<string, number[]>, columnList: HTMLElement[], mode: string): Promise<void> {
     disableClicks(columnList);
     if (!column || !column.id) {
+        enableClicks(columnList);
         console.error("Column or column ID is invalid: ", column);
         return;
     }
 
     const cells = columnMap.get(column.id);
     if (!cells) {
+        enableClicks(columnList);
         console.error("Cells are undefined for column ID: ", column.id);
         return;
     }
     const columnData = boardMap.get(column.id);
     if (!columnData) {
+        enableClicks(columnList);
         console.error("ColumnData is undefined for column ID: ", column.id, boardMap);
         return;
     }    
 
     const row = columnData.findIndex(cell => cell === 0);
     if (row === -1){
+        enableClicks(columnList);
         console.error("No rows left in column: ", column);
         return ;
     }

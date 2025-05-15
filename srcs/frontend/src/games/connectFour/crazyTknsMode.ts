@@ -117,6 +117,7 @@ export function crazyTokensMode(data: Games): void {
 				console.log("AI is thinking...");
 				await aiToken();
 				console.log("AI token placed");
+                enableClicks();
 			}
 		}
     }
@@ -186,6 +187,7 @@ export function crazyTokensMode(data: Games): void {
         if (columnToUse && !isColumnPlayable(columnToUse))
             columnToUse = columnList.find(column => isColumnPlayable(column)) ?? null;
         
+        enableClicks();
         if (columnToUse) columnToUse.click();
     }
     
@@ -328,8 +330,8 @@ export function crazyTokensMode(data: Games): void {
         diceContainer.classList.add("rolling");
         await delay(1000);
         const randomIndex = Math.floor(Math.random() * crazyTokens.length);
-        const newToken = crazyTokens[randomIndex];
-        /* const newToken = "👻"; */
+        /* const newToken = crazyTokens[randomIndex]; */
+        const newToken = "👻";
         
         diceIcon.innerText = newToken;
         currentPlayer.specialToken = newToken;
@@ -435,7 +437,9 @@ export function crazyTokensMode(data: Games): void {
                         
                         cells[emptyCell].className = "filled";
                         token.style.position = 'absolute';
-                        token.style.animation = 'moveToken 0.2 ease-in-out forwards';
+                        token.style.animation = 'moveToken 0.2 ease-in forwards';
+
+                        await delay(200);
 
                         cells[row].removeChild(token);
                         cells[emptyCell].appendChild(token);
@@ -444,6 +448,7 @@ export function crazyTokensMode(data: Games): void {
                             cells[row].className = "cell red-hover";
                         else if (currentPlayer.color === "yellow")
                             cells[row].className = "cell yellow-hover";
+                        token.style.animation = '';
                     }
                 }
             }
@@ -610,10 +615,16 @@ export function crazyTokensMode(data: Games): void {
         
         const cells = columnMap.get(column.id);
         const columnData = boardMap.get(column.id);
-		if (!cells || !columnData) return;
+		if (!cells || !columnData) {
+            enableClicks();
+            return;
+        }
 
         const row = columnData.findIndex(cell => cell === 0);
-        if (row === -1) return;
+        if (row === -1) {
+            enableClicks();
+            return;
+        }
         
         if (currentPlayer.specialToken === "👻")
             columnData[row] = 3;

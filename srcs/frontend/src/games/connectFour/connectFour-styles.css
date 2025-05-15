@@ -3,15 +3,19 @@
 	width: 75vw;
 }
 
+#game-connect {
+    position: relative;
+    width: 80%;
+    margin-top: 1rem;
+	margin-bottom: 1rem;
+}
 #board {
     border-radius: 15px;
     border: 10px solid rgb(0, 77, 112);
 	background-color: rgb(24, 127, 245);
     aspect-ratio: 2.7 / 1.7;
-	width: 80%;
+	width: 100%;
     overflow: hidden;
-	margin-top: 1rem;
-	margin-bottom: 1rem;
 	position: relative;
     display: grid;
     gap: 1%;
@@ -199,9 +203,9 @@
 
 @keyframes moveToken {
     0% {
-        transform: translateY(0);
+        transform: translateY(100%);
     }
     100% {
-        transform: translateY(calc(100% + 20px));
+        transform: translateY(0%);
     }
 }
