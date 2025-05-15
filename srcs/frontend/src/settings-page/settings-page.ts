@@ -12,6 +12,83 @@ export function initSettingsEvents() {
 	initButtons();
 	moveToHome();
 	initSettingsFetch();
+	changedWindowSize();
+
+	window.addEventListener("resize", changedWindowSize);
+	const returnButtons = document.getElementsByClassName("back-button") as HTMLCollectionOf<HTMLButtonElement>;
+	if (!returnButtons) { return ; }
+	for (let i = 0; i < returnButtons.length; i++) {
+		returnButtons[i].onclick = () => { toggleMobileDisplay(i); };
+	}
+}
+
+function changedWindowSize() {
+	const settingsDiv = document.getElementById("settings-div");
+	const changePassword = document.getElementById("change-password");
+	const twoFactor = document.getElementById("two-factor");
+	const blockedAccounts = document.getElementById("blocked-accounts");
+	if (!settingsDiv || !changePassword || !twoFactor || !blockedAccounts) { return ; }
+
+	if (window.innerWidth > 1280) {
+		settingsDiv.classList.remove("hidden");
+		changePassword.classList.add("hide");
+		twoFactor.classList.add("hide");
+		blockedAccounts.classList.add("hide");
+
+		changePassword.classList.remove("hidden");
+		twoFactor.classList.remove("hidden");
+		blockedAccounts.classList.remove("hidden");
+
+		settingsDiv.classList.remove("animate__fadeInRight");
+		changePassword.classList.remove("animate__fadeInLeft");
+		twoFactor.classList.remove("animate__fadeInLeft");
+		blockedAccounts.classList.remove("animate__fadeInLeft");
+		
+		settingsDiv.classList.remove("animate__fadeOutRight");
+		changePassword.classList.remove("animate__fadeOutLeft");
+		twoFactor.classList.remove("animate__fadeOutLeft");
+		blockedAccounts.classList.remove("animate__fadeOutLeft");
+	}
+	else {
+		settingsDiv.classList.remove("hidden");
+		changePassword.classList.add("hidden");
+		twoFactor.classList.add("hidden");
+		blockedAccounts.classList.add("hidden");
+
+		changePassword.classList.remove("hide");
+		twoFactor.classList.remove("hide");
+		blockedAccounts.classList.remove("hide");
+
+		changePassword.classList.add("animate__fadeInLeft");
+		twoFactor.classList.add("animate__fadeInLeft");
+		blockedAccounts.classList.add("animate__fadeInLeft");
+	}
+	settingsDiv.classList.remove("slide-left");
+	settingsDiv.onanimationend = () => {};
+}
+
+function toggleMobileDisplay(option: number) {
+	const changePassword = document.getElementById("change-password") as HTMLButtonElement;
+	const twoFactor = document.getElementById("two-factor") as HTMLButtonElement;
+	const blockedAccounts = document.getElementById("blocked-accounts") as HTMLButtonElement;
+	const settingsDiv = document.getElementById('settings-div');
+	if (!changePassword || !twoFactor || !blockedAccounts || !settingsDiv)
+		return ;
+	
+	const arrayOptions = [ changePassword, twoFactor, blockedAccounts]; 
+	if (arrayOptions) { 
+		arrayOptions[option].classList.add('animate__fadeOutLeft');
+		settingsDiv.style.position = 'absolute';
+		settingsDiv.classList.add("animate__fadeInRight");
+		settingsDiv.classList.remove('hidden');
+		settingsDiv.onanimationend = () => {};
+		arrayOptions[option].onanimationend = () => {
+			settingsDiv.style.position = 'static';
+			arrayOptions[option].classList.add('hidden');
+			arrayOptions[option].style.position = 'absolute';
+			arrayOptions[option].classList.remove('animate__fadeOutLeft');
+		};
+	}
 }
 
 function initButtons() {
@@ -29,7 +106,8 @@ function initButtons() {
 }
 
 function displayOption(option: number) {
-	resetOptions();
+	if (window.innerWidth > 1280)
+		resetOptions();
 	const changePassword = document.getElementById("change-password") as HTMLButtonElement;
 	const twoFactor = document.getElementById("two-factor") as HTMLButtonElement;
 	const blockedAccounts = document.getElementById("blocked-accounts") as HTMLButtonElement;
@@ -39,8 +117,20 @@ function displayOption(option: number) {
 	
 	const arrayOptions = [ changePassword, twoFactor, blockedAccounts]; 
 	if (arrayOptions) {
-		settingsDiv.classList.add('slide-left');
-		arrayOptions[option].classList.remove('hide');
+		if (window.innerWidth > 1280) {
+			settingsDiv.classList.add('slide-left');
+			arrayOptions[option].classList.remove('hide');
+		}
+		else {
+			settingsDiv.classList.add('animate__fadeOutRight');
+			arrayOptions[option].classList.remove('hidden');
+			settingsDiv.onanimationend = () => {
+				settingsDiv.classList.add('hidden');
+				settingsDiv.classList.remove('animate__fadeOutRight');
+				arrayOptions[option].style.position = 'static';
+				arrayOptions[option].onanimationend = () => {};
+			};
+		}
 	}
 }
 

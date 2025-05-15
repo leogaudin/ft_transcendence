@@ -1,6 +1,7 @@
+
 .settings-size {
-    min-height: 60vh;
-    max-height: 60vh;
+    min-height: 65vh;
+    max-height: 65vh;
 }
 
 /* Add a container for both divs */
@@ -27,6 +28,10 @@
 }
 
 #change-password:not(.hide), #two-factor:not(.hide), #blocked-accounts:not(.hide) { transform: translateX(55%); }
+
+@media (max-width: 	1280px) {
+	#change-password:not(.hide), #two-factor:not(.hide), #blocked-accounts:not(.hide) { transform: translateX(0); }
+}
 
 .settings-option {
 	display: flex;
