@@ -14,8 +14,6 @@ import {
 	placeToken as placeTokenEngine,
 	isColumnPlayable as isColumnPlayableEngine,
 	detectWinOpportunities as detectWinOpportunitiesEngine,
-	doAlgorithm as doAlgorithmEngine,
-	delay as delayEngine,
 } from './gameEngine.js';
 
 import { Games } from "../../types.js";
@@ -79,7 +77,6 @@ export function classicMode(data: Games): void {
 		} else {
 			if (player2.turn && player2.AI) {
 				disableClicks();
-				await delay(1000);
 				console.log("AI is thinking...");
 				await aiToken();
 				console.log("AI token placed");
@@ -110,27 +107,53 @@ export function classicMode(data: Games): void {
 	async function aiToken(): Promise<void> {
 		const winColumns = detectWinOpportunities(player2);
 		if (winColumns.length > 0) {
+			enableClicks();
 			await winColumns[0].click();
 			return;
 		}
 
 		const threatColumns = detectWinOpportunities(player1);
 		if (threatColumns.length > 0) {
+			enableClicks();
 			await threatColumns[0].click();
 			return;
 		}
 
-		let columnToUse = Math.random() < 0.2
+		let columnToUse: HTMLElement | null = Math.random() < 0.2
 			? columnList[Math.floor(Math.random() * columnList.length)]
-			: doAlgorithm();
+			: null;
+
+		if (!columnToUse){
+			const boardState = {
+				boardMap: Object.fromEntries(
+					Array.from(boardMap.entries()).map(([key, value]) => [key, [...value]])
+				),
+				columnIds: columnList.map(col => col.id),
+				player1: { num: player1.num },
+				player2: { num: player2.num }
+        	};
+
+			const worker = new Worker(new URL('./aiWorker.js', import.meta.url));
+			
+			const bestColumnId = await new Promise<string>((resolve) => {
+				worker.onmessage = (e) => resolve(e.data);
+				worker.postMessage({ 
+					boardState,
+					depth: 5
+				});
+			});
+
+			worker.terminate();
+			columnToUse = columnList.find(col => col.id === bestColumnId) || null;
+		}
 
 		if (columnToUse && !isColumnPlayable(columnToUse)) {
-			columnToUse = columnList.find((column: HTMLElement) => isColumnPlayable(column)) || null;
+			columnToUse = columnList.find((column) => isColumnPlayable(column)) || null;
 		}
 
-		if (columnToUse) {
+		enableClicks();
+		if (columnToUse)
 			await columnToUse.click();
-		}
 	}
 
 	function isColumnPlayable(column: HTMLElement): boolean {
@@ -139,16 +162,6 @@ export function classicMode(data: Games): void {
 
 	function detectWinOpportunities(player: Player): HTMLElement[] {
 		return detectWinOpportunitiesEngine(boardMap, columnList, player, player1, player2);
-	}
-
-	function doAlgorithm(): HTMLElement | null {
-		return doAlgorithmEngine(boardMap, columnList, player1, player2);
-	}
-
-	/* Utils */
-
-	async function delay(ms: number): Promise<void> {
-		await delayEngine(ms);
 	}
 
 	start();

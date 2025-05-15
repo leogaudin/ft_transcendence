@@ -16,7 +16,6 @@ import {
     updateTurnIndicator as updateTurnIndicatorEngine,
     isColumnPlayable as isColumnPlayableEngine,
     detectWinOpportunities as detectWinOpportunitiesEngine,
-    doAlgorithm as doAlgorithmEngine,
     delay as delayEngine,
 } from './gameEngine.js';
 
@@ -42,7 +41,7 @@ export function crazyTokensMode(data: Games): void {
         }
     }
 	const player1 = new PlayerClass(false, 1, "red");
-	const player2 = new PlayerClass(data.gameMode === "ai" ? true : false, 2, "yellow");
+	const player2 = new PlayerClass(data.gameMode === "ai-custom" ? true : false, 2, "yellow");
 
     /* Initialization Functionality */
 
@@ -117,7 +116,6 @@ export function crazyTokensMode(data: Games): void {
 		} else {
 			if (player2.turn && player2.AI) {
 				disableClicks();
-				await delay(1000);
 				console.log("AI is thinking...");
 				await aiToken();
 				console.log("AI token placed");
@@ -165,12 +163,14 @@ export function crazyTokensMode(data: Games): void {
     async function aiToken(): Promise<void> {
 		if (player2.affected && player2.affected === "🌫️"){
 			console.log("AI is blind");
+            enableClicks();
             columnList[Math.floor(Math.random() * columnList.length)]?.click();
 			return ;
 		}
 
         const winColumns = detectWinOpportunities(player2);
         if (winColumns.length > 0) {
+            enableClicks();
             winColumns[0]?.click();
             return;
         }
@@ -180,13 +180,38 @@ export function crazyTokensMode(data: Games): void {
 
 		if (!columnToUse){
 			if (threatColumns.length > 0) {
+                enableClicks();
                 threatColumns[0]?.click();
             	return;
 			}
             columnToUse = Math.random() < 0.2 
                 ? (columnList[Math.floor(Math.random() * columnList.length)] ?? null) 
-                : doAlgorithm();
+                : null;
 		}
+
+        if (!columnToUse){
+            const boardState = {
+                boardMap: Object.fromEntries(
+                    Array.from(boardMap.entries()).map(([key, value]) => [key, [...value]])
+                ),
+                columnIds: columnList.map(col => col.id),
+                player1: { num: player1.num },
+                player2: { num: player2.num }
+            };
+
+            const worker = new Worker(new URL('./aiWorker.js', import.meta.url));
+            
+            const bestColumnId = await new Promise<string>((resolve) => {
+                worker.onmessage = (e) => resolve(e.data);
+                worker.postMessage({ 
+                    boardState,
+                    depth: 4
+                });
+            });
+
+            worker.terminate();
+            columnToUse = columnList.find(col => col.id === bestColumnId) || null;
+        }
 
         if (columnToUse && !isColumnPlayable(columnToUse))
             columnToUse = columnList.find(column => isColumnPlayable(column)) ?? null;
@@ -201,10 +226,6 @@ export function crazyTokensMode(data: Games): void {
 
 	function detectWinOpportunities(player: Player): HTMLElement[] {
 		return detectWinOpportunitiesEngine(boardMap, columnList, player, player1, player2);
-	}
-
-	function doAlgorithm(): HTMLElement | null {
-		return doAlgorithmEngine(boardMap, columnList, player1, player2);
 	}
 
 	/* Special Tokens AI Functionality */
@@ -334,7 +355,7 @@ export function crazyTokensMode(data: Games): void {
         diceContainer.classList.add("rolling");
         await delay(1000);
         const randomIndex = Math.floor(Math.random() * crazyTokens.length);
-        const newToken = "👻";
+        const newToken = crazyTokens[randomIndex];
         
         diceIcon.innerText = newToken;
         currentPlayer.specialToken = newToken;
