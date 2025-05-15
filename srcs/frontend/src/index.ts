@@ -69,6 +69,11 @@ const routes = [
 		}
 	},
 	{
+		path: "/statistics",
+		url: "../src/statistics/statistics-page.html",
+		event: () => {}
+	},
+	{
 		path: "/settings",
 		url: "../src/settings-page/settings-page.html",
 		event: () => {

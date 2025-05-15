@@ -647,6 +647,18 @@
   box-shadow: var(--violet) 0px 0px 5px;
 }
 
+/* --> Stats Page <-- */
+
+.stats-won-card {
+  background-color: var(--success);
+  box-shadow: var(--accent-success) 0px 0px 10px;
+}
+
+.stats-lost-card {
+  background-color: var(--alert);
+  box-shadow: var(--accent-alert) 0px 0px 10px;
+}
+
 *, ::before, ::after {
   --tw-border-spacing-x: 0;
   --tw-border-spacing-y: 0;
@@ -1495,6 +1507,10 @@ video {
   flex-direction: column-reverse;
 }
 
+.items-end {
+  align-items: flex-end;
+}
+
 .items-center {
   align-items: center;
 }
@@ -1653,6 +1669,10 @@ video {
 
 .bg-\[var\(--dark-pink\)\] {
   background-color: var(--dark-pink);
+}
+
+.bg-\[var\(--success\)\] {
+  background-color: var(--success);
 }
 
 .bg-\[var\(--violet\)\] {
@@ -2238,6 +2258,10 @@ h1 {
 
   .md\:grid-cols-6 {
     grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .md\:grid-cols-\[1fr_2fr\] {
+    grid-template-columns: 1fr 2fr;
   }
 
   .md\:flex-row {

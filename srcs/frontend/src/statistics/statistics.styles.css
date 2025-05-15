@@ -1,0 +1,9 @@
+.stats-won-card {
+	background-color: var(--success);
+	box-shadow: var(--accent-success) 0px 0px 10px;
+}
+
+.stats-lost-card {
+	background-color: var(--alert);
+	box-shadow: var(--accent-alert) 0px 0px 10px;
+}

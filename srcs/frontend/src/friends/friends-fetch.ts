@@ -278,7 +278,6 @@ export async function displayFriends() {
 			section.setAttribute("class", "friend-card");
 			section.innerHTML = `
 						<div class="flex items-center gap-4">
-              <!-- Se puede poner el avatar de un usuario de la siguiente forma:  -->
 							<img id="friend-avatar" class="card-avatar rounded-full m-1.5" src="${friend.avatar}" alt="Avatar">
 							<div class="flex flex-col">
 								<h3>${friend.username}</h3>
