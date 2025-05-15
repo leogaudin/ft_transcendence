@@ -1,9 +1,13 @@
 import { asyncHandler, validateInput } from "../utils.js";
 import {
   createMatch,
+  createMatchOffline,
   getMatch,
   finishMatch,
   getMatches,
+  getMatchesHistory,
+  getMatchesGeneralStats,
+  getMatchesType,
 } from "../models/matchModel.js";
 
 import {
@@ -25,13 +29,97 @@ export default function createMatchRoutes(fastify) {
       url: "/matches",
       handler: asyncHandler(async (req, res) => {
         const results = await getMatches(req.userId);
-        return res.code(201).send(results);
+        return res.code(200).send(results);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/matches/pong",
+      handler: asyncHandler(async (req, res) => {
+        const results = await getMatchesType(req.userId, "pong");
+        return res.code(200).send(results);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/matches/connect",
+      handler: asyncHandler(async (req, res) => {
+        const results = await getMatchesType(req.userId, "connect_four");
+        return res.code(200).send(results);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/matches/history/pong",
+      handler: asyncHandler(async (req, res) => {
+        const results = await getMatchesHistory(req.userId, "pong");
+        return res.code(200).send(results);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/matches/history/connect",
+      handler: asyncHandler(async (req, res) => {
+        const results = await getMatchesHistory(req.userId, "connect_four");
+        return res.code(200).send(results);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/matches/general/pong",
+      handler: asyncHandler(async (req, res) => {
+        const results = await getMatchesGeneralStats(req.userId, "pong");
+        return res.code(200).send(results);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "GET",
+      url: "/matches/general/connect",
+      handler: asyncHandler(async (req, res) => {
+        const results = await getMatchesGeneralStats(
+          req.userId,
+          "connect_four",
+        );
+        return res.code(200).send(results);
       }),
     },
     {
       preHandler: [fastify.authenticate],
       method: "POST",
-      url: "/matches",
+      url: "/matches/offline",
+      handler: asyncHandler(async (req, res) => {
+        if (
+          !validateInput(req, res, [
+            "game_type",
+            "custom_mode",
+            "rival_alias",
+            "first_player_score",
+            "second_player_score",
+          ])
+        )
+          return;
+        req.body.userId = req.userId;
+        if (req.body.first_player_score > req.body.second_player_score) {
+          req.body.winner_id = req.body.userId;
+          req.body.loser_id = null;
+        } else {
+          req.body.loser_id = req.body.userId;
+          req.body.winner_id = null;
+        }
+        const match = await createMatchOffline(req.body);
+        return res.code(201).send(match);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "POST",
+      url: "/matches/online",
       handler: asyncHandler(async (req, res) => {
         if (
           !validateInput(req, res, [
