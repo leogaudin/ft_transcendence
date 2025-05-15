@@ -53,7 +53,6 @@
 }
 
 #explanation {
-  color: white;
   background-color: var(--dark-pink);
   box-shadow: #3b00345d 0px 5px 5px;
   border-radius: 15px;
@@ -1825,11 +1824,6 @@ video {
 .text-gray-500 {
   --tw-text-opacity: 1;
   color: rgb(107 114 128 / var(--tw-text-opacity, 1));
-}
-
-.text-gray-700 {
-  --tw-text-opacity: 1;
-  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
 }
 
 .text-white {
