@@ -9,6 +9,7 @@ export interface LastMessage {
 	sender_username: string;
 	friend_username: string;
 	friend_avatar: string;
+	friend_id: string;
 	sent_at: string;	
 }
 

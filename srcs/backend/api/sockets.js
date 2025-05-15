@@ -295,6 +295,25 @@ export default function createWebSocketsRoutes(fastify){
 							friendRequest(data, sender_id, receiver_id);
 						else if (data.type === "tournament")
 							tournamentCreation(data, sender_id, receiver_id);
+						else if (data.type === "change_avatar"){
+							let username = await getUsername(data.sender_id)
+							socketsToast.forEach((clientSocket, clientId)=> {
+								try{
+									if (clientId !== data.sender_id){
+										clientSocket.send(JSON.stringify({
+											type: "change_avatar",
+											sender_id: data.sender_id,
+											receiver_id: clientId,
+											avatar_url: data.avatar,
+											username: username,
+										}))
+									}
+								}
+								catch(error){
+									console.error("Error while changing avatar:", error);
+								}
+							})
+						}
 					}
 				})
 				socket.on("close", async () => {

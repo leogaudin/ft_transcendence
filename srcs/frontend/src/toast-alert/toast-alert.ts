@@ -1,6 +1,7 @@
 import { getClientID } from "../messages/messages-page.js"
 import { displayFriends, displayInvitations, showMatches, debounce } from "../friends/friends-fetch.js";
 import { Tournament } from "../types.js";
+import { chargeChat, recentChats } from "../messages/load-info.js";
 
 export let socketToast: WebSocket | null;
 let toastTimeout: NodeJS.Timeout;
@@ -128,6 +129,22 @@ export function createsocketToastConnection() {
 					showAlert(data.body, "toast-success");
 				else if (data.info === "reject")
 					showAlert(data.body, "toast-error");
+			}
+			else if (data.type === "change_avatar" && data.avatar_url){
+				if (window.location.pathname === "/friends"){
+
+				}
+				else if (window.location.pathname === "/messages"){
+					const avatar_container = document.getElementById(`friend-avatar-${data.sender_id}`) as HTMLImageElement;
+					const chat_container = document.getElementById("chat-friend-username") as HTMLElement
+        	if (avatar_container){
+						avatar_container.src = data.avatar_url;
+        	}
+					if (chat_container.innerText === data.username){
+						const contact_picture = document.getElementById("contact-picture") as HTMLImageElement;
+						contact_picture.src = data.avatar_url;
+					}
+				}
 			}
 		}
 		catch(err){

@@ -9,6 +9,7 @@ export function initFriendFetches() {
 	const searchForm = document.getElementById("message-box") as HTMLFormElement;
 	const friendInput = document.getElementById("friend-input") as HTMLInputElement;
 	const searchFriend = document.getElementById("search-friend") as any;
+	
 	if (!friendInput || !searchFriend || !searchForm)
 		return;
 	displayFriends();

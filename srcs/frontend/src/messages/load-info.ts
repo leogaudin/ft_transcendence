@@ -6,7 +6,6 @@ export function loadInfo(data: MessageObject) {
 	displayFirstChat(data);
 	recentChats();
 	searchChatFriend();
-
 	const returnButton = document.getElementById("go-back-chat");
 	if (returnButton)
 		returnButton.addEventListener("click", () => {
@@ -106,7 +105,7 @@ export async function recentChats() {
 			const recentChatsTyped = await sendRequest('GET', 'chats/last') as LastMessage[];
 			if (!recentChatsTyped)
 				throw new Error("Error fetching recent chats");
-	
+			
 			recentChatsTyped.forEach((chat) => {
 				var subDiv = document.createElement('div');
 	
@@ -115,7 +114,7 @@ export async function recentChats() {
 				subDiv.innerHTML = `
 				<div id="chat-${chat.chat_id} "class="flex items-center gap-2 recent-chat-card">
 					<div id="chat-avatar">
-						<img class="rounded-full aspect-square" src="${chat.friend_avatar}" alt="Avatar">
+						<img id="friend-avatar-${chat.friend_id}" class="rounded-full aspect-square" src="${chat.friend_avatar}" alt="Avatar">
 					</div>
 					<div class="chat-info overflow-hidden">
 						<h3>${chat.friend_username}</h3>
@@ -127,7 +126,9 @@ export async function recentChats() {
 				subDiv.addEventListener("click", () => {
 					if (last_chat !== chat.chat_id) {
 						last_chat = chat.chat_id;
-						chargeChat(chat.chat_id, chat.friend_username, chat.friend_avatar);
+						const friend_avatar = document.getElementById(`friend-avatar-${chat.friend_id}`) as HTMLImageElement;
+						if (!friend_avatar) { return ; }
+						chargeChat(chat.chat_id, chat.friend_username, friend_avatar.src);
 					}
 				});
 			})
@@ -151,7 +152,7 @@ export async function chargeChat(chat_id: number, friend_username: string, frien
     hasMoreMessages = true;
     page = 1;
   }
-
+	
   const chatDiv = document.getElementById("message-history");
   let contactName = document.getElementById("chat-friend-username");
   let contactAvatar = document.getElementById("contact-picture");
