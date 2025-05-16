@@ -340,7 +340,7 @@
   position: absolute;
 }
 
-#modify-profile-photo, canvas {
+#modify-profile-photo, #myCanvas {
   width: 250px;
   aspect-ratio: 1/1;
   box-shadow: var(--dark-pink) 0px 0px 10px;
@@ -657,6 +657,11 @@
 .stats-lost-card {
   background-color: var(--alert);
   box-shadow: var(--accent-alert) 0px 0px 10px;
+}
+
+.myChartDiv {
+  height: 250px;
+  aspect-ratio: 1/1;
 }
 
 *, ::before, ::after {
@@ -1671,10 +1676,6 @@ video {
   background-color: var(--dark-pink);
 }
 
-.bg-\[var\(--success\)\] {
-  background-color: var(--success);
-}
-
 .bg-\[var\(--violet\)\] {
   background-color: var(--violet);
 }
@@ -1937,6 +1938,7 @@ video {
 
 body {
   background-color: var(--dark-pink);
+  /* background-color: #f5f5f56e; */
   margin: 0;
   font-family: "Perfect DOS VGA";
   color: var(--accent-pink);
@@ -2260,8 +2262,8 @@ h1 {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
 
-  .md\:grid-cols-\[1fr_2fr\] {
-    grid-template-columns: 1fr 2fr;
+  .md\:grid-cols-\[2fr_3fr\] {
+    grid-template-columns: 2fr 3fr;
   }
 
   .md\:flex-row {

@@ -7,3 +7,8 @@
 	background-color: var(--alert);
 	box-shadow: var(--accent-alert) 0px 0px 10px;
 }
+
+.myChartDiv {
+	height: 250px;
+	aspect-ratio: 1/1;
+}

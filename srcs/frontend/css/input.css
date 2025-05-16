@@ -58,6 +58,7 @@
 
 body {
 	background-color: var(--dark-pink);
+	/* background-color: #f5f5f56e; */
 	margin: 0;
 	font-family: "Perfect DOS VGA";
 	color: var(--accent-pink);

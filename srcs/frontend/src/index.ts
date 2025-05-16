@@ -11,6 +11,7 @@ import { pong } from "./games/game.js"
 import { initTournamentEvents } from "./tournament/tournament.js";
 import { initSelectPageEvent } from "./games/select-game-page.js";
 import { initModifyPageEvents } from "./modify-profile/modify-page.js";
+import { initStatsEvents } from "./statistics/stats-page.js";
 
 const routes = [
 	{
@@ -71,7 +72,9 @@ const routes = [
 	{
 		path: "/statistics",
 		url: "../src/statistics/statistics-page.html",
-		event: () => {}
+		event: () => {
+			initStatsEvents();
+		}
 	},
 	{
 		path: "/settings",
