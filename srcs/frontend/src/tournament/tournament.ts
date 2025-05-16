@@ -2,6 +2,8 @@ import { getClientID } from "../messages/messages-page.js";
 import { UserMatches, Tournament } from "../types.js";
 import { sendRequest } from "../login-page/login-fetch.js";
 import { socketToast, showAlert } from "../toast-alert/toast-alert.js";
+import { debounce } from "../friends/friends-fetch.js";
+import { navigateTo } from "../index.js";
 
 export let socketTournament: WebSocket | null = null;
 export let tournament: Tournament;
@@ -10,6 +12,19 @@ export function initTournamentEvents(){
 	createTournament();
 	initSearchPlayers();
   initTournamentSearch();
+  initBackButton()
+}
+
+function initBackButton() {
+  const backButton = document.getElementById('back-button');
+  if (backButton) {
+    backButton.addEventListener('click', () => {
+      if (socketTournament && socketTournament.readyState === WebSocket.OPEN) {
+        socketTournament.close();
+      }
+      navigateTo('/games');
+    });
+  }
 }
 
 function initTournamentSearch(){
@@ -133,7 +148,7 @@ export function createSocketTournamentConnection(tournamentName: string, game_ty
       socketTournament.onopen = () => {
         console.log("WebSocketTournament connection established, sending name");
         if (!tournamentName)
-        console.error("Invalid name, cannot connect to back")
+          console.error("Invalid name, cannot connect to back")
         else{
           if (!socketTournament){
             reject(new Error("Socket connection lost"));
@@ -152,7 +167,6 @@ export function createSocketTournamentConnection(tournamentName: string, game_ty
         try{
         	const data = JSON.parse(event.data);
         	tournament = data.tournament;
-        	console.log("soy tournament.ts", tournament);
         	resolve (tournament);
          }
          catch(err){
@@ -195,13 +209,15 @@ function createTournament(){
           showAlert("Please select a game type", "toast-error");
           return;
         }
-        handleTournamentCreation(tournamentName, game_type);
-        inputElement.value = "";
-        gameTypeSelect.value = "";
+        if (!tournament){
+          handleTournamentCreation(tournamentName, game_type);
+          inputElement.value = "";
+          gameTypeSelect.value = "";
+        }
+        else if (tournament)
+          showAlert("You're already in a tournament. Finish or cancel it first.", "toast-error");
       });
     }
-   
-   
     // Handle Enter key
     if (inputElement){
       inputElement.addEventListener("keydown", (event) => {
@@ -231,12 +247,8 @@ function createTournament(){
 function initSearchPlayers(){
   const searchInput = document.getElementById('player-search') as HTMLInputElement;
   const searchResults = document.getElementById('search-results');
-
   if (searchInput && searchResults) {
-    let timeout: NodeJS.Timeout;
-    searchInput.addEventListener('input', () => {
-      clearTimeout(timeout);
-      timeout = setTimeout(async () => {
+    searchInput.oninput = debounce(async () => {
         const query = searchInput.value.trim();
         if (query.length >= 2){
           try{
@@ -250,11 +262,10 @@ function initSearchPlayers(){
         }
         else
           searchResults.innerHTML = '';
-
-      }, 300);
-    });
+   } , 300)
   }
 }
+
 
 function displaySearchResults(players: UserMatches[], container: HTMLElement) {
   container.innerHTML = '';
@@ -267,10 +278,13 @@ function displaySearchResults(players: UserMatches[], container: HTMLElement) {
     container.innerHTML = '<p>No players found</p>';
     return;
   }
-  players.forEach(player => {
+  players.forEach( async (player) => {
     const option = document.createElement('div');
     option.className = 'player-item';
-    if (!player.is_invited) {
+    const is_invited = await sendRequest("POST", "/tournaments/isinvited", { tournament_id: tournament.tournament_id, user_id: player.user_id });
+    const is_participant = await sendRequest("POST", "/tournaments/isparticipant", { tournament_id: tournament.tournament_id, user_id: player.user_id });
+    const status = await sendRequest("POST", "/tournaments/invitationstatus", { tournament_id: tournament.tournament_id, user_id: player.user_id });
+    if (!is_invited || status?.status === "denied") {
       option.innerHTML = `
         ${player.username}
         <svg id="invite-player-${player.user_id}" class="standard-icon rounded-full add" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
@@ -280,24 +294,25 @@ function displaySearchResults(players: UserMatches[], container: HTMLElement) {
 
       const inviteButton = option.querySelector(`#invite-player-${player.user_id}`);
       if (inviteButton) {
-        inviteButton.addEventListener("click", () => {
-          if (sendTournamentInvitation(player.user_id, player.username) === true)
-          option.innerHTML = `
-            ${player.username}
-            <svg xmlns="http://www.w3.org/2000/svg" class="pending rounded-full" viewBox="0 -960 960 960">
-              <path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
-            </svg>
-          `;
+        inviteButton.addEventListener("click", async () => {
+          if (await sendTournamentInvitation(player.user_id, player.username) === true){
+            option.innerHTML = `
+              ${player.username}
+              <svg xmlns="http://www.w3.org/2000/svg" class="pending rounded-full" viewBox="0 -960 960 960">
+                <path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
+              </svg>
+            `;
+          } 
         });
       }
-    } else if (player.is_invited) {
+    } else if (is_invited && !is_participant) {
       option.innerHTML = `
         ${player.username}
         <svg xmlns="http://www.w3.org/2000/svg" class="pending rounded-full" viewBox="0 -960 960 960">
           <path d="m612-292 56-56-148-148v-184h-80v216l172 172ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Z"/>
         </svg>
       `;
-    } else {
+    } else if (is_invited && is_participant) {
       option.innerHTML = `
         ${player.username}
         <svg xmlns="http://www.w3.org/2000/svg" class="joined rounded-full" viewBox="0 -960 960 960">
@@ -309,10 +324,18 @@ function displaySearchResults(players: UserMatches[], container: HTMLElement) {
   });
 }
 
-function sendTournamentInvitation(receiverId: number, username: string): boolean{
+async function sendTournamentInvitation(receiverId: number, username: string): Promise<boolean>{
   if (socketToast && socketToast.readyState === WebSocket.OPEN){
+
     if (tournament){
-      console.log("soy el invitador", tournament)
+      const fullTournament = await sendRequest("GET", `/tournaments/${ tournament.tournament_id}`, ) as Tournament;
+      const playerAmount = fullTournament.tournament_participants.length;
+      console.log(playerAmount);
+      if (fullTournament.player_limit === playerAmount)
+      {
+        showAlert("Tournament limit is four players", "toast-error");
+        return (false);
+      }
 			socketToast.send(JSON.stringify({
 				type: "tournament",
 				info: "request",
@@ -322,6 +345,12 @@ function sendTournamentInvitation(receiverId: number, username: string): boolean
 				tournament: tournament,
 				sent_at: new Date().toISOString(),
 			}));
+      const searchInput = document.getElementById('player-search') as HTMLInputElement;
+      const searchResults = document.getElementById('search-results');
+      if (searchInput && searchResults){
+        searchInput.value = '';
+        searchResults.innerHTML = '';
+      }
 			return (true);
 		}
   }
@@ -335,5 +364,6 @@ export function handleTournamentCreation(input: string, gameType: string){
   if (tournamentName){
     console.log(`Creating tournament with name: ${tournamentName}`);
 		createSocketTournamentConnection(tournamentName, gameType);
+    showAlert("Tournament has been created", "toast-success")
   }
 }

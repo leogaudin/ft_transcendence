@@ -9,6 +9,7 @@ export interface LastMessage {
 	sender_username: string;
 	friend_username: string;
 	friend_avatar: string;
+	friend_id: string;
 	sent_at: string;	
 }
 
@@ -94,15 +95,8 @@ export interface InvitationList {
 }
 
 export interface Tournament {
-	id: number,
-  name: string,
-  player_amount: number,
-}
-
-interface Tournament {
 	tournament_id: number;
 	name: string;
-	player_amount: number;
 	player_limit: number;
 	status: string;
 	game_type: string;

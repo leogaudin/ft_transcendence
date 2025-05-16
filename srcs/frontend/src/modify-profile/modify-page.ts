@@ -1,5 +1,6 @@
 import { navigateTo } from "../index.js"
-import { showAlert } from "../toast-alert/toast-alert.js";
+import { getClientID } from "../messages/messages-page.js";
+import { showAlert, socketToast} from "../toast-alert/toast-alert.js";
 import { uploadCanvas, updatePhoto, updateNick, updateDescription ,initModifyFetchEvents } from "./modify-fetch.js";
 
 export function initModifyPageEvents() {
@@ -100,8 +101,9 @@ function submitImage() {
 	const fileId = document.getElementById('fileid') as HTMLInputElement;
 	if (!formId || !fileId) { return; }
 
-	if (fileId.files)
+	if (fileId.files){
 		updatePhoto(fileId.files[0]);
+	}
 }
 
 let canvas: HTMLCanvasElement | null = null;
@@ -149,7 +151,7 @@ function toggleAvatarEditor() {
 		avatarEditorPage.onanimationend = () => {};
 	};
     
-    saveChanges.onclick = () => {
+    saveChanges.onclick = async () => {
 		if (canvas) {
 			for (let layer of layers) {
 				if (!layer || layer.src === "") {
@@ -157,7 +159,15 @@ function toggleAvatarEditor() {
 					return ;
 				}
 			}
-			uploadCanvas(canvas);
+			const avatar = await uploadCanvas(canvas);
+			if (socketToast){
+				socketToast.send(JSON.stringify({
+					type: "change_avatar",
+					info: "update",
+					sender_id: getClientID(),
+					avatar: avatar,
+				}));
+			}
 		}
 		avatarEditorPage.classList.add('animate__fadeOutRight');
 		modifyProfilePage.classList.remove('hidden');

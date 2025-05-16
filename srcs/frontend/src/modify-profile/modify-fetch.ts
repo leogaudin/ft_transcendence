@@ -38,7 +38,7 @@ async function initData() {
 	}
 }
 
-export async function updatePhoto(image: File) {
+export async function updatePhoto(image: File){
 	try {
 		const formData = new FormData();
 		formData.append('file', image);
@@ -56,16 +56,16 @@ export async function updatePhoto(image: File) {
 		const profilePhoto = document.getElementById("modify-profile-photo") as HTMLImageElement;
 		if (profilePhoto)
 			profilePhoto.src = data.data_url;
-		return ;
+		return data.data_url;
 	}
 	catch (error) {
 		console.error(`Error: `, error);
 		showAlert((error as Error).message , "toast-error");
-		return ;
+		return (null);
 	}
 }
 
-export async function uploadCanvas(canvas: HTMLCanvasElement) {
+export async function uploadCanvas(canvas: HTMLCanvasElement): Promise<string | null> {
 	let image = canvas.toDataURL();
 
 	try {
@@ -77,12 +77,12 @@ export async function uploadCanvas(canvas: HTMLCanvasElement) {
 		const profilePhoto = document.getElementById("modify-profile-photo") as HTMLImageElement;
 		if (profilePhoto)
 			profilePhoto.src = response.avatar;
-		return ;
+		return (response.avatar);
 	}
 	catch (error) {
 		console.error(`Error: `, error);
 		showAlert((error as Error).message , "toast-error");
-		return ;
+		return (null);
 	}
 }
 
