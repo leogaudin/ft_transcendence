@@ -15,6 +15,7 @@ export function chaosPong(data: Games): void{
 		paddleCenter: number = 0;
 		counter: number = 0;
 		keysAffected: boolean = false;
+		paddleSpeed: number = 0.04;
 
 		constructor(paddle: HTMLElement) {
 			this.keyPress = false;
@@ -69,7 +70,7 @@ export function chaosPong(data: Games): void{
 		powerUp: HTMLElement | null,
         types: Array<string>,
         active: boolean,
-        timeout: number;
+        timeout: NodeJS.Timeout | number;
         controlPowerUp: NodeJS.Timeout | null;
 	}
 
@@ -375,7 +376,7 @@ export function chaosPong(data: Games): void{
                 powerUpData.active = false;
             }, 400);
         }, 600);
-    }, powerUpData.timeout);
+    }, 6000);
     }
 
     function checkBallPowerUpCollision(): void {
@@ -407,10 +408,12 @@ export function chaosPong(data: Games): void{
                 break;
         }
 
-        powerUpData.powerUp.style.display = "none";
-        powerUp.classList.remove('powerUpAnimate', 'powerUpDisappear');
-        clearTimeout(powerUpData.timeout);
-        powerUpData.active = false;
+		if (powerUpData.powerUp) {
+			powerUpData.powerUp.style.display = "none";
+			powerUpData.powerUp.classList.remove('powerUpAnimate', 'powerUpDisappear');
+		}
+		clearTimeout(powerUpData.timeout);
+		powerUpData.active = false;
     }
 
     function activePaddleSize(){
@@ -465,7 +468,7 @@ export function chaosPong(data: Games): void{
             trail.style.left = `${ballData.ball.offsetLeft - ballData.velX}px`
             trail.style.top = `${ballData.ball.offsetTop - ballData.velY}px`;
     
-            document.getElementById("game").appendChild(trail);
+            document.getElementById("game")?.appendChild(trail);
     
             setTimeout(() => trail.remove(), 400);
         }, 50);
