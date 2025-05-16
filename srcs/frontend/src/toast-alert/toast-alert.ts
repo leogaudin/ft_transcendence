@@ -168,7 +168,7 @@ export function createsocketToastConnection() {
 							}));
 						}
 						createPongSocketConnection();
-						navigateTo()
+						navigateTo("/pong")
 					}
 					function handleReject(){
 						if (socketToast){
