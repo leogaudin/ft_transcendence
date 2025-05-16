@@ -17,6 +17,7 @@
 @import url("../src/modify-profile/modify-styles.css");
 
 /* --> Games page <-- */
+@import url("../src/games/select-game-styles.css");
 @import url("../src/games/pong/pong-styles.css");
 @import url("../src/games/connectFour/connectFour-styles.css");
 
