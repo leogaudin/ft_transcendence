@@ -1,6 +1,59 @@
+<<<<<<< HEAD:srcs/frontend/src/games/game.ts
 import { Games } from "../types.js";
+import { getClientID } from "../messages/messages-page.js";
+
+export let socket_game:  WebSocket | null;
+
+export function createPongSocketConnection(){
+ if (socket_game && socket_game.readyState !== WebSocket.CLOSED)
+		socket_game.close();
+	try{
+		socket_game = new WebSocket(`wss://${window.location.hostname}:8443/ws/pong`)
+		if (!socket_game)
+			return ;
+		socket_game.onopen = () => {
+			let id = getClientID();
+			console.log("WebSocketPong connection established, sending id:", id);
+			if (id === -1){
+				console.error("Invalid ID, cannot connect to back")
+			}
+			else{
+				if (!socket_game)
+					return ;
+				socket_game.send(JSON.stringify({
+					userId: id,
+					action: "identify"
+				}));
+				console.log("ID succesfully sent");
+			}
+		};
+		socket_game.onmessage = (event) => {
+			try{
+				const data = JSON.parse(event.data);
+			}
+			catch(err) {
+				console.error("Error on message", err);
+			}
+		};
+		socket_game.onerror = (error) => {
+			console.error("WebSocket error:", error);
+		};
+		socket_game.onclose = () => {
+			console.log("WebSocketPong connection closed");
+			socket_game = null;
+		};
+	}
+	catch(err){
+		console.error("Error creating WebSocketPong:", err);
+	}
+}
+=======
+import { Games } from "../../types.js";
+>>>>>>> 14f302966d9945cda8a05f383e56155eee1e3570:srcs/frontend/src/games/pong/pong.ts
 
 export function pong(data: Games): void{
+	if (data.gameMode === "remote")
+		createPongSocketConnection();
 	const gameElement = document.getElementById('game');
 	if (!gameElement){
 		throw new Error("HTML 'game' element not found.");
@@ -432,6 +485,8 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.addEventListener("popstate", () => {
+	if (socket_game)
+		socket_game.close();
 	stop();
 	clearGameState();
 });

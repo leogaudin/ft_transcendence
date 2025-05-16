@@ -79,6 +79,39 @@ export default function createTournamentRoutes(fastify) {
     {
       preHandler: [fastify.authenticate],
       method: "POST",
+      url: "/tournaments/isinvited",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["tournament_id", "user_id"]))
+          return;
+        const result = await isInvited(req.body.tournament_id, req.body.user_id);
+        return res.code(200).send(result);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "POST",
+      url: "/tournaments/isparticipant",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["tournament_id", "user_id"]))
+          return;
+        const result = await isParticipant(req.body.tournament_id, req.body.user_id);
+        return res.code(200).send(result);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "POST",
+      url: "/tournaments/invitationstatus",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["tournament_id", "user_id"]))
+          return;
+        const result = await getInvitationStatus(req.body.tournament_id, req.body.user_id);
+        return res.code(200).send(result);
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
+      method: "POST",
       url: "/tournaments/invite",
       handler: asyncHandler(async (req, res) => {
         if (!validateInput(req, res, ["tournament_id", "user_id"])) return;
