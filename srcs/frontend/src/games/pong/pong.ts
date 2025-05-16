@@ -1,3 +1,4 @@
+<<<<<<< HEAD:srcs/frontend/src/games/game.ts
 import { Games } from "../types.js";
 import { getClientID } from "../messages/messages-page.js";
 
@@ -46,6 +47,9 @@ export function createPongSocketConnection(){
 		console.error("Error creating WebSocketPong:", err);
 	}
 }
+=======
+import { Games } from "../../types.js";
+>>>>>>> 14f302966d9945cda8a05f383e56155eee1e3570:srcs/frontend/src/games/pong/pong.ts
 
 export function pong(data: Games): void{
 	if (data.gameMode === "remote")

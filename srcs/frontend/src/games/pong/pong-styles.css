@@ -1,0 +1,191 @@
+#games-page {
+	min-height: 90vh;
+	width: 75vw;
+}
+
+#game {
+	border-radius: 15px;
+	background-color: black;
+	overflow: hidden;
+	width: 70%;
+	aspect-ratio: 2/1;
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+	border: 20px solid white;
+	position: relative;
+}
+
+#ball {
+	width: 2%;
+	height: 4%;
+	left: 50%;
+	top: 50%;
+	display: block;
+	border: 2px solid white;
+	position: absolute;
+	background-color: white;
+}
+
+.paddle {
+	width: 2%;
+	height: 20%;
+	background-color: white;
+	position: absolute;
+	top: 50%;
+}
+
+#paddleLeft {
+	left: 2%;
+}
+
+#paddleRight {
+	right: 2%;
+}
+
+#line {
+	width: 50%;
+	height: 100%;
+	border-right: 10px dashed white;
+	position: absolute;
+}
+
+.counter {
+	color: white;
+	position: absolute;
+	top: 10%;
+	font-size: 5vw;
+	font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+#counter1 {
+	left: 25%;
+}
+
+#counter2 {
+	left: 65%;
+}
+
+/* Custom styles for the game */
+
+#powerUp {
+	position: absolute;
+	width: 30%;
+	height: 40%;
+	background-color: gold;
+	border-radius: 50%;
+	display: none;
+}
+
+.powerUpAppear {
+	animation: powerUpAppear  0.4s ease;
+}
+
+.powerUpBlink {
+	animation: powerUpBlink 0.6s ease 3;
+}
+
+.powerUpDisappear {
+	animation: powerUpDisappear 0.4s ease forwards;
+  }
+
+@keyframes powerUpAppear  {
+	0% {
+	  transform: scale(0.5);
+	  opacity: 0;
+	}
+	60% {
+	  transform: scale(1.2);
+	  opacity: 1;
+	}
+	100% {
+	  transform: scale(1);
+	}
+}
+
+@keyframes powerUpBlink {
+	0% {
+	  opacity: 1;
+	}
+	50% {
+	  opacity: 0;
+	}
+	100% {
+	  opacity: 1;
+	}
+}
+
+@keyframes powerUpDisappear {
+	0% {
+	  opacity: 1;
+	  transform: scale(1);
+	}
+	100% {
+	  opacity: 0;
+	  transform: scale(0.8);
+	}
+}
+
+.ballTrailClone {
+	position: absolute;
+	width: 20px;
+	height: 20px;
+	background-color: white;
+	border: 2px solid white;
+	pointer-events: none;
+	opacity: 0.6;
+	transform: translate(-50%, -50%);
+	animation: fadeTrail 0.2s linear forwards;
+}
+
+@keyframes fadeTrail {
+	0% {
+		opacity: 0.6;
+		transform: scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: scale(1.5);
+	}
+}
+
+@keyframes paddleGrow {
+	0% { height: 120px; opacity: 0.6; }
+	50% { height: 160px; opacity: 1; }
+	75% { height: 140px; opacity: 0.6;}
+	100% { height: 160px; opacity: 1;}
+}
+
+@keyframes paddleGrowToNormal {
+	0% { height: 160px; opacity: 0.6; }
+	50% { height: 120px; opacity: 1; }
+	75% { height: 140px; opacity: 0.6;}
+	100% { height: 120px; opacity: 1;}
+}
+
+@keyframes paddleLittleToNormal{
+	0% { height: 80px; opacity: 0.6; }
+	50% { height: 120px; opacity: 1; }
+	75% { height: 80px; opacity: 0.6;}
+	100% { height: 120px; opacity: 1;}
+}
+@keyframes paddleLittle {
+	0% { height: 120px; opacity: 0.6; }
+	50% { height: 80px; opacity: 1; }
+	75% { height: 100px; opacity: 0.6; }
+	100% { height: 80px; opacity: 1;}
+}
+
+.paddleGrowEffect {
+	animation: paddleGrow 1.5s ease-out forwards;
+}
+
+.paddleLittleEffect {
+	animation: paddleLittle 1.5s ease-out forwards;
+}
+
+.paddleGrowToNormalEffect {
+	animation: paddleGrowToNormal 1.5s ease-out forwards;
+}
+.paddleLittleToNormalEffect {
+	animation: paddleLittleToNormal 1.5s ease-out forwards;
+}

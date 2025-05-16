@@ -7,7 +7,10 @@ import { initFriendsEvents } from "./friends/friends-page.js"
 import { initSettingsEvents } from "./settings-page/settings-page.js"
 import { LoginObject, MessageObject, Games } from "./types.js";
 import { displayToast, createsocketToastConnection, socketToast } from "./toast-alert/toast-alert.js";
-import { pong } from "./games/game.js"
+import { classicPong } from "./games/pong/classicPong.js"
+import { chaosPong } from "./games/pong/chaosPong.js";
+import { classicMode } from "./games/connectFour/classicMode.js";
+import { crazyTokensMode } from "./games/connectFour/crazyTknsMode.js";
 import { initTournamentEvents } from "./tournament/tournament.js";
 import { initSelectPageEvent } from "./games/select-game-page.js";
 import { initModifyPageEvents } from "./modify-profile/modify-page.js";
@@ -90,12 +93,23 @@ const routes = [
 		}
 	},
 	{
-    path: "/pong",
-    url: "../src/games/games-page.html",
-    event: (data: object) => {
-      pong(data as Games);
-    }
-  },
+    	path: "/pong",
+    	url: "../src/games/pong/pong.html",
+    	event: (data: object) => {
+      		classicPong(data as Games);
+    	}
+	},
+ 	{
+		path: "/connectFour",
+    	url: "../src/games/connectFour/connectFour.html",
+    	event: (data: object) => {
+			const mode = data as Games;
+			if (!mode.isCustom)
+      			classicMode(mode);
+			else
+				crazyTokensMode(mode)
+    	}
+	},
 ];
 
 export function navigateTo(path: string, data: object = {}) {
