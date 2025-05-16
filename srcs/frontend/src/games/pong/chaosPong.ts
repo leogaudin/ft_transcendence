@@ -1,3 +1,9 @@
+import { 
+    Player, GeneralData, PaddleCollision, BallData, AIData, OnrizeData, init, resetBall, updateScore, setAI,
+	play as playEngine, stop as stopEngine,
+	moveBall as moveBallEngine
+} from './gameEngine.js';
+
 import { Games } from "../../types.js";
 
 export function chaosPong(data: Games): void{
@@ -8,109 +14,12 @@ export function chaosPong(data: Games): void{
 	let width = gameElement.clientWidth;
 	let height = gameElement.clientHeight;
 
-	class Player {
-		keyPress: boolean;
-		keyCode: string | null;
-		paddle: HTMLElement;
-		paddleCenter: number = 0;
-		counter: number = 0;
-		keysAffected: boolean = false;
-		paddleSpeed: number = 0.04;
-
-		constructor(paddle: HTMLElement) {
-			this.keyPress = false;
-			this.keyCode = null;
-			this.paddle = paddle;
-		}
-	}
-
-	const player1 = new Player(document.getElementById('paddleLeft') as HTMLElement);
-	const player2 = new Player(document.getElementById('paddleRight') as HTMLElement);
-
-	type GeneralDataType = {
-		time: number;
-		speed: number;
-		paddleSpeed: number;
-		paddleMargin: number;
-		controlGame: NodeJS.Timeout | null;
-	}
-
-	type PaddleCollisionDataType = {
-		offset: number;
-		maxBounceAngle: number;
-		newVelX: number;
-	}
-
-	type BallDataType = {
-		ball: HTMLElement;
-		velX: number;
-		velY: number;
-		angle: number;
-		ballCenter: number;
-	}
-
-	type AIDataType = {
-		timeToRefresh: number;
-		targetY: number;
-		timeToReach: number;
-		errorRate: number;
-		activate: boolean;
-		controlAI: NodeJS.Timeout | null;
-	}
-
-	type OnrizeDataType = {
-		ballRelativeLeft: number;
-		ballRelativeTop: number;
-		player1RelativeTop: number;
-		player2RelativeTop: number;
-		newSpeed: number;
-	}
-
 	type PowerUpType = {
 		powerUp: HTMLElement | null,
         types: Array<string>,
         active: boolean,
         timeout: NodeJS.Timeout | number;
         controlPowerUp: NodeJS.Timeout | null;
-	}
-
-	const generalData: GeneralDataType = {
-		time: 30,
-		speed: 0.02,
-		paddleSpeed: 0.04,
-		paddleMargin: height * 0.03,
-		controlGame: null
-	}
-
-	const paddleCollisionData: PaddleCollisionDataType = {
-		offset: 0,
-		maxBounceAngle: 0,
-		newVelX: 0
-	}
-
-	const ballData: BallDataType = {
-		ball: document.getElementById('ball') as HTMLElement,
-		velX: 0,
-		velY: 0,
-		angle: 0,
-		ballCenter: 0
-	}
-
-	const AIData: AIDataType = {
-		timeToRefresh: 1000,
-		targetY: 0,
-		timeToReach: 0,
-		errorRate: 0,
-		activate: data.gameMode === "ai" ? true : false,
-		controlAI: null
-	}
-
-	const onresizeData: OnrizeDataType = {
-		ballRelativeLeft: 0,
-		ballRelativeTop: 0,
-		player1RelativeTop: 0,
-		player2RelativeTop: 0,
-		newSpeed: 0
 	}
 
 	const powerUpData: PowerUpType = {
@@ -121,159 +30,98 @@ export function chaosPong(data: Games): void{
 		controlPowerUp: null
     }
 
+	const player1: Player = {
+        keyPress: false,
+        keyCode: null,
+        paddle: document.getElementById('paddleLeft') as HTMLElement,
+        paddleCenter: 0,
+        counter: 0,
+        paddleSpeed: 0.04,
+		keysAffected: false
+    };
+    
+    const player2: Player = {
+        keyPress: false,
+        keyCode: null,
+        paddle: document.getElementById('paddleRight') as HTMLElement,
+        paddleCenter: 0,
+        counter: 0,
+        paddleSpeed: 0.04,
+		keysAffected: false
+    };
+    
+    const generalData: GeneralData = {
+        time: 30,
+        speed: 0.02,
+        paddleMargin: height * 0.03,
+        controlGame: null
+    };
+
+    const paddleCollisionData: PaddleCollision = {
+        offset: 0,
+        maxBounceAngle: 0,
+        newVelX: 0
+    };
+
+    const ballData: BallData = {
+        ball: document.getElementById('ball') as HTMLElement,
+        velX: 0,
+        velY: 0,
+        angle: 0,
+        ballCenter: 0
+    };
+
+    const AIData: AIData = {
+        timeToRefresh: 1000,
+        targetY: 0,
+        timeToReach: 0,
+        errorRate: 0,
+        activate: data.gameMode === "ai-custom" ? true : false,
+        controlAI: null
+    };
+
+    const onresizeData: OnrizeData = {
+        ballRelativeLeft: 0,
+        ballRelativeTop: 0,
+        player1RelativeTop: 0,
+        player2RelativeTop: 0,
+        newSpeed: 0
+    };
 
 	function start(): void {
 		const savedState = localStorage.getItem("gameState");
 		if (savedState)
 			loadGameState();
 		else
-			init();
+			init(generalData, ballData, player1, player2, width);
 		generalData.controlGame = setInterval(play, generalData.time);
 		powerUpData.controlPowerUp = setInterval(spawnPowerUp, 5000);
 		if (AIData.activate) 
 			AIData.controlAI = setInterval(moveAI, AIData.timeToRefresh);
 	}
 
-	function init(): void {
-		resetBall();
-	}
-
 	function play(): void {
 		setOnresize();
 		moveBall();
-		movePaddle();
-		checkLost();
+		playEngine(generalData, ballData, AIData, player1, player2, paddleCollisionData, width, height);
 		saveGameState();
 	}
 
 	function stop(): void {
 		saveGameState();
-		if (generalData.controlGame) 
-			clearInterval(generalData.controlGame);
-		if (AIData.activate && AIData.controlAI) 
-			clearInterval(AIData.controlAI);
+		stopEngine(generalData, AIData, ballData);
 		if (powerUpData.controlPowerUp)
             clearInterval(powerUpData.controlPowerUp);
-		ballData.ball.style.display = "none";
 	}
 
-	function resetBall(): void {
-		generalData.speed = 0.01;
-		ballData.ball.style.left = "50%";
-		ballData.ball.style.top = Math.floor(Math.random() * 100) + "%";
-		ballData.angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
-
-		ballData.velX = width * generalData.speed * Math.cos(ballData.angle)
-		if ((player1.counter + player2.counter) % 2 === 0)
-			ballData.velX *= -1;
-		ballData.velY = width * generalData.speed * Math.sin(ballData.angle);
-	}
-
-	function checkLost(): void {
-		if (ballData.ball.offsetLeft >= width) {
-			updateScore(player1.paddle);
-			player1.counter < 10 ? init() : stop();
-		}
-		if (ballData.ball.offsetLeft <= 0) {
-			updateScore(player2.paddle);
-			player2.counter < 10 ? init() : stop();
-		}
-	}
-
-	function updateScore(paddle: HTMLElement): void {
-		if (paddle === player1.paddle) {
-			player1.counter++;
-			document.getElementById('counter1')!.innerHTML = player1.counter.toString();
-		} else {
-			player2.counter++;
-			document.getElementById('counter2')!.innerHTML = player2.counter.toString();
-		}
-	}
-
-	function moveBall(): void {
+	function moveBall(){
 		checkBallPowerUpCollision();
-		checkState();
-
-		ballData.ball.style.left = `${ballData.ball.offsetLeft + ballData.velX}px`;
-		ballData.ball.style.top = `${ballData.ball.offsetTop + ballData.velY}px`;
-
-		if (ballData.ball.offsetTop <= 0) {
-			ballData.ball.style.top = `0px`;
-			ballData.velY *= -1;
-		} else if (ballData.ball.offsetTop + ballData.ball.clientHeight >= height) {
-			ballData.ball.style.top = `${height - ballData.ball.clientHeight}px`;
-			ballData.velY *= -1;
-		}
-	}
-
-	function checkState(): void {
-		if (collidePlayer(player1.paddle)) 
-			handlePaddleCollision(player1, player1.paddle);
-		else if (collidePlayer(player2.paddle))
-			handlePaddleCollision(player2, player2.paddle);
-	}
-
-	function collidePlayer(paddle: HTMLElement): boolean {
-		if (((ballData.ball.offsetLeft + ballData.ball.clientWidth) >= paddle.offsetLeft) &&
-			(ballData.ball.offsetLeft <= (paddle.offsetLeft + paddle.clientWidth)) &&
-			((ballData.ball.offsetTop + ballData.ball.clientHeight) >= paddle.offsetTop) &&
-			(ballData.ball.offsetTop <= (paddle.offsetTop + paddle.clientHeight)))
-			return true;
-		return false;
-	}
-
-	function setPaddleCollision(player: Player, paddle: HTMLElement): void {
-		player.paddleCenter = paddle.offsetTop + paddle.clientHeight / 2;
-		ballData.ballCenter = ballData.ball.offsetTop + ballData.ball.clientHeight / 2;
-
-		paddleCollisionData.offset = (ballData.ballCenter - player.paddleCenter) / (paddle.clientHeight / 2);
-		paddleCollisionData.maxBounceAngle = Math.PI / 4;
-
-		generalData.speed = 0.02;
-		ballData.angle = paddleCollisionData.offset * paddleCollisionData.maxBounceAngle;
-		paddleCollisionData.newVelX = width * generalData.speed * Math.cos(ballData.angle);
-	}
-
-	function handlePaddleCollision(player: Player, paddle: HTMLElement): void {
-		setPaddleCollision(player, paddle);
-
-		if (Math.abs(paddleCollisionData.newVelX) < 2)
-			paddleCollisionData.newVelX = paddleCollisionData.newVelX > 0 ? 2 : -2
-
-		ballData.velX = ballData.velX > 0 ? paddleCollisionData.newVelX * -1 : paddleCollisionData.newVelX * 1;
-		ballData.velY = height * generalData.speed * Math.sin(ballData.angle);
-		ballData.ball.style.left = paddle === player1.paddle ? `${paddle.offsetLeft + paddle.clientWidth}px` : `${paddle.offsetLeft - ballData.ball.clientWidth}px`;
-	}
-
-	function movePaddle(): void {
-		if (player1.keyPress) {
-			if (player1.keyCode === "up" && player1.paddle.offsetTop >= generalData.paddleMargin)
-				player1.paddle.style.top = `${player1.paddle.offsetTop - height * generalData.paddleSpeed}px`;
-			if (player1.keyCode === "down" && (player1.paddle.offsetTop + player1.paddle.clientHeight) <= height - generalData.paddleMargin)
-				player1.paddle.style.top = `${player1.paddle.offsetTop + height * generalData.paddleSpeed}px`;
-		}
-		if (player2.keyPress) {
-			if (AIData.activate) {
-				if ((AIData.targetY >= player2.paddle.offsetTop) && (AIData.targetY <= (player2.paddle.offsetTop + player2.paddle.clientHeight)))
-					player2.keyPress = false;
-			}
-			if (player2.keyCode === "up" && player2.paddle.offsetTop >= generalData.paddleMargin)
-				player2.paddle.style.top = `${player2.paddle.offsetTop - height * generalData.paddleSpeed}px`;
-			if (player2.keyCode === "down" && (player2.paddle.offsetTop + player2.paddle.clientHeight) <= height - generalData.paddleMargin)
-				player2.paddle.style.top = `${player2.paddle.offsetTop + height * generalData.paddleSpeed}px`;
-		}
-	}
-
-	function setAI(): void {
-		AIData.timeToReach = (player2.paddle.offsetLeft - ballData.ball.offsetLeft) / ballData.velX;
-		AIData.targetY = ballData.ball.offsetTop + ballData.velY * AIData.timeToReach;
-		AIData.errorRate = player2.paddleCenter < AIData.targetY ? Math.random() * height - player2.paddleCenter : Math.random() * player2.paddleCenter - 0;
-		player2.paddleCenter = player2.paddle.offsetTop + player2.paddle.clientHeight / 2; 
+		moveBallEngine(ballData, player1, player2, paddleCollisionData, generalData, width, height)
 	}
 
 	function moveAI(): void {
 		let random = Math.random();
-		setAI();
+		setAI(AIData, player2, ballData, height);
 
 		AIData.targetY = random < 0.03 ? AIData.errorRate : AIData.targetY; // Tasa de error
 
@@ -526,12 +374,12 @@ export function chaosPong(data: Games): void{
 		player2.paddle.style.top = `${onresizeData.player2RelativeTop * height}px`;
 	
 		if (ballData.ball.offsetLeft < 0) {
-			updateScore(player2.paddle);
-			resetBall();
+			updateScore(player2.paddle, player1, player2);
+			resetBall(generalData, ballData, player1, player2, width);
 			return;
 		} else if (ballData.ball.offsetLeft + ballData.ball.clientWidth > width) {
-			updateScore(player1.paddle);
-			resetBall();
+			updateScore(player1.paddle, player1, player2);
+			resetBall(generalData, ballData, player1, player2, width);
 			return;
 		}
 	
@@ -543,101 +391,105 @@ export function chaosPong(data: Games): void{
 			ballData.velY = -Math.abs(ballData.velY);
 		}
 	}
+
 	function saveGameState() {
 		const gameState = {
-				player1: {
-						counter: player1.counter,
-						paddleTop: player1.paddle.offsetTop
-				},
-				player2: {
-						counter: player2.counter,
-						paddleTop: player2.paddle.offsetTop
-				},
-				ball: {
-						posX: ballData.ball.offsetLeft,
-						posY: ballData.ball.offsetTop,
-						velX: ballData.velX,
-						velY: ballData.velY,
-						angle: ballData.angle
-				},
-				generalData: {
-						time: generalData.time,
-						speed: generalData.speed,
-						paddleSpeed: generalData.paddleSpeed
-				},
-				AIData: {
-						activate: AIData.activate,
-						targetY: AIData.targetY
-				}
+			player1: {
+					counter: player1.counter,
+					paddleTop: player1.paddle.offsetTop,
+					paddleSpeed: player1.paddleSpeed
+			},
+			player2: {
+					counter: player2.counter,
+					paddleTop: player2.paddle.offsetTop,
+					paddleSpeed: player2.paddleSpeed
+			},
+			ball: {
+					posX: ballData.ball.offsetLeft,
+					posY: ballData.ball.offsetTop,
+					velX: ballData.velX,
+					velY: ballData.velY,
+					angle: ballData.angle
+			},
+			generalData: {
+					time: generalData.time,
+					speed: generalData.speed,
+			},
+			AIData: {
+					activate: AIData.activate,
+					targetY: AIData.targetY
+			}
 		};
 		localStorage.setItem('gameState', JSON.stringify(gameState));
-}
+	}
 
-function loadGameState() {
+	function loadGameState() {
 		const savedState = localStorage.getItem('gameState');
 
 		if (savedState) {
-				const gameState = JSON.parse(savedState);
+			const gameState = JSON.parse(savedState);
 
-				player1.counter = gameState.player1.counter;
-				player2.counter = gameState.player2.counter;
+			player1.counter = gameState.player1.counter;
+			player2.counter = gameState.player2.counter;
 
-				player1.paddle.style.top = `${gameState.player1.paddleTop}px`;
-				player2.paddle.style.top = `${gameState.player2.paddleTop}px`;
+			player1.paddle.style.top = `${gameState.player1.paddleTop}px`;
+			player2.paddle.style.top = `${gameState.player2.paddleTop}px`;
 
-				ballData.ball.style.left = `${gameState.ball.posX}px`;
-				ballData.ball.style.top = `${gameState.ball.posY}px`;
-				ballData.velX = gameState.ball.velX;
-				ballData.velY = gameState.ball.velY;
-				ballData.angle = gameState.ball.angle;
+			player1.paddleSpeed = gameState.player1.paddleSpeed;
+			player2.paddleSpeed = gameState.player2.paddleSpeed;
+
+			ballData.ball.style.left = `${gameState.ball.posX}px`;
+			ballData.ball.style.top = `${gameState.ball.posY}px`;
+			ballData.velX = gameState.ball.velX;
+			ballData.velY = gameState.ball.velY;
+			ballData.angle = gameState.ball.angle;
 
 
-				generalData.time = gameState.generalData.time;
-				generalData.speed = gameState.generalData.speed;
-				generalData.paddleSpeed = gameState.generalData.paddleSpeed;
+			generalData.time = gameState.generalData.time;
+			generalData.speed = gameState.generalData.speed;
 
-				AIData.activate = gameState.AIData.activate;
-				AIData.targetY = gameState.AIData.targetY;
+			AIData.activate = gameState.AIData.activate;
+			AIData.targetY = gameState.AIData.targetY;
 
-				document.getElementById('counter1')!.innerText = player1.counter.toString();
-				document.getElementById('counter2')!.innerText = player2.counter.toString();
+			document.getElementById('counter1')!.innerText = player1.counter.toString();
+			document.getElementById('counter2')!.innerText = player2.counter.toString();
 		}
-}
+	}
 
-const initialize = () => {
-	if (document.readyState === 'complete') {
+	const initialize = () => {
+		if (document.readyState === 'complete') {
 			setOnresize();
 			start();
-	} else {
+		} else {
 			window.addEventListener('load', () => {
-					setOnresize();
-					start();
+				setOnresize();
+				start();
 			});
+		}
+	};
+
+	function clearGameState(){
+		localStorage.removeItem('gameState');
+		player1.counter = 0;
+		player2.counter = 0;
+		document.getElementById('counter1')!.innerText = '0';
+		document.getElementById('counter2')!.innerText = '0';
 	}
-};
 
-function clearGameState(){
-	localStorage.removeItem('gameState');
-	player1.counter = 0;
-	player2.counter = 0;
-	document.getElementById('counter1')!.innerText = '0';
-	document.getElementById('counter2')!.innerText = '0';
-}
+	window.addEventListener('beforeunload', () => {
+		saveGameState();
+	});
 
-window.addEventListener('beforeunload', () => {
-	saveGameState();
-});
-
-document.addEventListener('DOMContentLoaded', function() {
+	document.addEventListener('DOMContentLoaded', function() {
 		start();
 		loadGameState();
 		setOnresize();
-});
+	});
 
-window.addEventListener("popstate", () => {
-	stop();
-	clearGameState();
-});
+	window.addEventListener("popstate", () => {
+		stop();
+		clearGameState();
+	});
 
 	setOnresize();
 	initialize();
