@@ -1,6 +1,6 @@
 <<<<<<< HEAD:srcs/frontend/src/games/game.ts
-import { Games } from "../types.js";
-import { getClientID } from "../messages/messages-page.js";
+import { Games } from "../../types.js";
+import { getClientID } from "../../messages/messages-page.js";
 
 export let socket_game:  WebSocket | null;
 
