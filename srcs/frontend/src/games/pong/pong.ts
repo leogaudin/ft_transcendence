@@ -1,4 +1,4 @@
-import { Games } from "../types.js";
+import { Games } from "../../types.js";
 
 export function pong(data: Games): void{
 	const gameElement = document.getElementById('game');
