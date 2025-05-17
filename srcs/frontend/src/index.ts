@@ -96,7 +96,11 @@ const routes = [
     	path: "/pong",
     	url: "../src/games/pong/pong.html",
     	event: (data: object) => {
-      		classicPong(data as Games);
+      		const mode = data as Games;
+			if (!mode.isCustom)
+      			classicPong(mode);
+			else
+				chaosPong(mode)
     	}
 	},
  	{
