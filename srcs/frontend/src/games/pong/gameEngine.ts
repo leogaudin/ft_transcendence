@@ -38,11 +38,13 @@ export interface AIData {
 	controlAI: NodeJS.Timeout | null;
 }
 
-export interface OnrizeData {
+export interface OnresizeData {
 	ballRelativeLeft: number;
 	ballRelativeTop: number;
 	player1RelativeTop: number;
 	player2RelativeTop: number;
+	powerUpRelativeLeft?: number;
+    powerUpRelativeTop?: number;
 	newSpeed: number;
 }
 

@@ -9,6 +9,31 @@
     margin-top: 1rem;
 	margin-bottom: 1rem;
 }
+
+#players {
+	display: flex;
+	width: 60%;
+	justify-content: space-between;
+	padding: 0 2%;
+    opacity: 80%;
+}
+
+/* #buttomGroup {
+	display: inline-flex;
+	place-self: center;
+	width: 50%;
+	justify-content: space-between;
+}
+
+button {
+	border-radius: 2%;
+	width: fit-content;
+	height: fit-content;
+    padding: 5%;
+	margin-inline: 20%;
+    text-align: center;
+} */
+
 #board {
     border-radius: 15px;
     border: 10px solid rgb(0, 77, 112);
