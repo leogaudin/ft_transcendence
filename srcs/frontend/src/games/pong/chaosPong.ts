@@ -291,7 +291,7 @@ export function chaosPong(data: Games): void{
             else if (paddle.offsetTop + paddle.clientHeight > height - generalData.paddleMargin)
                 paddle.style.top = `${height - generalData.paddleMargin - paddle.clientHeight}px`;
 
-            paddleAffected.style.height = "120px";
+            paddleAffected.style.height = "20%";
             paddleAffected.classList.remove('paddleLittleEffect');
             paddleAffected.classList.add('paddleLittleToNormalEffect');
             if (paddleAffected.offsetTop < generalData.paddleMargin)
