@@ -168,6 +168,7 @@ export function createsocketToastConnection() {
 								receiver_id: data.sender_id,
 							}));
 						}
+						navigateTo(`/${data.game_type}`, { gameMode: "remote", isCustom: data.is_custom })
 					}
 					function handleReject(data: any){
 						if (socketToast){
