@@ -101,6 +101,7 @@ export function createsocketToastConnection() {
 				if (data.info === "request"){
 					tournament_id = tournament.tournament_id;
 					function handleAccept(tournament: Tournament | null){
+						console.log("soy el torneo")
 						if (socketToast){
 							socketToast.send(JSON.stringify({
 								type: "tournament",
@@ -156,8 +157,9 @@ export function createsocketToastConnection() {
 				}
 			}
 			else if (data.type === "game_invitation"){
+				console.log(data);
 				if (data.info === "request"){
-					function handleAccept(){
+					function handleAccept(data: any){
 						if (socketToast){
 							socketToast.send(JSON.stringify({
 								type: "game_invitation",
@@ -166,10 +168,8 @@ export function createsocketToastConnection() {
 								receiver_id: data.sender_id,
 							}));
 						}
-						createPongSocketConnection();
-						navigateTo("/pong")
 					}
-					function handleReject(){
+					function handleReject(data: any){
 						if (socketToast){
 							socketToast.send(JSON.stringify({
 								type: "game_invitation",
@@ -179,7 +179,10 @@ export function createsocketToastConnection() {
 							}));
 						}
 					}
-					showAlert(data.body, "toast-success", () => handleAccept, () => handleReject);
+					showAlert(data.body, "toast-success", () => handleAccept(data), () => handleReject(data));
+				}
+				else if (data.info === "accept"){
+					showAlert("Sioque", "toast-success");
 				}
 			}
 		}
