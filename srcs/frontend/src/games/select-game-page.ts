@@ -235,7 +235,7 @@ function initGameSelection(){
         else if (currentGame === "pong")
           navigateTo("/pong", { gameMode: mode, isCustom: mode.includes('custom') });
         else if (currentGame === "4inrow")
-          navigateTo("/connectFour", { gameMode: mode, isCustom: mode.includes('custom') });
+          navigateTo("/4inrow", { gameMode: mode, isCustom: mode.includes('custom') });
         if (mode !== 'remote' && mode !== "remote-custom")
           hideGameOptions();
       }
