@@ -5,7 +5,7 @@ import { sendRequest } from "../login-page/login-fetch.js";
 import { showAlert } from "../toast-alert/toast-alert.js";
 import { createSocketTournamentConnection } from "../tournament/tournament.js";
 
-let socketChat: WebSocket | null = null;
+export let socketChat: WebSocket | null = null;
 let activeTournament: Tournament | null = null;
 export function initMessagesEvents(data: MessageObject) {
 	moveToHome();
@@ -80,33 +80,107 @@ function createSocketConnection() {
 }
 
 function displayMessage(data: Message){
-    if (actual_chat_id !== data.chat_id)
+    if (actual_chat_id !== data.chat_id && data.type !== "tournament")
       showAlert(`You have a message from ${data.sender_username}`, "toast-success");
-    let messageContainer = document.getElementById("message-history");
-    if (!messageContainer)
-      return ;
-    let el = document.createElement("div");
-    const sent_at = data.sent_at.substring(11, 16);
-    if (data.sender_id === getClientID()){
-      el.setAttribute("id", "message");
-      el.innerHTML = `
-        <div class="message self-message">
+    else if(actual_chat_id !== data.chat_id && data.type === "tournament")
+      showAlert(`You have a tournament inivitation from ${data.sender_username}`, "toast-success");
+    if (data.type === "message"){
+      let messageContainer = document.getElementById("message-history");
+      if (!messageContainer)
+        return ;
+      let el = document.createElement("div");
+      const sent_at = data.sent_at.substring(11, 16);
+      if (data.sender_id === getClientID()){
+        el.setAttribute("id", "message");
+        el.innerHTML = `
+          <div class="message self-message">
+            <p>${data.body}</p>
+            <p class="hour">${sent_at}</p>
+          </div>`;
+      }
+      else if (data.receiver_id === getClientID() && actual_chat_id === data.chat_id){
+        el.setAttribute("id", "friend-message");
+        el.innerHTML = `
+        <div class="message friend-message">
           <p>${data.body}</p>
           <p class="hour">${sent_at}</p>
         </div>`;
+        sendRequest(`PATCH`, `messages/${data.message_id}`, {is_read: 1});
+      }
+      messageContainer.appendChild(el);
+      el.scrollIntoView({ behavior: 'smooth'});
+      recentChats();
     }
-    else if (data.receiver_id === getClientID() && actual_chat_id === data.chat_id){
-      el.setAttribute("id", "friend-message");
-      el.innerHTML = `
-      <div class="message friend-message">
-        <p>${data.body}</p>
-        <p class="hour">${sent_at}</p>
-      </div>`;
-      sendRequest(`PATCH`, `messages/${data.message_id}`, {is_read: 1});
-    }
-    messageContainer.appendChild(el);
-    el.scrollIntoView({ behavior: 'smooth'});
-    recentChats();
+		else if (data.type === "tournament" && data.tournament){
+       let messageContainer = document.getElementById("message-history");
+        if (!messageContainer) return;
+        
+        let el = document.createElement("div");
+        const sent_at = data.sent_at.substring(11, 16);
+        const body = `Play in ${ data.tournament.game_type } tournament`
+        if (data.info === "request"){
+            el.setAttribute("id", "tournament-invite");
+            el.innerHTML = `
+                <div class="message tournament-message">
+                    <p>${body}</p>
+                    <p class="hour">${sent_at}</p>
+                    <div class="tournament-actions">
+                        <button class="accept-btn" data-tournament-id="${data.tournament.tournament_id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            Accept
+                        </button>
+                        <button class="reject-btn" data-tournament-id="${data.tournament.tournament_id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                            Reject
+                        </button>
+                    </div>
+                </div>`;
+
+            // Add event listeners for the buttons
+            const acceptBtn = el.querySelector('.accept-btn');
+            const rejectBtn = el.querySelector('.reject-btn');
+
+            acceptBtn?.addEventListener('click', () => {
+                if (socketChat && data.tournament){
+                  socketChat.send(JSON.stringify({
+                    body: "Tournament accepted",
+                    type: "tournament",
+                    info: "accept",
+                    tournament: data.tournament,
+                    sender_id: getClientID(),
+                    receiver_id: data.sender_id
+                  }));
+                  acceptBtn.setAttribute('disabled', 'true');
+                  acceptBtn.classList.add('disabled');
+                  rejectBtn?.remove();
+                  acceptBtn.textContent = "Accepted ✓";
+                }
+            });
+
+            rejectBtn?.addEventListener('click', () => {
+                if (socketChat && data.tournament){
+                  socketChat.send(JSON.stringify({
+                    body: "Tournament rejected",
+                    type: "tournament",
+                    info: "reject",
+                    tournament: data.tournament,
+                    sender_id: getClientID(),
+                    receiver_id: data.sender_id
+                  }));
+                  rejectBtn.setAttribute('disabled', 'true');
+                  rejectBtn.classList.add('disabled');
+                  acceptBtn?.remove();
+                  rejectBtn.textContent = "Rejected ✗";
+                }
+            });
+        }
+        messageContainer.appendChild(el);
+        el.scrollIntoView({ behavior: 'smooth' });
+		}
 }
 
 async function setupMessageForm() {
@@ -145,7 +219,7 @@ async function setupMessageForm() {
           input.value = "";
           return;
         }
-        const tournament = await createSocketTournamentConnection(tournament_name, game_type);
+        let tournament = await createSocketTournamentConnection(tournament_name, game_type);
         activeTournament = tournament
         let fullMessage: Message = {
           body: message,
@@ -159,6 +233,24 @@ async function setupMessageForm() {
           tournament: tournament,
         };
         socketChat.send(JSON.stringify(fullMessage));
+      }
+      if (message.startsWith("/invite")){
+        if (activeTournament){
+          let fullMessage: Message = {
+            body: message,
+            chat_id: actual_chat_id,
+            receiver_id: friendID,
+            sender_id: getClientID(),
+            sent_at: date.toISOString(),
+            read: false,
+            type: "tournament",
+            info: "request",
+            tournament: activeTournament,
+          };
+          socketChat.send(JSON.stringify(fullMessage));
+        }
+        else if (!activeTournament)
+          showAlert("Can't invite before creating a tournament", "toast-error")
       }
       else{
           let fullMessage: Message = {
@@ -177,5 +269,3 @@ async function setupMessageForm() {
     input.value = "";
   });
 }
-
-export { socketChat };

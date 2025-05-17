@@ -1,5 +1,10 @@
 import { getClientID } from "../messages/messages-page.js"
 import { displayFriends, displayInvitations, showMatches, debounce } from "../friends/friends-fetch.js";
+import { Tournament } from "../types.js";
+import { chargeChat, recentChats } from "../messages/load-info.js";
+import { createSocketTournamentConnection } from "../tournament/tournament.js";
+import { createPongSocketConnection } from "../games/game.js";
+import { navigateTo } from "../index.js";
 
 export let socketToast: WebSocket | null;
 let toastTimeout: NodeJS.Timeout;
@@ -37,7 +42,7 @@ export function createsocketToastConnection() {
 		  console.error("Invalid ID, cannot connect to back");
 		else{
 		  if (!socketToast)
-			return ;
+				return ;
 		  socketToast.send(JSON.stringify({
 			userId: id,
 			action: "identify"
@@ -96,31 +101,30 @@ export function createsocketToastConnection() {
 				const tournament = data.tournament;
 				if (data.info === "request"){
 					tournament_id = tournament.tournament_id;
-					console.log("soy el alertador", tournament)
-						function handleAccept(tournament_id: number | null){
-							if (socketToast){
-								socketToast.send(JSON.stringify({
-									type: "tournament",
-									info: "accept",
-									sender_id: getClientID(),
-									receiver_id: data.sender_id,
-									tournament_id: tournament_id
-								}));
-							}
+					function handleAccept(tournament: Tournament | null){
+						if (socketToast){
+							socketToast.send(JSON.stringify({
+								type: "tournament",
+								info: "accept",
+								sender_id: getClientID(),
+								receiver_id: data.sender_id,
+								tournament: tournament
+							}));
 						}
-						function handleReject(tournament_id: number | null){
-							if (socketToast){
-								socketToast.send(JSON.stringify({
-									type: "tournament",
-									info: "reject",
-									sender_id: getClientID(),
-									receiver_id: data.sender_id,
-									tournament_id: tournament_id
-								}));
-							}
+					}
+					function handleReject(tournament: Tournament | null){
+						if (socketToast){
+							socketToast.send(JSON.stringify({
+								type: "tournament",
+								info: "reject",
+								sender_id: getClientID(),
+								receiver_id: data.sender_id,
+								tournament: tournament,
+							}));
 						}
-						if (tournament_id)
-							showAlert(data.body, "toast-success", () => handleAccept(tournament_id), () => handleReject(tournament_id));
+					}
+					if (tournament_id)
+						showAlert(data.body, "toast-success", () => handleAccept(tournament), () => handleReject(tournament));
 				}
 				else if (data.info === "creator")
 					showAlert(data.body, "toast-success");
@@ -128,6 +132,56 @@ export function createsocketToastConnection() {
 					showAlert(data.body, "toast-success");
 				else if (data.info === "reject")
 					showAlert(data.body, "toast-error");
+			}
+			else if (data.type === "change_avatar" && data.avatar_url){
+				if (window.location.pathname === "/friends"){
+					const avatar_container = document.getElementById(`friend-id-${data.sender_id}`) as HTMLElement;
+					const sender_invitation_avatar = document.getElementById(`invitation-avatar-${data.sender_id}`) as HTMLImageElement
+					if (avatar_container){
+						const friend_img = avatar_container.querySelector("#friend-avatar") as HTMLImageElement;
+						if (friend_img)
+							friend_img.src = data.avatar_url
+					}
+					else if (sender_invitation_avatar)
+						sender_invitation_avatar.src = data.avatar_url
+				}
+				else if (window.location.pathname === "/messages"){
+					const avatar_container = document.getElementById(`friend-avatar-${data.sender_id}`) as HTMLImageElement;
+					const chat_container = document.getElementById("chat-friend-username") as HTMLElement
+        	if (avatar_container)
+						avatar_container.src = data.avatar_url;
+					if (chat_container.innerText === data.username){
+						const contact_picture = document.getElementById("contact-picture") as HTMLImageElement;
+						contact_picture.src = data.avatar_url;
+					}
+				}
+			}
+			else if (data.type === "game_invitation"){
+				if (data.info === "request"){
+					function handleAccept(){
+						if (socketToast){
+							socketToast.send(JSON.stringify({
+								type: "game_invitation",
+								info: "accept",
+								sender_id: getClientID(),
+								receiver_id: data.sender_id,
+							}));
+						}
+						createPongSocketConnection();
+						navigateTo("/pong")
+					}
+					function handleReject(){
+						if (socketToast){
+							socketToast.send(JSON.stringify({
+								type: "game_invitation",
+								info: "reject",
+								sender_id: getClientID(),
+								receiver_id: data.sender_id,
+							}));
+						}
+					}
+					showAlert(data.body, "toast-success", () => handleAccept, () => handleReject);
+				}
 			}
 		}
 		catch(err){
