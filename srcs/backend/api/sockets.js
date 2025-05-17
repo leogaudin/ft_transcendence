@@ -235,6 +235,8 @@ async function handleGameInvitation(data, sender_id, receiver_id){
 				body: `${username} has invited you to play ${data.game_type}`,
 				sender_id: data.sender_id,
 				receiver_id: data.receiver_id,
+				game_type: data.game_type,
+				is_custom: data.is_custom,
 			}))
 		}
 	}
