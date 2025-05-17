@@ -104,7 +104,7 @@ const routes = [
     	}
 	},
  	{
-		path: "/connectFour",
+		path: "/4inrow",
     	url: "../src/games/connectFour/connectFour.html",
     	event: (data: object) => {
 			const mode = data as Games;
