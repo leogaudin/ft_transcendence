@@ -168,7 +168,6 @@ export function createsocketToastConnection() {
 								receiver_id: data.sender_id,
 							}));
 						}
-						createPongSocketConnection();
 					}
 					function handleReject(data: any){
 						if (socketToast){
