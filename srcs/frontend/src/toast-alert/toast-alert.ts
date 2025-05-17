@@ -3,7 +3,6 @@ import { displayFriends, displayInvitations, showMatches, debounce } from "../fr
 import { Tournament } from "../types.js";
 import { chargeChat, recentChats } from "../messages/load-info.js";
 import { createSocketTournamentConnection } from "../tournament/tournament.js";
-import { createPongSocketConnection } from "../games/game.js";
 import { navigateTo } from "../index.js";
 
 export let socketToast: WebSocket | null;
