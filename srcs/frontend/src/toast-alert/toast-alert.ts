@@ -2,11 +2,7 @@ import { getClientID } from "../messages/messages-page.js"
 import { displayFriends, displayInvitations, showMatches, debounce } from "../friends/friends-fetch.js";
 import { Tournament } from "../types.js";
 import { chargeChat, recentChats } from "../messages/load-info.js";
-<<<<<<< HEAD
-import { createPongSocketConnection } from "../games/pong/pong.js";
-=======
 import { createSocketTournamentConnection } from "../tournament/tournament.js";
->>>>>>> dc99b5a76b3adabcb90cc402386c04f78b230324
 import { navigateTo } from "../index.js";
 
 export let socketToast: WebSocket | null;
