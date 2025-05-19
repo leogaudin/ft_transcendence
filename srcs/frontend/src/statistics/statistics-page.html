@@ -1,0 +1,50 @@
+<div class="screen-set">
+	<div id="card" class="standard-purple-card flex">
+		<header class="flex justify-between items-center lg:items-end mx-4 h-fit lg:h-1/6">
+			<div>
+				<h1 class="hidden lg:block">Statistics</h1>
+				<p><span id="pong-stats-page" class="friend-selector cursor-pointer">Pong</span> | <span id="connect4-stats-page" class="friend-selector cursor-pointer">Connect4</span></p>
+			</div>
+			<svg id="home-button" class="home-icon m-4 h-10 w-10" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FEE0EF">
+				<path d="M240-200h120v-240h240v240h120v-360L480-740 240-560v360Zm-80 80v-480l320-240 320 240v480H520v-240h-80v240H160Zm320-350Z"/>
+			</svg>
+		</header>
+
+		<div id="pink-divider" class="flex justify-center"></div>
+
+		<main class="flex flex-col justify-center items-center h-4/5">
+
+			<!-- Pong Page -->
+			<div id="pong-stats" class="flex gap-2 grid grid-cols-1 lg:grid-cols-2 gap-2 h-full w-full justify-between overflow-y-auto">
+				<div class="flex flex-col w-full">
+					<div class="flex items-center gap-2 m-2">
+						<p class="w-fit text-lg">Historical</p>
+						<div id="pink-divider" class="w-full"></div>
+					</div>
+					<section id="historical-div" class="flex flex-col h-[98%] overflow-x-clip overflow-y-auto"></section>
+				</div>
+				<div class="flex flex-col w-full h-full overflow-y-auto">
+					<div class="flex items-center gap-2 m-2">
+						<p class="w-fit text-lg">Dashboard</p>
+						<div id="pink-divider" class="w-full"></div>
+					</div>
+					<div id="dashboard-div" class="flex justify-center w-full overflow-y-auto">
+						<div class="myChartDiv flex justify-center">
+							<canvas id="winsLossesChart"></canvas>
+						</div>
+						<div class="myChartDiv flex justify-center">
+							<canvas id="gameModesChart"></canvas>
+						</div>
+					</div>
+					<div class="flex myChartDiv justify-center items-center">
+						<canvas id="gamesPlayedChart"></canvas>
+					</div>
+				</div>
+			</div>
+
+			<!-- Connect4 page -->
+			<div id="connect4-page" class="hidden flex flex-col lg:flex-row gap-2 h-full w-full justify-between overflow-y-auto">
+			</div>
+		</main>
+	</div>
+</div>

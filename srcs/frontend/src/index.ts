@@ -14,6 +14,7 @@ import { crazyTokensMode } from "./games/connectFour/crazyTknsMode.js";
 import { initTournamentEvents } from "./tournament/tournament.js";
 import { initSelectPageEvent } from "./games/select-game-page.js";
 import { initModifyPageEvents } from "./modify-profile/modify-page.js";
+import { initStatsEvents } from "./statistics/stats-page.js";
 
 const routes = [
 	{
@@ -69,6 +70,13 @@ const routes = [
 		url: "../src/friends/friends-page.html",
 		event: () => {
 			initFriendsEvents();
+		}
+	},
+	{
+		path: "/statistics",
+		url: "../src/statistics/statistics-page.html",
+		event: () => {
+			initStatsEvents();
 		}
 	},
 	{

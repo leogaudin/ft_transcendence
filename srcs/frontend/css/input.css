@@ -24,6 +24,9 @@
 /* --> Friends Page <-- */
 @import url("../src/friends/friends.styles.css");
 
+/* --> Stats Page <-- */
+@import url("../src/statistics/statistics.styles.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -48,7 +51,7 @@
 	--back-purple: #3B0034;
 	--dark-purple: #54184D;
 	--dark-blue: #360066;
-	--violet: #522B66;
+	--violet: #522b66;
 	--alert: #C60001;
 	--accent-alert: #FF504F;
 	--success: #537A1C;
@@ -57,6 +60,7 @@
 
 body {
 	background-color: var(--dark-pink);
+	/* background-color: #f5f5f56e; */
 	margin: 0;
 	font-family: "Perfect DOS VGA";
 	color: var(--accent-pink);
