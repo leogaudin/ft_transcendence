@@ -167,6 +167,8 @@ export function createsocketToastConnection() {
 								info: "accept",
 								sender_id: getClientID(),
 								receiver_id: data.sender_id,
+								game_type: data.game_type,
+								is_custom: data.is_custom,
 							}));
 						}
 						if (data.game_type && data.game_type === "pong")
@@ -188,7 +190,10 @@ export function createsocketToastConnection() {
 					showAlert(data.body, "toast-success", () => handleAccept(data), () => handleReject(data));
 				}
 				else if (data.info === "accept"){
-					showAlert("Sioque", "toast-success");
+					createSocketPongConnection()
+					showAlert("Your invitation has been accepted, starting game", "toast-success");
+					console.log("data de navegado", data)
+					navigateTo(`/${data.game_type}`, { gameMode: "remote", isCustom: data.is_custom });
 				}
 			}
 		}

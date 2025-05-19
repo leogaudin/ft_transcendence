@@ -248,6 +248,8 @@ async function handleGameInvitation(data, sender_id, receiver_id){
 				info: "accept",
 				sender_id: data.sender_id,
 				receiver_id: data.receiver_id,
+				game_type: data.game_type,
+				is_custom: data.is_custom,
 			}))
 		}
 	}

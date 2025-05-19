@@ -1827,6 +1827,10 @@ video {
   height: 1.5rem;
 }
 
+.h-\[95\%\] {
+  height: 95%;
+}
+
 .h-\[98\%\] {
   height: 98%;
 }
@@ -1840,12 +1844,12 @@ video {
   height: 100%;
 }
 
-.h-\[95\%\] {
-  height: 95%;
-}
-
 .max-h-\[60px\] {
   max-height: 60px;
+}
+
+.min-h-\[250px\] {
+  min-height: 250px;
 }
 
 .min-h-\[60px\] {
@@ -1854,10 +1858,6 @@ video {
 
 .min-h-\[80vh\] {
   min-height: 80vh;
-}
-
-.min-h-\[250px\] {
-  min-height: 250px;
 }
 
 .w-10 {
