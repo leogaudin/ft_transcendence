@@ -180,7 +180,7 @@ async function pongHistorical() {
 	}
 }
 
-async function connect4Charts() {
+export async function connect4Charts() {
 	const winsLossesChart = document.getElementById('connect4-wins-losses-chart') as HTMLCanvasElement;
 	const gameModesChart = document.getElementById('connect4-game-modes-chart') as HTMLCanvasElement;
 	const gamesPlayedChart = document.getElementById('connect4-games-played-chart') as HTMLCanvasElement;
