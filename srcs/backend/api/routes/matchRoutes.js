@@ -21,8 +21,6 @@ import {
 
 export default function createMatchRoutes(fastify) {
   return [
-    //TODO: Add more endpoints to the matches:
-    //      GET match/:id
     {
       preHandler: [fastify.authenticate],
       method: "GET",
@@ -124,6 +122,7 @@ export default function createMatchRoutes(fastify) {
         if (
           !validateInput(req, res, [
             "game_type",
+            "custom_mode",
             "first_player_id",
             "second_player_id",
           ])

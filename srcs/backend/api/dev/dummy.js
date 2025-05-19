@@ -61,54 +61,6 @@ import { createChat } from "../models/chatModel.js";
 import { createMessage } from "../models/messageModel.js";
 import { createMatch, createMatchOffline } from "../models/matchModel.js";
 
-async function createMatches(foo, bar) {
-  console.log("Creating matches...");
-  createMatch({
-    game_type: 0,
-    custom_mode: 0,
-    turns_played: 15,
-    first_player_id: foo.id,
-    second_player_id: bar.id,
-    first_player_score: 10,
-    second_player_score: 5,
-    winner_id: foo.id,
-    loser_id: bar.id,
-  });
-  createMatch({
-    game_type: 1,
-    custom_mode: 0,
-    turns_played: 20,
-    first_player_id: foo.id,
-    second_player_id: bar.id,
-    first_player_score: 1,
-    second_player_score: 0,
-    winner_id: foo.id,
-    loser_id: bar.id,
-  });
-  createMatch({
-    game_type: 0,
-    custom_mode: 1,
-    turns_played: 12,
-    first_player_id: foo.id,
-    second_player_id: bar.id,
-    first_player_score: 10,
-    second_player_score: 2,
-    winner_id: foo.id,
-    loser_id: bar.id,
-  });
-  createMatch({
-    game_type: 1,
-    custom_mode: 1,
-    turns_played: 23,
-    first_player_id: foo.id,
-    second_player_id: bar.id,
-    first_player_score: 0,
-    second_player_score: 1,
-    winner_id: bar.id,
-    loser_id: foo.id,
-  });
-}
-
 import {
   createTournament,
   addInvitationToTournament,
@@ -347,7 +299,7 @@ export async function createDebug() {
     for (let i = 0; i < 5; i++) {
       createMatchOffline({
         game_type: "pong",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: foo.id,
         userId: foo.id,
         first_player_score: 10,
@@ -358,7 +310,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "pong",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: foo.id,
         userId: foo.id,
         first_player_score: 3,
@@ -369,7 +321,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "pong",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: bar.id,
         userId: bar.id,
         first_player_score: 10,
@@ -380,7 +332,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "pong",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: bar.id,
         userId: bar.id,
         first_player_score: 3,
@@ -391,7 +343,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "pong",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: baz.id,
         userId: baz.id,
         first_player_score: 10,
@@ -402,7 +354,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "pong",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: baz.id,
         userId: baz.id,
         first_player_score: 3,
@@ -413,7 +365,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "pong",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: qux.id,
         userId: qux.id,
         first_player_score: 10,
@@ -424,7 +376,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "pong",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: qux.id,
         userId: qux.id,
         first_player_score: 3,
@@ -436,7 +388,7 @@ export async function createDebug() {
       //
       createMatchOffline({
         game_type: "connect_four",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: foo.id,
         userId: foo.id,
         first_player_score: 1,
@@ -447,7 +399,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "connect_four",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: foo.id,
         userId: foo.id,
         first_player_score: 0,
@@ -458,7 +410,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "connect_four",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: bar.id,
         userId: bar.id,
         first_player_score: 1,
@@ -469,7 +421,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "connect_four",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: bar.id,
         userId: bar.id,
         first_player_score: 0,
@@ -480,7 +432,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "connect_four",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: baz.id,
         userId: baz.id,
         first_player_score: 1,
@@ -491,7 +443,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "connect_four",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: baz.id,
         userId: baz.id,
         first_player_score: 0,
@@ -502,7 +454,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "connect_four",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: qux.id,
         userId: qux.id,
         first_player_score: 1,
@@ -513,7 +465,7 @@ export async function createDebug() {
       });
       createMatchOffline({
         game_type: "connect_four",
-        custom_mode: "none",
+        custom_mode: "Classic",
         userId: qux.id,
         userId: qux.id,
         first_player_score: 0,
@@ -528,24 +480,28 @@ export async function createDebug() {
       let match;
       match = await createMatch({
         game_type: "pong",
+        custom_mode: "Chaos",
         first_player_id: foo.id,
         second_player_id: bar.id,
       });
       await finishMatch(match, 10, 5);
       match = await createMatch({
         game_type: "pong",
+        custom_mode: "Chaos",
         first_player_id: foo.id,
         second_player_id: bar.id,
       });
       await finishMatch(match, 6, 10);
       match = await createMatch({
         game_type: "pong",
+        custom_mode: "Chaos",
         first_player_id: baz.id,
         second_player_id: qux.id,
       });
       await finishMatch(match, 10, 5);
       match = await createMatch({
         game_type: "pong",
+        custom_mode: "Chaos",
         first_player_id: baz.id,
         second_player_id: qux.id,
       });
@@ -555,24 +511,28 @@ export async function createDebug() {
       let match;
       match = await createMatch({
         game_type: "connect_four",
+        custom_mode: "Custom one",
         first_player_id: foo.id,
         second_player_id: bar.id,
       });
       await finishMatch(match, 1, 0);
       match = await createMatch({
         game_type: "connect_four",
+        custom_mode: "Custom two",
         first_player_id: foo.id,
         second_player_id: bar.id,
       });
       await finishMatch(match, 0, 1);
       match = await createMatch({
         game_type: "connect_four",
+        custom_mode: "Custom one",
         first_player_id: baz.id,
         second_player_id: qux.id,
       });
       await finishMatch(match, 0, 1);
       match = await createMatch({
         game_type: "connect_four",
+        custom_mode: "Custom two",
         first_player_id: baz.id,
         second_player_id: qux.id,
       });
