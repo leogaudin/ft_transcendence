@@ -1,18 +1,20 @@
 .stats-won-card {
 	display: flex;
 	justify-content: space-between;
-	background-color: var(--success);
-	box-shadow: var(--accent-success) 0px 0px 10px;
+	color: var(--dark-purple);
+	background-color: var(--accent-pink);
+	box-shadow: var(--accent-pink) 0px 0px 5px;
 }
 
 .stats-lost-card {
 	display: flex;
 	justify-content: space-between;
-	background-color: var(--alert);
-	box-shadow: var(--accent-alert) 0px 0px 10px;
+	background-color: var(--dark-pink);
+	box-shadow: var(--dark-pink) 0px 0px 5px;
 }
 
 .myChartDiv {
+	/* min-height: 200px; */
 	max-height: 250px;
 	aspect-ratio: 3/2;
 }
