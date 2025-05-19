@@ -1,31 +1,78 @@
 import { sendRequest } from "../login-page/login-fetch.js";
-import { LastMessage, Message, MessageObject, ChatInfo } from "../types.js"
+import { LastMessage, Message, MessageObject, ChatInfo, UserMatches } from "../types.js"
+import { debounce, emptyMatches } from "../friends/friends-fetch.js"
 export let actual_chat_id: number;
 
 export function loadInfo(data: MessageObject) {
 	displayFirstChat(data);
 	recentChats();
-	searchChatFriend();
 	const returnButton = document.getElementById("go-back-chat");
 	if (returnButton)
 		returnButton.addEventListener("click", () => {
 			toggleMobileDisplay();
 	});
 	window.addEventListener("resize", changedWindowSize);
+
+	// Search friend chats
+	const searchForm = document.getElementById("search-chat-form") as HTMLFormElement;
+	const friendInput = document.getElementById("friend-input") as HTMLInputElement;
+	const searchFriend = document.getElementById("search-chat") as any;
+
+	searchForm.onclick = (e: Event) => { e.preventDefault(); }
+
+	document.addEventListener("click", (event) => {
+		const target = event.target as Node;
+		// If click is outside the search form
+		if (!searchForm.contains(target)) {
+			friendInput.style.boxShadow = "";
+			friendInput.value = "";
+			searchFriend.innerHTML = "";
+			searchFriend.style.display = 'none';
+		}
+	});
+	friendInput.addEventListener("focusin", () => {
+		searchFriend.style.display = 'block';
+		friendInput.style.boxShadow = "0 0 0 max(100vh, 100vw) rgba(0, 0, 0, .3)";
+	});
+	friendInput.oninput = debounce(() => {showChats(friendInput.value)}, 500);
 }
 
-function searchChatFriend() {
-	const searchFriend = document.getElementById("search-friend-chat");
-	if (searchFriend) {
-		searchFriend.addEventListener("submit", (e) => {
-			e.preventDefault();
-			const input = searchFriend.querySelector("input") as HTMLInputElement;
-			if (!input)
-			return;
+async function showChats(input: string) {
+	const datalist = document.getElementById("search-chat");
 
-			// Here goes the functionality of searching a friend
-			input.value = "";
-		});
+	if (datalist) {
+		emptyMatches(datalist);
+		if (!input || input.length === 0)
+			return ;
+	
+		const matchesTyped = await sendRequest('POST', '/users/search', {username: input}) as UserMatches[];
+		for(let i = 0; i < matchesTyped.length; i++) {
+			if (matchesTyped[i].is_friend === 1) {
+				let option = document.createElement('div');
+				option.innerHTML = `${matchesTyped[i].username}`
+				option.setAttribute("id", `friend-chat-${matchesTyped[i].user_id}`);
+				option.classList.add("chat-option", "match-option");
+				datalist.appendChild(option);
+			}
+			if (matchesTyped[i]){
+				const messageButton = document.getElementById(`friend-chat-${matchesTyped[i].user_id}`);
+				if (messageButton) {
+					const chat_id = await sendRequest('POST', '/chats/identify', {friend_id: matchesTyped[i].user_id});
+					if (!chat_id)
+						throw new Error("Error during fetch for navigating to friend chat");
+					messageButton.onclick = () => {
+						const friendInput = document.getElementById("friend-input") as HTMLInputElement;
+						const searchFriend = document.getElementById("search-chat") as any;
+						friendInput.style.boxShadow = "";
+						friendInput.value = "";
+						searchFriend.innerHTML = "";
+						searchFriend.style.display = 'none';
+						chargeChat(chat_id, matchesTyped[i].username, matchesTyped[i].avatar) 
+					};
+				}
+			}
+		}
+
 	}
 }
 
@@ -90,24 +137,26 @@ async function displayFirstChat(data: MessageObject) {
 	}
 }
 
+// Misses some tests
 export async function recentChats() {
 	let last_chat = 0;
 	const recentChatsDiv = document.getElementById("conversation-list");
 
 	if (recentChatsDiv) {
 		try {
+			const recentChatsTyped = await sendRequest('GET', 'chats/last') as LastMessage[];
+			if (!recentChatsTyped)
+				throw new Error("Error fetching recent chats");
 			const searchForm = document.getElementById("search-friend-chat");
-			const chatEntries = recentChatsDiv.querySelectorAll("div:not(#search-friend-chat)");
+			const chatEntries = recentChatsDiv.querySelectorAll('[class^="chat"],[class*=" chat"]')
 			chatEntries.forEach(entry => {
 			  if (entry !== searchForm)
 				entry.remove();
 			});
-			const recentChatsTyped = await sendRequest('GET', 'chats/last') as LastMessage[];
-			if (!recentChatsTyped)
-				throw new Error("Error fetching recent chats");
 			
 			recentChatsTyped.forEach((chat) => {
 				var subDiv = document.createElement('div');
+				subDiv.classList.add('chat-card');
 	
 				let truncated = "";
 				chat.body?.length > 10 ? truncated = chat.body.substring(0, 10) + "..." : truncated = chat.body;
