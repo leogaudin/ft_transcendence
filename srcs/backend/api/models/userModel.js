@@ -121,7 +121,7 @@ export async function patchUser(id, updates) {
         return reject(err);
       }
       if (this.changes === 0) {
-        return reject(new Error("User not found"));
+        return resolve({message: "No changes"});
       }
       resolve({ success: true, id, ...updates });
     });

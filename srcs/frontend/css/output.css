@@ -543,7 +543,6 @@
   position: absolute;
   top: 10%;
   font-size: 5vw;
-  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 #counter1 {
@@ -621,8 +620,8 @@
 
 .ballTrailClone {
   position: absolute;
-  width: 20px;
-  height: 20px;
+  width: 2%;
+  height: 4%;
   background-color: white;
   border: 2px solid white;
   pointer-events: none;
@@ -645,88 +644,88 @@
 
 @keyframes paddleGrow {
   0% {
-    height: 120px;
+    height: 20%;
     opacity: 0.6;
   }
 
   50% {
-    height: 160px;
+    height: 26.5%;
     opacity: 1;
   }
 
   75% {
-    height: 140px;
+    height: 23%;
     opacity: 0.6;
   }
 
   100% {
-    height: 160px;
+    height: 26.5%;
     opacity: 1;
   }
 }
 
 @keyframes paddleGrowToNormal {
   0% {
-    height: 160px;
+    height: 26.5%;
     opacity: 0.6;
   }
 
   50% {
-    height: 120px;
+    height: 20%;
     opacity: 1;
   }
 
   75% {
-    height: 140px;
+    height: 23%;
     opacity: 0.6;
   }
 
   100% {
-    height: 120px;
+    height: 20%;
     opacity: 1;
   }
 }
 
 @keyframes paddleLittleToNormal{
   0% {
-    height: 80px;
+    height: 13.5%;
     opacity: 0.6;
   }
 
   50% {
-    height: 120px;
+    height: 20%;
     opacity: 1;
   }
 
   75% {
-    height: 80px;
+    height: 13.5%;
     opacity: 0.6;
   }
 
   100% {
-    height: 120px;
+    height: 20%;
     opacity: 1;
   }
 }
 
 @keyframes paddleLittle {
   0% {
-    height: 120px;
+    height: 20%;
     opacity: 0.6;
   }
 
   50% {
-    height: 80px;
+    height: 13.5%;
     opacity: 1;
   }
 
   75% {
-    height: 100px;
+    height: 17%;
     opacity: 0.6;
   }
 
   100% {
-    height: 80px;
+    height: 13.5%;
     opacity: 1;
   }
 }

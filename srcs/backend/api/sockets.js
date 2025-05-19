@@ -332,7 +332,8 @@ export default function createWebSocketsRoutes(fastify){
 							  message: "Invalid Id"
 							}));
 						}
-						await patchUser(userId, {is_online: 1});
+						if (userId)
+							await patchUser(userId, {is_online: 1});
 						socketsToast.forEach((clientSocket, clientId) => {
 							try{
 							  clientSocket.send(JSON.stringify({
@@ -422,7 +423,7 @@ export default function createWebSocketsRoutes(fastify){
 			})
 		},
 		{
-			url: "/fourInARow",
+			url: "/4inrow",
 			method: "GET",
 			websocket: true,
 			handler: asyncWebSocketHandler(async (socket) => {

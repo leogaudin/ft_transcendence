@@ -1,10 +1,10 @@
 import { getClientID } from "../messages/messages-page.js"
 import { displayFriends, displayInvitations, showMatches, debounce } from "../friends/friends-fetch.js";
 import { Tournament } from "../types.js";
-import { chargeChat, recentChats } from "../messages/load-info.js";
 import { createSocketTournamentConnection } from "../tournament/tournament.js";
-import { createPongSocketConnection } from "../games/pong/pong.js";
 import { navigateTo } from "../index.js";
+import { createSocket4inrowConnection } from "../games/connectFour/gameEngine.js";
+import { createSocketPongConnection } from "../games/pong/gameEngine.js";
 
 export let socketToast: WebSocket | null;
 let toastTimeout: NodeJS.Timeout;
@@ -169,6 +169,10 @@ export function createsocketToastConnection() {
 								receiver_id: data.sender_id,
 							}));
 						}
+						if (data.game_type && data.game_type === "pong")
+							createSocketPongConnection();
+						if (data.game_type && data.game_type === "4inrow")
+							createSocket4inrowConnection();
 						navigateTo(`/${data.game_type}`, { gameMode: "remote", isCustom: data.is_custom })
 					}
 					function handleReject(data: any){

@@ -1,3 +1,7 @@
+import { getClientID } from "../../messages/messages-page.js";
+
+export let socketPong: WebSocket | null;
+
 export interface Player {
 	keyPress: boolean;
     keyCode: string | null;
@@ -174,4 +178,49 @@ export function setAI(AIData: AIData, player2: Player, ballData: BallData, heigh
 	AIData.targetY = ballData.ball.offsetTop + ballData.velY * AIData.timeToReach;
 	AIData.errorRate = player2.paddleCenter < AIData.targetY ? Math.random() * height - player2.paddleCenter : Math.random() * player2.paddleCenter - 0;
 	player2.paddleCenter = player2.paddle.offsetTop + player2.paddle.clientHeight / 2; 
+}
+
+export function createSocketPongConnection(){
+if (socketPong && socketPong.readyState !== WebSocket.CLOSED)
+		socketPong.close();
+	try{
+		socketPong = new WebSocket(`wss://${window.location.hostname}:8443/ws/pong`)
+		if (!socketPong)
+			return ;
+		socketPong.onopen = () => {
+			let id = getClientID();
+			console.log("WebSocketPong connection established, sending id:", id);
+			if (id === -1){
+				console.error("Invalid ID, cannot connect to back")
+			}
+			else{
+				if (!socketPong)
+					return ;
+				socketPong.send(JSON.stringify({
+					userId: id,
+					action: "identify"
+				}));
+				console.log("ID succesfully sent");
+			}
+		};
+		socketPong.onmessage = (event) => {
+			try{
+				const data = JSON.parse(event.data);
+
+			}
+			catch(err) {
+				console.error("Error on message", err);
+			}
+		};
+		socketPong.onerror = (error) => {
+			console.error("WebSocket error:", error);
+		};
+		socketPong.onclose = () => {
+			console.log("WebSocketPong connection closed");
+			socketPong = null;
+		};
+	}
+	catch(err){
+		console.error("Error creating WebSocketPong:", err);
+	}
 }
