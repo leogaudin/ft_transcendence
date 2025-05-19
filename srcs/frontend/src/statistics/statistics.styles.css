@@ -14,7 +14,8 @@
 }
 
 .myChartDiv {
-	/* min-height: 200px; */
+	min-width: 250px;
+	min-height: 250px;
 	max-height: 250px;
-	aspect-ratio: 3/2;
+	/* aspect-ratio: 3/2; */
 }

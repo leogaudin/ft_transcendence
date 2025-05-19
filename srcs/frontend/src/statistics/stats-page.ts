@@ -1,5 +1,5 @@
 import { moveToHome } from "../messages/messages-page.js";
-import { initStatsFetch } from "./stats-fetch.js";
+import { initStatsFetch, connect4Charts } from "./stats-fetch.js";
 
 export function initStatsEvents() {
 	moveToHome();
@@ -14,9 +14,9 @@ export function initStatsEvents() {
 		connect4Page.classList.add('hidden');	
 		pongPage.classList.remove('hidden');
 	};
-	connect4PageButton.onclick = () => {
+	connect4PageButton.onclick = async () => {
 		pongPage.classList.add('hidden');
-		connect4Page.classList.remove('hidden');	
+		connect4Page.classList.remove('hidden');
 	};
 }
 
