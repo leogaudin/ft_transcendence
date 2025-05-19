@@ -20,6 +20,15 @@
     aspect-ratio: 1/1;
 }
 
+#contact-picture {
+	transition: all 250ms ease-in;
+}
+
+#contact-picture:hover {
+	box-shadow: var(--accent-pink) 0px 0px 5px;
+	cursor: pointer;
+}
+
 #message {
 	display: flex;
 	justify-content: flex-end;
@@ -89,7 +98,7 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background-color: #c06090c3;
+	background-color: #4d167dcb;
 	font-size: 18px;
 	padding: 10px;
 	margin: 3px;

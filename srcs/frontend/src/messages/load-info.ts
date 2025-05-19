@@ -1,6 +1,8 @@
 import { sendRequest } from "../login-page/login-fetch.js";
 import { LastMessage, Message, MessageObject, ChatInfo, UserMatches } from "../types.js"
 import { debounce, emptyMatches } from "../friends/friends-fetch.js"
+import { navigateTo } from "../index.js";
+import { showAlert } from "../toast-alert/toast-alert.js";
 export let actual_chat_id: number;
 
 export function loadInfo(data: MessageObject) {
@@ -189,6 +191,23 @@ export async function recentChats() {
 	}
 }
 
+async function displayFriendInfo(friend_username: string) {
+	try {
+		const response = await sendRequest('POST', '/users/getid', {username: friend_username});
+		if (!response) 
+			throw new Error("Álvaro cabrón");
+
+		const data = await sendRequest('POST', '/users/isfriends', {friend_id: response.user_id});
+		if (!data)
+			showAlert("You're not friends with this user", "toast-error");
+		else
+			navigateTo("/friends", response);
+	}
+	catch (error) {
+		console.error("Error: ", error);
+	}
+}
+
 export async function chargeChat(chat_id: number, friend_username: string, friend_avatar: string, page: number = 1) {
   if (page === 1)
     console.log("chargeChat information");
@@ -207,7 +226,10 @@ export async function chargeChat(chat_id: number, friend_username: string, frien
   let contactAvatar = document.getElementById("contact-picture");
 
   if (contactName) contactName.innerText = friend_username;
-  if (contactAvatar) contactAvatar.setAttribute("src", friend_avatar);
+	if (contactAvatar) {
+		contactAvatar.setAttribute("src", friend_avatar);
+		contactAvatar.onclick = () => { displayFriendInfo(friend_username) };
+	}
 
   await getChatInfo(chat_id);
   if (chatDiv) {
