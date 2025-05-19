@@ -164,7 +164,7 @@ async function pongHistorical() {
 			match.is_win ? section.classList.add('stats-won-card') : section.classList.add('stats-lost-card');
 			section.innerHTML = `
 						<div class="flex items-center gap-4">
-							<img id="friend-avatar" class="card-avatar rounded-full m-1.5" src="${match.rival_avatar}" alt="Avatar">
+							<img id="friend-avatar-${match.rival_id}" class="friend-avatar-${match.rival_id} card-avatar rounded-full m-1.5" src="${match.rival_avatar}" alt="Avatar">
 						</div>
 						<div id="friend-status" class="flex flex-col justify-between items-end px-4 w-full">
 							<p>${match.custom_mode} - ${match.user_score}-${match.rival_score}</p>
@@ -336,7 +336,7 @@ async function connect4Historical() {
 			match.is_win ? section.classList.add('stats-won-card') : section.classList.add('stats-lost-card');
 			section.innerHTML = `
 						<div class="flex items-center gap-4">
-							<img id="friend-avatar" class="card-avatar rounded-full m-1.5" src="${match.rival_avatar}" alt="Avatar">
+							<img id="friend-avatar-${match.rival_id}" class="friend-avatar-${match.rival_id} card-avatar rounded-full m-1.5" src="${match.rival_avatar}" alt="Avatar">
 						</div>
 						<div id="friend-status" class="flex flex-col justify-between items-end px-4 w-full">
 							<p>${match.custom_mode} - ${match.user_score}-${match.rival_score}</p>
