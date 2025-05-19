@@ -1,7 +1,8 @@
 import { moveToHome } from "../messages/messages-page.js"
-import { initFriendFetches, displayFriends, displayInvitations, blockFriend } from "./friends-fetch.js"
+import { User } from "../types.js";
+import { initFriendFetches, displayFriends, displayInvitations, blockFriend, clickFriendProfile } from "./friends-fetch.js"
 
-export function initFriendsEvents() {
+export function initFriendsEvents(data: User | null) {
 	moveToHome();
 	changeFriendPage();
 	initFriendFetches();
@@ -12,6 +13,9 @@ export function initFriendsEvents() {
 			toggleMobileDisplay();
 	});
 	window.addEventListener("resize", changedWindowSize);
+	if (data) {
+		clickFriendProfile(null, data);
+	}
 }
 
 function changedWindowSize() {

@@ -1,4 +1,4 @@
-import { UserMatches, FriendList, InvitationList } from "../types.js"
+import { UserMatches, FriendList, InvitationList, User } from "../types.js"
 import { sendRequest } from "../login-page/login-fetch.js";
 import { displayBlockPopUp, closeModal, toggleMobileDisplay } from "./friends-page.js"
 import { navigateTo } from "../index.js";
@@ -16,7 +16,7 @@ export function initFriendFetches() {
 
 	const friendHolder = document.getElementById("friends-holder");
 	if (friendHolder) {
-		friendHolder.addEventListener("click", (e) => { clickFriendProfile(e) });
+		friendHolder.addEventListener("click", (e) => { clickFriendProfile(e, null) });
 	}
 
 	searchForm.onclick = (e: Event) => { e.preventDefault(); }
@@ -38,68 +38,72 @@ export function initFriendFetches() {
 	friendInput.oninput = debounce(() => {showMatches(friendInput.value)}, 500);
 }
 
-async function clickFriendProfile(e: Event) {
-	const target = e.target as HTMLElement;
-    const friendElement = target.closest('[id^="friend-id-"]') as HTMLElement;
+export async function clickFriendProfile(e: Event | null, data: User | null) {
+	const target = e?.target as HTMLElement;
+	let friendElement;
+	if (target) {
+		friendElement = target.closest('[id^="friend-id-"]') as HTMLElement;
+		if (!friendElement) { return ; }
+	}
     
-    if (friendElement) {
-		if (window.innerWidth < 768)
-			toggleMobileDisplay();
-        const friendId = friendElement.id.replace("friend-id-", "");
+	if (!friendElement && (!data || data === undefined)) { return ; }
+	if (window.innerWidth < 768)
+		toggleMobileDisplay();
+	const friendId = data?.user_id ? data.user_id.toString() : friendElement?.id.replace("friend-id-", "");
+	if (!friendId) { return ; }
+	
+	try {
+		const friendProfileTyped = await sendRequest('GET', `/users/friends/${friendId}`) as FriendList;
+		if (!friendProfileTyped)
+			throw new Error("Error while fetching friend profile");
 		
-        try {
-            const friendProfileTyped = await sendRequest('GET', `/users/friends/${friendId}`) as FriendList;
-            if (!friendProfileTyped)
-                throw new Error("Error while fetching friend profile");
-            
-            const friendProfileDiv = document.getElementById("friend-profile");
-            if (!friendProfileDiv)
-                return;
-            
-            friendProfileDiv.innerHTML = ` 
-					<div id="friend-data" class="flex flex-col-reverse lg:flex-row justify-between items-center gap-4 w-full p-2.5">
-						<div class="flex flex-col lg:ml-4">
-							<p class="font-bold text-center lg:text-start">Username: <span id="friend-name" class="font-thin">${friendProfileTyped.username}</span></p>
-							<p class="font-bold text-center lg:text-start">Nick: <span id="friend-nick" class="font-thin">${friendProfileTyped.alias}</span></p>
-							<div id="friend-status" class="flex gap-2 justify-center lg:justify-start">
-								${friendProfileTyped.is_online === 1 ?
-								'<p>Online</p><img src="../../resources/img/online.svg" alt="Online status">' :
-								'<p>Offline</p><img src="../../resources/img/offline.svg" alt="Offline status">'
-								}
-							</div>
-							<p class="font-bold text-center lg:text-start">Description: <span id="friend-description" class="italic font-thin">${friendProfileTyped.status}</span></p>
-							<div class="flex justify-center gap-10 my-4">
-								<button id="delete-friend" class="button p-2.5 rounded-[15px]">Delete</button>
-								<button id="block-friend" class="button p-2.5 rounded-[15px] bg-[var(--alert)]">Block</button>
-							</div>
+		const friendProfileDiv = document.getElementById("friend-profile");
+		if (!friendProfileDiv)
+			return;
+		
+		friendProfileDiv.innerHTML = ` 
+				<div id="friend-data" class="flex flex-col-reverse lg:flex-row justify-between items-center gap-4 w-full p-2.5">
+					<div class="flex flex-col lg:ml-4">
+						<p class="font-bold text-center lg:text-start">Username: <span id="friend-name" class="font-thin">${friendProfileTyped.username}</span></p>
+						<p class="font-bold text-center lg:text-start">Nick: <span id="friend-nick" class="font-thin">${friendProfileTyped.alias}</span></p>
+						<div id="friend-status" class="flex gap-2 justify-center lg:justify-start">
+							${friendProfileTyped.is_online === 1 ?
+							'<p>Online</p><img src="../../resources/img/online.svg" alt="Online status">' :
+							'<p>Offline</p><img src="../../resources/img/offline.svg" alt="Offline status">'
+							}
 						</div>
-						<div class="flex flex-col items-center lg:mr-4">
-							<img id="friend-profile-photo" class="rounded-full" src="${friendProfileTyped.avatar}" alt="Profile photo">
+						<p class="font-bold text-center lg:text-start">Description: <span id="friend-description" class="italic font-thin">${friendProfileTyped.status}</span></p>
+						<div class="flex justify-center gap-10 my-4">
+							<button id="delete-friend" class="button p-2.5 rounded-[15px]">Delete</button>
+							<button id="block-friend" class="button p-2.5 rounded-[15px] bg-[var(--alert)]">Block</button>
 						</div>
 					</div>
-					<div id="friend-statistics" class="flex flex-col items-center p-4 gap-1 mt-4 rounded-[15px] w-full lg:w-9/12 bg-[#7d48778f]">
-						<p class="font-bold text-center">Pong Games Played: <span class="font-thin">${friendProfileTyped.pong_games_played}</span></p>
-						<p class="font-bold text-center">Pong Wins Rate: <span class="font-thin">${friendProfileTyped.pong_games_won}</span></p>
-						<p class="font-bold text-center">Pong Loses Rate: <span class="font-thin">${friendProfileTyped.pong_games_lost}</span></p>
-						<p class="font-bold text-center">Connect Four Games Played: <span class="font-thin">${friendProfileTyped.connect_four_games_played}</span></p>
-						<p class="font-bold text-center">Connect Four Wins Rate: <span class="font-thin">${friendProfileTyped.connect_four_games_played}</span></p>
-						<p class="font-bold text-center">Connect Four Loses Rate: <span class="font-thin">${friendProfileTyped.connect_four_games_played}</span></p>
+					<div class="flex flex-col items-center lg:mr-4">
+						<img id="friend-profile-photo" class="rounded-full" src="${friendProfileTyped.avatar}" alt="Profile photo">
 					</div>
-					`
+				</div>
+				<div id="friend-statistics" class="flex flex-col items-center p-4 gap-1 mt-4 rounded-[15px] w-full lg:w-9/12 bg-[#7d48778f]">
+					<p class="font-bold text-center">Pong Games Played: <span class="font-thin">${friendProfileTyped.pong_games_played}</span></p>
+					<p class="font-bold text-center">Pong Wins Rate: <span class="font-thin">${friendProfileTyped.pong_games_won}</span></p>
+					<p class="font-bold text-center">Pong Loses Rate: <span class="font-thin">${friendProfileTyped.pong_games_lost}</span></p>
+					<p class="font-bold text-center">Connect Four Games Played: <span class="font-thin">${friendProfileTyped.connect_four_games_played}</span></p>
+					<p class="font-bold text-center">Connect Four Wins Rate: <span class="font-thin">${friendProfileTyped.connect_four_games_played}</span></p>
+					<p class="font-bold text-center">Connect Four Loses Rate: <span class="font-thin">${friendProfileTyped.connect_four_games_played}</span></p>
+				</div>
+				`
 
-			friendProfileDiv.style.display = 'flex';
-			const blockFriendButton = document.getElementById("block-friend");
-			if (blockFriendButton)
-				blockFriendButton.addEventListener("click", () => { displayBlockPopUp(friendId) });
+		friendProfileDiv.style.display = 'flex';
+		const blockFriendButton = document.getElementById("block-friend");
+		if (blockFriendButton)
+			blockFriendButton.addEventListener("click", () => { displayBlockPopUp(friendId) });
 
-			const deleteFriendButton = document.getElementById("delete-friend");
-			if (deleteFriendButton)
-				deleteFriendButton.addEventListener("click", () => { deleteFriend(friendId) });
-        }
-        catch (error) {
-            console.error(error);
-        }
-    }
+		const deleteFriendButton = document.getElementById("delete-friend");
+		if (deleteFriendButton)
+			deleteFriendButton.addEventListener("click", () => { deleteFriend(friendId) });
+	}
+	catch (error) {
+		console.error(error);
+	}
 }
 
 async function deleteFriend(friendId: string) {
