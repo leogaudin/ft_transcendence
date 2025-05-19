@@ -120,9 +120,7 @@ export async function patchUser(id, updates) {
         console.error("Error updating user:", err.message);
         return reject(err);
       }
-      if (this.changes === 0) {
-        return reject(new Error("User not found"));
-      }
+      if (this.changes === 0) return resolve({ message: "No changes" });
       resolve({ success: true, id, ...updates });
     });
   });
