@@ -224,6 +224,7 @@ async function handleAvatarChange(data){
 }
 
 async function handleGameInvitation(data, sender_id, receiver_id){
+	console.log(data);
 	if (data.info === "request"){
 		let username = await getUsername(data.sender_id);
 		if (socketsToast.has(receiver_id)){
@@ -234,6 +235,8 @@ async function handleGameInvitation(data, sender_id, receiver_id){
 				body: `${username} has invited you to play ${data.game_type}`,
 				sender_id: data.sender_id,
 				receiver_id: data.receiver_id,
+				game_type: data.game_type,
+				is_custom: data.is_custom,
 			}))
 		}
 	}
@@ -241,7 +244,7 @@ async function handleGameInvitation(data, sender_id, receiver_id){
 		if (socketsToast.has(receiver_id)){
 			const receiver = socketsToast.get(receiver_id)
 			receiver.send(JSON.stringify({
-				type: "game_accepted",
+				type: "game_invitation",
 				info: "accept",
 				sender_id: data.sender_id,
 				receiver_id: data.receiver_id,
@@ -252,7 +255,7 @@ async function handleGameInvitation(data, sender_id, receiver_id){
 		if (socketsToast.has(receiver_id)){
 			const receiver = socketsToast.get(receiver_id)
 			receiver.send(JSON.stringify({
-				type: "game_rejected",
+				type: "game_invitation",
 				info: "reject",
 				sender_id: data.sender_id,
 				receiver_id: data.receiver_id,
@@ -348,6 +351,7 @@ export default function createWebSocketsRoutes(fastify){
 						const data = JSON.parse(notification);
 						const sender_id = parseInt(data.sender_id);
 						const receiver_id = parseInt(data.receiver_id);
+						console.log(data)
 						if (data.type === "friendRequest")
 							friendRequest(data, sender_id, receiver_id);
 						else if (data.type === "tournament")

@@ -20,49 +20,122 @@ function initHomeButton(){
   }
 }
 
-function showRemoteSearch(mode: string) {
-  const searchContainer = document.getElementById('remote-search-container');
-  if (searchContainer) {
+async function initRemotePlayerSearchCustom(mode: string, isCustom: boolean){
+  const searchInput = document.getElementById('remote-custom-player-search') as HTMLInputElement;
+  const searchResults = document.getElementById('remote-custom-search-results');
+  const searchContainer = document.getElementById('remote-custom-search-container');
+  if (searchContainer)
     searchContainer.classList.remove('hidden');
-    initRemotePlayerSearch(mode);
-  }
-}
-
-async function initRemotePlayerSearch(mode: string) {
-  const searchInput = document.getElementById('remote-player-search') as HTMLInputElement;
-  const searchResults = document.getElementById('remote-search-results');
-
-  if (searchInput && searchResults) {
+  if (searchInput && searchResults){
+    searchInput.value = '';
+    searchResults.innerHTML = '';
     searchInput.oninput = debounce(async () => {
       const query = searchInput.value.trim();
-      if (query.length >= 2) {
-        try {
+      if (query.length >= 2){
+        try{
           const matches = await sendRequest('POST', '/users/search', { username: query }) as UserMatches[];
-          displayRemoteSearchResults(matches, searchResults, mode);
-        } catch (error) {
-          console.error('Error searching players:', error);
-          searchResults.innerHTML = '<p>Error searching players</p>';
+          displayRemoteSearchResultsCustom(matches, searchResults, mode, isCustom);
         }
-      } else {
-        searchResults.innerHTML = '';
+        catch (error){
+            console.error('Error searching players:', error);
+            searchResults.innerHTML = '<p>Error searching players</p>';
+        }
       }
+      else
+        searchResults.innerHTML = '';
     }, 300);
   }
 }
 
-function displayRemoteSearchResults(players: UserMatches[], container: HTMLElement, mode: string) {
+function displayRemoteSearchResultsCustom(players: UserMatches[], container: HTMLElement, mode: string, isCustom: boolean) {
   container.innerHTML = '';
   
-  if (!Array.isArray(players)) {
+  if (!Array.isArray(players)){
     container.innerHTML = '<p>Error: Invalid data format</p>';
     return;
   }
-
-  if (players.length === 0) {
+  if (players.length === 0){
     container.innerHTML = '<p>No players found</p>';
     return;
   }
+  players.forEach(player => {
+    const option = document.createElement('div');
+    option.className = 'player-item';
+    option.innerHTML = `
+      ${player.username}
+      <button class="invite-button" data-user-id="${player.user_id}">
+        Invite to Custom Game
+      </button>
+    `;
+    const inviteButton = option.querySelector('.invite-button');
+    if (inviteButton){
+      inviteButton.addEventListener('click', () => {
+        sendGameInvitation(player.user_id, player.username, mode, isCustom);
+        hideCustomSearch();
+      });
+    }
+    container.appendChild(option);
+  });
+}
 
+function hideCustomSearch(){
+  const searchCustomContainer = document.getElementById('remote-custom-search-container');
+  if (searchCustomContainer){
+    searchCustomContainer.classList.add('hidden');
+    const searchInput = document.getElementById('remote-custom-player-search') as HTMLInputElement;
+    if (searchInput)
+      searchInput.value = '';
+    const searchResults = document.getElementById('remote-custom-search-results');
+    if (searchResults)
+      searchResults.innerHTML = '';
+  }
+}
+
+function showRemoteSearch(mode: string, isCustom: boolean){
+  const searchContainer = document.getElementById('remote-search-container');
+  const searchCustomContainer = document.getElementById('remote-custom-search-container');
+  if (searchContainer && !isCustom){
+    searchContainer.classList.remove('hidden');
+    initRemotePlayerSearch(mode, isCustom);
+  }
+  else if (searchCustomContainer && isCustom){
+    searchCustomContainer.classList.remove('hidden');
+    initRemotePlayerSearchCustom(mode, isCustom);
+  }
+}
+
+async function initRemotePlayerSearch(mode: string, isCustom: boolean){
+  const searchInput = document.getElementById('remote-player-search') as HTMLInputElement;
+  const searchResults = document.getElementById('remote-search-results');
+  if (searchInput && searchResults){
+    searchInput.oninput = debounce(async () => {
+      const query = searchInput.value.trim();
+      if (query.length >= 2){
+        try {
+          const matches = await sendRequest('POST', '/users/search', { username: query }) as UserMatches[];
+          displayRemoteSearchResults(matches, searchResults, mode, isCustom);
+        }
+        catch (error){
+          console.error('Error searching players:', error);
+          searchResults.innerHTML = '<p>Error searching players</p>';
+        }
+      }
+      else
+        searchResults.innerHTML = '';
+    }, 300);
+  }
+}
+
+function displayRemoteSearchResults(players: UserMatches[], container: HTMLElement, mode: string, isCustom: boolean){
+  container.innerHTML = '';
+  if (!Array.isArray(players)){
+    container.innerHTML = '<p>Error: Invalid data format</p>';
+    return;
+  }
+  if (players.length === 0){
+    container.innerHTML = '<p>No players found</p>';
+    return;
+  }
   players.forEach(player => {
     const option = document.createElement('div');
     option.className = 'player-item';
@@ -72,19 +145,17 @@ function displayRemoteSearchResults(players: UserMatches[], container: HTMLEleme
         Invite to Game
       </button>
     `;
-
     const inviteButton = option.querySelector('.invite-button');
-    if (inviteButton) {
+    if (inviteButton){
       inviteButton.addEventListener('click', () => {
-        sendGameInvitation(player.user_id, player.username, mode);
+        sendGameInvitation(player.user_id, player.username, mode, isCustom);
       });
     }
-
     container.appendChild(option);
   });
 }
 
-function sendGameInvitation(receiverId: number, username: string, currentGame: string) {
+function sendGameInvitation(receiverId: number, username: string, currentGame: string, isCustom: boolean){
   if (socketToast && socketToast.readyState === WebSocket.OPEN) {
     socketToast.send(JSON.stringify({
       type: 'game_invitation',
@@ -92,9 +163,9 @@ function sendGameInvitation(receiverId: number, username: string, currentGame: s
       sender_id: getClientID(),
       receiver_id: receiverId,
       game_type: currentGame,
+      is_custom: isCustom,
       sent_at: new Date().toISOString()
     }));
-    
     showAlert(`Invitation sent to ${username}`, 'toast-success');
   }
 }
@@ -102,7 +173,6 @@ function sendGameInvitation(receiverId: number, username: string, currentGame: s
 function showGameOptions(){
   const modal = document.getElementById('game-options-modal');
   const gameModes = document.querySelector('.game-modes');
-  
   if (modal && gameModes){
     modal.classList.remove('hidden');
     gameModes.classList.remove('hidden');
@@ -137,12 +207,8 @@ function initGameSelection(){
     button.addEventListener('click', (event) => {
       const target = event.target as HTMLElement;
       const modeType = target.getAttribute('data-mode-type');
-
-      // Update active button
       modeButtons.forEach(btn => btn.classList.remove('active'));
       target.classList.add('active');
-
-      // Show/hide appropriate options
       if (modeType === 'normal'){
         normalModes?.classList.remove('hidden');
         customModes?.classList.add('hidden');
@@ -154,22 +220,23 @@ function initGameSelection(){
     });
   });
 
-  // Update option button handler to include custom modes
-  
   const optionButtons = document.querySelectorAll('.option-button');
   optionButtons.forEach(button => {
     button.addEventListener('click', (event) => {
       event.preventDefault();
       const target = event.target as HTMLElement;
       const mode = target.getAttribute('data-mode');
+      console.log(mode)
       if (mode && currentGame){
-        if (mode === 'remote')
-          showRemoteSearch(currentGame);
+        if (mode === "remote" || mode === "remote-custom"){
+          const isCustom = mode.includes('custom')
+          showRemoteSearch(currentGame, isCustom);
+        }
         else if (currentGame === "pong")
           navigateTo("/pong", { gameMode: mode, isCustom: mode.includes('custom') });
         else if (currentGame === "4inrow")
-          navigateTo("/connectFour", { gameMode: mode, isCustom: mode.includes('custom') });
-        if (mode !== 'remote')
+          navigateTo("/4inrow", { gameMode: mode, isCustom: mode.includes('custom') });
+        if (mode !== 'remote' && mode !== "remote-custom")
           hideGameOptions();
       }
     });

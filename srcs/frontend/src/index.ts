@@ -104,11 +104,15 @@ const routes = [
     	path: "/pong",
     	url: "../src/games/pong/pong.html",
     	event: (data: object) => {
-      		classicPong(data as Games);
+      		const mode = data as Games;
+			if (!mode.isCustom)
+      			classicPong(mode);
+			else
+				chaosPong(mode)
     	}
 	},
  	{
-		path: "/connectFour",
+		path: "/4inrow",
     	url: "../src/games/connectFour/connectFour.html",
     	event: (data: object) => {
 			const mode = data as Games;
