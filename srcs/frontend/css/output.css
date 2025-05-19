@@ -1073,18 +1073,20 @@
 .stats-won-card {
   display: flex;
   justify-content: space-between;
-  background-color: var(--success);
-  box-shadow: var(--accent-success) 0px 0px 10px;
+  color: var(--dark-purple);
+  background-color: var(--accent-pink);
+  box-shadow: var(--accent-pink) 0px 0px 5px;
 }
 
 .stats-lost-card {
   display: flex;
   justify-content: space-between;
-  background-color: var(--alert);
-  box-shadow: var(--accent-alert) 0px 0px 10px;
+  background-color: var(--dark-pink);
+  box-shadow: var(--dark-pink) 0px 0px 5px;
 }
 
 .myChartDiv {
+  /* min-height: 200px; */
   max-height: 250px;
   aspect-ratio: 3/2;
 }
@@ -1838,6 +1840,10 @@ video {
   height: 100%;
 }
 
+.h-\[95\%\] {
+  height: 95%;
+}
+
 .max-h-\[60px\] {
   max-height: 60px;
 }
@@ -1848,6 +1854,10 @@ video {
 
 .min-h-\[80vh\] {
   min-height: 80vh;
+}
+
+.min-h-\[250px\] {
+  min-height: 250px;
 }
 
 .w-10 {
@@ -2741,8 +2751,8 @@ h1 {
     width: 75%;
   }
 
-  .lg\:grid-cols-2 {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .lg\:basis-1\/2 {
+    flex-basis: 50%;
   }
 
   .lg\:flex-row {
