@@ -1,0 +1,40 @@
+#stars-background {
+	animation-duration: 3000ms;
+	animation-name: stars;
+	animation-iteration-count: infinite;
+	background-size: cover;
+    background-position: center;
+	animation-timing-function: steps(1);
+}
+
+@keyframes stars {
+  0% {
+    background-image: url("../../resources/img/stars.png");
+  }
+  33.33% {
+    background-image: url("../../resources/img/stars-2.png");
+  }
+  66.66% {
+    background-image: url("../../resources/img/stars-3.png");
+  }
+  100% {
+    background-image: url("../../resources/img/stars.png");
+  }
+}
+
+.bounce {
+	animation-duration: 2500ms;
+	animation-name: bounce;
+	animation-iteration-count: infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(-5%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: none;
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
