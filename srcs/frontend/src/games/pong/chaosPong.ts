@@ -1,5 +1,6 @@
 import { 
-    Player, GeneralData, PaddleCollision, BallData, AIData, OnresizeData, init, resetBall, updateScore, setAI, countDown, pauseGame,
+    Player, GeneralData, PaddleCollision, BallData, AIData, OnresizeData, init, 
+    resetBall, updateScore, setAI, countDown, pauseGame, returnToGames,
 	play as playEngine, stop as stopEngine, moveBall as moveBallEngine
 } from './gameEngine.js';
 
@@ -93,11 +94,14 @@ export function chaosPong(data: Games): void{
 
 	async function start(): Promise<void> {
 		const savedState = localStorage.getItem("gameState");
-		if (savedState)
+		if (savedState){
 			loadGameState();
-        await countDown(ballData);
-		if (!savedState)
+			await pauseGame(generalData, ballData);
+		}
+		if (!savedState){
+			await countDown(ballData);
 			init(generalData, ballData, player1, player2, width);
+		}
 		generalData.controlGame = setInterval(play, generalData.time);
 		powerUpData.controlPowerUp = setInterval(spawnPowerUp, 5000);
 		if (AIData.activate) 
@@ -503,6 +507,10 @@ export function chaosPong(data: Games): void{
 
     document.getElementById('pauseGame')?.addEventListener('click', async () => {
         await pauseGame(generalData, ballData);
+    })
+
+    document.getElementById('exitGame')?.addEventListener('click', async () => {
+        await returnToGames(generalData, ballData);
     })
 
 	setOnresize();
