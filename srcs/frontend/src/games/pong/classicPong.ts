@@ -1,5 +1,5 @@
 import { 
-    Player, GeneralData, PaddleCollision, BallData, AIData, OnresizeData, init, resetBall, updateScore, setAI,
+    Player, GeneralData, PaddleCollision, BallData, AIData, OnresizeData, init, resetBall, updateScore, setAI, countDown,
 	play as playEngine, stop as stopEngine, moveBall as moveBallEngine
 } from './gameEngine.js';
 
@@ -69,11 +69,12 @@ export function classicPong(data: Games): void{
         newSpeed: 0
     };
 
-	function start(): void {
+	async function start(): Promise<void> {
 		const savedState = localStorage.getItem("gameState");
 		if (savedState)
 			loadGameState();
-		else
+		await countDown(ballData);
+		if (!savedState)
 			init(generalData, ballData, player1, player2, width);
 		generalData.controlGame = setInterval(play, generalData.time);
 		if (AIData.activate) 

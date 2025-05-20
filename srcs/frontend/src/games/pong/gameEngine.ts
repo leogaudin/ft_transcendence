@@ -48,6 +48,43 @@ export interface OnresizeData {
 	newSpeed: number;
 }
 
+export async function countDown(ballData: BallData): Promise<void>{
+	const countDownEl = document.getElementById('countdown')
+	if (!countDownEl){
+		console.error("countdown element not found.")
+		return Promise.resolve();
+	}
+
+	const gameEl = document.getElementById('game');
+	if (!gameEl){
+		console.error("game element not found.")
+		return Promise.resolve();
+	}
+
+	gameEl.style.opacity = '50%';
+	countDownEl.classList.remove('hidden');
+	ballData.ball.style.display = 'none';
+
+	for (let i = 3; i > 0; i--){
+		countDownEl.textContent = i.toString();
+		countDownEl.style.animation = 'countdownPulse 1s ease-in-out';
+		await delay(1000);
+		countDownEl.style.animation = 'none'
+		void countDownEl.offsetWidth;
+	}
+	countDownEl.textContent = '¡GO!';
+	await delay(1000);
+
+	countDownEl.style.animation = 'fadeOut 0.5s';
+	await delay(500);
+
+	countDownEl.classList.add('hidden');
+	gameEl.style.animation = "fullOpacity 0.25s ease forwards"
+	ballData.ball.style.display = 'block';
+
+	return Promise.resolve();
+}
+
 export function init(generalData: GeneralData, ballData: BallData, player1: Player, player2: Player, width: number): void {
 	resetBall(generalData, ballData, player1, player2, width);
 }
@@ -176,4 +213,8 @@ export function setAI(AIData: AIData, player2: Player, ballData: BallData, heigh
 	AIData.targetY = ballData.ball.offsetTop + ballData.velY * AIData.timeToReach;
 	AIData.errorRate = player2.paddleCenter < AIData.targetY ? Math.random() * height - player2.paddleCenter : Math.random() * player2.paddleCenter - 0;
 	player2.paddleCenter = player2.paddle.offsetTop + player2.paddle.clientHeight / 2; 
+}
+
+export function delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
