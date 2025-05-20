@@ -186,7 +186,7 @@ export function delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export async function countDown(ballData: BallData): Promise<void>{
+export async function countDown(ballData: BallData, start: boolean): Promise<void>{
 	const countDownEl = document.getElementById('countdown')
 	if (!countDownEl){
 		console.error("countdown element not found.")
@@ -214,7 +214,7 @@ export async function countDown(ballData: BallData): Promise<void>{
 	exitBtn.style.pointerEvents = 'none';
 	pauseBtn.style.pointerEvents = 'none';
 	countDownEl.style.display = 'block';
-	ballData.ball.style.display = 'none';
+	if (start) ballData.ball.style.display = 'none';
 
 	for (let i = 3; i > 0; i--){
 		countDownEl.textContent = i.toString();
@@ -231,7 +231,7 @@ export async function countDown(ballData: BallData): Promise<void>{
 
 	countDownEl.style.display = 'none';
 	gameEl.style.animation = "fullOpacity 0.25s ease forwards"
-	ballData.ball.style.display = 'block';
+	if (start) ballData.ball.style.display = 'block';
 	pauseBtn.style.pointerEvents = 'auto';
 	exitBtn.style.pointerEvents = 'auto';
 
@@ -272,7 +272,7 @@ export async function pauseGame(generalData: GeneralData, ballData: BallData): P
 	}
 	else{
 		pauseEl.style.display = 'none';
-		await countDown(ballData)
+		await countDown(ballData, false)
 		generalData.isPaused = false;
 	}
 	return Promise.resolve();
@@ -312,7 +312,7 @@ export async function returnToGames(generalData: GeneralData, ballData: BallData
 
 	document.getElementById('continue')?.addEventListener('click', async () => {
 		returnEl.style.display = 'none';
-		await countDown(ballData);
+		await countDown(ballData, false);
 		generalData.exitPause = false;
 		return ;
 	})

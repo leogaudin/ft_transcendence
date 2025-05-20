@@ -4,6 +4,8 @@ import {
     columnList,
     boardMap,
     crazyTokens,
+    pauseGame,
+	returnToGames,
     init as initEngine,
     clearGame as clearGameEngine,
     insertDivWinner as insertDivWinnerEngine,
@@ -671,6 +673,14 @@ export function crazyTokensMode(data: Games): void {
 	async function delay(ms: number): Promise<void> {
 		await delayEngine(ms);
 	}
+
+    document.getElementById('pauseGame')?.addEventListener('click', async () => {
+        await pauseGame(columnList);
+    })
+
+    document.getElementById('exitGame')?.addEventListener('click', async () => {
+        await returnToGames(columnList);
+    })
 
     start();
 }

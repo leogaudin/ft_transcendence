@@ -1,3 +1,5 @@
+import { navigateTo } from "../../index.js";
+
 export interface Player {
     color: string;
     turn: boolean;
@@ -293,4 +295,109 @@ export function detectWinOpportunities(boardMap: Map<string, number[]>, columnLi
 
 export function delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export async function pauseGame(columnList: HTMLElement[]): Promise<void> {
+    const pauseEl = document.getElementById('pause');
+    if (!pauseEl){
+        console.error("pause element not found.");
+        return Promise.resolve();
+    }
+
+    const boardEl = document.getElementById('board');
+    if (!boardEl){
+        console.error("board element not found.")
+        return Promise.resolve();
+    }
+
+    const pauseBtn = document.getElementById('pauseGame')
+    if (!pauseBtn){
+        console.error("pauseGame element not found.")
+        return Promise.resolve();
+    }
+
+    const exitBtn = document.getElementById('exitGame');
+    if (!exitBtn){
+        console.error("exitGame element not found.");
+        return Promise.resolve();
+    }
+
+    const diceEl = document.getElementById('dice-container');
+    if (!diceEl){
+        console.error("dice-container element not found.")
+        return Promise.resolve();
+    }
+
+    disableClicks(columnList);
+    diceEl.style.pointerEvents = 'none';
+    exitBtn.style.pointerEvents = 'none';
+
+    if (pauseEl.style.display !== 'block'){
+        pauseEl.style.display = 'block';
+        boardEl.style.animation = "mediumOpacity 0.25s ease forwards";
+        await delay(250);
+    }
+    else{
+        exitBtn.style.pointerEvents = 'auto';
+        diceEl.style.pointerEvents = 'auto';
+        boardEl.style.animation = "fullOpacity 0.25s ease forwards";
+        pauseEl.style.display = 'none';
+        enableClicks(columnList);
+    }
+    return Promise.resolve();
+}
+
+export async function returnToGames(columnList: HTMLElement[]): Promise<void> {
+    const exitBtn = document.getElementById('exitGame');
+    if (!exitBtn){
+        console.error("exitGame element not found.");
+        return Promise.resolve();
+    }
+
+    const pauseBtn = document.getElementById('pauseGame')
+    if (!pauseBtn){
+        console.error("pauseGame element not found.")
+        return Promise.resolve();
+    }
+
+    const boardEl = document.getElementById('board');
+    if (!boardEl){
+        console.error("board element not found.")
+        return Promise.resolve();
+    }
+
+    const diceEl = document.getElementById('dice-container');
+    if (!diceEl){
+        console.error("dice-container element not found.")
+        return Promise.resolve();
+    }
+
+    disableClicks(columnList);
+    diceEl.style.pointerEvents = 'none';
+    exitBtn.style.pointerEvents = 'none';
+    pauseBtn.style.pointerEvents = 'none';
+    boardEl.style.animation = "mediumOpacity 0.25s ease forwards";
+    await delay(250);
+
+    const returnEl = document.getElementById('returnToGames');
+    if (!returnEl){
+        console.error("returnToGames element not found.");
+        return Promise.resolve();
+    }
+    returnEl.style.display = 'block';
+
+    document.getElementById('continue')?.addEventListener('click', async () => {
+        returnEl.style.display = 'none';
+        boardEl.style.animation = "fullOpacity 0.25s ease forwards";
+        diceEl.style.pointerEvents = 'auto';
+        exitBtn.style.pointerEvents = 'auto';
+        pauseBtn.style.pointerEvents = 'auto';
+        enableClicks(columnList);
+        return ;
+    })
+
+    document.getElementById('exit')?.addEventListener('click', () => {
+        /* localStorage.removeItem('gameState'); */
+        navigateTo("/games");
+    })
 }

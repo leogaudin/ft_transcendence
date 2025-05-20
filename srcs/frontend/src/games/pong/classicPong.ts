@@ -79,7 +79,7 @@ export function classicPong(data: Games): void{
 			await pauseGame(generalData, ballData);
 		}
 		if (!savedState){
-			await countDown(ballData);
+			await countDown(ballData, true);
 			init(generalData, ballData, player1, player2, width);
 		}
 		generalData.controlGame = setInterval(play, generalData.time);
@@ -275,7 +275,7 @@ export function classicPong(data: Games): void{
 		}
 	};
 
-	function clearGameState(){
+	async function clearGameState(){
 		localStorage.removeItem('gameState');
 		player1.counter = 0;
 		player2.counter = 0;
@@ -293,9 +293,9 @@ export function classicPong(data: Games): void{
 		setOnresize();
 	});
 
-	window.addEventListener('popstate', () => {
+	window.addEventListener('popstate', async () => {
 		stop();
-		clearGameState();
+		await clearGameState();
 	});
 
 	document.getElementById('pauseGame')?.addEventListener('click', async () => {
