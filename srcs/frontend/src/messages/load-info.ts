@@ -3,9 +3,11 @@ import { LastMessage, Message, MessageObject, ChatInfo, UserMatches } from "../t
 import { debounce, emptyMatches } from "../friends/friends-fetch.js"
 import { navigateTo } from "../index.js";
 import { showAlert } from "../toast-alert/toast-alert.js";
+import { displayMessage, getClientID } from "./messages-page.js"
 export let actual_chat_id: number;
 
 export function loadInfo(data: MessageObject) {
+	dropDown();
 	displayFirstChat(data);
 	recentChats();
 	const returnButton = document.getElementById("go-back-chat");
@@ -37,6 +39,65 @@ export function loadInfo(data: MessageObject) {
 		friendInput.style.boxShadow = "0 0 0 max(100vh, 100vw) rgba(0, 0, 0, .3)";
 	});
 	friendInput.oninput = debounce(() => {showChats(friendInput.value)}, 500);
+}
+
+function dropDown(){
+	const dropdownButton = document.getElementById("party-invitation");
+	const dropdownOptions = document.getElementById("party-options");
+	if (!dropdownButton || !dropdownOptions)
+		return;
+
+	dropdownButton.addEventListener("click", () => {
+		dropdownButton.focus();
+	});
+	dropdownButton.addEventListener("focus", () => {
+		dropdownOptions.style.display = "block";
+	});
+	dropdownButton.addEventListener("blur", () => {
+		dropdownOptions.style.display = "none";
+	});
+	dropdownOptions.addEventListener("mousedown", (e) => {
+		const target = e.target as HTMLElement;
+		const key = target.getAttribute('profile_key');
+		if (key)
+			navigatePartyInvitations(key);
+	});
+}
+
+function navigatePartyInvitations(key: string) {
+	const date = new Date();
+    date.setHours(date.getHours() + 2);
+	const keyMap = [
+		{
+			value: "classic-pong",
+			title: "Classic Pong",
+		},
+		{
+			value: "chaos-pong",
+			title: "Chaos Pong",
+		},
+		{
+			value: "classic-connect4",
+			title: "Classic Connect4",
+		},
+		{
+			value: "crazy-connect4",
+			title: "Crazy-Tokens Connect4",
+		}
+	];
+	const title = keyMap.find(r => r.value === key)?.title;
+
+	const invitation = {
+		body: `I want to play with you to ${title}!`,
+		chat_id: actual_chat_id,
+		receiver_id: 3,
+		sender_id: getClientID(),
+		sent_at: date.toISOString(),
+		info: "request",
+		type: "game",
+		game_type: key,
+	} as Message;
+	displayMessage(invitation);
 }
 
 async function showChats(input: string) {
@@ -195,7 +256,7 @@ async function displayFriendInfo(friend_username: string) {
 	try {
 		const response = await sendRequest('POST', '/users/getid', {username: friend_username});
 		if (!response) 
-			throw new Error("Álvaro cabrón");
+			throw new Error("Problem while fetching the id of the friend");
 
 		const data = await sendRequest('POST', '/users/isfriends', {friend_id: response.user_id});
 		if (!data)

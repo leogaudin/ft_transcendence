@@ -175,6 +175,17 @@ h1 {
 	box-shadow: var(--accent-pink) 0px 0px 2px;
 }
 
+.party-icon {
+	width: 40px;
+	aspect-ratio: 1/1;
+	transition: 0.3s ease-in-out;
+}
+
+.party-icon:hover {
+	cursor: pointer;
+	box-shadow: var(--accent-pink) 0px 0px 2px;
+}
+
 .send-icon {
     transition: fill 0.3s ease-in-out;
 }
