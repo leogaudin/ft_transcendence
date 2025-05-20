@@ -96,13 +96,21 @@ function openFileSelector() {
 		fileId.click();
 }
 
-function submitImage() {
+async function submitImage() {
 	const formId = document.getElementById('formid') as HTMLFormElement;
 	const fileId = document.getElementById('fileid') as HTMLInputElement;
 	if (!formId || !fileId) { return; }
 
 	if (fileId.files){
-		updatePhoto(fileId.files[0]);
+		const avatar = await updatePhoto(fileId.files[0]);
+    if (socketToast && avatar){
+      socketToast.send(JSON.stringify({
+        type: "change_avatar",
+        info: "update",
+        sender_id: getClientID(),
+        avatar: avatar,
+      }));
+    }
 	}
 }
 
