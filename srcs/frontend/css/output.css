@@ -178,6 +178,15 @@
   aspect-ratio: 1/1;
 }
 
+#contact-picture {
+  transition: all 250ms ease-in;
+}
+
+#contact-picture:hover {
+  box-shadow: var(--accent-pink) 0px 0px 5px;
+  cursor: pointer;
+}
+
 #message {
   display: flex;
   justify-content: flex-end;
@@ -242,6 +251,25 @@
     min-width: 78vw;
     max-height: 75vh;
   }
+}
+
+.chat-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #4d167dcb;
+  font-size: 18px;
+  padding: 10px;
+  margin: 3px;
+  border-radius: 15px;
+  transition: 250ms ease-in-out;
+}
+
+.chat-option:hover {
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px) saturate(80%);
+          backdrop-filter: blur(6px) saturate(80%);
+  box-shadow: var(--dark-pink) 0px 0px 2px;
 }
 
 /* --> Settings page <-- */

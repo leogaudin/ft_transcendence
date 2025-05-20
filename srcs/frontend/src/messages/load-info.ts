@@ -1,31 +1,80 @@
 import { sendRequest } from "../login-page/login-fetch.js";
-import { LastMessage, Message, MessageObject, ChatInfo } from "../types.js"
+import { LastMessage, Message, MessageObject, ChatInfo, UserMatches } from "../types.js"
+import { debounce, emptyMatches } from "../friends/friends-fetch.js"
+import { navigateTo } from "../index.js";
+import { showAlert } from "../toast-alert/toast-alert.js";
 export let actual_chat_id: number;
 
 export function loadInfo(data: MessageObject) {
 	displayFirstChat(data);
 	recentChats();
-	searchChatFriend();
 	const returnButton = document.getElementById("go-back-chat");
 	if (returnButton)
 		returnButton.addEventListener("click", () => {
 			toggleMobileDisplay();
 	});
 	window.addEventListener("resize", changedWindowSize);
+
+	// Search friend chats
+	const searchForm = document.getElementById("search-chat-form") as HTMLFormElement;
+	const friendInput = document.getElementById("friend-input") as HTMLInputElement;
+	const searchFriend = document.getElementById("search-chat") as any;
+
+	searchForm.onclick = (e: Event) => { e.preventDefault(); }
+
+	document.addEventListener("click", (event) => {
+		const target = event.target as Node;
+		// If click is outside the search form
+		if (!searchForm.contains(target)) {
+			friendInput.style.boxShadow = "";
+			friendInput.value = "";
+			searchFriend.innerHTML = "";
+			searchFriend.style.display = 'none';
+		}
+	});
+	friendInput.addEventListener("focusin", () => {
+		searchFriend.style.display = 'block';
+		friendInput.style.boxShadow = "0 0 0 max(100vh, 100vw) rgba(0, 0, 0, .3)";
+	});
+	friendInput.oninput = debounce(() => {showChats(friendInput.value)}, 500);
 }
 
-function searchChatFriend() {
-	const searchFriend = document.getElementById("search-friend-chat");
-	if (searchFriend) {
-		searchFriend.addEventListener("submit", (e) => {
-			e.preventDefault();
-			const input = searchFriend.querySelector("input") as HTMLInputElement;
-			if (!input)
-			return;
+async function showChats(input: string) {
+	const datalist = document.getElementById("search-chat");
 
-			// Here goes the functionality of searching a friend
-			input.value = "";
-		});
+	if (datalist) {
+		emptyMatches(datalist);
+		if (!input || input.length === 0)
+			return ;
+	
+		const matchesTyped = await sendRequest('POST', '/users/search', {username: input}) as UserMatches[];
+		for(let i = 0; i < matchesTyped.length; i++) {
+			if (matchesTyped[i].is_friend === 1) {
+				let option = document.createElement('div');
+				option.innerHTML = `${matchesTyped[i].username}`
+				option.setAttribute("id", `friend-chat-${matchesTyped[i].user_id}`);
+				option.classList.add("chat-option", "match-option");
+				datalist.appendChild(option);
+			}
+			if (matchesTyped[i]){
+				const messageButton = document.getElementById(`friend-chat-${matchesTyped[i].user_id}`);
+				if (messageButton) {
+					const chat_id = await sendRequest('POST', '/chats/identify', {friend_id: matchesTyped[i].user_id});
+					if (!chat_id)
+						throw new Error("Error during fetch for navigating to friend chat");
+					messageButton.onclick = () => {
+						const friendInput = document.getElementById("friend-input") as HTMLInputElement;
+						const searchFriend = document.getElementById("search-chat") as any;
+						friendInput.style.boxShadow = "";
+						friendInput.value = "";
+						searchFriend.innerHTML = "";
+						searchFriend.style.display = 'none';
+						chargeChat(chat_id, matchesTyped[i].username, matchesTyped[i].avatar) 
+					};
+				}
+			}
+		}
+
 	}
 }
 
@@ -90,24 +139,27 @@ async function displayFirstChat(data: MessageObject) {
 	}
 }
 
+// Misses some tests
 export async function recentChats() {
 	let last_chat = 0;
 	const recentChatsDiv = document.getElementById("conversation-list");
 
 	if (recentChatsDiv) {
 		try {
+			const recentChatsTyped = await sendRequest('GET', 'chats/last') as LastMessage[];
+			if (!recentChatsTyped)
+				throw new Error("Error fetching recent chats");
 			const searchForm = document.getElementById("search-friend-chat");
-			const chatEntries = recentChatsDiv.querySelectorAll("div:not(#search-friend-chat)");
+			const chatEntries = recentChatsDiv.querySelectorAll('[class^="chat"],[class*=" chat"]')
 			chatEntries.forEach(entry => {
 			  if (entry !== searchForm)
 				entry.remove();
 			});
-			const recentChatsTyped = await sendRequest('GET', 'chats/last') as LastMessage[];
-			if (!recentChatsTyped)
-				throw new Error("Error fetching recent chats");
+      last_chat = recentChatsTyped[0].chat_id;
 			
 			recentChatsTyped.forEach((chat) => {
 				var subDiv = document.createElement('div');
+				subDiv.classList.add('chat-card');
 	
 				let truncated = "";
 				chat.body?.length > 10 ? truncated = chat.body.substring(0, 10) + "..." : truncated = chat.body;
@@ -124,7 +176,7 @@ export async function recentChats() {
 				`;
 				recentChatsDiv.appendChild(subDiv);
 				subDiv.addEventListener("click", () => {
-					if (last_chat !== chat.chat_id) {
+					if (window.innerWidth < 768 || last_chat !== chat.chat_id) {
 						last_chat = chat.chat_id;
 						const friend_avatar = document.getElementById(`friend-avatar-${chat.friend_id}`) as HTMLImageElement;
 						if (!friend_avatar) { return ; }
@@ -139,15 +191,31 @@ export async function recentChats() {
 	}
 }
 
-// FIX: sometimes it still mixes messages up
+async function displayFriendInfo(friend_username: string) {
+	try {
+		const response = await sendRequest('POST', '/users/getid', {username: friend_username});
+		if (!response) 
+			throw new Error("Álvaro cabrón");
+
+		const data = await sendRequest('POST', '/users/isfriends', {friend_id: response.user_id});
+		if (!data)
+			showAlert("You're not friends with this user", "toast-error");
+		else
+			navigateTo("/friends", response);
+	}
+	catch (error) {
+		console.error("Error: ", error);
+	}
+}
+
 export async function chargeChat(chat_id: number, friend_username: string, friend_avatar: string, page: number = 1) {
+  if (page === 1)
+    console.log("chargeChat information");
+  console.log( "friend_username:",  friend_username, "chat_id:", chat_id, "page:", page);
   if (window.innerWidth < 768 && page === 1)
     toggleMobileDisplay();
 
-  // Check if the chat changed from previous one
-  if (actual_chat_id !== chat_id && chat_id !== 0) {
-    // console.log(`Switching chats from ${actual_chat_id} to ${chat_id}. Resetting pagination.`);
-
+  if (page === 1 || (actual_chat_id !== chat_id && chat_id !== 0)) {
     currentPage = 1;
     hasMoreMessages = true;
     page = 1;
@@ -158,18 +226,17 @@ export async function chargeChat(chat_id: number, friend_username: string, frien
   let contactAvatar = document.getElementById("contact-picture");
 
   if (contactName) contactName.innerText = friend_username;
-  if (contactAvatar) contactAvatar.setAttribute("src", friend_avatar);
+	if (contactAvatar) {
+		contactAvatar.setAttribute("src", friend_avatar);
+		contactAvatar.onclick = () => { displayFriendInfo(friend_username) };
+	}
 
   await getChatInfo(chat_id);
   if (chatDiv) {
     try {
       const chatHistoryTyped = await sendRequest("GET", `chats/${chat_id}?page=${page}`) as Message[];
-      // Delete if it's a new page
       if (page === 1 && chatDiv.children.length > 0)
         chatDiv.innerHTML = "";
-
-      // console.log('chat_id:', chat_id, "page:", page)
-
       if (!chatHistoryTyped) {
         if (page === 1) throw new Error("Error fetching the chat selected");
         else return false;
@@ -201,11 +268,9 @@ export async function chargeChat(chat_id: number, friend_username: string, frien
         fragment.appendChild(div);
       });
       if (page > 1) {
-        // Put the messages on top
         chatDiv.prepend(fragment);
         chatDiv.scrollTop = chatDiv.scrollHeight - prevScrollHeight;
       } else {
-        // Put the messages below
         chatDiv.appendChild(fragment);
         chatDiv.scrollTop = chatDiv.scrollHeight;
       }
@@ -223,14 +288,11 @@ export async function chargeChat(chat_id: number, friend_username: string, frien
 let currentPage = 1;
 let hasMoreMessages = true;
 
-// Set up the scroll event listener
 export function setupInfiniteScroll() {
   const chatDiv = document.getElementById("message-history");
   if (!chatDiv) return;
   if (hasMoreMessages) {
     chatDiv.addEventListener("scroll", handleScroll);
-    // console.log("Infinite scroll enabled");
-    // Check if the div has scrolled almost all the way to load the next batch
     if (
       chatDiv.scrollTop < 100 &&
       chatDiv.scrollHeight > chatDiv.clientHeight
@@ -242,15 +304,11 @@ export function setupInfiniteScroll() {
   }
 }
 
-// Function to handle scroll events
 async function handleScroll() {
   const chatDiv = document.getElementById("message-history");
   if (!chatDiv || !hasMoreMessages) return;
-  // Check if user has scrolled to the top (with a small threshold)
   if (chatDiv.scrollTop < 50) {
-    // Advance to the next page
     currentPage++;
-    // Fetch the batch
     hasMoreMessages = await chargeChat(
       actual_chat_id,
       document.getElementById("chat-friend-username")?.innerText || "",

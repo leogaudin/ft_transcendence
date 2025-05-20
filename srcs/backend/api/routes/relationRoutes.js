@@ -56,6 +56,16 @@ export default function createRelationRoutes(fastify) {
         return res.code(200).send(data);
       }),
     },
+     {
+      preHandler: [fastify.authenticate],
+      method: "POST",
+      url: "/users/isfriends",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["friend_id"])) return;
+        const data = await isFriend(req.userId, req.body.friend_id);
+        return res.code(200).send(data);
+      }),
+    },
     {
       preHandler: [fastify.authenticate],
       method: "PATCH",

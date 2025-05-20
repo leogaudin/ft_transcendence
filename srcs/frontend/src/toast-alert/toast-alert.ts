@@ -156,7 +156,13 @@ export function createsocketToastConnection() {
 						contact_picture.src = data.avatar_url;
 					}
 				}
-				//else if (pagina de estadisticas)
+				else if (window.location.pathname === "/statistics"){
+					const avatar_container = document.getElementsByClassName(`friend-avatar-${data.sender_id}`) as HTMLCollectionOf<HTMLImageElement>;
+        	if (avatar_container) {
+            for (let i = 0; i < avatar_container.length; i++)
+                avatar_container[i].src = data.avatar_url;
+          }
+				}
 			}
 			else if (data.type === "game_invitation"){
 				console.log(data);

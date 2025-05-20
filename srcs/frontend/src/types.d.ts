@@ -147,6 +147,7 @@ export interface Historical {
 	is_offline: boolean,
 	rival_username: string,
 	rival_avatar: string;
+	rival_id: number;
 	user_score: number;
 	rival_score: number;
 	is_win: boolean;

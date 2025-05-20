@@ -384,9 +384,9 @@ export function isFriend(user_id, friend_id) {
         FROM
           user_friends
         WHERE
-          user_id = ? AND friend_id = ?
+          user_id = ? AND friend_id = ? AND pending = 0
         OR
-          user_id = ? AND friend_id = ?)
+          user_id = ? AND friend_id = ? AND pending = 0)
       AS is_friend;`;
     const params = [user_id, friend_id, friend_id, user_id];
     db.get(sql, params, function (err, row) {
