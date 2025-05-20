@@ -26,7 +26,7 @@ const updateFriendsList = debounce(() => {
 export function createsocketToastConnection() {
 	if (socketToast && socketToast.readyState !== WebSocket.CLOSED)
 	  socketToast.close();
-	const userId = localStorage.getItem("id");
+		const userId = localStorage.getItem("id");
     if (!userId) {
       console.error("Can't connect to WebSocketToast");
       return;
@@ -34,21 +34,21 @@ export function createsocketToastConnection() {
 	try{
 	  socketToast = new WebSocket(`wss://${window.location.hostname}:8443/ws/toast`)
 	  if (!socketToast)
-		return ;
+			return ;
 	  socketToast.onopen = () => {
-		let id = getClientID();
-		console.log("WebsocketToast connection established, sending id:", id);
-		if (id === -1)
-		  console.error("Invalid ID, cannot connect to back");
-		else{
-		  if (!socketToast)
-				return ;
-		  socketToast.send(JSON.stringify({
-			userId: id,
-			action: "identify"
-		  }));
-		  console.log("ID succesfully sent");
-		}
+			let id = getClientID();
+			console.log("WebsocketToast connection established, sending id:", id);
+			if (id === -1)
+				console.error("Invalid ID, cannot connect to back");
+			else{
+				if (!socketToast)
+					return ;
+				socketToast.send(JSON.stringify({
+				userId: id,
+				action: "identify"
+				}));
+				console.log("ID succesfully sent");
+			}
 	  };
 	  socketToast.onmessage = async (event) => {
 		try{
@@ -156,6 +156,7 @@ export function createsocketToastConnection() {
 						contact_picture.src = data.avatar_url;
 					}
 				}
+				//else if (pagina de estadisticas)
 			}
 			else if (data.type === "game_invitation"){
 				console.log(data);
@@ -202,11 +203,11 @@ export function createsocketToastConnection() {
 		}
 	  };
 	  socketToast.onerror = (error) => {
-		console.error("WebsocketToast error:", error);
+			console.error("WebsocketToast error:", error);
 	  };
 	  socketToast.onclose = () => {
-		console.log("WebsocketToast connection closed");
-		socketToast = null;
+			console.log("WebsocketToast connection closed");
+			socketToast = null;
 	  };
 	}
 	catch(err){

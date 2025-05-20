@@ -190,9 +190,8 @@ if (socketPong && socketPong.readyState !== WebSocket.CLOSED)
 		socketPong.onopen = () => {
 			let id = getClientID();
 			console.log("WebSocketPong connection established, sending id:", id);
-			if (id === -1){
+			if (id === -1)
 				console.error("Invalid ID, cannot connect to back")
-			}
 			else{
 				if (!socketPong)
 					return ;
@@ -208,7 +207,7 @@ if (socketPong && socketPong.readyState !== WebSocket.CLOSED)
 				const data = JSON.parse(event.data);
 
 			}
-			catch(err) {
+			catch(err){
 				console.error("Error on message", err);
 			}
 		};

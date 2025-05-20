@@ -309,9 +309,8 @@ if (socket4inrow && socket4inrow.readyState !== WebSocket.CLOSED)
         socket4inrow.onopen = () => {
             let id = getClientID();
             console.log("WebSocket4inrow connection established, sending id:", id);
-            if (id === -1){
+            if (id === -1)
                 console.error("Invalid ID, cannot connect to back")
-            }
             else{
                 if (!socket4inrow)
                     return ;
@@ -327,7 +326,7 @@ if (socket4inrow && socket4inrow.readyState !== WebSocket.CLOSED)
                 const data = JSON.parse(event.data);
                 
             }
-            catch(err) {
+            catch(err){
                 console.error("Error on message", err);
             }
         };

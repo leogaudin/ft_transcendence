@@ -1,7 +1,8 @@
 import { 
     Player, GeneralData, PaddleCollision, BallData, AIData, OnrizeData, init, resetBall, updateScore, setAI,
 	play as playEngine, stop as stopEngine,
-	moveBall as moveBallEngine
+	moveBall as moveBallEngine,
+    socketPong
 } from './gameEngine.js';
 
 import { Games } from "../../types.js";
@@ -489,6 +490,8 @@ export function chaosPong(data: Games): void{
 	window.addEventListener("popstate", () => {
 		stop();
 		clearGameState();
+        if (socketPong)
+            socketPong.close()
 	});
 
 	setOnresize();
