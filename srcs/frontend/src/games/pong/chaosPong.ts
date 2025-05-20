@@ -54,7 +54,8 @@ export function chaosPong(data: Games): void{
         speed: 0.02,
         paddleMargin: height * 0.03,
         controlGame: null,
-        isPaused: false
+        isPaused: false,
+        exitPause: false,
     };
 
     const paddleCollisionData: PaddleCollision = {
@@ -104,7 +105,7 @@ export function chaosPong(data: Games): void{
 	}
 
 	function play(): void {
-        if (generalData.isPaused) return ;
+        if (generalData.isPaused || generalData.exitPause) return ;
 
 		setOnresize();
 		moveBall();
@@ -125,8 +126,8 @@ export function chaosPong(data: Games): void{
 	}
 
 	function moveAI(): void {
-        if (generalData.isPaused) return ;
-        
+        if (generalData.isPaused || generalData.exitPause) return ;
+
 		let random = Math.random();
 		setAI(AIData, player2, ballData, height);
 
@@ -195,7 +196,7 @@ export function chaosPong(data: Games): void{
 	/* PowerUp setup */
 
     function spawnPowerUp(): void {
-        if (generalData.isPaused) return ;
+        if (generalData.isPaused || generalData.exitPause) return ;
         if (powerUpData.active) return;
 
         powerUpData.active = true;

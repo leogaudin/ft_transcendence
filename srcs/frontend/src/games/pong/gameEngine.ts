@@ -1,3 +1,5 @@
+import { navigateTo } from "../..";
+
 export interface Player {
 	keyPress: boolean;
     keyCode: string | null;
@@ -14,6 +16,7 @@ export interface GeneralData {
 	paddleMargin: number;
 	controlGame: NodeJS.Timeout | null;
 	isPaused: boolean;
+	exitPause: boolean;
 }
 
 export interface PaddleCollision {
@@ -202,6 +205,13 @@ export async function countDown(ballData: BallData): Promise<void>{
 		return Promise.resolve();
 	}
 
+	const exitBtn = document.getElementById('exitGame');
+	if (!exitBtn){
+		console.error("exitGame element not found.");
+		return Promise.resolve();
+	}
+
+	exitBtn.style.pointerEvents = 'none';
 	pauseBtn.style.pointerEvents = 'none';
 	countDownEl.classList.remove('hidden');
 	ballData.ball.style.display = 'none';
@@ -223,6 +233,7 @@ export async function countDown(ballData: BallData): Promise<void>{
 	gameEl.style.animation = "fullOpacity 0.25s ease forwards"
 	ballData.ball.style.display = 'block';
 	pauseBtn.style.pointerEvents = 'auto';
+	exitBtn.style.pointerEvents = 'auto';
 
 	return Promise.resolve();
 }
@@ -246,6 +257,13 @@ export async function pauseGame(generalData: GeneralData, ballData: BallData): P
 		return Promise.resolve();
 	}
 
+	const exitBtn = document.getElementById('exitGame');
+	if (!exitBtn){
+		console.error("exitGame element not found.");
+		return Promise.resolve();
+	}
+	exitBtn.style.pointerEvents = 'none';
+
 	if (!generalData.isPaused){
 		generalData.isPaused = true;
 		pauseEl.style.display = 'block';
@@ -258,4 +276,49 @@ export async function pauseGame(generalData: GeneralData, ballData: BallData): P
 		generalData.isPaused = false;
 	}
 	return Promise.resolve();
+}
+
+export async function returnToGames(generalData: GeneralData, ballData: BallData): Promise<void> {
+	const exitBtn = document.getElementById('exitGame');
+	if (!exitBtn){
+		console.error("exitGame element not found.");
+		return Promise.resolve();
+	}
+
+	const pauseBtn = document.getElementById('pauseGame')
+	if (!pauseBtn){
+		console.error("pauseGame element not found.")
+		return Promise.resolve();
+	}
+
+	const gameEl = document.getElementById('game');
+	if (!gameEl){
+		console.error("game element not found.")
+		return Promise.resolve();
+	}
+
+	exitBtn.style.pointerEvents = 'none';
+	pauseBtn.style.pointerEvents = 'none';
+	gameEl.style.animation = "mediumOpacity 0.25s ease forwards";
+	await delay(250);
+
+	const returnEl = document.getElementById('returnToGames');
+	if (!returnEl){
+		console.error("returnToGames element not found.");
+		return Promise.resolve();
+	}
+	returnEl.style.display = 'block';
+	generalData.exitPause = true;
+
+	document.getElementById('continue')?.addEventListener('click', async () => {
+		returnEl.style.display = 'none';
+		await countDown(ballData);
+		generalData.exitPause = false;
+		return ;
+	})
+
+	document.getElementById('exit')?.addEventListener('click', () => {
+	/* 	localStorage.removeItem('gameState'); */
+		navigateTo("/games");
+	})
 }

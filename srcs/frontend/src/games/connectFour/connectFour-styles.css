@@ -139,10 +139,10 @@ button {
 #draw {
     position: absolute;
     display: none;
-    border:2px solid rgb(7, 39, 76);
+    border: 5px solid rgb(7, 39, 76);
     background-color: rgb(24, 127, 245);
     opacity: 80%;
-    border-radius: 1%;
+    border-radius: 3%;
     width: 80%;
     height: fit-content;
     z-index: 1;

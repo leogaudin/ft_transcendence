@@ -1,5 +1,6 @@
 import { 
-    Player, GeneralData, PaddleCollision, BallData, AIData, OnresizeData, init, resetBall, updateScore, setAI, countDown, pauseGame,
+    Player, GeneralData, PaddleCollision, BallData, AIData, OnresizeData, init, 
+	resetBall, updateScore, setAI, countDown, pauseGame, returnToGames, 
 	play as playEngine, stop as stopEngine, moveBall as moveBallEngine,
 } from './gameEngine.js';
 
@@ -36,7 +37,8 @@ export function classicPong(data: Games): void{
         speed: 0.02,
         paddleMargin: height * 0.03,
         controlGame: null,
-		isPaused: false
+		isPaused: false,
+		exitPause: false,
     };
 
     const paddleCollisionData: PaddleCollision = {
@@ -83,7 +85,7 @@ export function classicPong(data: Games): void{
 	}
 
 	function play(): void {
-		if (generalData.isPaused) return ;
+		if (generalData.isPaused || generalData.exitPause) return ;
 
 		setOnresize();
 		moveBall();
@@ -101,8 +103,8 @@ export function classicPong(data: Games): void{
 	}
 
 	function moveAI(): void {
-		if (generalData.isPaused) return ;
-		
+		if (generalData.isPaused || generalData.exitPause) return ;
+
 		let random = Math.random();
 		setAI(AIData, player2, ballData, height);
 
@@ -295,6 +297,10 @@ export function classicPong(data: Games): void{
 
 	document.getElementById('pauseGame')?.addEventListener('click', async () => {
 		await pauseGame(generalData, ballData);
+	})
+
+	document.getElementById('exitGame')?.addEventListener('click', async () => {
+		await returnToGames(generalData, ballData);
 	})
 
 	setOnresize();

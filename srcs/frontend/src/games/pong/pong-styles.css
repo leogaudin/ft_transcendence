@@ -26,7 +26,7 @@
 #countdown {
 	position: absolute;
 	text-align: center;
-	top: 50%;
+	top: 52%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	font-size: 4vw;
@@ -97,6 +97,44 @@
 }
 
 #buttomGroup > button:hover {
+    background-color: #b06289;
+    transform: translateY(-2px);
+}
+
+#returnToGames {
+	position: absolute;
+	color: white;
+	width: 40%;
+	height: 20%;
+	align-content: center;
+	justify-content: center;
+	text-align: center;
+	display: none;
+	background-color: black;
+	border: white solid 2px;
+	border-radius: 2%;
+}
+
+#returnToGames > p {
+	font-size: 2vw;
+	animation: blinkPause 1.5s infinite;
+}
+
+#returnToGames > button {
+	font-size: 2vw;
+	border-radius: 8px;       
+    background-color: var(--dark-pink);
+    width: fit-content;
+    height: fit-content;
+    padding: 10px 20px;        
+    text-align: center;
+    font-size: 100%;
+    cursor: pointer;         
+    transition: background-color 0.2s;
+	margin-inline: 2%;
+}
+
+#returnToGames > button:hover {
     background-color: #b06289;
     transform: translateY(-2px);
 }
