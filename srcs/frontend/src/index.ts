@@ -198,7 +198,11 @@ async function initBaseEvents() {
 window.onpopstate = () => {
   if (socketChat)
     socketChat.close();
-  loadContent(window.location.pathname);
+/* COmentario para ver el caso donde se vuelve desde la página pong o connect*/
+/*   if (window.location.pathname.includes("/pong") || window.location.pathname.includes("/4inrow"))
+	console.log("hola"); */
+/*   else */
+  	loadContent(window.location.pathname);
 };
 
 document.addEventListener("DOMContentLoaded", () => {
