@@ -1,4 +1,4 @@
-import { navigateTo } from "../..";
+import { navigateTo } from "../../index.js";
 
 export interface Player {
 	keyPress: boolean;
@@ -213,7 +213,7 @@ export async function countDown(ballData: BallData): Promise<void>{
 
 	exitBtn.style.pointerEvents = 'none';
 	pauseBtn.style.pointerEvents = 'none';
-	countDownEl.classList.remove('hidden');
+	countDownEl.style.display = 'block';
 	ballData.ball.style.display = 'none';
 
 	for (let i = 3; i > 0; i--){
@@ -229,7 +229,7 @@ export async function countDown(ballData: BallData): Promise<void>{
 	countDownEl.style.animation = 'fadeOut 0.5s';
 	await delay(500);
 
-	countDownEl.classList.add('hidden');
+	countDownEl.style.display = 'none';
 	gameEl.style.animation = "fullOpacity 0.25s ease forwards"
 	ballData.ball.style.display = 'block';
 	pauseBtn.style.pointerEvents = 'auto';
@@ -318,7 +318,7 @@ export async function returnToGames(generalData: GeneralData, ballData: BallData
 	})
 
 	document.getElementById('exit')?.addEventListener('click', () => {
-	/* 	localStorage.removeItem('gameState'); */
+		localStorage.removeItem('gameState');
 		navigateTo("/games");
 	})
 }

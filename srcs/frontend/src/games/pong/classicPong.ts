@@ -74,11 +74,14 @@ export function classicPong(data: Games): void{
 
 	async function start(): Promise<void> {
 		const savedState = localStorage.getItem("gameState");
-		if (savedState)
+		if (savedState){
 			loadGameState();
-		await countDown(ballData);
-		if (!savedState)
+			await pauseGame(generalData, ballData);
+		}
+		if (!savedState){
+			await countDown(ballData);
 			init(generalData, ballData, player1, player2, width);
+		}
 		generalData.controlGame = setInterval(play, generalData.time);
 		if (AIData.activate) 
 			AIData.controlAI = setInterval(moveAI, AIData.timeToRefresh);
