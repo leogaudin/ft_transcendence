@@ -53,7 +53,6 @@
 }
 
 #explanation {
-  color: white;
   background-color: var(--dark-pink);
   box-shadow: #3b00345d 0px 5px 5px;
   border-radius: 15px;
@@ -179,6 +178,15 @@
   aspect-ratio: 1/1;
 }
 
+#contact-picture {
+  transition: all 250ms ease-in;
+}
+
+#contact-picture:hover {
+  box-shadow: var(--accent-pink) 0px 0px 5px;
+  cursor: pointer;
+}
+
 #message {
   display: flex;
   justify-content: flex-end;
@@ -243,6 +251,25 @@
     min-width: 78vw;
     max-height: 75vh;
   }
+}
+
+.chat-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #4d167dcb;
+  font-size: 18px;
+  padding: 10px;
+  margin: 3px;
+  border-radius: 15px;
+  transition: 250ms ease-in-out;
+}
+
+.chat-option:hover {
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px) saturate(80%);
+          backdrop-filter: blur(6px) saturate(80%);
+  box-shadow: var(--dark-pink) 0px 0px 2px;
 }
 
 /* --> Settings page <-- */
@@ -341,7 +368,7 @@
   position: absolute;
 }
 
-#modify-profile-photo, canvas {
+#modify-profile-photo, #myCanvas {
   width: 250px;
   aspect-ratio: 1/1;
   box-shadow: var(--dark-pink) 0px 0px 10px;
@@ -1067,6 +1094,30 @@
 
 .cancel-button:hover {
   box-shadow: var(--violet) 0px 0px 5px;
+}
+
+/* --> Stats Page <-- */
+
+.stats-won-card {
+  display: flex;
+  justify-content: space-between;
+  color: var(--dark-purple);
+  background-color: var(--accent-pink);
+  box-shadow: var(--accent-pink) 0px 0px 5px;
+}
+
+.stats-lost-card {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--dark-pink);
+  box-shadow: var(--dark-pink) 0px 0px 5px;
+}
+
+.myChartDiv {
+  min-width: 250px;
+  min-height: 250px;
+  max-height: 250px;
+  /* aspect-ratio: 3/2; */
 }
 
 *, ::before, ::after {
@@ -1805,6 +1856,10 @@ video {
   height: 1.5rem;
 }
 
+.h-\[95\%\] {
+  height: 95%;
+}
+
 .h-\[98\%\] {
   height: 98%;
 }
@@ -1820,6 +1875,10 @@ video {
 
 .max-h-\[60px\] {
   max-height: 60px;
+}
+
+.min-h-\[250px\] {
+  min-height: 250px;
 }
 
 .min-h-\[60px\] {
@@ -1927,6 +1986,10 @@ video {
 
 .flex-col-reverse {
   flex-direction: column-reverse;
+}
+
+.items-end {
+  align-items: flex-end;
 }
 
 .items-center {
@@ -2260,11 +2323,6 @@ video {
   color: rgb(107 114 128 / var(--tw-text-opacity, 1));
 }
 
-.text-gray-700 {
-  --tw-text-opacity: 1;
-  color: rgb(55 65 81 / var(--tw-text-opacity, 1));
-}
-
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
@@ -2355,7 +2413,7 @@ video {
   --back-purple: #3B0034;
   --dark-purple: #54184D;
   --dark-blue: #360066;
-  --violet: #522B66;
+  --violet: #522b66;
   --alert: #C60001;
   --accent-alert: #FF504F;
   --success: #537A1C;
@@ -2364,6 +2422,7 @@ video {
 
 body {
   background-color: var(--dark-pink);
+  /* background-color: #f5f5f56e; */
   margin: 0;
   font-family: "Perfect DOS VGA";
   color: var(--accent-pink);
@@ -2709,12 +2768,28 @@ h1 {
     margin-right: 1rem;
   }
 
+  .lg\:block {
+    display: block;
+  }
+
+  .lg\:h-1\/6 {
+    height: 16.666667%;
+  }
+
   .lg\:w-9\/12 {
     width: 75%;
   }
 
+  .lg\:basis-1\/2 {
+    flex-basis: 50%;
+  }
+
   .lg\:flex-row {
     flex-direction: row;
+  }
+
+  .lg\:items-end {
+    align-items: flex-end;
   }
 
   .lg\:justify-start {
@@ -2723,6 +2798,10 @@ h1 {
 
   .lg\:justify-center {
     justify-content: center;
+  }
+
+  .lg\:overflow-y-auto {
+    overflow-y: auto;
   }
 
   .lg\:text-start {

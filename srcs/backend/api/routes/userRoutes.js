@@ -63,6 +63,16 @@ export default function createUserRoutes(fastify) {
     },
     {
       preHandler: [fastify.authenticate],
+      method: "POST",
+      url: "/users/getid",
+      handler: asyncHandler(async (req, res) => {
+        if (!validateInput(req, res, ["username"])) return;
+        const user = await getUser(req.body.username);
+        return res.code(200).send({user_id: user.id});
+      }),
+    },
+    {
+      preHandler: [fastify.authenticate],
       method: "PUT",
       url: "/users",
       handler: asyncHandler(async (req, res) => {

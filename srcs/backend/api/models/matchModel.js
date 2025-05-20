@@ -12,13 +12,15 @@ export function createMatch(data) {
     const sql = `
       INSERT INTO matches (
         game_type,
+        custom_mode,
         first_player_id,
         second_player_id
       )
-      VALUES (?,?,?)
+      VALUES (?,?,?,?)
     `;
     const params = [
       data.game_type,
+      data.custom_mode,
       data.first_player_id,
       data.second_player_id,
     ];
@@ -60,7 +62,7 @@ export function createMatchOffline(data) {
         status,
         played_at
       )
-      VALUES (?,?,?,?,?,?,?,?,?,?,?, datetime('now', '+2 hours'))
+      VALUES (?,?,?,?,?,?,?,?,?,?,?, datetime('now', '+2 hours', 'subsec'))
     `;
     const params = [
       data.game_type,
@@ -253,6 +255,10 @@ export function getMatchesHistory(user_id, type) {
         ELSE u1.username
       END AS rival_username,
       CASE
+        WHEN m.first_player_id = ? THEN u2.id
+        ELSE u1.id
+      END AS rival_id,
+      CASE
         WHEN m.first_player_id = ? THEN u2.is_deleted
         ELSE u1.is_deleted
       END AS rival_is_deleted,
@@ -276,6 +282,7 @@ export function getMatchesHistory(user_id, type) {
     db.all(
       sql,
       [
+        user_id,
         user_id,
         user_id,
         user_id,
@@ -337,7 +344,7 @@ export function getMatchesGeneralStats(user_id, type) {
         SELECT COUNT(*) as standard_games
         FROM matches
         WHERE (first_player_id = ? OR second_player_id = ?)
-        AND custom_mode = 'none'
+        AND custom_mode = 'Classic'
         AND status = 'finished'
         AND game_type = ?
       `;
@@ -346,25 +353,29 @@ export function getMatchesGeneralStats(user_id, type) {
         SELECT COUNT(*) as custom_games
         FROM matches
         WHERE (first_player_id = ? OR second_player_id = ?)
-        AND custom_mode != 'none'
+        AND custom_mode != 'Classic'
         AND status = 'finished'
         AND game_type = ?
       `;
 
     const lastTenGamesQuery = `
-        SELECT 
-          id,
-          first_player_id,
-          second_player_id,
-          first_player_score,
-          second_player_score,
-          winner_id
-        FROM matches
-        WHERE (first_player_id = ? OR second_player_id = ?)
-        AND status = 'finished'
-        AND game_type = ?
-        ORDER BY played_at DESC
-        LIMIT 10
+        SELECT * FROM (
+          SELECT
+            id,
+            first_player_id,
+            second_player_id,
+            first_player_score,
+            second_player_score,
+            winner_id,
+            played_at
+          FROM matches
+          WHERE (first_player_id = ? OR second_player_id = ?)
+          AND status = 'finished'
+          AND game_type = ?
+          ORDER BY played_at DESC
+          LIMIT 10
+        ) AS recent_matches
+        ORDER BY played_at ASC
       `;
 
     const result = {};
@@ -444,7 +455,7 @@ export function finishMatch(match, first_player_score, second_player_score) {
         winner_id = ?,
         loser_id = ?,
         status = 'finished',
-        played_at = datetime('now', '+2 hours')
+        played_at = datetime('now', '+2 hours', 'subsec')
       WHERE
         id = ?
     `;

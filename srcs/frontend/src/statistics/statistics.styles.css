@@ -1,0 +1,21 @@
+.stats-won-card {
+	display: flex;
+	justify-content: space-between;
+	color: var(--dark-purple);
+	background-color: var(--accent-pink);
+	box-shadow: var(--accent-pink) 0px 0px 5px;
+}
+
+.stats-lost-card {
+	display: flex;
+	justify-content: space-between;
+	background-color: var(--dark-pink);
+	box-shadow: var(--dark-pink) 0px 0px 5px;
+}
+
+.myChartDiv {
+	min-width: 250px;
+	min-height: 250px;
+	max-height: 250px;
+	/* aspect-ratio: 3/2; */
+}

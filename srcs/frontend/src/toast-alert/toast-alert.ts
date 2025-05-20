@@ -3,6 +3,7 @@ import { displayFriends, displayInvitations, showMatches, debounce } from "../fr
 import { Tournament } from "../types.js";
 import { chargeChat, recentChats } from "../messages/load-info.js";
 import { createSocketTournamentConnection } from "../tournament/tournament.js";
+import { createPongSocketConnection } from "../games/pong/pong.js";
 import { navigateTo } from "../index.js";
 
 export let socketToast: WebSocket | null;
@@ -154,6 +155,13 @@ export function createsocketToastConnection() {
 						const contact_picture = document.getElementById("contact-picture") as HTMLImageElement;
 						contact_picture.src = data.avatar_url;
 					}
+				}
+				else if (window.location.pathname === "/statistics"){
+					const avatar_container = document.getElementsByClassName(`friend-avatar-${data.sender_id}`) as HTMLCollectionOf<HTMLImageElement>;
+        	if (avatar_container) {
+            for (let i = 0; i < avatar_container.length; i++)
+                avatar_container[i].src = data.avatar_url;
+          }
 				}
 			}
 			else if (data.type === "game_invitation"){

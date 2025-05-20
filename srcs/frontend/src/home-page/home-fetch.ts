@@ -8,6 +8,7 @@ export function initHomeFetches() {
 	goMessages();
 	goGames();
 	goFriends();
+	goStats();
 }
 
 /**
@@ -41,5 +42,15 @@ function goFriends() {
 
 	friendsPageButton.addEventListener("click", () => {
 		navigateTo("/friends");
+	});
+}
+
+function goStats() {
+	const statsPageButton = document.getElementById("statistics");
+	if (!statsPageButton)
+		return ;
+
+	statsPageButton.addEventListener("click", () => {
+		navigateTo("/statistics");
 	});
 }

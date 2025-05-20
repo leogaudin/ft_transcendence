@@ -5,7 +5,7 @@ import { initResetPasswordEvents } from "./reset-password-page/reset-password.js
 import { initTwoFactorEvents } from "./two-factor-page/two-factor.js";
 import { initFriendsEvents } from "./friends/friends-page.js"
 import { initSettingsEvents } from "./settings-page/settings-page.js"
-import { LoginObject, MessageObject, Games } from "./types.js";
+import { LoginObject, MessageObject, Games, User } from "./types.js";
 import { displayToast, createsocketToastConnection, socketToast } from "./toast-alert/toast-alert.js";
 import { classicPong } from "./games/pong/classicPong.js"
 import { chaosPong } from "./games/pong/chaosPong.js";
@@ -14,6 +14,7 @@ import { crazyTokensMode } from "./games/connectFour/crazyTknsMode.js";
 import { initTournamentEvents } from "./tournament/tournament.js";
 import { initSelectPageEvent } from "./games/select-game-page.js";
 import { initModifyPageEvents } from "./modify-profile/modify-page.js";
+import { initStatsEvents } from "./statistics/stats-page.js";
 
 const routes = [
 	{
@@ -67,8 +68,15 @@ const routes = [
 	{
 		path: "/friends",
 		url: "../src/friends/friends-page.html",
+		event: (data: object) => {
+			initFriendsEvents(data as User);
+		}
+	},
+	{
+		path: "/statistics",
+		url: "../src/statistics/statistics-page.html",
 		event: () => {
-			initFriendsEvents();
+			initStatsEvents();
 		}
 	},
 	{

@@ -130,3 +130,25 @@ export interface Profile {
 	wins: string,
 	losses: string,
 }
+
+export interface ChartStats {
+	wins: number,
+	losses: number,
+	standard_games: number,
+	custom_games: number,
+	last_ten_games: Array,
+}
+
+export interface Historical {
+	match_id: number,
+	game_type: string,
+	played_at: string,
+	custom_mode: string,
+	is_offline: boolean,
+	rival_username: string,
+	rival_avatar: string;
+	rival_id: number;
+	user_score: number;
+	rival_score: number;
+	is_win: boolean;
+}
