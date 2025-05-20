@@ -9,6 +9,31 @@
     margin-top: 1rem;
 	margin-bottom: 1rem;
 }
+
+#players {
+	display: flex;
+	width: 60%;
+	justify-content: space-between;
+	padding: 0 2%;
+    opacity: 80%;
+}
+
+/* #buttomGroup {
+	display: inline-flex;
+	place-self: center;
+	width: 50%;
+	justify-content: space-between;
+}
+
+button {
+	border-radius: 2%;
+	width: fit-content;
+	height: fit-content;
+    padding: 5%;
+	margin-inline: 20%;
+    text-align: center;
+} */
+
 #board {
     border-radius: 15px;
     border: 10px solid rgb(0, 77, 112);
@@ -114,10 +139,10 @@
 #draw {
     position: absolute;
     display: none;
-    border:2px solid rgb(7, 39, 76);
+    border: 5px solid rgb(7, 39, 76);
     background-color: rgb(24, 127, 245);
     opacity: 80%;
-    border-radius: 1%;
+    border-radius: 3%;
     width: 80%;
     height: fit-content;
     z-index: 1;

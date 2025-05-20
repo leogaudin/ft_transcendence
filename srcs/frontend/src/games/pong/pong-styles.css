@@ -7,12 +7,133 @@
 	border-radius: 15px;
 	background-color: black;
 	overflow: hidden;
-	width: 70%;
+	width: 80%;
 	aspect-ratio: 2/1;
 	margin-top: 1rem;
 	margin-bottom: 1rem;
 	border: 20px solid white;
 	position: relative;
+	opacity: 50%;
+}
+
+#players {
+	display: flex;
+	width: 50%;
+	justify-content: space-between;
+	padding: 0 2%;
+}
+
+#countdown {
+	position: absolute;
+	text-align: center;
+	top: 52%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 4vw;
+	color: white;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.976);
+	display: none;
+}
+
+@keyframes countdownPulse {
+	0% { transform: translate(-50%, -50%) scale(1); }
+	50% { transform: translate(-50%, -50%) scale(1.1); }
+	100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+@keyframes fadeOut {
+	from { opacity: 1; }
+	to { opacity: 0; }
+}
+
+@keyframes mediumOpacity {
+	from { opacity: 100%; }
+	to { opacity: 50%; }
+}
+@keyframes fullOpacity {
+	from { opacity: 50%; }
+	to { opacity: 100%; }
+}
+
+#pause {
+	position: absolute;
+	top: 52%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	color: white;
+	font-size: 4vw;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.976);
+	display: none;
+	animation: blinkPause 1.5s infinite;
+}
+
+@keyframes blinkPause {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0.5; }
+}
+
+#buttomGroup {
+    display: flex;
+    position: relative;
+    justify-content: flex-end;
+    width: 70%;           
+    gap: 20px;                 
+    margin: 0 auto;         
+}
+
+#buttomGroup > button {
+    border-radius: 8px;       
+    background-color: var(--dark-pink);
+    width: fit-content;
+    height: fit-content;
+    padding: 10px 20px;        
+    text-align: center;
+    font-size: 100%;
+    cursor: pointer;         
+    transition: background-color 0.2s; 
+}
+
+#buttomGroup > button:hover {
+    background-color: #b06289;
+    transform: translateY(-2px);
+}
+
+#returnToGames {
+	position: absolute;
+	color: white;
+	width: 40%;
+	height: 20%;
+	align-content: center;
+	justify-content: center;
+	text-align: center;
+	display: none;
+	background-color: black;
+	border: white solid 2px;
+	border-radius: 2%;
+}
+
+#returnToGames > p {
+	font-size: 2vw;
+	animation: blinkPause 1.5s infinite;
+}
+
+#returnToGames > button {
+	font-size: 2vw;
+	border-radius: 8px;       
+    background-color: var(--dark-pink);
+    width: fit-content;
+    height: fit-content;
+    padding: 10px 20px;        
+    text-align: center;
+    font-size: 100%;
+    cursor: pointer;         
+    transition: background-color 0.2s;
+	margin-inline: 2%;
+}
+
+#returnToGames > button:hover {
+    background-color: #b06289;
+    transform: translateY(-2px);
 }
 
 #ball {

@@ -1,6 +1,7 @@
 import { 
-    Player, GeneralData, PaddleCollision, BallData, AIData, OnrizeData, init, resetBall, updateScore, setAI,
-	play as playEngine, stop as stopEngine, moveBall as moveBallEngine
+    Player, GeneralData, PaddleCollision, BallData, AIData, OnresizeData, init, 
+	resetBall, updateScore, setAI, countDown, pauseGame, returnToGames, 
+	play as playEngine, stop as stopEngine, moveBall as moveBallEngine,
 } from './gameEngine.js';
 
 import { Games } from "../../types.js";
@@ -35,7 +36,9 @@ export function classicPong(data: Games): void{
         time: 30,
         speed: 0.02,
         paddleMargin: height * 0.03,
-        controlGame: null
+        controlGame: null,
+		isPaused: false,
+		exitPause: false,
     };
 
     const paddleCollisionData: PaddleCollision = {
@@ -61,7 +64,7 @@ export function classicPong(data: Games): void{
         controlAI: null
     };
 
-    const onresizeData: OnrizeData = {
+    const onresizeData: OnresizeData = {
         ballRelativeLeft: 0,
         ballRelativeTop: 0,
         player1RelativeTop: 0,
@@ -69,18 +72,24 @@ export function classicPong(data: Games): void{
         newSpeed: 0
     };
 
-	function start(): void {
+	async function start(): Promise<void> {
 		const savedState = localStorage.getItem("gameState");
-		if (savedState)
+		if (savedState){
 			loadGameState();
-		else
+			await pauseGame(generalData, ballData);
+		}
+		if (!savedState){
+			await countDown(ballData);
 			init(generalData, ballData, player1, player2, width);
+		}
 		generalData.controlGame = setInterval(play, generalData.time);
 		if (AIData.activate) 
 			AIData.controlAI = setInterval(moveAI, AIData.timeToRefresh);
 	}
 
 	function play(): void {
+		if (generalData.isPaused || generalData.exitPause) return ;
+
 		setOnresize();
 		moveBall();
 		playEngine(generalData, ballData, AIData, player1, player2, paddleCollisionData, width, height);
@@ -97,6 +106,8 @@ export function classicPong(data: Games): void{
 	}
 
 	function moveAI(): void {
+		if (generalData.isPaused || generalData.exitPause) return ;
+
 		let random = Math.random();
 		setAI(AIData, player2, ballData, height);
 
@@ -187,104 +198,113 @@ export function classicPong(data: Games): void{
 			ballData.velY = -Math.abs(ballData.velY);
 		}
 	}
+
 	function saveGameState() {
 		const gameState = {
-				player1: {
-						counter: player1.counter,
-						paddleTop: player1.paddle.offsetTop,
-						paddleSpeed: player1.paddleSpeed
-				},
-				player2: {
-						counter: player2.counter,
-						paddleTop: player2.paddle.offsetTop,
-						paddleSpeed: player2.paddleSpeed
-				},
-				ball: {
-						posX: ballData.ball.offsetLeft,
-						posY: ballData.ball.offsetTop,
-						velX: ballData.velX,
-						velY: ballData.velY,
-						angle: ballData.angle
-				},
-				generalData: {
-						time: generalData.time,
-						speed: generalData.speed,
-				},
-				AIData: {
-						activate: AIData.activate,
-						targetY: AIData.targetY
-				}
+			player1: {
+				counter: player1.counter,
+				paddleTop: player1.paddle.offsetTop,
+				paddleSpeed: player1.paddleSpeed
+			},
+			player2: {
+				counter: player2.counter,
+				paddleTop: player2.paddle.offsetTop,
+				paddleSpeed: player2.paddleSpeed
+			},
+			ball: {
+				posX: ballData.ball.offsetLeft,
+				posY: ballData.ball.offsetTop,
+				velX: ballData.velX,
+				velY: ballData.velY,
+				angle: ballData.angle
+			},
+			generalData: {
+				time: generalData.time,
+				speed: generalData.speed,
+			},
+			AIData: {
+				activate: AIData.activate,
+				targetY: AIData.targetY
+			}
 		};
 		localStorage.setItem('gameState', JSON.stringify(gameState));
-}
+	}
 
-function loadGameState() {
+	function loadGameState() {
 		const savedState = localStorage.getItem('gameState');
 
 		if (savedState) {
-				const gameState = JSON.parse(savedState);
+			const gameState = JSON.parse(savedState);
 
-				player1.counter = gameState.player1.counter;
-				player2.counter = gameState.player2.counter;
+			player1.counter = gameState.player1.counter;
+			player2.counter = gameState.player2.counter;
 
-				player1.paddle.style.top = `${gameState.player1.paddleTop}px`;
-				player2.paddle.style.top = `${gameState.player2.paddleTop}px`;
+			player1.paddle.style.top = `${gameState.player1.paddleTop}px`;
+			player2.paddle.style.top = `${gameState.player2.paddleTop}px`;
 
-				player1.paddleSpeed = gameState.player1.paddleSpeed;
-				player2.paddleSpeed = gameState.player2.paddleSpeed;
+			player1.paddleSpeed = gameState.player1.paddleSpeed;
+			player2.paddleSpeed = gameState.player2.paddleSpeed;
 
-				ballData.ball.style.left = `${gameState.ball.posX}px`;
-				ballData.ball.style.top = `${gameState.ball.posY}px`;
-				ballData.velX = gameState.ball.velX;
-				ballData.velY = gameState.ball.velY;
-				ballData.angle = gameState.ball.angle;
+			ballData.ball.style.left = `${gameState.ball.posX}px`;
+			ballData.ball.style.top = `${gameState.ball.posY}px`;
+			ballData.velX = gameState.ball.velX;
+			ballData.velY = gameState.ball.velY;
+			ballData.angle = gameState.ball.angle;
 
 
-				generalData.time = gameState.generalData.time;
-				generalData.speed = gameState.generalData.speed;
+			generalData.time = gameState.generalData.time;
+			generalData.speed = gameState.generalData.speed;
 
-				AIData.activate = gameState.AIData.activate;
-				AIData.targetY = gameState.AIData.targetY;
+			AIData.activate = gameState.AIData.activate;
+			AIData.targetY = gameState.AIData.targetY;
 
-				document.getElementById('counter1')!.innerText = player1.counter.toString();
-				document.getElementById('counter2')!.innerText = player2.counter.toString();
+			document.getElementById('counter1')!.innerText = player1.counter.toString();
+			document.getElementById('counter2')!.innerText = player2.counter.toString();
 		}
-}
+	}
 
-const initialize = () => {
-	if (document.readyState === 'complete') {
+	const initialize = () => {
+		if (document.readyState === 'complete') {
 			setOnresize();
 			start();
-	} else {
+		} else {
 			window.addEventListener('load', () => {
-					setOnresize();
-					start();
+				setOnresize();
+				start();
 			});
+		}
+	};
+
+	function clearGameState(){
+		localStorage.removeItem('gameState');
+		player1.counter = 0;
+		player2.counter = 0;
+		document.getElementById('counter1')!.innerText = '0';
+		document.getElementById('counter2')!.innerText = '0';
 	}
-};
 
-function clearGameState(){
-	localStorage.removeItem('gameState');
-	player1.counter = 0;
-	player2.counter = 0;
-	document.getElementById('counter1')!.innerText = '0';
-	document.getElementById('counter2')!.innerText = '0';
-}
+	window.addEventListener('beforeunload', () => {
+		saveGameState();
+	});
 
-window.addEventListener('beforeunload', () => {
-	saveGameState();
-});
-
-document.addEventListener('DOMContentLoaded', function() {
+	document.addEventListener('DOMContentLoaded', function() {
 		start();
 		loadGameState();
 		setOnresize();
-});
+	});
 
-window.addEventListener("popstate", () => {
-	stop();
-	clearGameState();
-});
+	window.addEventListener('popstate', () => {
+		stop();
+		clearGameState();
+	});
+
+	document.getElementById('pauseGame')?.addEventListener('click', async () => {
+		await pauseGame(generalData, ballData);
+	})
+
+	document.getElementById('exitGame')?.addEventListener('click', async () => {
+		await returnToGames(generalData, ballData);
+	})
 
 	setOnresize();
 	initialize();
