@@ -122,45 +122,63 @@ const routes = [
 				crazyTokensMode(mode)
     	}
 	},
+	{
+		path: "/404",
+    	url: "../src/404/404-page.html",
+    	event: () => {}
+	},
 ];
 
 export function navigateTo(path: string, data: object = {}) {
-  const screen = document.getElementsByClassName("screen-set")[0];
-  if (screen) {
-    screen.classList.add("fade-out");
-    // Wait for the animation to complete before navigating
-    setTimeout(() => {
-      history.pushState(null, "", path);
-      if (socketToast && path === "/login")
-        socketToast.close();
-      loadContent(path, data);
-    }, 150); 
-  } 
-  else {
-    // If no screen element, navigate immediately
-    history.pushState(null, "", path);
-    if (socketToast && path === "/login")
-      socketToast.close();
-    loadContent(path, data);
-  }
+    let route = routes.find(r => r.path === path);
+    if (!route) {
+        path = "/404";
+        route = routes.find(r => r.path === "/404");
+    }
+        
+    if (route) {
+        const screen = document.getElementsByClassName("screen-set")[0];
+        if (screen) {
+          screen.classList.add("fade-out");
+
+          setTimeout(() => {
+            history.pushState({}, "", path);
+            if (socketToast && path === "/login")
+              socketToast.close();
+            loadContent(path, data);
+          }, 150); 
+        } 
+        else {
+          history.pushState({}, "", path);
+          if (socketToast && path === "/login")
+            socketToast.close();
+          loadContent(path, data);
+        }
+    }
 }
 
 async function loadContent(path: string, data: object = {}) {
-	try {
-		const route = routes.find(r => r.path === path);
-		if (!route)
-			throw ("Ruta no encontrada");
-
-		const response = await fetch(route.url);
-		const content = await response.text();
-		const app = document.getElementById("app");
-		if (app)
-			app.innerHTML = content;
-		route.event(data);
-	}
-	catch (error) {
-		console.error("Error al cargar la página:", error);
-	}
+    try {
+        let route = routes.find(r => r.path === path);
+        if (!route || route === undefined) {
+            route = routes.find(r => r.path === "/404");
+            if (!route)
+                throw "404 route not defined";
+        }
+        
+        if (route.url) {
+            const response = await fetch(route.url);
+            const content = await response.text();
+            const app = document.getElementById("app");
+            if (app)
+                app.innerHTML = content;
+        }
+        
+        route.event(data);
+    }
+    catch (error) {
+        console.error("Error:", error);
+    }
 }
 
 async function initBaseEvents() {
@@ -173,21 +191,28 @@ async function initBaseEvents() {
 		displayToast();
 	}
 	catch (error) {
-		console.error("Error al cargar la página:", error);
+		console.error("Error while charging the page:", error);
 	}
 }
 
-// Managing back and forward button
 window.onpopstate = () => {
-	if (socketChat)
-		socketChat.close();
-	loadContent(window.location.pathname);
+  if (socketChat)
+    socketChat.close();
+  loadContent(window.location.pathname);
 };
 
-// Load page correctly when writing it directly on navbar
 document.addEventListener("DOMContentLoaded", () => {
-	initBaseEvents();
-	if (window.location.pathname !== "/login")
-		createsocketToastConnection();
-	loadContent(window.location.pathname);
+  initBaseEvents();
+  
+  const currentPath = window.location.pathname;
+  const validRoute = routes.find(r => r.path === currentPath);
+  
+  if (!validRoute) {
+    history.pushState({}, "", "/404");
+    loadContent("/404");
+  } else {
+    if (currentPath !== "/login")
+      createsocketToastConnection();
+    loadContent(currentPath);
+  }
 });

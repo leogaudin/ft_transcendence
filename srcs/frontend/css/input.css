@@ -27,6 +27,9 @@
 /* --> Stats Page <-- */
 @import url("../src/statistics/statistics.styles.css");
 
+/* --> 404 Page <-- */
+@import url("../src/404/404-styles.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
