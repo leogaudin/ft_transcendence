@@ -1,6 +1,6 @@
 import { 
-    Player, GeneralData, PaddleCollision, BallData, AIData, OnresizeData, init, resetBall, updateScore, setAI, countDown,
-	play as playEngine, stop as stopEngine, moveBall as moveBallEngine
+    Player, GeneralData, PaddleCollision, BallData, AIData, OnresizeData, init, resetBall, updateScore, setAI, countDown, pauseGame,
+	play as playEngine, stop as stopEngine, moveBall as moveBallEngine,
 } from './gameEngine.js';
 
 import { Games } from "../../types.js";
@@ -35,7 +35,8 @@ export function classicPong(data: Games): void{
         time: 30,
         speed: 0.02,
         paddleMargin: height * 0.03,
-        controlGame: null
+        controlGame: null,
+		isPaused: false
     };
 
     const paddleCollisionData: PaddleCollision = {
@@ -82,6 +83,8 @@ export function classicPong(data: Games): void{
 	}
 
 	function play(): void {
+		if (generalData.isPaused) return ;
+
 		setOnresize();
 		moveBall();
 		playEngine(generalData, ballData, AIData, player1, player2, paddleCollisionData, width, height);
@@ -98,6 +101,8 @@ export function classicPong(data: Games): void{
 	}
 
 	function moveAI(): void {
+		if (generalData.isPaused) return ;
+		
 		let random = Math.random();
 		setAI(AIData, player2, ballData, height);
 
@@ -283,10 +288,14 @@ export function classicPong(data: Games): void{
 		setOnresize();
 	});
 
-	window.addEventListener("popstate", () => {
+	window.addEventListener('popstate', () => {
 		stop();
 		clearGameState();
 	});
+
+	document.getElementById('pauseGame')?.addEventListener('click', async () => {
+		await pauseGame(generalData, ballData);
+	})
 
 	setOnresize();
 	initialize();

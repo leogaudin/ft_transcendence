@@ -7,12 +7,13 @@
 	border-radius: 15px;
 	background-color: black;
 	overflow: hidden;
-	width: 70%;
+	width: 80%;
 	aspect-ratio: 2/1;
 	margin-top: 1rem;
 	margin-bottom: 1rem;
 	border: 20px solid white;
 	position: relative;
+	opacity: 50%;
 }
 
 #players {
@@ -25,7 +26,7 @@
 #countdown {
 	position: absolute;
 	text-align: center;
-	top: 52%;
+	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	font-size: 4vw;
@@ -59,13 +60,14 @@
 
 #pause {
 	position: absolute;
-	top: 50%;
+	top: 52%;
 	left: 50%;
 	transform: translate(-50%, -50%);
 	color: white;
-	font-size: 100%;
-	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.976);;
-
+	font-size: 4vw;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.976);
+	display: none;
+	animation: blinkPause 1.5s infinite;
 }
 
 @keyframes blinkPause {

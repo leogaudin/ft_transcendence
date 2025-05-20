@@ -13,6 +13,7 @@ export interface GeneralData {
 	speed: number;
 	paddleMargin: number;
 	controlGame: NodeJS.Timeout | null;
+	isPaused: boolean;
 }
 
 export interface PaddleCollision {
@@ -46,43 +47,6 @@ export interface OnresizeData {
 	powerUpRelativeLeft?: number;
     powerUpRelativeTop?: number;
 	newSpeed: number;
-}
-
-export async function countDown(ballData: BallData): Promise<void>{
-	const countDownEl = document.getElementById('countdown')
-	if (!countDownEl){
-		console.error("countdown element not found.")
-		return Promise.resolve();
-	}
-
-	const gameEl = document.getElementById('game');
-	if (!gameEl){
-		console.error("game element not found.")
-		return Promise.resolve();
-	}
-
-	gameEl.style.opacity = '50%';
-	countDownEl.classList.remove('hidden');
-	ballData.ball.style.display = 'none';
-
-	for (let i = 3; i > 0; i--){
-		countDownEl.textContent = i.toString();
-		countDownEl.style.animation = 'countdownPulse 1s ease-in-out';
-		await delay(1000);
-		countDownEl.style.animation = 'none'
-		void countDownEl.offsetWidth;
-	}
-	countDownEl.textContent = '¡GO!';
-	await delay(1000);
-
-	countDownEl.style.animation = 'fadeOut 0.5s';
-	await delay(500);
-
-	countDownEl.classList.add('hidden');
-	gameEl.style.animation = "fullOpacity 0.25s ease forwards"
-	ballData.ball.style.display = 'block';
-
-	return Promise.resolve();
 }
 
 export function init(generalData: GeneralData, ballData: BallData, player1: Player, player2: Player, width: number): void {
@@ -217,4 +181,81 @@ export function setAI(AIData: AIData, player2: Player, ballData: BallData, heigh
 
 export function delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+export async function countDown(ballData: BallData): Promise<void>{
+	const countDownEl = document.getElementById('countdown')
+	if (!countDownEl){
+		console.error("countdown element not found.")
+		return Promise.resolve();
+	}
+
+	const gameEl = document.getElementById('game');
+	if (!gameEl){
+		console.error("game element not found.")
+		return Promise.resolve();
+	}
+
+	const pauseBtn = document.getElementById('pauseGame')
+	if (!pauseBtn){
+		console.error("pauseGame element not found.")
+		return Promise.resolve();
+	}
+
+	pauseBtn.style.pointerEvents = 'none';
+	countDownEl.classList.remove('hidden');
+	ballData.ball.style.display = 'none';
+
+	for (let i = 3; i > 0; i--){
+		countDownEl.textContent = i.toString();
+		countDownEl.style.animation = 'countdownPulse 1s ease-in-out';
+		await delay(1000);
+		countDownEl.style.animation = 'none'
+		void countDownEl.offsetWidth;
+	}
+	countDownEl.textContent = '¡GO!';
+	await delay(1000);
+
+	countDownEl.style.animation = 'fadeOut 0.5s';
+	await delay(500);
+
+	countDownEl.classList.add('hidden');
+	gameEl.style.animation = "fullOpacity 0.25s ease forwards"
+	ballData.ball.style.display = 'block';
+	pauseBtn.style.pointerEvents = 'auto';
+
+	return Promise.resolve();
+}
+
+export async function pauseGame(generalData: GeneralData, ballData: BallData): Promise<void> {
+	const pauseEl = document.getElementById('pause');
+	if (!pauseEl){
+		console.error("pause element not found.");
+		return Promise.resolve();
+	}
+
+	const gameEl = document.getElementById('game');
+	if (!gameEl){
+		console.error("game element not found.")
+		return Promise.resolve();
+	}
+
+	const pauseBtn = document.getElementById('pauseGame')
+	if (!pauseBtn){
+		console.error("pauseGame element not found.")
+		return Promise.resolve();
+	}
+
+	if (!generalData.isPaused){
+		generalData.isPaused = true;
+		pauseEl.style.display = 'block';
+		gameEl.style.animation = "mediumOpacity 0.25s ease forwards";
+		await delay(250);
+	}
+	else{
+		pauseEl.style.display = 'none';
+		await countDown(ballData)
+		generalData.isPaused = false;
+	}
+	return Promise.resolve();
 }
