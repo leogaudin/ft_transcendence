@@ -2,6 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "url";
 import { getUser, patchUser } from "./models/userModel.js";
 import assert from "node:assert/strict";
+import sharp from "sharp";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -137,13 +138,11 @@ export function anonymize(user) {
 export async function saveAvatar(user_id, data) {
   assert(user_id !== undefined, "user_id must exist");
   assert(data !== undefined, "data must exist");
-  const chunks = [];
-  for await (const chunk of data.file) {
-    chunks.push(chunk);
-  }
-  const imageBuffer = Buffer.concat(chunks);
-  const base64Image = imageBuffer.toString("base64");
-  const dataUrl = `data:${data.mimetype};base64,${base64Image}`;
+
+  const buffer = await data.toBuffer();
+  const metadata = await sharp(buffer).metadata();
+  const base64Image = buffer.toString("base64");
+  const dataUrl = `data:${buffer.mimetype};base64,${base64Image}`;
   await patchUser(user_id, { avatar: dataUrl });
   return {
     message: "Avatar uploaded successfully",
@@ -151,6 +150,6 @@ export async function saveAvatar(user_id, data) {
     user_id: user_id,
     originalName: data.filename,
     mimetype: data.mimetype,
-    size: imageBuffer.length,
+    size: buffer.length,
   };
 }

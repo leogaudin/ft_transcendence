@@ -1,5 +1,6 @@
 import db from "../database.js";
 import assert from "node:assert/strict";
+import { increaseWins, increaseLosses } from "./userModel.js";
 
 /**
  * Creates a match
@@ -82,6 +83,7 @@ export function createMatchOffline(data) {
         console.error("Error inserting match:", err.message);
         return reject(err);
       }
+      data.winner_id ? increaseWins(data.userId) : increaseLosses(data.userId);
       resolve({
         match_id: this.lastID,
         game_type: data.game_type,
@@ -479,6 +481,8 @@ export function finishMatch(match, first_player_score, second_player_score) {
         console.error("Error updating match:", err.message);
         return reject(err);
       }
+      increaseWins(winner_id);
+      increaseLosses(loser_id);
       resolve({ success: "Match successfully finished" });
     });
   });

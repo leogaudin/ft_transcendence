@@ -21,7 +21,12 @@ export default function createAvatarRoutes(fastify) {
         const maxSize = 1024 * 1024;
         if (data.file.bytesRead > maxSize)
           return res.code(400).send({ error: "File too large (max 1MB)" });
-        const result = await saveAvatar(req.userId, data);
+        let result;
+        try {
+          result = await saveAvatar(req.userId, data);
+        } catch (e) {
+          return res.code(400).send({ error: "Invalid or corrupt file" });
+        }
         return res.code(200).send(result);
       }),
     },

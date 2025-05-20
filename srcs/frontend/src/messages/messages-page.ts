@@ -41,7 +41,7 @@ function createSocketConnection() {
       return ;
     socketChat.onopen = () => {
       let id = getClientID();
-      console.log("WebSocketChat connection established, sending id:", id);
+      // console.log("WebSocketChat connection established, sending id:", id);
       if (id === -1){
         console.error("Invalid ID, cannot connect to back")
       }
@@ -52,7 +52,7 @@ function createSocketConnection() {
           userId: id,
           action: "identify"
         }));
-        console.log("ID succesfully sent");
+        // console.log("ID succesfully sent");
       }
     };
     socketChat.onmessage = (event) => {
@@ -70,7 +70,7 @@ function createSocketConnection() {
       console.error("WebSocket error:", error);
     };
     socketChat.onclose = () => {
-      console.log("WebSocketChat connection closed");
+      // console.log("WebSocketChat connection closed");
       socketChat = null;
     };
   }

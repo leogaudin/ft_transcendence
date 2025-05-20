@@ -3,7 +3,6 @@ import { displayFriends, displayInvitations, showMatches, debounce } from "../fr
 import { Tournament } from "../types.js";
 import { chargeChat, recentChats } from "../messages/load-info.js";
 import { createSocketTournamentConnection } from "../tournament/tournament.js";
-import { createPongSocketConnection } from "../games/pong/pong.js";
 import { navigateTo } from "../index.js";
 
 export let socketToast: WebSocket | null;
@@ -37,7 +36,7 @@ export function createsocketToastConnection() {
 		return ;
 	  socketToast.onopen = () => {
 		let id = getClientID();
-		console.log("WebsocketToast connection established, sending id:", id);
+		// console.log("WebsocketToast connection established, sending id:", id);
 		if (id === -1)
 		  console.error("Invalid ID, cannot connect to back");
 		else{
@@ -47,7 +46,7 @@ export function createsocketToastConnection() {
 			userId: id,
 			action: "identify"
 		  }));
-		  console.log("ID succesfully sent");
+		//   console.log("ID succesfully sent");
 		}
 	  };
 	  socketToast.onmessage = async (event) => {
@@ -203,7 +202,7 @@ export function createsocketToastConnection() {
 		console.error("WebsocketToast error:", error);
 	  };
 	  socketToast.onclose = () => {
-		console.log("WebsocketToast connection closed");
+		// console.log("WebsocketToast connection closed");
 		socketToast = null;
 	  };
 	}
