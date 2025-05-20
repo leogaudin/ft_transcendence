@@ -214,16 +214,6 @@ async function initBaseEvents() {
 	}
 }
 
-<<<<<<< HEAD
-window.onpopstate = () => {
-  if (socketChat)
-    socketChat.close();
-/* COmentario para ver el caso donde se vuelve desde la página pong o connect*/
-/*   if (window.location.pathname.includes("/pong") || window.location.pathname.includes("/4inrow"))
-	console.log("hola"); */
-/*   else */
-  	loadContent(window.location.pathname);
-=======
 window.onpopstate = async () => {
 	if (socketChat)
 		socketChat.close();
@@ -233,7 +223,6 @@ window.onpopstate = async () => {
 		|| (await checkLogged() && currentPath === "/login")) 
 		return ;
 	loadContent(currentPath);
->>>>>>> d332e6c39f2f078646507bf36004cd7134c6f22c
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
