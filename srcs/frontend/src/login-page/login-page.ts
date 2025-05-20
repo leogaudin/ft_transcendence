@@ -1,28 +1,28 @@
 "use strict";
 
 import { initLoginFetches } from "./login-fetch.js";
-import { sendRequest } from "./login-fetch.js";
+import { checkLogged, navigateTo } from "../index.js"
 
 export async function initLoginEvents() {
-	dropDown();
-	switchSigns();
-	resetPassword();
-	initLoginFetches();
-	googleSignIn();
-//   const res = await sendRequest("GET", "/islogged");
-//   if (res["logged"]) {
-//     console.log("JWT found, user is already logged");
-//   } else {
-//     console.log("JWT not found, user is not logged");
-//   }
-	setTimeout(() => {
-		const googleButton = document.getElementsByClassName("g_id_signin")[0];
-		const loadingIcon = document.getElementsByClassName("animate-spin")[0];
-		if (!googleButton || !loadingIcon) { return; }
-		googleButton.classList.remove("opacity-0");
-		loadingIcon.classList.add("hidden");
-		googleButton.classList.add("googleButton");
-	}, 500);
+	const logged = await checkLogged();
+	if (logged)
+		navigateTo("/home");
+	else {
+		dropDown();
+		switchSigns();
+		resetPassword();
+		initLoginFetches();
+		googleSignIn();
+	
+		setTimeout(() => {
+			const googleButton = document.getElementsByClassName("g_id_signin")[0];
+			const loadingIcon = document.getElementsByClassName("animate-spin")[0];
+			if (!googleButton || !loadingIcon) { return; }
+			googleButton.classList.remove("opacity-0");
+			loadingIcon.classList.add("hidden");
+			googleButton.classList.add("googleButton");
+		}, 500);
+	}
 }
 
 export function dropDown(){
