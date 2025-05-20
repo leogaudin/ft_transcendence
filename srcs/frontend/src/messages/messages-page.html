@@ -35,6 +35,25 @@
 							<path d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"/>
 						</svg>
 					</button>
+					<button id="party-invitation" class="relative">
+						<svg class="mx-2 party-icon fill-[var(--dark-purple)] bg-[var(--accent-pink)] rounded-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+							<path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z"/>
+						</svg>
+
+						<div class="absolute bottom-full right-0 z-10 mb-1 origin-bottom-right focus:outline-hidden" role="menu"
+						aria-orientation="vertical" aria-labelledby="party-invitation" tabindex="-1">
+							<div class="hidden py-2.5 bg-[var(--dark-pink)]" role="none" id="party-options">
+								<div profile_key="classic-pong" class="p-option px-4 py-2 text-left hover:bg-[var(--dark-purple)] cursor-pointer" role="menuitem"
+								tabindex="-1">Classic Pong</div>
+								<div profile_key="chaos-pong" class="p-option px-4 py-2 text-left hover:bg-[var(--dark-purple)] cursor-pointer" role="menuitem"
+								tabindex="-1">Chaos Pong</div>
+								<div profile_key="classic-connect4" class="p-option px-4 py-2 text-left hover:bg-[var(--dark-purple)] cursor-pointer" role="menuitem"
+								tabindex="-1">Classic Connect4</div>
+								<div profile_key="crazy-connect4" class="p-option px-4 py-2 text-left hover:bg-[var(--dark-purple)] cursor-pointer" role="menuitem"
+								tabindex="-1">CrazyTokens Connect4</div>
+							</div>
+						</div>
+					</button>
 				</form>
 			</div>
 		</div>

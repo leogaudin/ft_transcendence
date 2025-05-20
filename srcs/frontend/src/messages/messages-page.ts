@@ -79,7 +79,7 @@ function createSocketConnection() {
   }
 }
 
-function displayMessage(data: Message){
+export function displayMessage(data: Message){
     if (actual_chat_id !== data.chat_id && data.type !== "tournament")
       showAlert(`You have a message from ${data.sender_username}`, "toast-success");
     else if(actual_chat_id !== data.chat_id && data.type === "tournament")
@@ -181,6 +181,73 @@ function displayMessage(data: Message){
         messageContainer.appendChild(el);
         el.scrollIntoView({ behavior: 'smooth' });
 		}
+    else if (data.type === "game") {
+      let messageContainer = document.getElementById("message-history");
+      if (!messageContainer) return;
+      const game_type = data.body.substring(29);
+      
+      let el = document.createElement("div");
+      const sent_at = data.sent_at.substring(11, 16);
+      if (data.info === "request") {
+          el.setAttribute("id", "message");
+          el.innerHTML = `
+              <div class="message self-message flex flex-col items-center justify-center">
+                  <p>${data.body}</p>
+                  <p class="hour">${sent_at}</p>
+                  <div class="tournament-actions">
+                      <button class="accept-btn close-icon bg-[var(--dark-purple)] rounded-[15px]" data-tournament-id="${game_type}">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                          </svg>
+                      </button>
+                      <button class="reject-btn close-icon bg-[var(--dark-purple)] rounded-[15px]" data-tournament-id="${game_type}">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                          </svg>
+                      </button>
+                  </div>
+              </div>`;
+
+          // Add event listeners for the buttons
+          const acceptBtn = el.querySelector('.accept-btn') as HTMLButtonElement;
+          const rejectBtn = el.querySelector('.reject-btn') as HTMLButtonElement;
+          if (!acceptBtn || !rejectBtn) { return ; }
+
+          acceptBtn.onclick = () => {
+              if (socketChat && data.game_type){
+                socketChat.send(JSON.stringify({
+                  body: "Game accepted",
+                  type: "game",
+                  info: "accept",
+                  game_type: data.game_type,
+                  sender_id: getClientID(),
+                  receiver_id: data.sender_id
+                }));
+                acceptBtn.setAttribute('disabled', 'true');
+                acceptBtn.classList.add('disabled');
+                rejectBtn.remove();
+              }
+          };
+
+          rejectBtn.onclick = () => {
+              if (socketChat && data.game_type){
+                socketChat.send(JSON.stringify({
+                  body: "Game rejected",
+                  type: "game",
+                  info: "reject",
+                  game_type: data.game_type,
+                  sender_id: getClientID(),
+                  receiver_id: data.sender_id
+                }));
+                rejectBtn.setAttribute('disabled', 'true');
+                rejectBtn.classList.add('disabled');
+                acceptBtn.remove();
+              }
+          };
+      }
+      messageContainer.appendChild(el);
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
 async function setupMessageForm() {

@@ -1,4 +1,5 @@
 import { initHomeEvents } from "./home-page/home-page.js";
+import { sendRequest } from "./login-page/login-fetch.js";
 import { initLoginEvents } from "./login-page/login-page.js";
 import { initMessagesEvents, socketChat } from "./messages/messages-page.js";
 import { initResetPasswordEvents } from "./reset-password-page/reset-password.js";
@@ -18,27 +19,34 @@ import { initStatsEvents } from "./statistics/stats-page.js";
 
 const routes = [
 	{
+		// Create an init page
 		path: "/",
-		url: "",
-		event: () => {}
-	},
-	{
-		path: "/home",
-		url: "../src/home-page/home-page.html",
-		event: () => {
-			initHomeEvents();
-		}
-	},
-	{
-		path: "/login",
 		url: "../src/login-page/login-page.html",
+		accesible: true,
 		event: () => {
 			initLoginEvents()
 		}
 	},
 	{
+		path: "/login",
+		url: "../src/login-page/login-page.html",
+		accesible: true,
+		event: () => {
+			initLoginEvents()
+		}
+	},
+	{
+		path: "/home",
+		url: "../src/home-page/home-page.html",
+		accesible: false,
+		event: () => {
+			initHomeEvents();
+		}
+	},
+	{
 		path: "/reset-password",
 		url: "../src/reset-password-page/reset-password.html",
+		accesible: true,
 		event: () => {
 			initResetPasswordEvents()
 		}
@@ -46,6 +54,7 @@ const routes = [
 	{
 		path: "/two-factor",
 		url: "../src/two-factor-page/two-factor.html",
+		accesible: true,
 		event: (data: object) => {
 			initTwoFactorEvents(data as LoginObject);
 		}
@@ -53,6 +62,7 @@ const routes = [
 	{
 		path: "/messages",
 		url: "../src/messages/messages-page.html",
+		accesible: false,
 		event: (data: object) => {
 			initMessagesEvents(data as MessageObject);
 		}
@@ -61,6 +71,7 @@ const routes = [
 		//cambios para implementar la opcion de menu al seleccionar los juegos
 		path: "/games",
 		url: "../src/games/select-game-page.html",
+		accesible: false,
 		event: () => {
 			initSelectPageEvent();
 		}
@@ -68,6 +79,7 @@ const routes = [
 	{
 		path: "/friends",
 		url: "../src/friends/friends-page.html",
+		accesible: false,
 		event: (data: object) => {
 			initFriendsEvents(data as User);
 		}
@@ -75,6 +87,7 @@ const routes = [
 	{
 		path: "/statistics",
 		url: "../src/statistics/statistics-page.html",
+		accesible: false,
 		event: () => {
 			initStatsEvents();
 		}
@@ -82,6 +95,7 @@ const routes = [
 	{
 		path: "/settings",
 		url: "../src/settings-page/settings-page.html",
+		accesible: false,
 		event: () => {
 			initSettingsEvents();
 		}
@@ -89,6 +103,7 @@ const routes = [
 	{
 		path: "/modify-profile",
 		url: "../src/modify-profile/modify-page.html",
+		accesible: false,
 		event: () => {
 			initModifyPageEvents();
 		}
@@ -96,6 +111,7 @@ const routes = [
 	{
 		path: "/tournament",
 		url: "../src/tournament/tournament.html",
+		accesible: false,
 		event: () => {
 			initTournamentEvents();
 		}
@@ -103,6 +119,7 @@ const routes = [
 	{
     	path: "/pong",
     	url: "../src/games/pong/pong.html",
+		accesible: false,
     	event: (data: object) => {
       		const mode = data as Games;
 			if (!mode.isCustom)
@@ -114,6 +131,7 @@ const routes = [
  	{
 		path: "/4inrow",
     	url: "../src/games/connectFour/connectFour.html",
+		accesible: false,
     	event: (data: object) => {
 			const mode = data as Games;
 			if (!mode.isCustom)
@@ -125,6 +143,7 @@ const routes = [
 	{
 		path: "/404",
     	url: "../src/404/404-page.html",
+		accesible: true,
     	event: () => {}
 	},
 ];
@@ -195,6 +214,7 @@ async function initBaseEvents() {
 	}
 }
 
+<<<<<<< HEAD
 window.onpopstate = () => {
   if (socketChat)
     socketChat.close();
@@ -203,20 +223,55 @@ window.onpopstate = () => {
 	console.log("hola"); */
 /*   else */
   	loadContent(window.location.pathname);
+=======
+window.onpopstate = async () => {
+	if (socketChat)
+		socketChat.close();
+	let currentPath = window.location.pathname;
+	const validRoute = routes.find(r => r.path === currentPath);
+	if ((!validRoute?.accesible && !(await checkLogged()))
+		|| (await checkLogged() && currentPath === "/login")) 
+		return ;
+	loadContent(currentPath);
+>>>>>>> d332e6c39f2f078646507bf36004cd7134c6f22c
 };
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   initBaseEvents();
   
-  const currentPath = window.location.pathname;
+  let currentPath = window.location.pathname;
   const validRoute = routes.find(r => r.path === currentPath);
   
   if (!validRoute) {
     history.pushState({}, "", "/404");
     loadContent("/404");
-  } else {
+  } 
+  else {
+	if (!validRoute.accesible && !(await checkLogged())) 
+		currentPath = "/login";
+	if (await checkLogged() && currentPath === "/login")
+		currentPath = "/home";
     if (currentPath !== "/login")
       createsocketToastConnection();
+	history.pushState({}, "", currentPath);
     loadContent(currentPath);
   }
 });
+
+export async function checkLogged() {
+	const username = localStorage.getItem("username");
+	if (!username)
+		return (false);
+	try {
+		const res = await sendRequest("GET", "/islogged");
+		if (!res)
+			throw new Error("Problem checking if the user is logged");
+		if (res["logged"])
+			return (true);
+		else
+			return (false);
+	}
+	catch (error) {
+		console.error("Error:", error);
+	}
+}
