@@ -120,7 +120,11 @@ function popUp() {
 }
 
 function googleSignIn() {
+  const googleSignIn = document.getElementById("google-script");
+  if (googleSignIn)
+    googleSignIn.remove();
 	var s = document.createElement( 'script' );
+  s.id = "google-script";
 	s.setAttribute( 'src', "https://accounts.google.com/gsi/client" );
 	document.body.appendChild( s );
 };
