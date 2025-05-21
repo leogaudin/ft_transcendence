@@ -59,7 +59,6 @@ export async function updatePhoto(image: File){
 		return data.data_url;
 	}
 	catch (error) {
-		console.error(`Error: `, error);
 		showAlert((error as Error).message , "toast-error");
 		return (null);
 	}

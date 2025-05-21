@@ -146,7 +146,7 @@ export function createSocketTournamentConnection(tournamentName: string, game_ty
       if (!socketTournament)
         return ;
       socketTournament.onopen = () => {
-        console.log("WebSocketTournament connection established, sending name");
+        // console.log("WebSocketTournament connection established, sending name");
         if (!tournamentName)
           console.error("Invalid name, cannot connect to back")
         else{
@@ -160,7 +160,7 @@ export function createSocketTournamentConnection(tournamentName: string, game_ty
             action: "identify",
             creator_id: getClientID()
           }));
-          console.log("ID succesfully sent");
+          // console.log("ID succesfully sent");
         }
       };
       socketTournament.onmessage = (event) => {
@@ -178,7 +178,7 @@ export function createSocketTournamentConnection(tournamentName: string, game_ty
         console.error("WebSocketTournament error:", error);
       };
       socketTournament.onclose = () => {
-        console.log("WebSocketTournament connection closed");
+        // console.log("WebSocketTournament connection closed");
         socketTournament = null;
       };
     }

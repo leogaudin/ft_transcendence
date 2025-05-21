@@ -3,6 +3,8 @@ import {
     columnMap,
     columnList,
     boardMap,
+	pauseGame,
+	returnToGames,
 	init as initEngine,
 	clearGame as clearGameEngine,
 	insertDivWinner as insertDivWinnerEngine,
@@ -163,6 +165,14 @@ export function classicMode(data: Games): void {
 	function detectWinOpportunities(player: Player): HTMLElement[] {
 		return detectWinOpportunitiesEngine(boardMap, columnList, player, player1, player2);
 	}
+
+	document.getElementById('pauseGame')?.addEventListener('click', async () => {
+		await pauseGame(columnList);
+	})
+
+	document.getElementById('exitGame')?.addEventListener('click', async () => {
+		await returnToGames(columnList);
+	})
 
 	start();
 }

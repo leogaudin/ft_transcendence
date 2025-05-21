@@ -111,3 +111,11 @@
 	backdrop-filter: blur(6px) saturate(80%);
 	box-shadow: var(--dark-pink) 0px 0px 2px;
 }
+
+#party-options {
+	margin: 5px;
+	width: 250px;
+	border-radius: 15px;
+	background-color: var(--accent-pink);
+	box-shadow: 0 0 0 max(100vh, 100vw) rgba(0, 0, 0, .3);
+}

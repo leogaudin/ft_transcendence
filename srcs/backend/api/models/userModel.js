@@ -702,3 +702,47 @@ export function getProfileOfUser(id) {
     });
   });
 }
+
+export function increaseWins(user_id) {
+  assert(user_id !== undefined, "user_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+    UPDATE
+      users
+    SET
+      wins = wins + 1
+    WHERE
+      id = ?
+  `;
+    db.run(sql, user_id, function (err) {
+      if (err) {
+        console.error("Error updating wins:", err.message);
+        return reject(err);
+      }
+      if (this.changes === 0) return resolve({ message: "No changes" });
+      resolve({ success: "Wins incremented" });
+    });
+  });
+}
+
+export function increaseLosses(user_id) {
+  assert(user_id !== undefined, "user_id must exist");
+  return new Promise((resolve, reject) => {
+    const sql = `
+    UPDATE
+      users
+    SET
+      losses = losses + 1
+    WHERE
+      id = ?
+  `;
+    db.run(sql, user_id, function (err) {
+      if (err) {
+        console.error("Error updating losses:", err.message);
+        return reject(err);
+      }
+      if (this.changes === 0) return resolve({ message: "No changes" });
+      resolve({ success: "Losses incremented" });
+    });
+  });
+}

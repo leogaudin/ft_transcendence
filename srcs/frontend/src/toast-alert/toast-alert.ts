@@ -36,19 +36,19 @@ export function createsocketToastConnection() {
 	  if (!socketToast)
 			return ;
 	  socketToast.onopen = () => {
-			let id = getClientID();
-			console.log("WebsocketToast connection established, sending id:", id);
-			if (id === -1)
-				console.error("Invalid ID, cannot connect to back");
-			else{
-				if (!socketToast)
-					return ;
-				socketToast.send(JSON.stringify({
-				userId: id,
-				action: "identify"
-				}));
-				console.log("ID succesfully sent");
-			}
+		let id = getClientID();
+		// console.log("WebsocketToast connection established, sending id:", id);
+		if (id === -1)
+		  console.error("Invalid ID, cannot connect to back");
+		else{
+		  if (!socketToast)
+				return ;
+		  socketToast.send(JSON.stringify({
+			userId: id,
+			action: "identify"
+		  }));
+		//   console.log("ID succesfully sent");
+		}
 	  };
 	  socketToast.onmessage = async (event) => {
 		try{
@@ -212,8 +212,8 @@ export function createsocketToastConnection() {
 			console.error("WebsocketToast error:", error);
 	  };
 	  socketToast.onclose = () => {
-			console.log("WebsocketToast connection closed");
-			socketToast = null;
+		// console.log("WebsocketToast connection closed");
+		socketToast = null;
 	  };
 	}
 	catch(err){

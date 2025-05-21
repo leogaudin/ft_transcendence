@@ -1,8 +1,7 @@
 import { 
-    Player, GeneralData, PaddleCollision, BallData, AIData, OnrizeData, init, resetBall, updateScore, setAI,
-	play as playEngine, stop as stopEngine,
-	moveBall as moveBallEngine,
-    socketPong
+    Player, GeneralData, PaddleCollision, BallData, AIData, OnresizeData, init, 
+    resetBall, updateScore, setAI, countDown, pauseGame, returnToGames,
+	play as playEngine, stop as stopEngine, moveBall as moveBallEngine
 } from './gameEngine.js';
 
 import { Games } from "../../types.js";
@@ -55,7 +54,9 @@ export function chaosPong(data: Games): void{
         time: 30,
         speed: 0.02,
         paddleMargin: height * 0.03,
-        controlGame: null
+        controlGame: null,
+        isPaused: false,
+        exitPause: false,
     };
 
     const paddleCollisionData: PaddleCollision = {
@@ -81,20 +82,26 @@ export function chaosPong(data: Games): void{
         controlAI: null
     };
 
-    const onresizeData: OnrizeData = {
+    const onresizeData: OnresizeData = {
         ballRelativeLeft: 0,
         ballRelativeTop: 0,
         player1RelativeTop: 0,
         player2RelativeTop: 0,
+        powerUpRelativeLeft: 0,
+        powerUpRelativeTop: 0,
         newSpeed: 0
     };
 
-	function start(): void {
+	async function start(): Promise<void> {
 		const savedState = localStorage.getItem("gameState");
-		if (savedState)
+		if (savedState){
 			loadGameState();
-		else
+			await pauseGame(generalData, ballData);
+		}
+		if (!savedState){
+			await countDown(ballData, true);
 			init(generalData, ballData, player1, player2, width);
+		}
 		generalData.controlGame = setInterval(play, generalData.time);
 		powerUpData.controlPowerUp = setInterval(spawnPowerUp, 5000);
 		if (AIData.activate) 
@@ -102,6 +109,8 @@ export function chaosPong(data: Games): void{
 	}
 
 	function play(): void {
+        if (generalData.isPaused || generalData.exitPause) return ;
+
 		setOnresize();
 		moveBall();
 		playEngine(generalData, ballData, AIData, player1, player2, paddleCollisionData, width, height);
@@ -121,6 +130,8 @@ export function chaosPong(data: Games): void{
 	}
 
 	function moveAI(): void {
+        if (generalData.isPaused || generalData.exitPause) return ;
+
 		let random = Math.random();
 		setAI(AIData, player2, ballData, height);
 
@@ -147,6 +158,7 @@ export function chaosPong(data: Games): void{
 
 	document.onkeydown = function (e) {
         const key = e.key.toLowerCase();
+
         if (key === "w") {
             if (!player1.keysAffected)
                 player1.keyCode = "up";
@@ -188,6 +200,7 @@ export function chaosPong(data: Games): void{
 	/* PowerUp setup */
 
     function spawnPowerUp(): void {
+        if (generalData.isPaused || generalData.exitPause) return ;
         if (powerUpData.active) return;
 
         powerUpData.active = true;
@@ -261,6 +274,7 @@ export function chaosPong(data: Games): void{
 			powerUpData.powerUp.style.display = "none";
 			powerUpData.powerUp.classList.remove('powerUpAnimate', 'powerUpDisappear');
 		}
+
 		clearTimeout(powerUpData.timeout);
 		powerUpData.active = false;
     }
@@ -373,7 +387,7 @@ export function chaosPong(data: Games): void{
 
 		player1.paddle.style.top = `${onresizeData.player1RelativeTop * height}px`;
 		player2.paddle.style.top = `${onresizeData.player2RelativeTop * height}px`;
-	
+
 		if (ballData.ball.offsetLeft < 0) {
 			updateScore(player2.paddle, player1, player2);
 			resetBall(generalData, ballData, player1, player2, width);
@@ -395,31 +409,31 @@ export function chaosPong(data: Games): void{
 
 	function saveGameState() {
 		const gameState = {
-			player1: {
-					counter: player1.counter,
-					paddleTop: player1.paddle.offsetTop,
-					paddleSpeed: player1.paddleSpeed
-			},
-			player2: {
-					counter: player2.counter,
-					paddleTop: player2.paddle.offsetTop,
-					paddleSpeed: player2.paddleSpeed
-			},
-			ball: {
-					posX: ballData.ball.offsetLeft,
-					posY: ballData.ball.offsetTop,
-					velX: ballData.velX,
-					velY: ballData.velY,
-					angle: ballData.angle
-			},
-			generalData: {
-					time: generalData.time,
-					speed: generalData.speed,
-			},
-			AIData: {
-					activate: AIData.activate,
-					targetY: AIData.targetY
-			}
+            player1: {
+                counter: player1.counter,
+                paddleTop: player1.paddle.offsetTop,
+                paddleSpeed: player1.paddleSpeed
+            },
+            player2: {
+                counter: player2.counter,
+                paddleTop: player2.paddle.offsetTop,
+                paddleSpeed: player2.paddleSpeed
+            },
+            ball: {
+                posX: ballData.ball.offsetLeft,
+                posY: ballData.ball.offsetTop,
+                velX: ballData.velX,
+                velY: ballData.velY,
+                angle: ballData.angle
+            },
+            generalData: {
+                time: generalData.time,
+                speed: generalData.speed,
+            },
+            AIData: {
+                activate: AIData.activate,
+                targetY: AIData.targetY
+            }
 		};
 		localStorage.setItem('gameState', JSON.stringify(gameState));
 	}
@@ -428,34 +442,33 @@ export function chaosPong(data: Games): void{
 		const savedState = localStorage.getItem('gameState');
 
 		if (savedState) {
-			const gameState = JSON.parse(savedState);
+            const gameState = JSON.parse(savedState);
 
-			player1.counter = gameState.player1.counter;
-			player2.counter = gameState.player2.counter;
+            player1.counter = gameState.player1.counter;
+            player2.counter = gameState.player2.counter;
 
-			player1.paddle.style.top = `${gameState.player1.paddleTop}px`;
-			player2.paddle.style.top = `${gameState.player2.paddleTop}px`;
+            player1.paddle.style.top = `${gameState.player1.paddleTop}px`;
+            player2.paddle.style.top = `${gameState.player2.paddleTop}px`;
 
-			player1.paddleSpeed = gameState.player1.paddleSpeed;
-			player2.paddleSpeed = gameState.player2.paddleSpeed;
+            player1.paddleSpeed = gameState.player1.paddleSpeed;
+            player2.paddleSpeed = gameState.player2.paddleSpeed;
 
-			ballData.ball.style.left = `${gameState.ball.posX}px`;
-			ballData.ball.style.top = `${gameState.ball.posY}px`;
-			ballData.velX = gameState.ball.velX;
-			ballData.velY = gameState.ball.velY;
-			ballData.angle = gameState.ball.angle;
+            ballData.ball.style.left = `${gameState.ball.posX}px`;
+            ballData.ball.style.top = `${gameState.ball.posY}px`;
+            ballData.velX = gameState.ball.velX;
+            ballData.velY = gameState.ball.velY;
+            ballData.angle = gameState.ball.angle;
 
+            generalData.time = gameState.generalData.time;
+            generalData.speed = gameState.generalData.speed;
 
-			generalData.time = gameState.generalData.time;
-			generalData.speed = gameState.generalData.speed;
+            AIData.activate = gameState.AIData.activate;
+            AIData.targetY = gameState.AIData.targetY;
 
-			AIData.activate = gameState.AIData.activate;
-			AIData.targetY = gameState.AIData.targetY;
-
-			document.getElementById('counter1')!.innerText = player1.counter.toString();
-			document.getElementById('counter2')!.innerText = player2.counter.toString();
+            document.getElementById('counter1')!.innerText = player1.counter.toString();
+            document.getElementById('counter2')!.innerText = player2.counter.toString();
 		}
-	}
+    }
 
 	const initialize = () => {
 		if (document.readyState === 'complete') {
@@ -469,7 +482,7 @@ export function chaosPong(data: Games): void{
 		}
 	};
 
-	function clearGameState(){
+	async function clearGameState(){
 		localStorage.removeItem('gameState');
 		player1.counter = 0;
 		player2.counter = 0;
@@ -487,12 +500,18 @@ export function chaosPong(data: Games): void{
 		setOnresize();
 	});
 
-	window.addEventListener("popstate", () => {
+	window.addEventListener("popstate", async () => {
 		stop();
-		clearGameState();
-        if (socketPong)
-            socketPong.close()
+		await clearGameState();
 	});
+
+    document.getElementById('pauseGame')?.addEventListener('click', async () => {
+        await pauseGame(generalData, ballData);
+    })
+
+    document.getElementById('exitGame')?.addEventListener('click', async () => {
+        await returnToGames(generalData, ballData);
+    })
 
 	setOnresize();
 	initialize();

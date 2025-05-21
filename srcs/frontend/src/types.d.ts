@@ -45,6 +45,7 @@ export interface Message {
 	read: boolean;
 	type?: string;
 	info?: string;
+	game_type?: string;
 	tournament?: Tournament | null;
 }
 
