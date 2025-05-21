@@ -167,7 +167,11 @@ export function createsocketToastConnection() {
 			else if (data.type === "game_invitation"){
 				console.log(data);
 				if (data.info === "request"){
-					function handleAccept(data: any){
+					async function handleAccept(data: any){
+						if (data.game_type && data.game_type === "pong")
+							await createSocketPongConnection();
+						if (data.game_type && data.game_type === "4inrow")
+							createSocket4inrowConnection();
 						if (socketToast){
 							socketToast.send(JSON.stringify({
 								type: "game_invitation",
@@ -178,10 +182,6 @@ export function createsocketToastConnection() {
 								is_custom: data.is_custom,
 							}));
 						}
-						if (data.game_type && data.game_type === "pong")
-							createSocketPongConnection();
-						if (data.game_type && data.game_type === "4inrow")
-							createSocket4inrowConnection();
 						navigateTo(`/${data.game_type}`, { gameMode: "remote", isCustom: data.is_custom })
 					}
 					function handleReject(data: any){

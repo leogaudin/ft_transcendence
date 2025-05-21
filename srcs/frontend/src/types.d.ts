@@ -152,3 +152,10 @@ export interface Historical {
 	rival_score: number;
 	is_win: boolean;
 }
+
+export interface GameState {
+	gameId: string;
+  role: 'player1' | 'player2';
+  opponent_id: number;
+  isPlaying: boolean;
+}

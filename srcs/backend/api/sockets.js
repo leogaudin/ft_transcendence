@@ -223,8 +223,7 @@ async function handleAvatarChange(data){
 	})
 }
 
-async function handleGameInvitation(data, sender_id, receiver_id){
-	console.log(data);
+async function handleGameInvitation(data, sender_id, receiver_id, fastify){
 	if (data.info === "request"){
 		let username = await getUsername(data.sender_id);
 		if (socketsToast.has(receiver_id)){
@@ -242,7 +241,7 @@ async function handleGameInvitation(data, sender_id, receiver_id){
 	}
 	else if (data.info === "accept"){
 		if (socketsToast.has(receiver_id)){
-			const receiver = socketsToast.get(receiver_id)
+			const receiver = socketsToast.get(receiver_id);
 			receiver.send(JSON.stringify({
 				type: "game_invitation",
 				info: "accept",
@@ -251,6 +250,64 @@ async function handleGameInvitation(data, sender_id, receiver_id){
 				game_type: data.game_type,
 				is_custom: data.is_custom,
 			}))
+
+        let attempts = 0;
+        const maxAttempts = 10;
+        
+        const checkSockets = async () => {
+            console.log("Checking sockets...", {
+                receiverId: receiver_id,
+                senderId: sender_id,
+                hasPongReceiver: socketsPong.has(receiver_id),
+                hasPongSender: socketsPong.has(sender_id)
+            });
+
+            if (socketsPong.has(receiver_id) && socketsPong.has(sender_id)) {
+                const matchReceiver = socketsPong.get(receiver_id);
+                const matchSender = socketsPong.get(sender_id);
+                
+                const gameId = `pong:${Date.now()}:${sender_id}-${receiver_id}`;
+                console.log("Starting game with ID:", gameId);
+
+                await fastify.cache.set(
+                    `game:${gameId}`,
+                    JSON.stringify({
+                        player1: sender_id,
+                        player2: receiver_id,
+                        ball: { x: 50, y: 50, velX: 0, velY: 0 },
+                        score: { player1: 0, player2: 0 },
+                        status: "playing",
+                    }),
+                    3600
+                );
+
+                matchReceiver.send(JSON.stringify({
+                    type: "start_game",
+                    gameId,
+                    opponent_id: sender_id,
+                    user_id: receiver_id,
+                    role: "player2"
+                }));
+
+                matchSender.send(JSON.stringify({
+                    type: "start_game",
+                    gameId,
+                    opponent_id: receiver_id,
+                    user_id: sender_id,
+                    role: "player1"
+                }));
+            } else if (attempts < maxAttempts) {
+                attempts++;
+                console.log(`Waiting for sockets... Attempt ${attempts}`);
+                setTimeout(checkSockets, 1000);
+            } else {
+                console.error("Failed to establish game connection");
+                // Notificar error a ambos usuarios
+                notifyConnectionError(sender_id, receiver_id);
+            }
+        };
+
+			checkSockets();
 		}
 	}
 	else if (data.info === "reject"){
@@ -354,7 +411,6 @@ export default function createWebSocketsRoutes(fastify){
 						const data = JSON.parse(notification);
 						const sender_id = parseInt(data.sender_id);
 						const receiver_id = parseInt(data.receiver_id);
-						console.log(data)
 						if (data.type === "friendRequest")
 							friendRequest(data, sender_id, receiver_id);
 						else if (data.type === "tournament")
@@ -362,7 +418,7 @@ export default function createWebSocketsRoutes(fastify){
 						else if (data.type === "change_avatar")
 							handleAvatarChange(data)
 						else if (data.type === "game_invitation")
-							handleGameInvitation(data, sender_id, receiver_id);
+							await handleGameInvitation(data, sender_id, receiver_id, fastify);
 					}
 				})
 				socket.on("close", async () => {
@@ -404,6 +460,7 @@ export default function createWebSocketsRoutes(fastify){
 									status: "success",
 									message: "Connected"
 							  }));
+								console.log(data);
 							}
 						  }
 						  catch (err){
@@ -415,7 +472,36 @@ export default function createWebSocketsRoutes(fastify){
 						}
 					}
 					else{
-						
+						if (data.type === "start_game"){
+							const gameId = `pong:${Date.now()}:${userId}`
+							const opponent = socketsPong.get(data.opponent_id);
+							if (opponent){
+							console.log("hola")
+								await fastify.cache.set(
+									`game:${gameId}`,
+									JSON.stringify({
+										player1: userId,
+										player2: data.opponent_id,
+										ball: { x: 50, y: 50, velX: 0, velY: 0 },
+										score: { player1: 0, player2: 0 },
+										status: "playing",
+									}),
+									3600
+								);
+								socket.send(JSON.stringify({
+                type: "game_started",
+                gameId,
+                opponent: data.opponent_id,
+                role: "player1"
+								}));
+								opponent.send(JSON.stringify({
+										type: "game_started",
+										gameId,
+										opponent: userId,
+										role: "player2"
+								}));
+							}
+						}
 					}
 				})
 				socket.on("close", () => {
