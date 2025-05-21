@@ -2,6 +2,7 @@ import { showAlert } from "../toast-alert/toast-alert.js";
 import { navigateTo } from "../index.js";
 import { LoginObject } from "../types.js";
 import { createsocketToastConnection } from "../toast-alert/toast-alert.js";
+import { getTranslation } from "./login-transcript.js";
 
 /**
  * @brief Inits the associated Login Fetches and buttons
@@ -35,20 +36,20 @@ export function parseSessionForm(
 	let msg: string = "Ok";
 
 	if (!username || !email || !password || !confirmPassword)
-		msg = "Fill in all the fields";
+		msg = getTranslation('fill_all_fields');
 	else if (email !== "Default") {
 		if (username.length < 4)
-			msg = "Username too short";
+			msg = getTranslation('username_too_short');
 		else if (username.length > 16)
-			msg = "Username too long (max 16 characters)";
-		else if (!/^[a-z0-9]+$/gi.test(username))
-			msg = "Username can only contain lowercase and digits";
+			msg = getTranslation('username_too_long');
+		else if (!/^[a-z0-9]+$/.test(username))
+			msg = getTranslation('username_allowed_chars');
 		else if (password !== confirmPassword)
-			msg = "Passwords don't match";
+			msg = getTranslation('passwords_not_match');
 		else if (password.length < 9)
-			msg = "Password too short";
+			msg = getTranslation('password_too_short');
 		else if (!/[A-Z]/.test(password) || !/[a-z]/.test(password) || !/[0-9]/.test(password) || !/[*\.\-_]/.test(password))
-			msg = "Please use at least one uppercase, lowercase, number and '*.-_'";
+			msg = getTranslation('password_musts');
 	}
 
 	return (msg);
@@ -91,8 +92,10 @@ async function handleLogin(e: Event) {
 				const data: LoginObject = { username, password };
 				navigateTo("/two-factor", data);
 			}
-			else if ((response["error"] && response["error"].includes("user")) || response["authorization"] === 'failed')
-				throw new Error("Username or Password may be incorrect");
+			else if ((response["error"] && response["error"].includes("User")) ||
+				(response["error"] && response["error"].includes("password")) 
+				|| response["authorization"] === 'failed')
+					throw new Error(getTranslation('incorrect_inputs'));
 			else
 				throw new Error(response["error"]);
 		}
@@ -174,7 +177,6 @@ async function handleRegister(e: Event) {
 		return (true);
 	}
 	catch (error) {
-		console.error(`Error: `, error);
 		showAlert((error as Error).message , "toast-error");
 		return (false);
 	}
