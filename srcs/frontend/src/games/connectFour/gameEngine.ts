@@ -347,9 +347,9 @@ if (socket4inrow && socket4inrow.readyState !== WebSocket.CLOSED)
 
 
 export async function pauseGame(columnList: HTMLElement[]): Promise<void> {
-    const pauseEl = document.getElementById('pause');
+    const pauseEl = document.getElementById('pauseConnect');
     if (!pauseEl){
-        console.error("pause element not found.");
+        console.error("pauseConnect element not found.");
         return Promise.resolve();
     }
 
@@ -428,9 +428,9 @@ export async function returnToGames(columnList: HTMLElement[]): Promise<void> {
     boardEl.style.animation = "mediumOpacity 0.25s ease forwards";
     await delay(250);
 
-    const returnEl = document.getElementById('returnToGames');
+    const returnEl = document.getElementById('returnToGamesConnect');
     if (!returnEl){
-        console.error("returnToGames element not found.");
+        console.error("returnToGamesConnect element not found.");
         return Promise.resolve();
     }
     returnEl.style.display = 'block';

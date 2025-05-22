@@ -2,6 +2,7 @@
 
 import { initLoginFetches } from "./login-fetch.js";
 import { checkLogged, navigateTo } from "../index.js"
+import { applyTranslation } from "./login-transcript.js"
 
 export async function initLoginEvents() {
 	const logged = await checkLogged();
@@ -13,6 +14,7 @@ export async function initLoginEvents() {
 		resetPassword();
 		initLoginFetches();
 		googleSignIn();
+		applyTranslation();
 	
 		setTimeout(() => {
 			const googleButton = document.getElementsByClassName("g_id_signin")[0];
@@ -120,7 +122,11 @@ function popUp() {
 }
 
 function googleSignIn() {
+  const googleSignIn = document.getElementById("google-script");
+  if (googleSignIn)
+    googleSignIn.remove();
 	var s = document.createElement( 'script' );
+  s.id = "google-script";
 	s.setAttribute( 'src', "https://accounts.google.com/gsi/client" );
 	document.body.appendChild( s );
 };
