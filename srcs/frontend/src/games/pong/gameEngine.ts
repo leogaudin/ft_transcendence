@@ -1,8 +1,9 @@
 import { getClientID } from "../../messages/messages-page.js";
 import { GameState } from "../../types.js";
+import { navigateTo } from "../../index.js";
 
-export let socketPong: WebSocket | null;
-let current_game: GameState | null = null;
+//export let socketPong: WebSocket | null;
+//let current_game: GameState | null = null;
 
 export interface Player {
 	keyPress: boolean;
@@ -186,7 +187,7 @@ export function setAI(AIData: AIData, player2: Player, ballData: BallData, heigh
 	player2.paddleCenter = player2.paddle.offsetTop + player2.paddle.clientHeight / 2; 
 }
 
-export async function createSocketPongConnection(): Promise<boolean> {
+/*export async function createSocketPongConnection(): Promise<boolean> {
 return new Promise((resolve, reject) => {
 		if (socketPong && socketPong.readyState !== WebSocket.CLOSED)
 			socketPong.close();
@@ -261,7 +262,7 @@ function setupGameHandler(){
 
 		}
 	};
-}
+}*/
 
 export function delay(ms: number): Promise<void> {
     return new Promise(resolve => setTimeout(resolve, ms));

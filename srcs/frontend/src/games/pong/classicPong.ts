@@ -1,8 +1,7 @@
 import { 
     Player, GeneralData, PaddleCollision, BallData, AIData, OnresizeData, init, 
 	resetBall, updateScore, setAI, countDown, pauseGame, returnToGames, 
-	play as playEngine, stop as stopEngine, moveBall as moveBallEngine,,
-	socketPong
+	play as playEngine, stop as stopEngine, moveBall as moveBallEngine,
 } from './gameEngine.js';
 
 import { Games } from "../../types.js";
@@ -297,8 +296,6 @@ export function classicPong(data: Games): void{
 	window.addEventListener('popstate', async () => {
 		stop();
 		await clearGameState();
-		if (socketPong)
-		socketPong.close()
 });
 
 	document.getElementById('pauseGame')?.addEventListener('click', async () => {
