@@ -8,7 +8,11 @@ FROM nginx:alpine
 RUN apk add --no-cache \
       nodejs=22.13.1-r0 \
       npm=10.9.1-r0 \
-      supervisor=4.2.5-r5
+      supervisor=4.2.5-r5 \
+      make \
+      g++ \
+      python3
+
 COPY --from=certificate /certificate /etc/nginx/ssl
 WORKDIR /usr/share/nginx/html
 # TODO: CHANGE THIS WHEN DEVELOPMENT IS DONE
