@@ -41,6 +41,7 @@ export function classicMode(data: Games): void {
 
 	const player1 = new PlayerClass(false, 1, "red");
 	const player2 = new PlayerClass(data.gameMode === "ai" ? true : false, 2, "yellow");
+	let aiIsThinking = false;
 
 	function init(): void {
 		initEngine(player1, boardMap, columnMap, columnList);
@@ -82,9 +83,11 @@ export function classicMode(data: Games): void {
 			clearGame();
 			return;
 		}
+		if (player2.turn && player2.AI && aiIsThinking) return;
 
 		await placeToken(column);
-		saveGameState("classic");
+		await updateTurnIndicator(player1, player2, columnList, columnMap, "clasic");
+		await saveGameState("classic");
 		if (checkWin(false)) {
 			insertDivWinner();
 			disableClicks();
@@ -92,7 +95,7 @@ export function classicMode(data: Games): void {
 			insertDivDraw();
 			disableClicks();
 		} else {
-			if (player2.turn && player2.AI) {
+			if (player2.turn && player2.AI && !aiIsThinking) {
 				disableClicks();
 				console.log("AI is thinking...");
 				await aiToken();
@@ -122,6 +125,9 @@ export function classicMode(data: Games): void {
 	}
 
 	async function aiToken(): Promise<void> {
+		if (aiIsThinking) return;
+    	aiIsThinking = true;
+
 		const winColumns = detectWinOpportunities(player2);
 		if (winColumns.length > 0) {
 			enableClicks();
@@ -164,11 +170,12 @@ export function classicMode(data: Games): void {
 			columnToUse = columnList.find(col => col.id === bestColumnId) || null;
 		}
 
-		if (columnToUse && !isColumnPlayable(columnToUse)) {
+		if (columnToUse && !isColumnPlayable(columnToUse))
 			columnToUse = columnList.find((column) => isColumnPlayable(column)) || null;
-		}
 
 		enableClicks();
+		aiIsThinking = false;
+		console.log("hola ?");
 		columnToUse?.click();
 	}
 
@@ -197,7 +204,7 @@ export function classicMode(data: Games): void {
 		player.AI = state.AI;
 	}
 
-	function saveGameState(mode: "classic" | "custom") {
+	async function saveGameState(mode: "classic" | "custom") {
 		const boardData: { [columnId: string]: number[] } = {};
 
 		columnList.forEach(column => {

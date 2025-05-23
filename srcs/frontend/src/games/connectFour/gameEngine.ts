@@ -80,7 +80,6 @@ export	function clearGame(player1: Player, player2: Player, columnList: HTMLElem
         const newColumn = column.cloneNode(true);
         column.replaceWith(newColumn);
     });
-	
     boardMap.clear();
     columnMap.clear();
     columnList = [];
@@ -92,6 +91,7 @@ export	function clearGame(player1: Player, player2: Player, columnList: HTMLElem
         winnerDiv.classList.remove(`${player1.winner ? `${player1.color}` : `${player2.color}`}`);
     }
     if (drawDiv) drawDiv.style.display = "none";
+    disableClicks(columnList);
 }
 
 export function insertDivWinner(player1: Player, player2: Player, columnList: HTMLElement[]): void {
@@ -160,6 +160,7 @@ export async function updateTurnIndicator(player1: Player, player2: Player, colu
         });
         if (mode == "crazy") 
             await updateDice(player1, player2);
+        enableClicks(columnList);
         console.log(`Turn: ${currentPlayer.num}, color: ${currentPlayer.color}`);
 }
 
@@ -207,8 +208,6 @@ export async function placeToken(column: HTMLElement | null, player1: Player, pl
     columnData[row] = currentPlayer.num;
 
     await updateCell(cells[row], currentPlayer);
-    await updateTurnIndicator(player1, player2, columnList, columnMap, mode);
-    enableClicks(columnList);
 }
 
 export function checkDraw(boardMap: Map<string, number[]>, columnList: HTMLElement[]): boolean {
