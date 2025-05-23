@@ -14,6 +14,25 @@ export interface Player {
     diceUses?: number;
 }
 
+export interface PlayerState {
+  num: number;
+  color: string;
+  turn: boolean;
+  AI: boolean;
+  specialToken?: string | null;
+  diceUses?: number;
+  useSpecial?: boolean;
+  affected?: string | null;
+  turnAffected?: number;
+}
+
+export interface GameState {
+  mode: "classic" | "custom";
+  boardData: { [columnId: string]: number[] };
+  player1: PlayerState;
+  player2: PlayerState;
+}
+
 export const columnMap: Map<string, HTMLElement[]> = new Map();
 
 export const columnList: HTMLElement[] = [];
@@ -156,7 +175,7 @@ async function updateCell(cell: HTMLElement, player: Player): Promise<void> {
         token.style.animation = "";
 }
 
-export async function placeToken(column: HTMLElement, player1: Player, player2: Player, columnMap: Map<string, HTMLElement[]>, boardMap: Map<string, number[]>, columnList: HTMLElement[], mode: string): Promise<void> {
+export async function placeToken(column: HTMLElement | null, player1: Player, player2: Player, columnMap: Map<string, HTMLElement[]>, boardMap: Map<string, number[]>, columnList: HTMLElement[], mode: string): Promise<void> {
     disableClicks(columnList);
     if (!column || !column.id) {
         enableClicks(columnList);
@@ -298,9 +317,9 @@ export function delay(ms: number): Promise<void> {
 }
 
 export async function pauseGame(columnList: HTMLElement[]): Promise<void> {
-    const pauseEl = document.getElementById('pause');
+    const pauseEl = document.getElementById('pauseConnect');
     if (!pauseEl){
-        console.error("pause element not found.");
+        console.error("pauseConnect element not found.");
         return Promise.resolve();
     }
 
@@ -379,9 +398,9 @@ export async function returnToGames(columnList: HTMLElement[]): Promise<void> {
     boardEl.style.animation = "mediumOpacity 0.25s ease forwards";
     await delay(250);
 
-    const returnEl = document.getElementById('returnToGames');
+    const returnEl = document.getElementById('returnToGamesConnect');
     if (!returnEl){
-        console.error("returnToGames element not found.");
+        console.error("returnToGamesConnect element not found.");
         return Promise.resolve();
     }
     returnEl.style.display = 'block';
@@ -397,7 +416,7 @@ export async function returnToGames(columnList: HTMLElement[]): Promise<void> {
     })
 
     document.getElementById('exit')?.addEventListener('click', () => {
-        /* localStorage.removeItem('gameState'); */
+        localStorage.removeItem(`connect4GameStateclassic`);
         navigateTo("/games");
     })
 }
