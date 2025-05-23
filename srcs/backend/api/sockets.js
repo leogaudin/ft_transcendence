@@ -108,10 +108,9 @@ async function messageInChat(data, userId) {
 					}
 				}
 			}
-			else if (data.type === "game") {
+			else if (data.type === "game") { 
 				const receiver_id = parseInt(data.receiver_id);
 				if (socketsChat.has(receiver_id) && data.info === "request") {
-				console.log(data)
 					const invitation = await createMessage({
 						body: data.body,
 						sender_id: data.sender_id,
@@ -137,6 +136,7 @@ async function messageInChat(data, userId) {
 					}))
 				}
 				else if (socketsChat.has(sender_id) && data.info === "accept"){
+					console.log(data)
 					const invitation = await createMessage({
 						body: "The invitation has been accepted",
 						sender_id: data.sender_id,
@@ -145,6 +145,7 @@ async function messageInChat(data, userId) {
 						sent_at: data.sent_at,
 						is_read: 0
 					})
+					console.log("b")
 					const message_id = invitation.id;
 					const sender = socketsChat.get(sender_id);
 					sender.send(JSON.stringify({
@@ -160,6 +161,32 @@ async function messageInChat(data, userId) {
 						info: "request",
 						game_type: data.game
 					}))
+				}
+				else if (socketsChat.has(sender_id) && data.info === "reject"){
+					const invitation = await createMessage({
+						body: "The invitation has been rejected",
+						sender_id: data.sender_id,
+						receiver_id: data.receiver_id,
+						chat_id: data.chat_id,
+						sent_at: data.sent_at,
+						is_read: 0
+					})
+					const message_id = invitation.id;
+					const sender = socketsChat.get(sender_id);
+					sender.send(JSON.stringify({
+						body: "The invitation has been rejected",
+						message_id: message_id,
+						chat_id: data.chat_id,
+						receiver_id: data.receiver_id,
+						sender_id: userId,
+						sender_username: username,
+						sent_at: data.sent_at,
+						read: false,
+						type: "game",
+						info: "request",
+						game_type: data.game
+					}))
+
 				}
 			}
 		}

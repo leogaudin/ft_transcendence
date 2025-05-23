@@ -7,6 +7,7 @@ import { createSocketTournamentConnection } from "../tournament/tournament.js";
 
 export let socketChat: WebSocket | null = null;
 let activeTournament: Tournament | null = null;
+
 export function initMessagesEvents(data: MessageObject) {
   moveToHome();
   loadInfo(data);
@@ -76,7 +77,7 @@ function createSocketConnection() {
 }
 
 export function displayMessage(data: Message) {
-  if (actual_chat_id !== data.chat_id && data.type !== "tournament")
+  if (actual_chat_id !== data.chat_id && data.type === "message")
     showAlert(`You have a message from ${data.sender_username}`, "toast-success");
   else if (actual_chat_id !== data.chat_id && data.type === "tournament")
     showAlert(`You have a tournament inivitation from ${data.sender_username}`, "toast-success");
@@ -213,8 +214,10 @@ export function displayMessage(data: Message) {
         // Añadir event listeners para los botones
         const acceptBtn = el.querySelector('.accept-btn') as HTMLButtonElement;
         const rejectBtn = el.querySelector('.reject-btn') as HTMLButtonElement;
-
+        console.log(data)
         acceptBtn?.addEventListener('click', (event) => {
+          const date = new Date();
+          date.setHours(date.getHours() + 2);
           event.preventDefault();
           if (socketChat) {
             socketChat.send(JSON.stringify({
@@ -223,7 +226,9 @@ export function displayMessage(data: Message) {
               game_type: data.game_type,
               sender_id: getClientID(),
               receiver_id: data.sender_id,
-              body: "Game invitation accepted"
+              body: "Game invitation accepted",
+              chat_id: actual_chat_id,
+              sent_at: date.toISOString(),
             }));
             // Deshabilitar botones después de aceptar
             acceptBtn.disabled = true;
@@ -234,6 +239,8 @@ export function displayMessage(data: Message) {
         });
 
         rejectBtn?.addEventListener('click', (event) => {
+          const date = new Date();
+          date.setHours(date.getHours() + 2);
           event.preventDefault()
           if (socketChat) {
             socketChat.send(JSON.stringify({
@@ -242,7 +249,9 @@ export function displayMessage(data: Message) {
               game_type: data.game_type,
               sender_id: getClientID(),
               receiver_id: data.sender_id,
-              body: "Game invitation rejected"
+              body: "Game invitation rejected",
+              chat_id: actual_chat_id,
+              sent_at: date.toISOString(),
             }));
             // Deshabilitar botones después de rechazar
             rejectBtn.disabled = true;
@@ -252,7 +261,19 @@ export function displayMessage(data: Message) {
           }
         });
       }
+
       messageContainer.appendChild(el);
+    }
+    else if (data.info === "accept") {
+      if (data.receiver_id === getClientID() && actual_chat_id === data.chat_id) {
+        el.setAttribute("id", "friend-message");
+        el.innerHTML = `
+        <div class="message friend-message">
+          <p>${data.body}</p>
+          <p class="hour">${sent_at}</p>
+        </div>`;
+        sendRequest(`PATCH`, `messages/${data.message_id}`, { is_read: 1 });
+      }
     }
     el.scrollIntoView({ behavior: 'smooth' });
   }

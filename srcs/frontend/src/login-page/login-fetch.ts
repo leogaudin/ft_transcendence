@@ -216,6 +216,7 @@ export async function sendRequest(method: string, endpoint: string, body: object
 				},
 			});
 		}
+		console.log(response)
 		return await response.json();
 	}
 	catch (error) {
